@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌾 FazendaRPG</title>
+  <link rel="stylesheet" href="style/main.css" />
+</head>
+<body>
+
+  <!-- Tela de nome inicial -->
+  <div id="start-screen" class="modal">
+    <h2>👩‍🌾 Bem-vindo à FazendaRPG!</h2>
+    <p>Digite seu nome:</p>
+    <input type="text" id="player-name" placeholder="Seu nome" />
+    <button onclick="startGame()">Começar</button>
+  </div>
+
+  <!-- Jogo principal -->
+  <div id="game-container" class="hidden">
+    <div class="header">
+      <h1>🌾 FazendaRPG</h1>
+      <div>
+        <a href="cidade.html" class="cidade-btn">🏩 Cidade</a>
+        <button class="reset-btn" onclick="resetGame()">🧹 Resetar</button>
+        <button class="tema-btn" onclick="trocarTema()">🌃 Tema</button>
+        <button class="perfil-btn" onclick="abrirPerfil()">👤 Perfil</button>
+      </div>
+    </div>
+
+    <!-- HUD estilizada -->
+    <div id="hud" class="hud-box"></div>
+
+    <!-- Grid da fazenda -->
+    <div id="farm-grid" class="farm-grid"></div>
+  </div>
+
+  <!-- Modal de Perfil -->
+  <div id="perfil-modal" class="modal hidden">
+    <h3>📌 Perfil do Jogador</h3>
+    <div id="perfil-content"></div>
+    <button onclick="fecharPerfil()">Fechar</button>
+  </div>
+
+  <!-- Notificação flutuante -->
+  <div id="notification" class="hidden"></div>
+
+  <!-- Scripts -->
+  <script type="module" src="js/main.js"></script>
+  <script>
+    // Aplica o tema salvo ao carregar a página
+    const temaSalvo = localStorage.getItem("tema") || "white";
+    document.body.classList.add(temaSalvo);
+  </script>
+</body>
+</html>

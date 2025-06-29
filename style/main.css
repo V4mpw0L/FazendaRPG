@@ -1,0 +1,261 @@
+/* Tema base */
+body.white {
+  background: linear-gradient(to bottom, #e0ffe0, #ffffff);
+  color: #222;
+}
+
+body.dark {
+  background: linear-gradient(to bottom, #1a1a1a, #0d0d0d);
+  color: #eee;
+}
+
+body {
+  font-family: sans-serif;
+  padding: 10px;
+  margin: 0;
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.modal {
+  max-width: 400px;
+  margin: 100px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+body.dark .modal {
+  background: #2c2c2c;
+  color: white;
+}
+
+.modal input {
+  padding: 8px;
+  margin-top: 10px;
+  width: 80%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.modal button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: #5caa1f;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.cidade-btn, .reset-btn, .perfil-btn, .tema-btn {
+  background: #f0c674;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  margin: 4px;
+  box-shadow: 1px 1px 4px rgba(0,0,0,0.2);
+  border: none;
+  cursor: pointer;
+}
+
+.reset-btn {
+  background: #e74c3c;
+  color: white;
+}
+
+.perfil-btn {
+  background: #3498db;
+  color: white;
+}
+
+.tema-btn {
+  background: #555;
+  color: white;
+}
+
+.hud-box {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin: 20px auto;
+  max-width: 700px;
+  padding: 16px;
+  background: #f0f0d0;
+  border: 2px solid #a0522d;
+  border-radius: 12px;
+  box-shadow: 2px 4px 8px rgba(0,0,0,0.1);
+}
+
+body.dark .hud-box {
+  background: #2e2e2e;
+  border-color: #555;
+}
+
+.hud-box span {
+  background: rgba(255,255,255,0.6);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 16px;
+  min-width: 100px;
+  box-shadow: 1px 2px 4px rgba(0,0,0,0.1);
+}
+
+body.dark .hud-box span {
+  background: rgba(0,0,0,0.3);
+  box-shadow: none;
+}
+
+.farm-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.farm-tile {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  background: #a0522d;
+  font-size: 38px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.loja-grid {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.loja-card {
+  background: #fff8dc;
+  border: 2px solid #a0522d;
+  border-radius: 12px;
+  padding: 16px;
+  width: 140px;
+  box-shadow: 2px 4px 8px rgba(0,0,0,0.2);
+}
+
+body.dark .loja-card {
+  background: #333;
+  color: white;
+  border-color: #777;
+}
+
+.loja-card button {
+  margin-top: 10px;
+  padding: 6px 12px;
+  background: #5caa1f;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#notification {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff8dc;
+  color: #5a3;
+  border: 2px solid #a0522d;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  font-weight: bold;
+  font-size: 16px;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+#notification.show {
+  opacity: 1;
+}
+
+.cidade-opcoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.cidade-opcoes button, .voltar-btn {
+  padding: 14px 18px;
+  border: none;
+  border-radius: 10px;
+  background: #ffefa3;
+  color: #333;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+
+.progress-bar {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  height: 6px;
+  width: 88%;
+  background: #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: #27ae60;
+  width: 0%;
+  transition: width 0.3s ease-in-out;
+}
+
+.tile-timer {
+  font-size: 11px;
+  margin-top: 4px;
+  color: #222;
+  background: rgba(255,255,255,0.6);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-weight: bold;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+body.dark .tile-timer {
+  background: rgba(0,0,0,0.5);
+  color: #eee;
+}
+
+.farm-tile.ready {
+  box-shadow: 0 0 12px 4px #27ae60, inset 0 0 5px rgba(0,0,0,0.3);
+  border: 2px solid #2ecc71;
+}
