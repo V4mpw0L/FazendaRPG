@@ -15,21 +15,21 @@
 
 ## 📦 Estrutura do projeto
 
-FazendaRPG/
-├── index.html # Tela principal da fazenda
-├── cidade.html # Cidade com loja, banco, NPCs
-├── js/
-│ ├── main.js # Início do jogo e controle geral
-│ ├── ui.js # HUD, notificações, tema, perfil
-│ ├── player.js # Dados do jogador e salvamento
-│ ├── farm.js # Sistema de plantio/colheita
-│ ├── cidade.js # Lógica da cidade e menus
-├── style/
-│ └── main.css # Estilos gerais e tema claro/escuro
-├── assets/ # Sprites, sons e futuros ícones
-├── data/ # Configs futuras de mapas e missões
-├── save/ # Local para exportações
-└── README.md
+-FazendaRPG/
+-├── index.html # Tela principal da fazenda
+-├── cidade.html # Cidade com loja, banco, NPCs
+-├── js/
+-│ ├── main.js # Início do jogo e controle geral
+-│ ├── ui.js # HUD, notificações, tema, perfil
+-│ ├── player.js # Dados do jogador e salvamento
+-│ ├── farm.js # Sistema de plantio/colheita
+-│ ├── cidade.js # Lógica da cidade e menus
+-├── style/
+-│ └── main.css # Estilos gerais e tema claro/escuro
+-├── assets/ # Sprites, sons e futuros ícones
+-├── data/ # Configs futuras de mapas e missões
+-├── save/ # Local para exportações
+-└── README.md
 
 
 ---
