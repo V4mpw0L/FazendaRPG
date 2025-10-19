@@ -7,9 +7,10 @@
 import { getTimeRemaining, isPast, clamp } from "../utils/helpers.js";
 
 export default class FarmSystem {
-  constructor(player, skillSystem) {
+  constructor(player, skillSystem, inventorySystem) {
     this.player = player;
     this.skillSystem = skillSystem;
+    this.inventorySystem = inventorySystem;
     this.cropsData = null;
     this.plotCount = 9;
     this.updateInterval = null;
@@ -246,7 +247,7 @@ export default class FarmSystem {
     }
 
     // Consume seed and energy
-    this.player.removeItem(seedId, 1);
+    this.inventorySystem.removeItem(seedId, 1);
     this.player.removeEnergy(cropData.energyCost);
 
     // Plant crop
@@ -304,7 +305,7 @@ export default class FarmSystem {
     const amount = baseAmount + bonus;
 
     // Add harvested item to inventory
-    this.player.addItem(plot.crop, amount);
+    this.inventorySystem.addItem(plot.crop, amount);
 
     // Add XP
     const xpResult = this.skillSystem.addXP("farming", cropData.xpGain || 10);
@@ -367,7 +368,7 @@ export default class FarmSystem {
     }
 
     // Consume fertilizer
-    this.player.removeItem("fertilizer", 1);
+    this.inventorySystem.removeItem("fertilizer", 1);
 
     // Apply fertilizer
     plot.fertilized = true;

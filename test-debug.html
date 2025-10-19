@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FazendaRPG - Debug</title>
+</head>
+<body>
+    <h1>FazendaRPG Debug</h1>
+    <button onclick="checkLocalStorage()">Check LocalStorage</button>
+    <button onclick="clearAll()">Clear All</button>
+    <pre id="output"></pre>
+
+    <script>
+        function checkLocalStorage() {
+            const output = document.getElementById('output');
+            let html = '<h2>LocalStorage Contents:</h2>';
+            
+            for (let key in localStorage) {
+                if (localStorage.hasOwnProperty(key) && key.startsWith('fazenda')) {
+                    html += `<h3>${key}:</h3>`;
+                    try {
+                        const data = JSON.parse(localStorage.getItem(key));
+                        html += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                    } catch (e) {
+                        html += `<p>Error parsing: ${e.message}</p>`;
+                    }
+                }
+            }
+            
+            output.innerHTML = html;
+        }
+        
+        function clearAll() {
+            if (confirm('Clear ALL localStorage?')) {
+                for (let key in localStorage) {
+                    if (key.startsWith('fazenda')) {
+                        localStorage.removeItem(key);
+                    }
+                }
+                alert('Cleared!');
+                checkLocalStorage();
+            }
+        }
+    </script>
+</body>
+</html>

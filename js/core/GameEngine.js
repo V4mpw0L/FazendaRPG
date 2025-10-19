@@ -70,11 +70,15 @@ export default class GameEngine {
       this.skillSystem = new SkillSystem(this.player);
       await this.skillSystem.init();
 
-      this.farmSystem = new FarmSystem(this.player, this.skillSystem);
-      await this.farmSystem.init();
-
       this.inventorySystem = new InventorySystem(this.player);
       await this.inventorySystem.init();
+
+      this.farmSystem = new FarmSystem(
+        this.player,
+        this.skillSystem,
+        this.inventorySystem,
+      );
+      await this.farmSystem.init();
 
       this.questSystem = new QuestSystem(
         this.player,

@@ -5,49 +5,51 @@
  */
 
 export default class InventoryUI {
-    constructor(inventorySystem, modal, notifications) {
-        this.inventorySystem = inventorySystem;
-        this.modal = modal;
-        this.notifications = notifications;
-        this.container = null;
-        this.sortBy = 'name';
-        this.filterCategory = 'all';
+  constructor(inventorySystem, modal, notifications) {
+    this.inventorySystem = inventorySystem;
+    this.modal = modal;
+    this.notifications = notifications;
+    this.container = null;
+    this.sortBy = "name";
+    this.filterCategory = "all";
+  }
+
+  /**
+   * Initialize inventory UI
+   */
+  init() {
+    this.container = document.getElementById("inventory-grid");
+    if (!this.container) {
+      console.error("❌ Inventory container not found");
+      return false;
     }
 
-    /**
-     * Initialize inventory UI
-     */
-    init() {
-        this.container = document.getElementById('inventory-grid');
-        if (!this.container) {
-            console.error('❌ Inventory container not found');
-            return false;
-        }
+    // Listen to inventory events
+    window.addEventListener("inventory:itemAdded", () => this.render());
+    window.addEventListener("inventory:itemRemoved", () => this.render());
+    window.addEventListener("inventory:itemUsed", () => this.render());
+    window.addEventListener("inventory:itemSold", () => this.render());
+    window.addEventListener("inventory:cleared", () => this.render());
 
-        // Listen to inventory events
-        window.addEventListener('inventory:itemAdded', () => this.render());
-        window.addEventListener('inventory:itemRemoved', () => this.render());
-        window.addEventListener('inventory:itemUsed', () => this.render());
-        window.addEventListener('inventory:itemSold', () => this.render());
-        window.addEventListener('inventory:cleared', () => this.render());
+    this.setupControls();
 
-        this.setupControls();
+    console.log("✅ Inventory UI initialized");
+    return true;
+  }
 
-        console.log('✅ Inventory UI initialized');
-        return true;
-    }
+  /**
+   * Setup inventory controls (sort, filter, etc.)
+   */
+  setupControls() {
+    const screenHeader = document.querySelector(
+      "#inventory-screen .screen-header",
+    );
+    if (!screenHeader) return;
 
-    /**
-     * Setup inventory controls (sort, filter, etc.)
-     */
-    setupControls() {
-        const screenHeader = document.querySelector('#inventory-screen .screen-header');
-        if (!screenHeader) return;
+    // Check if controls already exist
+    if (screenHeader.querySelector(".inventory-controls")) return;
 
-        // Check if controls already exist
-        if (screenHeader.querySelector('.inventory-controls')) return;
-
-        const controlsHTML = `
+    const controlsHTML = `
             <div class="inventory-controls">
                 <div class="inventory-stats">
                     <span id="inv-items-count" class="stat-badge">0 itens</span>
@@ -75,36 +77,36 @@ export default class InventoryUI {
             </div>
         `;
 
-        screenHeader.insertAdjacentHTML('beforeend', controlsHTML);
+    screenHeader.insertAdjacentHTML("beforeend", controlsHTML);
 
-        // Add event listeners
-        document.getElementById('inv-sort')?.addEventListener('change', (e) => {
-            this.sortBy = e.target.value;
-            this.render();
-        });
+    // Add event listeners
+    document.getElementById("inv-sort")?.addEventListener("change", (e) => {
+      this.sortBy = e.target.value;
+      this.render();
+    });
 
-        document.getElementById('inv-filter')?.addEventListener('change', (e) => {
-            this.filterCategory = e.target.value;
-            this.render();
-        });
+    document.getElementById("inv-filter")?.addEventListener("change", (e) => {
+      this.filterCategory = e.target.value;
+      this.render();
+    });
 
-        document.getElementById('inv-sell-all')?.addEventListener('click', () => {
-            this.sellAllItems();
-        });
+    document.getElementById("inv-sell-all")?.addEventListener("click", () => {
+      this.sellAllItems();
+    });
 
-        // Add styles
-        this.addControlStyles();
-    }
+    // Add styles
+    this.addControlStyles();
+  }
 
-    /**
-     * Add control styles
-     */
-    addControlStyles() {
-        if (document.getElementById('inventory-ui-styles')) return;
+  /**
+   * Add control styles
+   */
+  addControlStyles() {
+    if (document.getElementById("inventory-ui-styles")) return;
 
-        const style = document.createElement('style');
-        style.id = 'inventory-ui-styles';
-        style.textContent = `
+    const style = document.createElement("style");
+    style.id = "inventory-ui-styles";
+    style.textContent = `
             .inventory-controls {
                 margin-top: var(--spacing-md);
                 display: flex;
@@ -302,146 +304,155 @@ export default class InventoryUI {
             }
         `;
 
-        document.head.appendChild(style);
+    document.head.appendChild(style);
+  }
+
+  /**
+   * Render inventory
+   */
+  render() {
+    if (!this.container) return;
+
+    // Get items
+    let items = this.inventorySystem.sortInventory(this.sortBy);
+
+    // Apply filter
+    if (this.filterCategory !== "all") {
+      items = items.filter((item) => item.category === this.filterCategory);
     }
 
-    /**
-     * Render inventory
-     */
-    render() {
-        if (!this.container) return;
+    // Update stats
+    this.updateStats();
 
-        // Get items
-        let items = this.inventorySystem.sortInventory(this.sortBy);
+    // Clear container
+    this.container.innerHTML = "";
 
-        // Apply filter
-        if (this.filterCategory !== 'all') {
-            items = items.filter(item => item.category === this.filterCategory);
-        }
-
-        // Update stats
-        this.updateStats();
-
-        // Clear container
-        this.container.innerHTML = '';
-
-        if (items.length === 0) {
-            this.container.innerHTML = `
+    if (items.length === 0) {
+      this.container.innerHTML = `
                 <div class="inventory-empty">
                     <div class="inventory-empty-icon">📦</div>
                     <div class="inventory-empty-text">
-                        ${this.filterCategory === 'all' ? 'Inventário vazio' : 'Nenhum item nesta categoria'}
+                        ${this.filterCategory === "all" ? "Inventário vazio" : "Nenhum item nesta categoria"}
                     </div>
                     <p style="margin-top: 0.5rem; font-size: 0.875rem;">
-                        ${this.filterCategory === 'all' ? 'Comece plantando e colhendo!' : 'Tente outra categoria.'}
+                        ${this.filterCategory === "all" ? "Comece plantando e colhendo!" : "Tente outra categoria."}
                     </p>
                 </div>
             `;
-            return;
-        }
+      return;
+    }
 
-        // Category colors
-        const categoryColors = {
-            seed: '#5caa1f',
-            crop: '#f39c12',
-            food: '#e74c3c',
-            tool: '#95a5a6',
-            resource: '#8b4513',
-            other: '#7f8c8d'
-        };
+    // Category colors
+    const categoryColors = {
+      seed: "#5caa1f",
+      crop: "#f39c12",
+      food: "#e74c3c",
+      tool: "#95a5a6",
+      resource: "#8b4513",
+      other: "#7f8c8d",
+    };
 
-        // Render items
-        items.forEach(item => {
-            const itemEl = document.createElement('div');
-            itemEl.className = 'inventory-item';
+    // Render items
+    items.forEach((item) => {
+      const itemEl = document.createElement("div");
+      itemEl.className = "inventory-item";
 
-            const categoryColor = categoryColors[item.category] || categoryColors.other;
-            const sellValue = (item.sellPrice || 0) * item.count;
+      const categoryColor =
+        categoryColors[item.category] || categoryColors.other;
+      const sellValue = (item.sellPrice || 0) * item.count;
 
-            itemEl.innerHTML = `
+      itemEl.innerHTML = `
                 <div class="inventory-item-count">${item.count}</div>
-                <div class="inventory-item-icon">${item.icon || '📦'}</div>
+                <div class="inventory-item-icon">${item.icon || "📦"}</div>
                 <div class="inventory-item-name">${item.name}</div>
-                ${sellValue > 0 ? `<div class="inventory-item-value">💰 ${sellValue}g</div>` : ''}
+                ${sellValue > 0 ? `<div class="inventory-item-value">💰 ${sellValue}g</div>` : ""}
                 <div class="inventory-item-category" style="background: ${categoryColor}; color: white;">
-                    ${item.category || 'other'}
+                    ${item.category || "other"}
                 </div>
             `;
 
-            itemEl.addEventListener('click', () => {
-                this.showItemDetails(item);
-            });
+      itemEl.addEventListener("click", () => {
+        this.showItemDetails(item);
+      });
 
-            this.container.appendChild(itemEl);
-        });
+      this.container.appendChild(itemEl);
+    });
+  }
+
+  /**
+   * Update inventory statistics
+   */
+  updateStats() {
+    const stats = this.inventorySystem.getStats();
+
+    const itemsCountEl = document.getElementById("inv-items-count");
+    const totalValueEl = document.getElementById("inv-total-value");
+
+    if (itemsCountEl) {
+      itemsCountEl.textContent = `${stats.totalItems} ${stats.totalItems === 1 ? "item" : "itens"}`;
     }
 
-    /**
-     * Update inventory statistics
-     */
-    updateStats() {
-        const stats = this.inventorySystem.getStats();
+    if (totalValueEl) {
+      totalValueEl.textContent = `💰 ${stats.totalValue}g`;
+    }
+  }
 
-        const itemsCountEl = document.getElementById('inv-items-count');
-        const totalValueEl = document.getElementById('inv-total-value');
-
-        if (itemsCountEl) {
-            itemsCountEl.textContent = `${stats.totalItems} ${stats.totalItems === 1 ? 'item' : 'itens'}`;
+  /**
+   * Show item details in modal
+   * @param {Object} item - Item data
+   */
+  showItemDetails(item) {
+    this.modal.showItemDetails(item, {
+      showActions: true,
+      onUse: (item) => {
+        const result = this.inventorySystem.useItem(item.id);
+        if (result.success) {
+          this.notifications.show(`Você usou ${item.name}!`, "success");
+          this.render();
+        } else {
+          this.notifications.show(
+            result.error || "Não foi possível usar o item",
+            "error",
+          );
         }
+      },
+      onSell: (item) => {
+        // Fecha o modal atual antes de abrir o de venda
+        this.modal.close();
+        // Aguarda o modal fechar antes de abrir o próximo
+        setTimeout(() => {
+          this.showSellDialog(item);
+        }, 350);
+      },
+    });
+  }
 
-        if (totalValueEl) {
-            totalValueEl.textContent = `💰 ${stats.totalValue}g`;
-        }
+  /**
+   * Show sell dialog
+   * @param {Object} item - Item to sell
+   */
+  showSellDialog(item) {
+    const maxAmount = item.count;
+    const unitPrice = item.sellPrice || 0;
+
+    if (unitPrice === 0) {
+      this.notifications.show("Este item não pode ser vendido", "warning");
+      return;
     }
 
-    /**
-     * Show item details in modal
-     * @param {Object} item - Item data
-     */
-    showItemDetails(item) {
-        this.modal.showItemDetails(item, {
-            showActions: true,
-            onUse: (item) => {
-                const result = this.inventorySystem.useItem(item.id);
-                if (result.success) {
-                    this.notifications.show(`Você usou ${item.name}!`, 'success');
-                    this.render();
-                } else {
-                    this.notifications.show(result.error || 'Não foi possível usar o item', 'error');
-                }
-            },
-            onSell: (item) => {
-                this.showSellDialog(item);
-            }
-        });
-    }
+    let amount = 1;
+    const updatePreview = () => {
+      const total = amount * unitPrice;
+      const previewEl = document.getElementById("sell-preview");
+      if (previewEl) {
+        previewEl.textContent = `Total: ${total} ouro`;
+      }
+    };
 
-    /**
-     * Show sell dialog
-     * @param {Object} item - Item to sell
-     */
-    showSellDialog(item) {
-        const maxAmount = item.count;
-        const unitPrice = item.sellPrice || 0;
-
-        if (unitPrice === 0) {
-            this.notifications.show('Este item não pode ser vendido', 'warning');
-            return;
-        }
-
-        let amount = 1;
-        const updatePreview = () => {
-            const total = amount * unitPrice;
-            const previewEl = document.getElementById('sell-preview');
-            if (previewEl) {
-                previewEl.textContent = `Total: ${total} ouro`;
-            }
-        };
-
-        const content = `
+    const content = `
             <div style="padding: 1rem 0;">
                 <div style="text-align: center; margin-bottom: 1.5rem;">
-                    <div style="font-size: 3rem; margin-bottom: 0.5rem;">${item.icon || '📦'}</div>
+                    <div style="font-size: 3rem; margin-bottom: 0.5rem;">${item.icon || "📦"}</div>
                     <h3 style="margin: 0;">${item.name}</h3>
                     <p style="color: var(--text-secondary); margin: 0.5rem 0;">
                         Valor unitário: ${unitPrice} ouro
@@ -473,106 +484,111 @@ export default class InventoryUI {
             </div>
         `;
 
-        this.modal.show({
-            title: '💰 Vender Item',
-            content,
-            buttons: [
-                {
-                    text: 'Cancelar',
-                    class: 'btn-secondary',
-                    onClick: () => true
-                },
-                {
-                    text: 'Vender',
-                    class: 'btn-success',
-                    onClick: () => {
-                        const input = document.getElementById('sell-amount');
-                        amount = parseInt(input?.value || '1');
+    this.modal
+      .show({
+        title: "💰 Vender Item",
+        content,
+        buttons: [
+          {
+            text: "Cancelar",
+            class: "btn-secondary",
+            onClick: () => true,
+          },
+          {
+            text: "Vender",
+            class: "btn-success",
+            onClick: () => {
+              const input = document.getElementById("sell-amount");
+              amount = parseInt(input?.value || "1");
 
-                        if (amount < 1 || amount > maxAmount) {
-                            this.notifications.show('Quantidade inválida', 'error');
-                            return false;
-                        }
+              if (amount < 1 || amount > maxAmount) {
+                this.notifications.show("Quantidade inválida", "error");
+                return false;
+              }
 
-                        const result = this.inventorySystem.sellItem(item.id, amount);
-                        if (result.success) {
-                            this.notifications.show(
-                                `Vendeu ${amount}x ${item.name} por ${result.gold} ouro!`,
-                                'success'
-                            );
-                            this.render();
-                            return true;
-                        } else {
-                            this.notifications.show(result.error || 'Erro ao vender', 'error');
-                            return false;
-                        }
-                    }
-                }
-            ],
-            closable: true
-        }).then(() => {
-            // Setup amount input listener after modal is shown
-            setTimeout(() => {
-                const input = document.getElementById('sell-amount');
-                if (input) {
-                    input.addEventListener('input', (e) => {
-                        amount = parseInt(e.target.value) || 1;
-                        amount = Math.max(1, Math.min(maxAmount, amount));
-                        e.target.value = amount;
-                        updatePreview();
-                    });
-                }
-            }, 100);
-        });
-    }
-
-    /**
-     * Sell all items
-     */
-    sellAllItems() {
-        const sellable = this.inventorySystem.getSellables();
-
-        if (sellable.length === 0) {
-            this.notifications.show('Nenhum item pode ser vendido', 'warning');
-            return;
-        }
-
-        const totalValue = sellable.reduce((sum, item) => {
-            return sum + (item.sellPrice * item.count);
-        }, 0);
-
-        this.modal.showConfirm({
-            title: '💰 Vender Tudo',
-            message: `Vender todos os itens vendáveis por ${totalValue} ouro?<br><br><small>${sellable.length} ${sellable.length === 1 ? 'tipo de item' : 'tipos de itens'}</small>`,
-            confirmText: 'Vender Tudo',
-            cancelText: 'Cancelar',
-            confirmClass: 'btn-success',
-            onConfirm: () => {
-                let totalGold = 0;
-                let itemsSold = 0;
-
-                sellable.forEach(item => {
-                    const result = this.inventorySystem.sellItem(item.id, item.count);
-                    if (result.success) {
-                        totalGold += result.gold;
-                        itemsSold += result.amount;
-                    }
-                });
-
+              const result = this.inventorySystem.sellItem(item.id, amount);
+              if (result.success) {
                 this.notifications.show(
-                    `Vendeu ${itemsSold} itens por ${totalGold} ouro!`,
-                    'success'
+                  `Vendeu ${amount}x ${item.name} por ${result.gold} ouro!`,
+                  "success",
                 );
-
                 this.render();
-            }
-        });
+                return true;
+              } else {
+                this.notifications.show(
+                  result.error || "Erro ao vender",
+                  "error",
+                );
+                return false;
+              }
+            },
+          },
+        ],
+        closable: true,
+      })
+      .then(() => {
+        // Setup amount input listener after modal is shown
+        setTimeout(() => {
+          const input = document.getElementById("sell-amount");
+          if (input) {
+            input.addEventListener("input", (e) => {
+              amount = parseInt(e.target.value) || 1;
+              amount = Math.max(1, Math.min(maxAmount, amount));
+              e.target.value = amount;
+              updatePreview();
+            });
+          }
+        }, 100);
+      });
+  }
+
+  /**
+   * Sell all items
+   */
+  sellAllItems() {
+    const sellable = this.inventorySystem.getSellables();
+
+    if (sellable.length === 0) {
+      this.notifications.show("Nenhum item pode ser vendido", "warning");
+      return;
     }
 
-    /**
-     * Clear and re-render
-     */
-    refresh() {
+    const totalValue = sellable.reduce((sum, item) => {
+      return sum + item.sellPrice * item.count;
+    }, 0);
+
+    this.modal.showConfirm({
+      title: "💰 Vender Tudo",
+      message: `Vender todos os itens vendáveis por ${totalValue} ouro?<br><br><small>${sellable.length} ${sellable.length === 1 ? "tipo de item" : "tipos de itens"}</small>`,
+      confirmText: "Vender Tudo",
+      cancelText: "Cancelar",
+      confirmClass: "btn-success",
+      onConfirm: () => {
+        let totalGold = 0;
+        let itemsSold = 0;
+
+        sellable.forEach((item) => {
+          const result = this.inventorySystem.sellItem(item.id, item.count);
+          if (result.success) {
+            totalGold += result.gold;
+            itemsSold += result.amount;
+          }
+        });
+
+        this.notifications.show(
+          `Vendeu ${itemsSold} itens por ${totalGold} ouro!`,
+          "success",
+        );
+
         this.render();
-    }
+      },
+    });
+  }
+
+  /**
+   * Clear and re-render
+   */
+  refresh() {
+    this.render();
+  }
 }
