@@ -117,7 +117,12 @@ export default class GameEngine {
       );
       await this.marketUI.init();
 
-      this.npcsUI = new NPCSUI(this.player, this.modal, notifications);
+      this.npcsUI = new NPCSUI(
+        this.player,
+        this.modal,
+        notifications,
+        this.inventorySystem,
+      );
       await this.npcsUI.init();
 
       this.cityUI = new CityUI(

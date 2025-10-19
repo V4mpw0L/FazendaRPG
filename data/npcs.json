@@ -13,7 +13,12 @@
       "location": "farm",
       "friendship": 0,
       "maxFriendship": 100,
-      "quests": ["welcome_farmer", "first_harvest", "skilled_farmer", "daily_harvest"],
+      "quests": [
+        "welcome_farmer",
+        "first_harvest",
+        "skilled_farmer",
+        "daily_harvest"
+      ],
       "shop": {
         "items": [
           { "id": "wheat_seed", "stock": 999, "priceMultiplier": 1.0 },
@@ -113,7 +118,8 @@
         "items": [
           { "id": "cooked_shrimp", "stock": 20, "priceMultiplier": 1.2 },
           { "id": "cooked_fish", "stock": 15, "priceMultiplier": 1.2 },
-          { "id": "bread", "stock": 30, "priceMultiplier": 1.1 }
+          { "id": "bread", "stock": 30, "priceMultiplier": 1.1 },
+          { "id": "energy_potion", "stock": 50, "priceMultiplier": 1.0 }
         ]
       },
       "dialogue": {

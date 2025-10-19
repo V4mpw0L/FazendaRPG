@@ -575,12 +575,14 @@ export default class InventoryUI {
     const itemDesc = item.descriptionPtBR || item.description || "";
     const sellPrice = item.sellPrice || 0;
     const maxSellable = item.count || 0;
+    const isConsumable = item.consumable || false;
 
     const content = `
       <div style="text-align: center; margin-bottom: 1rem;">
         <div style="font-size: 4rem; margin-bottom: 0.5rem;">${item.icon || "📦"}</div>
         <h3 style="margin: 0.5rem 0; color: var(--text-primary);">${itemName}</h3>
         <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0.5rem 0;">${itemDesc}</p>
+        ${isConsumable && item.energyRestore ? `<p style="color: #5caa1f; font-weight: 600; font-size: 0.875rem;">⚡ Restaura ${item.energyRestore} de energia</p>` : ""}
         <p style="color: var(--brand-primary); font-weight: 700; font-size: 1.125rem;">${sellPrice}g ${i18n.t("market.perUnit")}</p>
         <p style="color: var(--text-secondary); font-size: 0.875rem;">${i18n.t("market.youHave")}: ${maxSellable}</p>
       </div>
@@ -614,32 +616,63 @@ export default class InventoryUI {
       </div>
     `;
 
-    this.modal.show({
-      title: `💰 ${i18n.t("inventory.sell")}`,
-      content,
-      buttons: [
-        {
-          text: i18n.t("common.cancel"),
-          class: "btn-secondary",
-          onClick: () => true,
-        },
-        {
-          text: `💰 ${i18n.t("market.sell")}`,
-          class: "btn-success",
-          onClick: () => {
-            const amount = parseInt(
-              document.getElementById("sell-amount")?.value || "1",
-            );
-            if (amount > 0 && amount <= maxSellable) {
-              this.sellItem(item, amount);
-              return true;
-            } else {
-              this.notifications.error(i18n.t("market.invalidAmount"));
-              return false;
+    const buttons = [
+      {
+        text: i18n.t("common.cancel"),
+        class: "btn-secondary",
+        onClick: () => true,
+      },
+    ];
+
+    // Add use button if consumable
+    if (isConsumable) {
+      buttons.push({
+        text: `🍽️ Usar`,
+        class: "btn-primary",
+        onClick: () => {
+          const result = this.inventorySystem.useItem(item.id);
+          if (result.success) {
+            this.notifications.success(`Você usou ${itemName}!`);
+            if (result.effects.energy) {
+              this.notifications.show(
+                `+${result.effects.energy} energia`,
+                "success",
+              );
             }
-          },
+            this.render();
+            return true;
+          } else {
+            this.notifications.error(
+              result.error || "Não foi possível usar o item",
+            );
+            return false;
+          }
         },
-      ],
+      });
+    }
+
+    // Add sell button
+    buttons.push({
+      text: `💰 ${i18n.t("market.sell")}`,
+      class: "btn-success",
+      onClick: () => {
+        const amount = parseInt(
+          document.getElementById("sell-amount")?.value || "1",
+        );
+        if (amount > 0 && amount <= maxSellable) {
+          this.sellItem(item, amount);
+          return true;
+        } else {
+          this.notifications.error(i18n.t("market.invalidAmount"));
+          return false;
+        }
+      },
+    });
+
+    this.modal.show({
+      title: `📦 ${itemName}`,
+      content,
+      buttons,
       closable: true,
     });
 

@@ -241,6 +241,15 @@ export default class Player {
   }
 
   /**
+   * Get XP required for next level
+   * @returns {number} XP needed
+   */
+  getXPForNextLevel() {
+    const nextLevel = this.data.level + 1;
+    return calculateXPForLevel(nextLevel);
+  }
+
+  /**
    * Add XP to a skill
    * @param {string} skill - Skill name
    * @param {number} amount - XP amount

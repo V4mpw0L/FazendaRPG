@@ -516,6 +516,21 @@
       "sellPrice": 150,
       "stackable": false,
       "maxStack": 1
+    },
+    "energy_potion": {
+      "id": "energy_potion",
+      "name": "Energy Potion",
+      "namePtBR": "Poção de Energia",
+      "icon": "🧪",
+      "category": "food",
+      "description": "A refreshing potion. Restores 10 energy.",
+      "descriptionPtBR": "Uma poção refrescante. Restaura 10 de energia.",
+      "buyPrice": 25,
+      "sellPrice": 15,
+      "stackable": true,
+      "maxStack": 999,
+      "consumable": true,
+      "energyRestore": 10
     }
   }
 }
