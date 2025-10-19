@@ -158,69 +158,6 @@
 }
 
 /* ===================================
-   Notification Toast
-   =================================== */
-
-.notification-toast {
-    position: fixed;
-    top: calc(var(--topbar-height) + var(--spacing-md));
-    left: 50%;
-    transform: translateX(-50%) translateY(-100px);
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-    border: 3px solid var(--brand-primary);
-    border-radius: var(--border-radius);
-    padding: var(--spacing-md) var(--spacing-lg);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-    z-index: var(--z-toast);
-    max-width: 90%;
-    min-width: 280px;
-    opacity: 0;
-    pointer-events: none;
-    transition: all var(--transition-normal);
-    font-weight: 700;
-    text-align: center;
-    backdrop-filter: blur(8px);
-}
-
-.notification-toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-    pointer-events: auto;
-}
-
-.notification-toast.success {
-    border-color: var(--success);
-    background: var(--bg-secondary);
-    box-shadow: 0 8px 24px rgba(39, 174, 96, 0.5);
-}
-
-.notification-toast.error {
-    border-color: var(--danger);
-    background: var(--bg-secondary);
-    box-shadow: 0 8px 24px rgba(231, 76, 60, 0.5);
-}
-
-.notification-toast.warning {
-    border-color: var(--warning);
-    background: var(--bg-secondary);
-    box-shadow: 0 8px 24px rgba(243, 156, 18, 0.5);
-}
-
-.notification-toast.info {
-    border-color: var(--info);
-    background: var(--bg-secondary);
-    box-shadow: 0 8px 24px rgba(52, 152, 219, 0.5);
-}
-
-.notification-toast.levelup {
-    border-color: #9b59b6;
-    background: var(--bg-secondary);
-    box-shadow: 0 8px 24px rgba(155, 89, 182, 0.6);
-    font-size: 1.125rem;
-}
-
-/* ===================================
    Modal Container
    =================================== */
 
@@ -537,10 +474,6 @@
     .footer-version {
         font-size: 0.8125rem;
     }
-
-    .notification-toast {
-        min-width: 350px;
-    }
 }
 
 /* ===================================
@@ -601,11 +534,10 @@
     .footer,
     .side-menu,
     .menu-overlay,
-    .notification-toast,
     .loading-overlay,
     .btn,
     .menu-toggle {
-        display: none !important;
+        display: none;
     }
 
     body {
@@ -636,10 +568,6 @@ button:focus-visible {
 /* ===================================
    Dark Mode Specific Mobile Adjustments
    =================================== */
-
-.dark-theme .notification-toast {
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
-}
 
 .dark-theme .modal {
     box-shadow: 0 8px 48px rgba(0, 0, 0, 0.9);

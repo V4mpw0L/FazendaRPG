@@ -1,227 +1,655 @@
 /**
- * FazendaRPG - Notification System
- * Handles toast notifications with different types
- * @version 0.0.1
+ * FazendaRPG - Advanced Notification System
+ * Modern toast notifications with icons, animations and rich styling
+ * @version 0.0.2
  */
 
 class NotificationManager {
-    constructor() {
-        this.container = null;
-        this.queue = [];
-        this.isShowing = false;
-        this.defaultDuration = 3000;
-        this.init();
+  constructor() {
+    this.container = null;
+    this.queue = [];
+    this.activeNotifications = [];
+    this.maxVisible = 3;
+    this.defaultDuration = 3500;
+    this.init();
+  }
+
+  /**
+   * Initialize notification system
+   */
+  init() {
+    // Create notifications container if it doesn't exist
+    let container = document.getElementById("notifications-container");
+
+    if (!container) {
+      container = document.createElement("div");
+      container.id = "notifications-container";
+      container.className = "notifications-container";
+      document.body.appendChild(container);
     }
 
-    /**
-     * Initialize notification container
-     */
-    init() {
-        this.container = document.getElementById('notification-toast');
-        if (!this.container) {
-            console.warn('⚠️ Notification container not found');
-        }
-    }
+    this.container = container;
+    this.injectStyles();
+    console.log("✅ Notification system initialized");
+  }
 
-    /**
-     * Show a notification
-     * @param {string} message - Message to display
-     * @param {string} type - Notification type (success, error, warning, info)
-     * @param {number} duration - Duration in milliseconds
-     */
-    show(message, type = 'info', duration = this.defaultDuration) {
-        if (!this.container) {
-            console.error('❌ Cannot show notification: container not found');
-            return;
-        }
+  /**
+   * Inject notification styles
+   */
+  injectStyles() {
+    if (document.getElementById("notification-styles")) return;
 
-        // If a notification is showing, queue this one
-        if (this.isShowing) {
-            this.queue.push({ message, type, duration });
-            return;
-        }
-
-        this.isShowing = true;
-
-        // Set message and type
-        this.container.textContent = message;
-        this.container.className = 'notification-toast show ' + type;
-
-        // Play notification sound (if enabled)
-        this.playSound(type);
-
-        // Auto-hide after duration
-        setTimeout(() => {
-            this.hide();
-        }, duration);
-    }
-
-    /**
-     * Hide the current notification
-     */
-    hide() {
-        if (!this.container) return;
-
-        this.container.classList.remove('show');
-        this.isShowing = false;
-
-        // Show next notification in queue
-        setTimeout(() => {
-            if (this.queue.length > 0) {
-                const next = this.queue.shift();
-                this.show(next.message, next.type, next.duration);
+    const style = document.createElement("style");
+    style.id = "notification-styles";
+    style.textContent = `
+            /* Notifications Container */
+            .notifications-container {
+                position: fixed;
+                top: calc(var(--topbar-height, 60px) + 16px);
+                right: 16px;
+                z-index: 10000;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                pointer-events: none;
+                max-width: 400px;
             }
-        }, 300); // Wait for hide animation
-    }
 
-    /**
-     * Show success notification
-     * @param {string} message
-     * @param {number} duration
-     */
-    success(message, duration) {
-        this.show(message, 'success', duration);
-    }
-
-    /**
-     * Show error notification
-     * @param {string} message
-     * @param {number} duration
-     */
-    error(message, duration) {
-        this.show(message, 'error', duration);
-    }
-
-    /**
-     * Show warning notification
-     * @param {string} message
-     * @param {number} duration
-     */
-    warning(message, duration) {
-        this.show(message, 'warning', duration);
-    }
-
-    /**
-     * Show info notification
-     * @param {string} message
-     * @param {number} duration
-     */
-    info(message, duration) {
-        this.show(message, 'info', duration);
-    }
-
-    /**
-     * Play notification sound based on type
-     * @param {string} type
-     */
-    playSound(type) {
-        // Check if sound is enabled in settings
-        const soundEnabled = localStorage.getItem('fazenda_sound_enabled') !== 'false';
-        if (!soundEnabled) return;
-
-        // Future: Add sound effects
-        // For now, use browser beep for important notifications
-        if (type === 'error') {
-            // Only beep on errors to avoid annoyance
-            try {
-                const context = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = context.createOscillator();
-                const gainNode = context.createGain();
-
-                oscillator.connect(gainNode);
-                gainNode.connect(context.destination);
-
-                oscillator.frequency.value = 400;
-                oscillator.type = 'sine';
-
-                gainNode.gain.setValueAtTime(0.1, context.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.1);
-
-                oscillator.start(context.currentTime);
-                oscillator.stop(context.currentTime + 0.1);
-            } catch (e) {
-                // Audio API not supported or blocked
+            /* Individual Notification */
+            .notification {
+                pointer-events: auto;
+                background: var(--bg-secondary);
+                border-radius: 16px;
+                padding: 16px 20px;
+                box-shadow:
+                    0 10px 40px rgba(0, 0, 0, 0.2),
+                    0 0 0 1px rgba(255, 255, 255, 0.1);
+                display: flex;
+                align-items: flex-start;
+                gap: 14px;
+                min-width: 300px;
+                max-width: 400px;
+                transform: translateX(450px);
+                opacity: 0;
+                transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                position: relative;
+                overflow: hidden;
+                border: 2px solid transparent;
+                backdrop-filter: blur(10px);
             }
-        }
+
+            .notification.show {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            .notification.hide {
+                transform: translateX(450px);
+                opacity: 0;
+            }
+
+            /* Icon */
+            .notification-icon {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+                flex-shrink: 0;
+                position: relative;
+                z-index: 1;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            }
+
+            /* Content */
+            .notification-content {
+                flex: 1;
+                min-width: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .notification-title {
+                font-weight: 700;
+                font-size: 14px;
+                color: var(--text-primary);
+                line-height: 1.4;
+            }
+
+            .notification-message {
+                font-size: 13px;
+                color: var(--text-secondary);
+                line-height: 1.5;
+                word-wrap: break-word;
+            }
+
+            /* Numbers/Values Highlight */
+            .notification-value {
+                font-weight: 800;
+                font-size: 115%;
+                padding: 0 4px;
+                border-radius: 4px;
+                display: inline-block;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            }
+
+            /* Close Button */
+            .notification-close {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                color: var(--text-secondary);
+                font-size: 18px;
+                line-height: 1;
+                flex-shrink: 0;
+                transition: all 0.2s ease;
+                opacity: 0.6;
+                background: rgba(0, 0, 0, 0.05);
+            }
+
+            .notification-close:hover {
+                opacity: 1;
+                background: rgba(0, 0, 0, 0.1);
+                transform: scale(1.1);
+            }
+
+            .notification-close:active {
+                transform: scale(0.95);
+            }
+
+            /* Progress Bar */
+            .notification-progress {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                height: 3px;
+                background: currentColor;
+                opacity: 0.3;
+                transition: width linear;
+                border-radius: 0 0 0 16px;
+            }
+
+            /* Type Styles */
+
+            /* Success */
+            .notification.success {
+                border-color: rgba(39, 174, 96, 0.3);
+                background: linear-gradient(135deg,
+                    rgba(39, 174, 96, 0.05) 0%,
+                    var(--bg-secondary) 100%);
+            }
+
+            .notification.success .notification-icon {
+                background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+                color: white;
+            }
+
+            .notification.success .notification-value {
+                color: #27ae60;
+                background: rgba(39, 174, 96, 0.1);
+            }
+
+            .notification.success .notification-progress {
+                color: #27ae60;
+            }
+
+            /* Error */
+            .notification.error {
+                border-color: rgba(231, 76, 60, 0.3);
+                background: linear-gradient(135deg,
+                    rgba(231, 76, 60, 0.05) 0%,
+                    var(--bg-secondary) 100%);
+            }
+
+            .notification.error .notification-icon {
+                background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+                color: white;
+                animation: shake 0.5s ease;
+            }
+
+            .notification.error .notification-value {
+                color: #e74c3c;
+                background: rgba(231, 76, 60, 0.1);
+            }
+
+            .notification.error .notification-progress {
+                color: #e74c3c;
+            }
+
+            /* Warning */
+            .notification.warning {
+                border-color: rgba(243, 156, 18, 0.3);
+                background: linear-gradient(135deg,
+                    rgba(243, 156, 18, 0.05) 0%,
+                    var(--bg-secondary) 100%);
+            }
+
+            .notification.warning .notification-icon {
+                background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+                color: white;
+                animation: pulse 1s ease infinite;
+            }
+
+            .notification.warning .notification-value {
+                color: #f39c12;
+                background: rgba(243, 156, 18, 0.1);
+            }
+
+            .notification.warning .notification-progress {
+                color: #f39c12;
+            }
+
+            /* Info */
+            .notification.info {
+                border-color: rgba(52, 152, 219, 0.3);
+                background: linear-gradient(135deg,
+                    rgba(52, 152, 219, 0.05) 0%,
+                    var(--bg-secondary) 100%);
+            }
+
+            .notification.info .notification-icon {
+                background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+                color: white;
+            }
+
+            .notification.info .notification-value {
+                color: #3498db;
+                background: rgba(52, 152, 219, 0.1);
+            }
+
+            .notification.info .notification-progress {
+                color: #3498db;
+            }
+
+            /* Level Up */
+            .notification.levelup {
+                border-color: rgba(155, 89, 182, 0.3);
+                background: linear-gradient(135deg,
+                    rgba(155, 89, 182, 0.08) 0%,
+                    var(--bg-secondary) 100%);
+            }
+
+            .notification.levelup .notification-icon {
+                background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+                color: white;
+                animation: bounce 0.6s ease;
+            }
+
+            .notification.levelup .notification-value {
+                color: #9b59b6;
+                background: rgba(155, 89, 182, 0.15);
+                font-size: 130%;
+            }
+
+            .notification.levelup .notification-progress {
+                color: #9b59b6;
+            }
+
+            /* Gold/Money */
+            .notification.gold {
+                border-color: rgba(241, 196, 15, 0.3);
+                background: linear-gradient(135deg,
+                    rgba(241, 196, 15, 0.05) 0%,
+                    var(--bg-secondary) 100%);
+            }
+
+            .notification.gold .notification-icon {
+                background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+                color: white;
+            }
+
+            .notification.gold .notification-value {
+                color: #f39c12;
+                background: rgba(241, 196, 15, 0.15);
+            }
+
+            .notification.gold .notification-progress {
+                color: #f1c40f;
+            }
+
+            /* Animations */
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                75% { transform: translateX(5px); }
+            }
+
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.1); }
+            }
+
+            @keyframes bounce {
+                0%, 100% { transform: translateY(0); }
+                25% { transform: translateY(-10px); }
+                50% { transform: translateY(-5px); }
+                75% { transform: translateY(-7px); }
+            }
+
+            /* Dark Theme */
+            .dark-theme .notification {
+                box-shadow:
+                    0 10px 50px rgba(0, 0, 0, 0.6),
+                    0 0 0 1px rgba(255, 255, 255, 0.05);
+            }
+
+            .dark-theme .notification-close {
+                background: rgba(255, 255, 255, 0.05);
+            }
+
+            .dark-theme .notification-close:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            /* Mobile Responsive */
+            @media (max-width: 480px) {
+                .notifications-container {
+                    right: 8px;
+                    left: 8px;
+                    max-width: calc(100% - 16px);
+                }
+
+                .notification {
+                    min-width: 0;
+                    max-width: 100%;
+                    padding: 14px 16px;
+                }
+
+                .notification-icon {
+                    width: 28px;
+                    height: 28px;
+                    font-size: 16px;
+                }
+
+                .notification-title {
+                    font-size: 13px;
+                }
+
+                .notification-message {
+                    font-size: 12px;
+                }
+            }
+        `;
+
+    document.head.appendChild(style);
+  }
+
+  /**
+   * Show notification
+   */
+  show(message, type = "info", options = {}) {
+    const {
+      title = null,
+      duration = this.defaultDuration,
+      icon = null,
+      closable = true,
+    } = options;
+
+    // Create notification element
+    const notification = document.createElement("div");
+    notification.className = `notification ${type}`;
+
+    // Icon
+    const iconEl = document.createElement("div");
+    iconEl.className = "notification-icon";
+    iconEl.innerHTML = icon || this.getIcon(type);
+
+    // Content
+    const content = document.createElement("div");
+    content.className = "notification-content";
+
+    if (title) {
+      const titleEl = document.createElement("div");
+      titleEl.className = "notification-title";
+      titleEl.innerHTML = this.highlightNumbers(title);
+      content.appendChild(titleEl);
     }
 
-    /**
-     * Clear all notifications
-     */
-    clear() {
-        this.queue = [];
-        this.hide();
+    const messageEl = document.createElement("div");
+    messageEl.className = title ? "notification-message" : "notification-title";
+    messageEl.innerHTML = this.highlightNumbers(message);
+    content.appendChild(messageEl);
+
+    // Close button
+    let closeBtn = null;
+    if (closable) {
+      closeBtn = document.createElement("div");
+      closeBtn.className = "notification-close";
+      closeBtn.innerHTML = "×";
+      closeBtn.onclick = () => this.hide(notification);
     }
 
-    /**
-     * Show level up notification with special styling
-     * @param {number} level
-     * @param {string} skill - Optional skill name
-     */
-    levelUp(level, skill = null) {
-        let message = skill
-            ? `🎉 ${skill} reached level ${level}!`
-            : `🎉 Congratulations! You reached level ${level}!`;
+    // Progress bar
+    const progress = document.createElement("div");
+    progress.className = "notification-progress";
+    progress.style.width = "100%";
 
-        this.show(message, 'success', 4000);
+    // Assemble
+    notification.appendChild(iconEl);
+    notification.appendChild(content);
+    if (closeBtn) notification.appendChild(closeBtn);
+    notification.appendChild(progress);
+
+    // Add to container
+    this.container.appendChild(notification);
+
+    // Trigger show animation
+    requestAnimationFrame(() => {
+      notification.classList.add("show");
+    });
+
+    // Progress animation
+    if (duration > 0) {
+      requestAnimationFrame(() => {
+        progress.style.transition = `width ${duration}ms linear`;
+        progress.style.width = "0%";
+      });
     }
 
-    /**
-     * Show quest completed notification
-     * @param {string} questName
-     * @param {Object} rewards
-     */
-    questCompleted(questName, rewards = {}) {
-        let message = `✅ Quest "${questName}" completed!`;
-
-        if (rewards.gold) {
-            message += ` +${rewards.gold} 💰`;
-        }
-        if (rewards.xp) {
-            message += ` +${rewards.xp} XP`;
-        }
-
-        this.show(message, 'success', 4000);
+    // Auto hide
+    if (duration > 0) {
+      setTimeout(() => {
+        this.hide(notification);
+      }, duration);
     }
 
-    /**
-     * Show achievement unlocked notification
-     * @param {string} achievementName
-     */
-    achievement(achievementName) {
-        this.show(`🏆 Achievement unlocked: ${achievementName}!`, 'success', 5000);
+    // Track active notifications
+    this.activeNotifications.push(notification);
+
+    // Limit max visible
+    if (this.activeNotifications.length > this.maxVisible) {
+      const oldest = this.activeNotifications.shift();
+      this.hide(oldest);
     }
 
-    /**
-     * Show item received notification
-     * @param {string} itemName
-     * @param {number} amount
-     */
-    itemReceived(itemName, amount = 1) {
-        const message = amount > 1
-            ? `Received: ${itemName} x${amount}`
-            : `Received: ${itemName}`;
+    return notification;
+  }
 
-        this.show(message, 'info', 2500);
-    }
+  /**
+   * Hide notification
+   */
+  hide(notification) {
+    if (!notification || !notification.parentNode) return;
 
-    /**
-     * Show energy low warning
-     * @param {number} currentEnergy
-     */
-    energyLow(currentEnergy) {
-        this.show(`⚡ Low energy! (${currentEnergy}/100)`, 'warning', 3000);
-    }
+    notification.classList.remove("show");
+    notification.classList.add("hide");
 
-    /**
-     * Show saved notification
-     */
-    saved() {
-        this.show('💾 Progress saved!', 'success', 2000);
-    }
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.parentNode.removeChild(notification);
+      }
+
+      const index = this.activeNotifications.indexOf(notification);
+      if (index > -1) {
+        this.activeNotifications.splice(index, 1);
+      }
+    }, 400);
+  }
+
+  /**
+   * Get icon for notification type
+   */
+  getIcon(type) {
+    const icons = {
+      success: "✓",
+      error: "✕",
+      warning: "⚠",
+      info: "ℹ",
+      levelup: "⭐",
+      gold: "💰",
+      xp: "⚡",
+      item: "📦",
+      quest: "📜",
+      achievement: "🏆",
+    };
+
+    return icons[type] || icons.info;
+  }
+
+  /**
+   * Highlight numbers in text
+   */
+  highlightNumbers(text) {
+    if (!text) return "";
+
+    // Highlight numbers with + or - prefix
+    text = text.replace(
+      /([+-]?\d+(?:,\d{3})*(?:\.\d+)?)/g,
+      '<span class="notification-value">$1</span>',
+    );
+
+    return text;
+  }
+
+  /**
+   * Success notification
+   */
+  success(message, options = {}) {
+    return this.show(message, "success", options);
+  }
+
+  /**
+   * Error notification
+   */
+  error(message, options = {}) {
+    return this.show(message, "error", { duration: 4000, ...options });
+  }
+
+  /**
+   * Warning notification
+   */
+  warning(message, options = {}) {
+    return this.show(message, "warning", options);
+  }
+
+  /**
+   * Info notification
+   */
+  info(message, options = {}) {
+    return this.show(message, "info", options);
+  }
+
+  /**
+   * Level up notification
+   */
+  levelUp(skill, level) {
+    const title = skill ? `${skill} Level Up!` : "Level Up!";
+    const message = `You reached level ${level}!`;
+
+    return this.show(message, "levelup", {
+      title,
+      icon: "🎉",
+      duration: 5000,
+    });
+  }
+
+  /**
+   * Gold received/spent
+   */
+  gold(amount, gained = true) {
+    const prefix = gained ? "+" : "-";
+    const message = `${prefix}${Math.abs(amount)} Gold`;
+
+    return this.show(message, "gold", {
+      icon: "💰",
+      duration: 2500,
+    });
+  }
+
+  /**
+   * XP gained
+   */
+  xp(amount, skill = null) {
+    const message = skill ? `+${amount} ${skill} XP` : `+${amount} XP`;
+
+    return this.show(message, "success", {
+      icon: "⚡",
+      duration: 2500,
+    });
+  }
+
+  /**
+   * Item received
+   */
+  item(itemName, amount = 1) {
+    const message =
+      amount > 1 ? `Received ${itemName} x${amount}` : `Received ${itemName}`;
+
+    return this.show(message, "info", {
+      icon: "📦",
+      duration: 3000,
+    });
+  }
+
+  /**
+   * Quest completed
+   */
+  quest(questName, rewards = {}) {
+    let message = `Quest completed!`;
+
+    if (rewards.gold) message += ` +${rewards.gold}💰`;
+    if (rewards.xp) message += ` +${rewards.xp}⚡`;
+
+    return this.show(message, "success", {
+      title: questName,
+      icon: "📜",
+      duration: 5000,
+    });
+  }
+
+  /**
+   * Achievement unlocked
+   */
+  achievement(name, description = "") {
+    return this.show(description || "Achievement unlocked!", "success", {
+      title: `🏆 ${name}`,
+      duration: 6000,
+    });
+  }
+
+  /**
+   * Clear all notifications
+   */
+  clearAll() {
+    this.activeNotifications.forEach((notif) => this.hide(notif));
+    this.activeNotifications = [];
+    this.queue = [];
+  }
 }
 
 // Create singleton instance
 const notifications = new NotificationManager();
+
+// Make it globally available
+if (typeof window !== "undefined") {
+  window.notifications = notifications;
+}
 
 export default notifications;
