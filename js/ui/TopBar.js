@@ -4,8 +4,6 @@
  * @version 0.0.5
  */
 
-import { calculateXPForLevel } from "../utils/helpers.js";
-
 export default class TopBar {
   constructor(player, skillSystem) {
     this.player = player;
@@ -32,9 +30,6 @@ export default class TopBar {
     this.elements = {
       playerName: document.getElementById("topbar-player-name"),
       level: document.getElementById("topbar-level"),
-      xpFill: document.getElementById("topbar-xp-fill"),
-      xpCurrent: document.getElementById("topbar-xp-current"),
-      xpNeeded: document.getElementById("topbar-xp-needed"),
       gold: document.getElementById("topbar-gold"),
       energy: document.getElementById("topbar-energy"),
       energyFill: document.getElementById("topbar-energy-fill"),
@@ -64,7 +59,6 @@ export default class TopBar {
   update() {
     this.updatePlayerName();
     this.updateLevel();
-    this.updateXPBar();
     this.updateGold();
     this.updateEnergy();
   }
@@ -83,43 +77,17 @@ export default class TopBar {
   }
 
   /**
-   * Update level display
+   * Update level display (from farming skill)
    */
   updateLevel() {
     if (!this.elements.level) return;
 
-    const level = this.player.data.level;
+    // Get farming skill level
+    const farmingLevel = this.skillSystem?.getLevel("farming") || 1;
 
-    if (this.elements.level.textContent !== level.toString()) {
-      this.elements.level.textContent = level;
+    if (this.elements.level.textContent !== farmingLevel.toString()) {
+      this.elements.level.textContent = farmingLevel;
     }
-  }
-
-  /**
-   * Update XP bar
-   */
-  updateXPBar() {
-    if (
-      !this.elements.xpFill ||
-      !this.elements.xpCurrent ||
-      !this.elements.xpNeeded
-    )
-      return;
-
-    const currentXP = this.player.data.xp;
-    const level = this.player.data.level;
-    const xpNeeded = calculateXPForLevel(level);
-
-    // Calculate percentage
-    const percentage =
-      xpNeeded > 0 ? Math.min((currentXP / xpNeeded) * 100, 100) : 100;
-
-    // Update bar fill
-    this.elements.xpFill.style.width = `${percentage}%`;
-
-    // Update text
-    this.elements.xpCurrent.textContent = this.formatNumber(currentXP);
-    this.elements.xpNeeded.textContent = this.formatNumber(xpNeeded);
   }
 
   /**
