@@ -336,6 +336,17 @@ export default class GameEngine {
       console.log(`✅ Loaded player: ${this.player.data.name}`);
     }
 
+    // Check if player has valid name
+    if (
+      !this.player.data.name ||
+      this.player.data.name.trim() === "" ||
+      this.player.data.name === "Fazendeiro"
+    ) {
+      console.warn("⚠️ Save has no valid player name, showing welcome screen");
+      this.showWelcomeScreen();
+      return;
+    }
+
     // Show farm screen
     this.screenManager.showScreen("farm-screen");
 

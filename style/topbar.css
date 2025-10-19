@@ -35,10 +35,12 @@
 /* Status Items Container */
 .topbar-status {
     display: flex;
-    gap: var(--spacing-sm);
-    flex-wrap: wrap;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
     align-items: center;
     flex: 1;
+    justify-content: flex-start;
+    overflow: hidden;
 }
 
 /* Individual Status Item */
@@ -47,14 +49,17 @@
     align-items: center;
     gap: 4px;
     background: var(--bg-accent);
-    padding: 6px 12px;
+    padding: 6px 10px;
     border-radius: 20px;
     border: 2px solid var(--border-color);
     box-shadow: 0 2px 4px var(--shadow-color);
     transition: all var(--transition-fast);
     font-weight: 600;
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     white-space: nowrap;
+    min-width: 100px;
+    max-width: 100px;
+    flex-shrink: 1;
 }
 
 .status-item:hover {
@@ -319,12 +324,18 @@
 /* Responsive adjustments */
 @media (max-width: 480px) {
     .topbar {
-        padding: 0 var(--spacing-sm);
+        padding: 0 0.4rem;
+    }
+
+    .topbar-status {
+        gap: 0.4rem;
     }
 
     .status-item {
-        padding: 4px 8px;
-        font-size: 0.75rem;
+        padding: 4px 6px;
+        font-size: 0.7rem;
+        min-width: 80px;
+        max-width: 80px;
     }
 
     .status-icon {
@@ -338,9 +349,16 @@
 }
 
 @media (max-width: 360px) {
+    .topbar-status {
+        gap: 0.3rem;
+    }
+
     .status-item {
         gap: 2px;
-        padding: 4px 6px;
+        padding: 3px 5px;
+        min-width: 70px;
+        max-width: 70px;
+        font-size: 0.65rem;
     }
 
     .status-item span:last-child {
@@ -353,9 +371,15 @@
         padding: 0 var(--spacing-lg);
     }
 
+    .topbar-status {
+        gap: 0.75rem;
+    }
+
     .status-item {
-        padding: 8px 16px;
-        font-size: 0.9375rem;
+        padding: 8px 14px;
+        font-size: 0.875rem;
+        min-width: 130px;
+        max-width: 130px;
     }
 
     .status-icon {

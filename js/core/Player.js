@@ -140,10 +140,10 @@ export default class Player {
       // Merge with defaults to ensure all properties exist
       this.data = this.mergeWithDefaults(data);
 
-      // Migration: Fix saves with empty names (from older versions)
+      // Validate player name exists
       if (!this.data.name || this.data.name.trim() === "") {
-        this.data.name = "Fazendeiro";
-        console.warn("⚠️ Save had no name, using default: Fazendeiro");
+        console.error("❌ Save has no valid player name");
+        return false;
       }
 
       console.log("✅ Player data loaded:", this.data.name);
