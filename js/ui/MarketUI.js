@@ -190,10 +190,12 @@ export default class MarketUI {
 
       #market-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
         gap: 0.5rem;
         padding: var(--spacing-md);
         min-height: 400px;
+        max-width: 100%;
+        justify-items: start;
       }
 
       .market-item {
@@ -207,7 +209,9 @@ export default class MarketUI {
         align-items: center;
         justify-content: space-between;
         gap: 0.25rem;
-        min-height: 160px;
+        aspect-ratio: 0.85;
+        max-width: 140px;
+        width: 100%;
       }
 
       .market-item:hover {
@@ -366,8 +370,12 @@ export default class MarketUI {
 
       @media (max-width: 768px) {
         #market-grid {
-          grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
           gap: 0.375rem;
+        }
+
+        .market-item {
+          max-width: 130px;
         }
 
         .category-btn {
@@ -378,7 +386,7 @@ export default class MarketUI {
 
       @media (max-width: 480px) {
         #market-grid {
-          grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
           gap: 0.375rem;
           padding: var(--spacing-sm);
         }
@@ -395,7 +403,8 @@ export default class MarketUI {
 
         .market-item {
           padding: 0.375rem;
-          min-height: 140px;
+          max-width: 120px;
+          aspect-ratio: 0.85;
         }
 
         .market-item-icon {
