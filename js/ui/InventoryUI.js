@@ -8,10 +8,11 @@ import i18n from "../utils/i18n.js";
 import notifications from "../utils/notifications.js";
 
 export default class InventoryUI {
-  constructor(inventorySystem, modal, notifications) {
+  constructor(inventorySystem, modal, notifications, farmSystem = null) {
     this.inventorySystem = inventorySystem;
     this.modal = modal;
     this.notifications = notifications;
+    this.farmSystem = farmSystem;
     this.container = null;
     this.sortBy = "name";
     this.filterCategory = "all";
@@ -125,6 +126,8 @@ export default class InventoryUI {
       .inventory-stats {
         display: flex;
         gap: var(--spacing-sm);
+        justify-content: center;
+        align-items: center;
         flex-wrap: wrap;
       }
 
@@ -651,6 +654,18 @@ export default class InventoryUI {
       });
     }
 
+    // Add use button if fertilizer
+    if (item.id === "fertilizer") {
+      buttons.push({
+        text: `💩 Usar na Fazenda`,
+        class: "btn-primary",
+        onClick: () => {
+          this.showFertilizerPlotSelector();
+          return false;
+        },
+      });
+    }
+
     // Add sell button
     buttons.push({
       text: `💰 ${i18n.t("market.sell")}`,
@@ -832,6 +847,140 @@ export default class InventoryUI {
 
     if (valueEl) {
       valueEl.textContent = `💰 ${totalValue}g`;
+    }
+  }
+
+  /**
+   * Show fertilizer plot selector
+   */
+  showFertilizerPlotSelector() {
+    if (!this.farmSystem) {
+      this.notifications.error("Sistema de fazenda não disponível!");
+      return;
+    }
+
+    // Get farm stats
+    const stats = this.farmSystem.getStats();
+
+    if (stats.empty === stats.total) {
+      this.notifications.error(
+        "Você não tem nenhuma plantação para fertilizar!",
+      );
+      return;
+    }
+
+    // Create plot selection grid
+    let plotsHTML =
+      '<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin: 1rem 0;">';
+
+    for (let i = 0; i < this.farmSystem.plotCount; i++) {
+      const plot = this.farmSystem.getPlot(i);
+      const isReady = this.farmSystem.isPlotReady(i);
+      const isFertilized = plot.fertilized;
+
+      if (!plot.crop) {
+        // Empty plot - disabled
+        plotsHTML += `
+          <button class="plot-select-btn" disabled style="padding: 1rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-accent); opacity: 0.5; cursor: not-allowed;">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🟫</div>
+            <div style="font-size: 0.75rem; color: var(--text-secondary);">Vazio</div>
+          </button>
+        `;
+      } else if (isFertilized) {
+        // Already fertilized - disabled
+        plotsHTML += `
+          <button class="plot-select-btn" disabled style="padding: 1rem; border: 2px solid #5caa1f; border-radius: 8px; background: var(--bg-accent); opacity: 0.7; cursor: not-allowed;">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">✨</div>
+            <div style="font-size: 0.75rem; color: #5caa1f;">Fertilizado</div>
+          </button>
+        `;
+      } else {
+        // Can be fertilized
+        const cropData = this.farmSystem.getCropData(plot.crop);
+        const cropIcon = cropData?.icon || "🌱";
+        plotsHTML += `
+          <button class="plot-select-btn" data-plot-index="${i}" style="padding: 1rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-secondary); cursor: pointer; transition: all 0.2s;">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">${cropIcon}</div>
+            <div style="font-size: 0.75rem; color: var(--text-primary);">Plot ${i + 1}</div>
+            <div style="font-size: 0.65rem; color: var(--text-secondary); margin-top: 0.25rem;">${isReady ? "Pronto" : "Crescendo"}</div>
+          </button>
+        `;
+      }
+    }
+
+    plotsHTML += "</div>";
+
+    const content = `
+      <div style="text-align: center; margin-bottom: 1rem;">
+        <div style="font-size: 4rem; margin-bottom: 0.5rem;">💩</div>
+        <h3 style="margin: 0.5rem 0; color: var(--text-primary);">Usar Fertilizante</h3>
+        <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0.5rem 0;">
+          Selecione um plot para fertilizar<br>
+          <span style="color: #5caa1f; font-weight: 600;">Reduz o tempo de crescimento em 50%!</span>
+        </p>
+      </div>
+      ${plotsHTML}
+    `;
+
+    this.modal.show({
+      title: "💩 Fertilizar Plot",
+      content,
+      buttons: [
+        {
+          text: "Cancelar",
+          class: "btn-secondary",
+          onClick: () => true,
+        },
+      ],
+      closable: true,
+    });
+
+    // Add click handlers to plot buttons
+    setTimeout(() => {
+      const plotButtons = document.querySelectorAll(
+        ".plot-select-btn[data-plot-index]",
+      );
+      plotButtons.forEach((button) => {
+        button.addEventListener("mouseenter", () => {
+          button.style.borderColor = "#5caa1f";
+          button.style.transform = "scale(1.05)";
+        });
+        button.addEventListener("mouseleave", () => {
+          button.style.borderColor = "var(--border-color)";
+          button.style.transform = "scale(1)";
+        });
+        button.addEventListener("click", () => {
+          const plotIndex = parseInt(button.getAttribute("data-plot-index"));
+          this.useFertilizerOnPlot(plotIndex);
+        });
+      });
+    }, 50);
+  }
+
+  /**
+   * Use fertilizer on a specific plot
+   * @param {number} plotIndex - Plot index
+   */
+  useFertilizerOnPlot(plotIndex) {
+    const result = this.farmSystem.fertilize(plotIndex);
+
+    if (result.success) {
+      this.notifications.success(
+        `Plot ${plotIndex + 1} fertilizado! Crescimento 50% mais rápido! 💩✨`,
+      );
+      this.modal.close();
+      this.render();
+
+      // Dispatch event to update farm UI
+      window.dispatchEvent(
+        new CustomEvent("farm:fertilized", {
+          detail: { index: plotIndex },
+        }),
+      );
+    } else {
+      this.notifications.error(
+        result.error || "Não foi possível fertilizar o plot",
+      );
     }
   }
 

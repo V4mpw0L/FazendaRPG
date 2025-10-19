@@ -104,6 +104,7 @@ export default class GameEngine {
         this.inventorySystem,
         this.modal,
         notifications,
+        this.farmSystem,
       );
       this.inventoryUI.init();
 
