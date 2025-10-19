@@ -523,14 +523,14 @@
       "namePtBR": "Poção de Energia",
       "icon": "🧪",
       "category": "food",
-      "description": "A refreshing potion. Restores 10 energy.",
-      "descriptionPtBR": "Uma poção refrescante. Restaura 10 de energia.",
+      "description": "A refreshing potion. Restores 20 energy.",
+      "descriptionPtBR": "Uma poção refrescante. Restaura 20 de energia.",
       "buyPrice": 25,
       "sellPrice": 15,
       "stackable": true,
       "maxStack": 999,
       "consumable": true,
-      "energyRestore": 10
+      "energyRestore": 20
     }
   }
 }
