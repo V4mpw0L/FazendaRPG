@@ -7,11 +7,20 @@
 import i18n from "../utils/i18n.js";
 
 export default class MarketUI {
-  constructor(player, inventorySystem, modal, notifications) {
+  constructor(
+    player,
+    inventorySystem,
+    modal,
+    notifications,
+    farmSystem,
+    skillSystem,
+  ) {
     this.player = player;
     this.inventorySystem = inventorySystem;
     this.modal = modal;
     this.notifications = notifications;
+    this.farmSystem = farmSystem;
+    this.skillSystem = skillSystem;
     this.container = null;
     this.currentTab = "buy";
     this.currentCategory = "all";
@@ -625,12 +634,25 @@ export default class MarketUI {
       type === "buy" ? i18n.t("market.buy") : i18n.t("market.sell");
     const buttonIcon = type === "buy" ? "🛒" : "💰";
 
+    // Check if it's a seed and get required level
+    let requiredLevelInfo = "";
+    if (item.category === "seeds" && type === "buy") {
+      const cropId = item.id.replace("_seed", "");
+      const cropData = this.farmSystem?.getCropData(cropId);
+      if (cropData && cropData.requiredLevel) {
+        const playerLevel = this.skillSystem?.getLevel("farming") || 1;
+        const canUse = playerLevel >= cropData.requiredLevel;
+        requiredLevelInfo = `<div class="market-item-level" style="font-size: 0.7rem; color: ${canUse ? "#4caf50" : "#ff6b6b"}; font-weight: 600; margin-top: 0.25rem;">${canUse ? "✓" : "🔒"} Nível ${cropData.requiredLevel}</div>`;
+      }
+    }
+
     card.innerHTML = `
       <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; flex: 1;">
         <div class="market-item-icon">${item.icon || "📦"}</div>
         <div class="market-item-name" title="${itemName}">${itemName}</div>
         <div class="market-item-price">${price}g</div>
         ${type === "sell" ? `<div class="market-item-stock">${i18n.t("market.youHave")}: ${stock}</div>` : ""}
+        ${requiredLevelInfo}
       </div>
       <button class="market-item-action">${buttonIcon} ${buttonText}</button>
     `;

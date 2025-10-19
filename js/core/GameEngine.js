@@ -112,6 +112,8 @@ export default class GameEngine {
         this.inventorySystem,
         this.modal,
         notifications,
+        this.farmSystem,
+        this.skillSystem,
       );
       await this.marketUI.init();
 
@@ -567,31 +569,39 @@ export default class GameEngine {
       return;
     }
 
+    // Get player's farming level
+    const farmingLevel = this.skillSystem.getLevel("farming");
+
     // Create seed selection content
     const seedsHTML = seeds
       .map((seed) => {
         const cropId = seed.id.replace("_seed", "");
         const cropData = this.farmSystem.getCropData(cropId);
         const growthTime = cropData ? cropData.growthTime : 0;
+        const requiredLevel = cropData ? cropData.requiredLevel : 1;
+        const canPlant = farmingLevel >= requiredLevel;
 
         return `
-        <div class="seed-option" data-crop-id="${cropId}" data-seed-id="${seed.id}" style="
+        <div class="seed-option ${!canPlant ? "seed-locked" : ""}" data-crop-id="${cropId}" data-seed-id="${seed.id}" data-can-plant="${canPlant}" style="
           display: flex;
           align-items: center;
           gap: 1rem;
           padding: 1rem;
           border: 2px solid var(--border-color);
           border-radius: 8px;
-          cursor: pointer;
+          cursor: ${canPlant ? "pointer" : "not-allowed"};
           transition: all 0.2s;
           margin-bottom: 0.5rem;
+          opacity: ${canPlant ? "1" : "0.5"};
+          background: ${canPlant ? "transparent" : "rgba(128, 128, 128, 0.1)"};
         ">
           <div style="font-size: 2rem;">${seed.icon}</div>
           <div style="flex: 1;">
             <div style="font-weight: 600; color: var(--text-primary);">${seed.namePtBR || seed.name}</div>
             <div style="font-size: 0.875rem; color: var(--text-secondary);">
-              ⏱️ ${growthTime}s | 📦 Quantidade: ${seed.count}
+              ⏱️ ${growthTime}s | 📦 Quantidade: ${seed.count} | 🌟 Nível: ${requiredLevel}
             </div>
+            ${!canPlant ? `<div style="font-size: 0.75rem; color: #ff6b6b; font-weight: 600; margin-top: 0.25rem;">🔒 Requer Farming Nível ${requiredLevel}</div>` : ""}
           </div>
         </div>
       `;
@@ -604,10 +614,13 @@ export default class GameEngine {
         ${seedsHTML}
       </div>
       <style>
-        .seed-option:hover {
+        .seed-option:not(.seed-locked):hover {
           background: var(--accent-color);
           border-color: var(--primary-color);
           transform: translateX(4px);
+        }
+        .seed-locked {
+          filter: grayscale(0.5);
         }
       </style>
     `;
@@ -623,6 +636,13 @@ export default class GameEngine {
     setTimeout(() => {
       document.querySelectorAll(".seed-option").forEach((option) => {
         option.addEventListener("click", () => {
+          const canPlant = option.dataset.canPlant === "true";
+
+          // Ignore clicks on locked seeds
+          if (!canPlant) {
+            return;
+          }
+
           const cropId = option.dataset.cropId;
           const seedId = option.dataset.seedId;
 
