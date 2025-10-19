@@ -628,7 +628,27 @@ export default class GameEngine {
     });
 
     // Farm events
+    window.addEventListener("farm:planted", () => {
+      this.renderFarm();
+    });
+
     window.addEventListener("farm:cropReady", () => {
+      this.renderFarm();
+    });
+
+    window.addEventListener("farm:cropsReady", () => {
+      this.renderFarm();
+    });
+
+    window.addEventListener("farm:harvested", () => {
+      this.renderFarm();
+    });
+
+    window.addEventListener("farm:fertilized", () => {
+      this.renderFarm();
+    });
+
+    window.addEventListener("farm:cleared", () => {
       this.renderFarm();
     });
 

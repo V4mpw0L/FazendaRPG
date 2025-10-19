@@ -89,10 +89,7 @@ body {
     overflow-x: hidden;
     position: relative;
     min-height: 100vh;
-    padding-top: calc(var(--topbar-height) + env(safe-area-inset-top, 0px));
-    padding-bottom: calc(
-        var(--footer-height) + env(safe-area-inset-bottom, 0px)
-    );
+    padding: 0;
     margin: 0;
     transition:
         background-color var(--transition-normal),
@@ -184,7 +181,9 @@ a:hover {
     max-width: 100%;
     margin: 0 auto;
     padding: var(--spacing-md);
-    min-height: calc(100vh - var(--topbar-height) - var(--footer-height));
+    padding-top: calc(var(--topbar-height) + var(--spacing-md));
+    padding-bottom: calc(var(--footer-height) + var(--spacing-md));
+    min-height: 100vh;
 }
 
 /* ===================================
@@ -614,10 +613,10 @@ a:hover {
 
 .city-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--spacing-lg);
-    padding: var(--spacing-md);
-    max-width: 800px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm);
+    max-width: 600px;
     margin: 0 auto;
 }
 
@@ -625,7 +624,7 @@ a:hover {
     background: var(--bg-secondary);
     border: 3px solid var(--border-color);
     border-radius: var(--border-radius);
-    padding: var(--spacing-lg);
+    padding: var(--spacing-md);
     text-align: center;
     cursor: pointer;
     transition: all var(--transition-fast);
@@ -639,20 +638,21 @@ a:hover {
 }
 
 .city-icon {
-    font-size: 4rem;
-    margin-bottom: var(--spacing-md);
+    font-size: 3rem;
+    margin-bottom: var(--spacing-sm);
     filter: drop-shadow(0 2px 4px var(--shadow-color));
 }
 
 .city-card h3 {
     color: var(--text-primary);
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+    font-size: 1rem;
 }
 
 .city-card p {
     color: var(--text-secondary);
-    font-size: 0.875rem;
-    margin-bottom: 0;
+    font-size: 0.75rem;
+    line-height: 1.3;
 }
 
 /* ===================================
