@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Top Bar UI Component
  * Manages the fixed top bar with real-time player stats and menu toggle
- * @version 0.0.3
+ * @version 0.0.4
  */
 
 export default class TopBar {

@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Market UI
  * Professional market system with 5x5 grid, pagination, and complete categories
- * @version 0.0.3
+ * @version 0.0.4
  */
 
 import i18n from "../utils/i18n.js";

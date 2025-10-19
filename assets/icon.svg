@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5caa1f;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="barnGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#c0392b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b2e1f;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="fieldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#7ec850;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5caa1f;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background Sky -->
+  <rect width="512" height="512" fill="url(#skyGradient)" rx="80"/>
+
+  <!-- Sun -->
+  <circle cx="420" cy="92" r="50" fill="#f39c12" opacity="0.9"/>
+  <circle cx="420" cy="92" r="40" fill="#f1c40f"/>
+
+  <!-- Ground -->
+  <rect x="0" y="320" width="512" height="192" fill="#8b6f47"/>
+
+  <!-- Farm Field Rows -->
+  <rect x="40" y="280" width="180" height="40" fill="url(#fieldGradient)" rx="5"/>
+  <rect x="40" y="240" width="180" height="30" fill="#7ec850" opacity="0.8" rx="5"/>
+  <rect x="40" y="200" width="180" height="25" fill="#5caa1f" opacity="0.6" rx="5"/>
+
+  <!-- Barn/House -->
+  <rect x="280" y="200" width="180" height="120" fill="url(#barnGradient)" rx="10"/>
+
+  <!-- Barn Roof -->
+  <path d="M 260 200 L 370 140 L 480 200 Z" fill="#8b2e1f"/>
+
+  <!-- Barn Door -->
+  <rect x="340" y="240" width="60" height="80" fill="#6d1f14" rx="5"/>
+  <rect x="346" y="246" width="24" height="70" fill="#5a1810" rx="3"/>
+  <rect x="376" y="246" width="24" height="70" fill="#5a1810" rx="3"/>
+
+  <!-- Barn Window -->
+  <rect x="295" y="220" width="30" height="30" fill="#87CEEB" opacity="0.7" rx="3"/>
+  <line x1="295" y1="235" x2="325" y2="235" stroke="#6d1f14" stroke-width="2"/>
+  <line x1="310" y1="220" x2="310" y2="250" stroke="#6d1f14" stroke-width="2"/>
+
+  <!-- Wheat Stalks (left field) -->
+  <g id="wheat">
+    <path d="M 100 290 Q 95 280 100 270" stroke="#f39c12" stroke-width="3" fill="none"/>
+    <ellipse cx="100" cy="268" rx="4" ry="8" fill="#f1c40f"/>
+    <ellipse cx="96" cy="272" rx="3" ry="6" fill="#f39c12"/>
+    <ellipse cx="104" cy="272" rx="3" ry="6" fill="#f39c12"/>
+  </g>
+  <use href="#wheat" x="20" y="10"/>
+  <use href="#wheat" x="40" y="5"/>
+  <use href="#wheat" x="60" y="8"/>
+  <use href="#wheat" x="80" y="3"/>
+  <use href="#wheat" x="100" y="6"/>
+  <use href="#wheat" x="120" y="4"/>
+
+  <!-- Fence -->
+  <g id="fence">
+    <rect x="50" y="340" width="8" height="60" fill="#8b6f47"/>
+    <rect x="90" y="340" width="8" height="60" fill="#8b6f47"/>
+    <rect x="130" y="340" width="8" height="60" fill="#8b6f47"/>
+    <rect x="170" y="340" width="8" height="60" fill="#8b6f47"/>
+    <rect x="210" y="340" width="8" height="60" fill="#8b6f47"/>
+    <rect x="40" y="355" width="190" height="6" fill="#8b6f47"/>
+    <rect x="40" y="375" width="190" height="6" fill="#8b6f47"/>
+  </g>
+
+  <!-- Tractor (simple) -->
+  <g id="tractor">
+    <!-- Body -->
+    <rect x="350" y="370" width="80" height="40" fill="#e74c3c" rx="5"/>
+    <!-- Cabin -->
+    <rect x="380" y="350" width="35" height="30" fill="#c0392b" rx="3"/>
+    <!-- Window -->
+    <rect x="385" y="355" width="25" height="18" fill="#87CEEB" opacity="0.7" rx="2"/>
+    <!-- Big Wheel -->
+    <circle cx="410" cy="415" r="20" fill="#2c3e50"/>
+    <circle cx="410" cy="415" r="12" fill="#34495e"/>
+    <!-- Small Wheel -->
+    <circle cx="365" cy="415" r="12" fill="#2c3e50"/>
+    <circle cx="365" cy="415" r="7" fill="#34495e"/>
+  </g>
+
+  <!-- Path/Road -->
+  <path d="M 0 420 Q 256 400 512 420" fill="none" stroke="#6d5635" stroke-width="15" opacity="0.5"/>
+  <path d="M 0 425 Q 256 405 512 425" fill="none" stroke="#8b6f47" stroke-width="8" opacity="0.7"/>
+
+  <!-- Clouds -->
+  <g opacity="0.8">
+    <ellipse cx="120" cy="80" rx="35" ry="20" fill="white"/>
+    <ellipse cx="100" cy="85" rx="25" ry="18" fill="white"/>
+    <ellipse cx="140" cy="85" rx="30" ry="18" fill="white"/>
+  </g>
+  <g opacity="0.7">
+    <ellipse cx="350" cy="120" rx="30" ry="18" fill="white"/>
+    <ellipse cx="330" cy="125" rx="22" ry="15" fill="white"/>
+    <ellipse cx="370" cy="125" rx="25" ry="15" fill="white"/>
+  </g>
+
+  <!-- Border -->
+  <rect width="512" height="512" fill="none" stroke="#5caa1f" stroke-width="8" rx="80"/>
+</svg>
