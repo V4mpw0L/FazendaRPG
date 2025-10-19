@@ -198,7 +198,32 @@ export default class Player {
       }
     });
 
+    // Migrate old saves: Calculate correct maxEnergy based on levels
+    merged.maxEnergy = this.calculateMaxEnergy(merged.level, merged.skills);
+
     return merged;
+  }
+
+  /**
+   * Calculate max energy based on player level and skill levels
+   * Base: 100 + (playerLevel - 1) * 5 + sum of (skillLevel - 1) * 5 for all skills
+   * @param {number} playerLevel - Player's main level
+   * @param {Object} skills - Player's skills object
+   * @returns {number} Calculated max energy
+   */
+  calculateMaxEnergy(playerLevel, skills) {
+    // Start with base energy
+    let maxEnergy = 100;
+
+    // Add 5 for each player level beyond 1
+    maxEnergy += (playerLevel - 1) * 5;
+
+    // Add 5 for each skill level beyond 1
+    Object.values(skills).forEach((skill) => {
+      maxEnergy += (skill.level - 1) * 5;
+    });
+
+    return maxEnergy;
   }
 
   /**
@@ -464,13 +489,11 @@ export default class Player {
   onLevelUp(newLevel) {
     console.log(`🎉 Level up! New level: ${newLevel}`);
 
-    // Restore energy on level up
-    this.data.energy = this.data.maxEnergy;
+    // Increase max energy by 5 on every level up
+    this.data.maxEnergy += 5;
 
-    // Increase max energy every 10 levels
-    if (newLevel % 10 === 0) {
-      this.data.maxEnergy += 10;
-    }
+    // Restore energy to max on level up
+    this.data.energy = this.data.maxEnergy;
 
     // Dispatch event for UI
     window.dispatchEvent(
@@ -487,6 +510,12 @@ export default class Player {
    */
   onSkillLevelUp(skill, newLevel) {
     console.log(`🎉 ${skill} level up! New level: ${newLevel}`);
+
+    // Increase max energy by 5 on every skill level up
+    this.data.maxEnergy += 5;
+
+    // Restore energy to max on skill level up
+    this.data.energy = this.data.maxEnergy;
 
     // Dispatch event for UI
     window.dispatchEvent(
