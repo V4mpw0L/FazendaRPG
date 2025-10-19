@@ -1,6 +1,78 @@
-# 📝 Changelog - FazendaRPG v0.0.1
+# 📝 Changelog - FazendaRPG
 
-## 🎉 Atualização Completa - Interface & Funcionalidades
+## 🔋 v0.0.5 - Sistema de Energia Dinâmica (Janeiro 2024)
+
+### ⚡ Nova Feature: Energia Escalável
+
+#### Sistema de Energia Atualizado
+- ✅ **+5 maxEnergy a cada level up do jogador**
+  - Energia máxima cresce com progressão
+  - Energia restaurada a 100% ao subir de nível
+  - Incentiva progressão constante
+
+- ✅ **+5 maxEnergy a cada skill level up**
+  - Todas as 8 skills contribuem para energia
+  - Farming, Mining, Fishing, Cooking, Woodcutting, Crafting, Smithing, Foraging
+  - Energia restaurada a 100% ao subir skill
+
+- ✅ **Fórmula de Cálculo Implementada**
+  - `MaxEnergy = 100 + (PlayerLevel-1)×5 + Σ(SkillLevel-1)×5`
+  - Crescimento equilibrado e justo
+  - Calculado automaticamente
+
+#### Migração Automática de Saves
+- ✅ **Compatibilidade total com saves antigos**
+  - Recálculo automático de maxEnergy baseado em níveis
+  - Energia atual preservada (não resetada)
+  - Sem perda de dados ou progresso
+  - Nenhuma ação necessária do usuário
+
+#### Arquivos Modificados
+- ✅ **`js/core/Player.js`**
+  - Nova função `calculateMaxEnergy()` - Calcula energia baseada em níveis
+  - Modificado `mergeWithDefaults()` - Migração automática de saves
+  - Modificado `onLevelUp()` - Aumenta +5 maxEnergy e restaura energia
+  - Modificado `onSkillLevelUp()` - Aumenta +5 maxEnergy e restaura energia
+
+#### Testes e Documentação
+- ✅ **Suite de testes completa criada**
+  - `/tests/energia-system-test.js` - 7 testes automatizados
+  - Validação de cálculos, level ups, save/load, migração
+  - Executável via `energiaSystemTest.runAll()`
+
+- ✅ **Documentação completa organizada**
+  - `/docs/INDEX.md` - Índice principal de documentação
+  - `/docs/README_ENERGIA_UPDATE.md` - README rápido
+  - `/docs/updates/ENERGIA_SYSTEM_UPDATE.md` - Documentação técnica
+  - `/docs/updates/RELEASE_NOTES_ENERGIA_v0.0.5.md` - Release notes detalhadas
+  - `/docs/guides/GUIA_RAPIDO_ENERGIA.md` - Guia de usuário
+
+#### Impacto no Gameplay
+- ✅ **Progressão mais recompensadora**
+  - Cada nível/skill tem recompensa tangível
+  - Sensação de crescimento constante
+  - Incentivo para upar todas as skills
+
+- ✅ **Balanceamento aprimorado**
+  - Early Game: 100-150 energia
+  - Mid Game: 150-300 energia
+  - Late Game: 300-600+ energia
+
+#### Debug Commands
+```javascript
+// Teste rápido
+energiaSystemTest.quickTest()
+
+// Suite completa
+energiaSystemTest.runAll()
+
+// Ver estatísticas
+energiaSystemTest.displayStats()
+```
+
+---
+
+## 🎉 v0.0.1 - Atualização Completa - Interface & Funcionalidades
 
 ### ✅ Correções de UI
 
