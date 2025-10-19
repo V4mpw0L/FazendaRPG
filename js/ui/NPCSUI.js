@@ -131,8 +131,6 @@ export default class NPCSUI {
                 <h3 class="npc-name">${name}</h3>
                 <p class="npc-role">${role}</p>
                 <p class="npc-description">${description}</p>
-                ${npc.shop ? '<div class="npc-badge">🛒 Loja</div>' : ""}
-                ${npc.quests && npc.quests.length > 0 ? '<div class="npc-badge">📜 Missões</div>' : ""}
             </div>
             <div class="npc-friendship">
                 <div class="friendship-label">Amizade: ${Math.floor(friendshipPercent)}%</div>
@@ -140,9 +138,12 @@ export default class NPCSUI {
                     <div class="friendship-fill" style="width: ${friendshipPercent}%"></div>
                 </div>
             </div>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">💬 Conversar</button>
         `;
 
-    card.addEventListener("click", () => {
+    const conversarBtn = card.querySelector(".btn");
+    conversarBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
       this.showNPCDialog(npc);
     });
 
