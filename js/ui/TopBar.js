@@ -1,8 +1,10 @@
 /**
  * FazendaRPG - Top Bar UI Component
- * Manages the fixed top bar with real-time player stats and menu toggle
- * @version 0.0.4
+ * Manages the fixed top bar with player stats, XP bar, and menu
+ * @version 0.0.5
  */
+
+import { calculateXPForLevel } from "../utils/helpers.js";
 
 export default class TopBar {
   constructor(player, skillSystem) {
@@ -28,10 +30,14 @@ export default class TopBar {
    */
   cacheElements() {
     this.elements = {
+      playerName: document.getElementById("topbar-player-name"),
+      level: document.getElementById("topbar-level"),
+      xpFill: document.getElementById("topbar-xp-fill"),
+      xpCurrent: document.getElementById("topbar-xp-current"),
+      xpNeeded: document.getElementById("topbar-xp-needed"),
       gold: document.getElementById("topbar-gold"),
       energy: document.getElementById("topbar-energy"),
-      level: document.getElementById("topbar-level"),
-      farming: document.getElementById("topbar-farming"),
+      energyFill: document.getElementById("topbar-energy-fill"),
       menuToggle: document.getElementById("menu-toggle"),
     };
   }
@@ -56,10 +62,64 @@ export default class TopBar {
    * Update all status displays
    */
   update() {
+    this.updatePlayerName();
+    this.updateLevel();
+    this.updateXPBar();
     this.updateGold();
     this.updateEnergy();
-    this.updateLevel();
-    this.updateFarmingSkill();
+  }
+
+  /**
+   * Update player name display
+   */
+  updatePlayerName() {
+    if (!this.elements.playerName) return;
+
+    const name = this.player.data.name || "Fazendeiro";
+
+    if (this.elements.playerName.textContent !== name) {
+      this.elements.playerName.textContent = name;
+    }
+  }
+
+  /**
+   * Update level display
+   */
+  updateLevel() {
+    if (!this.elements.level) return;
+
+    const level = this.player.data.level;
+
+    if (this.elements.level.textContent !== level.toString()) {
+      this.elements.level.textContent = level;
+    }
+  }
+
+  /**
+   * Update XP bar
+   */
+  updateXPBar() {
+    if (
+      !this.elements.xpFill ||
+      !this.elements.xpCurrent ||
+      !this.elements.xpNeeded
+    )
+      return;
+
+    const currentXP = this.player.data.xp;
+    const level = this.player.data.level;
+    const xpNeeded = calculateXPForLevel(level);
+
+    // Calculate percentage
+    const percentage =
+      xpNeeded > 0 ? Math.min((currentXP / xpNeeded) * 100, 100) : 100;
+
+    // Update bar fill
+    this.elements.xpFill.style.width = `${percentage}%`;
+
+    // Update text
+    this.elements.xpCurrent.textContent = this.formatNumber(currentXP);
+    this.elements.xpNeeded.textContent = this.formatNumber(xpNeeded);
   }
 
   /**
@@ -81,51 +141,28 @@ export default class TopBar {
    * Update energy display
    */
   updateEnergy() {
-    if (!this.elements.energy) return;
+    if (!this.elements.energy || !this.elements.energyFill) return;
 
     const energy = this.player.data.energy;
     const maxEnergy = this.player.data.maxEnergy;
     const energyText = `${energy}/${maxEnergy}`;
 
+    // Update text
     if (this.elements.energy.textContent !== energyText) {
       this.elements.energy.textContent = energyText;
-      this.animateUpdate(this.elements.energy.parentElement);
-
-      // Add warning class if energy is low
-      const statusItem = this.elements.energy.parentElement;
-      if (energy < 20) {
-        statusItem.classList.add("energy-low");
-      } else {
-        statusItem.classList.remove("energy-low");
-      }
+      this.animateUpdate(this.elements.energy.parentElement.parentElement);
     }
-  }
 
-  /**
-   * Update level display
-   */
-  updateLevel() {
-    if (!this.elements.level) return;
+    // Update energy bar fill
+    const percentage = maxEnergy > 0 ? (energy / maxEnergy) * 100 : 0;
+    this.elements.energyFill.style.width = `${percentage}%`;
 
-    const level = this.player.data.level;
-
-    if (this.elements.level.textContent !== level.toString()) {
-      this.elements.level.textContent = level;
-      this.animateUpdate(this.elements.level.parentElement);
-    }
-  }
-
-  /**
-   * Update farming skill display
-   */
-  updateFarmingSkill() {
-    if (!this.elements.farming) return;
-
-    const farmingLevel = this.skillSystem.getLevel("farming");
-
-    if (this.elements.farming.textContent !== farmingLevel.toString()) {
-      this.elements.farming.textContent = farmingLevel;
-      this.animateUpdate(this.elements.farming.parentElement);
+    // Update energy bar color based on percentage
+    this.elements.energyFill.classList.remove("low", "medium");
+    if (percentage <= 25) {
+      this.elements.energyFill.classList.add("low");
+    } else if (percentage <= 50) {
+      this.elements.energyFill.classList.add("medium");
     }
   }
 

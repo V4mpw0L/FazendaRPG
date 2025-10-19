@@ -34,25 +34,46 @@
 
   <!-- Top Bar -->
   <div id="topbar" class="topbar">
-    <div class="topbar-status">
-      <div class="status-item">
-        <span class="status-icon">💰</span>
-        <span id="topbar-gold">0</span>
+    <!-- Avatar -->
+    <div class="topbar-avatar">👨‍🌾</div>
+
+    <!-- Player Info -->
+    <div class="topbar-player">
+      <h1 class="topbar-player-name" id="topbar-player-name">Fazendeiro</h1>
+      <div class="topbar-player-level">Nível <span id="topbar-level">1</span></div>
+    </div>
+
+    <!-- XP Bar -->
+    <div class="topbar-xp-container">
+      <div class="topbar-xp-label">XP</div>
+      <div class="topbar-xp-bar">
+        <div class="topbar-xp-fill" id="topbar-xp-fill" style="width: 0%"></div>
       </div>
-      <div class="status-item">
-        <span class="status-icon">⚡</span>
-        <span id="topbar-energy">0/100</span>
-      </div>
-      <div class="status-item">
-        <span class="status-icon">⭐</span>
-        <span id="topbar-level">1</span>
-      </div>
-      <div class="status-item">
-        <span class="status-icon">🌾</span>
-        <span id="topbar-farming">1</span>
+      <div class="topbar-xp-text">
+        <span id="topbar-xp-current">0</span> / <span id="topbar-xp-needed">100</span>
       </div>
     </div>
 
+    <!-- Stats (Gold & Energy) -->
+    <div class="topbar-stats">
+      <div class="topbar-stat topbar-gold">
+        <div class="topbar-stat-header">
+          <span class="topbar-stat-icon">💰</span>
+          <span class="topbar-stat-value" id="topbar-gold">0</span>
+        </div>
+      </div>
+      <div class="topbar-stat topbar-energy">
+        <div class="topbar-stat-header">
+          <span class="topbar-stat-icon">⚡</span>
+          <span class="topbar-stat-value" id="topbar-energy">0/100</span>
+        </div>
+        <div class="topbar-energy-bar">
+          <div class="topbar-energy-fill" id="topbar-energy-fill" style="width: 100%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menu Toggle -->
     <button id="menu-toggle" class="menu-toggle" aria-label="Menu">
       <span class="hamburger"></span>
     </button>
