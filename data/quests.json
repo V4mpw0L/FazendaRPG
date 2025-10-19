@@ -1,0 +1,316 @@
+{
+  "version": "0.0.1",
+  "quests": {
+    "welcome_farmer": {
+      "id": "welcome_farmer",
+      "name": "Welcome, Farmer!",
+      "namePtBR": "Bem-vindo, Fazendeiro!",
+      "description": "Plant your first crops to get started on your farming journey.",
+      "descriptionPtBR": "Plante suas primeiras culturas para começar sua jornada na fazenda.",
+      "npc": "old_farmer",
+      "requiredLevel": 1,
+      "objectives": [
+        {
+          "type": "plant",
+          "cropId": "wheat",
+          "amount": 3,
+          "current": 0
+        }
+      ],
+      "rewards": {
+        "gold": 50,
+        "xp": 25,
+        "items": {
+          "wheat_seed": 10
+        }
+      },
+      "repeatable": false,
+      "completed": false
+    },
+    "first_harvest": {
+      "id": "first_harvest",
+      "name": "First Harvest",
+      "namePtBR": "Primeira Colheita",
+      "description": "Harvest 5 crops to complete your first harvest.",
+      "descriptionPtBR": "Colha 5 culturas para completar sua primeira colheita.",
+      "npc": "old_farmer",
+      "requiredLevel": 1,
+      "prerequisites": ["welcome_farmer"],
+      "objectives": [
+        {
+          "type": "harvest",
+          "amount": 5,
+          "current": 0
+        }
+      ],
+      "rewards": {
+        "gold": 100,
+        "xp": 50,
+        "items": {
+          "corn_seed": 5,
+          "fertilizer": 3
+        }
+      },
+      "repeatable": false,
+      "completed": false
+    },
+    "skilled_farmer": {
+      "id": "skilled_farmer",
+      "name": "Skilled Farmer",
+      "namePtBR": "Fazendeiro Habilidoso",
+      "description": "Reach farming level 5 to prove your skills.",
+      "descriptionPtBR": "Alcance o nível 5 de agricultura para provar suas habilidades.",
+      "npc": "old_farmer",
+      "requiredLevel": 1,
+      "objectives": [
+        {
+          "type": "skill_level",
+          "skill": "farming",
+          "level": 5,
+          "current": 0
+        }
+      ],
+      "rewards": {
+        "gold": 250,
+        "xp": 100,
+        "items": {
+          "tomato_seed": 5,
+          "fertilizer": 5
+        }
+      },
+      "repeatable": false,
+      "completed": false
+    },
+    "diverse_crops": {
+      "id": "diverse_crops",
+      "name": "Diverse Crops",
+      "namePtBR": "Culturas Diversas",
+      "description": "Plant 3 different types of crops.",
+      "descriptionPtBR": "Plante 3 tipos diferentes de culturas.",
+      "npc": "merchant",
+      "requiredLevel": 5,
+      "objectives": [
+        {
+          "type": "plant_different",
+          "amount": 3,
+          "current": 0,
+          "types": []
+        }
+      ],
+      "rewards": {
+        "gold": 200,
+        "xp": 75,
+        "items": {
+          "potato_seed": 3,
+          "carrot_seed": 3
+        }
+      },
+      "repeatable": false,
+      "completed": false
+    },
+    "master_fisher": {
+      "id": "master_fisher",
+      "name": "Master Fisher",
+      "namePtBR": "Mestre Pescador",
+      "description": "Catch 10 fish to become a skilled fisherman.",
+      "descriptionPtBR": "Pesque 10 peixes para se tornar um pescador habilidoso.",
+      "npc": "fisherman",
+      "requiredLevel": 1,
+      "objectives": [
+        {
+          "type": "fish",
+          "amount": 10,
+          "current": 0
+        }
+      ],
+      "rewards": {
+        "gold": 150,
+        "xp": 60,
+        "skillXP": {
+          "fishing": 50
+        }
+      },
+      "repeatable": false,
+      "completed": false
+    },
+    "woodcutter_apprentice": {
+      "id": "woodcutter_apprentice",
+      "name": "Woodcutter Apprentice",
+      "namePtBR": "Aprendiz de Lenhador",
+      "description": "Chop 15 trees to learn the woodcutting trade.",
+      "descriptionPtBR": "Corte 15 árvores para aprender o ofício de lenhador.",
+      "npc": "carpenter",
+      "requiredLevel": 1,
+      "objectives": [
+        {
+          "type": "woodcut",
+          "amount": 15,
+          "current": 0
+        }
+      ],
+      "rewards": {
+        "gold": 180,
+        "xp": 70,
+        "skillXP": {
+          "woodcutting": 60
+        }
+      },
+      "repeatable": false,
+      "completed": false
+    },
+    "mining_basics": {
+      "id": "mining_basics",
+      "name": "Mining Basics",
+      "namePtBR": "Noções de Mineração",
+      "description": "Mine 10 stones to learn basic mining techniques.",
+      "descriptionPtBR": "Mine 10 pedras para aprender técnicas básicas de mineração.",
+      "npc": "miner",
+      "requiredLevel": 1,
+      "objectives": [
+        {
+          "type": "mine",
+          "item": "stone",
+          "amount": 10,
+          "current": 0
+        }
+      ],
+      "rewards": {
+        "gold": 120,
+        "xp": 50,
+        "skillXP": {
+          "mining": 40
+        }
+      },
+      "repeatable": false,
+      "completed": false
+    },
+    "cooking_intro": {
+      "id": "cooking_intro",
+      "name": "Introduction to Cooking",
+      "namePtBR": "Introdução à Culinária",
+      "description": "Cook 5 meals to learn the basics of cooking.",
+      "descriptionPtBR": "Cozinhe 5 refeições para aprender o básico de culinária.",
+      "npc": "chef",
+      "requiredLevel": 1,
+      "objectives": [
+        {
+          "type": "cook",
+          "amount": 5,
+          "current": 0
+        }
+      ],
+      "rewards": {
+        "gold": 160,
+        "xp": 65,
+        "skillXP": {
+          "cooking": 55
+        }
+      },
+      "repeatable": false,
+      "completed": false
+    },
+    "wealthy_trader": {
+      "id": "wealthy_trader",
+      "name": "Wealthy Trader",
+      "namePtBR": "Comerciante Próspero",
+      "description": "Earn 1000 gold through trading and farming.",
+      "descriptionPtBR": "Ganhe 1000 de ouro através de comércio e agricultura.",
+      "npc": "merchant",
+      "requiredLevel": 10,
+      "objectives": [
+        {
+          "type": "earn_gold",
+          "amount": 1000,
+          "current": 0
+        }
+      ],
+      "rewards": {
+        "gold": 500,
+        "xp": 200,
+        "items": {
+          "fertilizer": 10
+        }
+      },
+      "repeatable": false,
+      "completed": false
+    },
+    "herbalist_helper": {
+      "id": "herbalist_helper",
+      "name": "Herbalist's Helper",
+      "namePtBR": "Ajudante do Herbalista",
+      "description": "Gather 20 herbs from the wild.",
+      "descriptionPtBR": "Colete 20 ervas da natureza.",
+      "npc": "herbalist",
+      "requiredLevel": 1,
+      "objectives": [
+        {
+          "type": "forage",
+          "item": "herbs",
+          "amount": 20,
+          "current": 0
+        }
+      ],
+      "rewards": {
+        "gold": 140,
+        "xp": 60,
+        "skillXP": {
+          "foraging": 50
+        }
+      },
+      "repeatable": false,
+      "completed": false
+    },
+    "daily_harvest": {
+      "id": "daily_harvest",
+      "name": "Daily Harvest",
+      "namePtBR": "Colheita Diária",
+      "description": "Harvest 10 crops. This quest can be repeated daily.",
+      "descriptionPtBR": "Colha 10 culturas. Esta missão pode ser repetida diariamente.",
+      "npc": "old_farmer",
+      "requiredLevel": 1,
+      "objectives": [
+        {
+          "type": "harvest",
+          "amount": 10,
+          "current": 0
+        }
+      ],
+      "rewards": {
+        "gold": 50,
+        "xp": 30,
+        "items": {
+          "fertilizer": 1
+        }
+      },
+      "repeatable": true,
+      "cooldown": 86400,
+      "completed": false
+    },
+    "daily_fishing": {
+      "id": "daily_fishing",
+      "name": "Daily Fishing",
+      "namePtBR": "Pesca Diária",
+      "description": "Catch 5 fish. This quest can be repeated daily.",
+      "descriptionPtBR": "Pesque 5 peixes. Esta missão pode ser repetida diariamente.",
+      "npc": "fisherman",
+      "requiredLevel": 1,
+      "objectives": [
+        {
+          "type": "fish",
+          "amount": 5,
+          "current": 0
+        }
+      ],
+      "rewards": {
+        "gold": 40,
+        "xp": 25,
+        "skillXP": {
+          "fishing": 20
+        }
+      },
+      "repeatable": true,
+      "cooldown": 86400,
+      "completed": false
+    }
+  }
+}

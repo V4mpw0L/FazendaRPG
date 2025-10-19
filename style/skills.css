@@ -1,0 +1,462 @@
+/* ===================================
+   FazendaRPG - Skills System Styles
+   RuneScape-inspired skill progression
+   =================================== */
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+    padding: var(--spacing-md);
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Skill Card */
+.skill-card {
+    background: var(--bg-secondary);
+    border: 3px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    box-shadow: 0 4px 12px var(--shadow-color);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.skill-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--skill-color, var(--brand-primary)),
+        transparent
+    );
+}
+
+.skill-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px var(--shadow-color);
+    border-color: var(--skill-color, var(--brand-primary));
+}
+
+/* Skill Header */
+.skill-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.skill-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--bg-accent) 0%, var(--bg-primary) 100%);
+    border: 3px solid var(--skill-color, var(--brand-primary));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all var(--transition-fast);
+}
+
+.skill-card:hover .skill-icon {
+    transform: rotate(5deg) scale(1.1);
+    box-shadow: 0 6px 16px var(--skill-color, var(--brand-primary));
+}
+
+.skill-info {
+    flex: 1;
+}
+
+.skill-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+    text-transform: capitalize;
+}
+
+.skill-level {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--skill-color, var(--brand-primary));
+    text-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.skill-level-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Skill Progress Bar */
+.skill-progress-container {
+    margin-bottom: var(--spacing-md);
+}
+
+.skill-progress-bar {
+    width: 100%;
+    height: 28px;
+    background: var(--bg-accent);
+    border: 2px solid var(--border-color);
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 2px 6px var(--shadow-color);
+}
+
+.skill-progress-fill {
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        var(--skill-color, var(--brand-primary)) 0%,
+        var(--skill-color-light, var(--brand-secondary)) 100%
+    );
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 0.875rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.skill-progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    animation: skillShimmer 2s infinite;
+}
+
+@keyframes skillShimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.skill-progress-text {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--spacing-xs);
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+/* Skill Stats */
+.skill-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.skill-stat {
+    background: var(--bg-accent);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    padding: var(--spacing-sm);
+    text-align: center;
+}
+
+.skill-stat-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.skill-stat-value {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--skill-color, var(--brand-primary));
+}
+
+/* Skill Actions */
+.skill-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.skill-action-btn {
+    flex: 1;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--skill-color, var(--brand-primary));
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.skill-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    filter: brightness(1.1);
+}
+
+.skill-action-btn:active {
+    transform: translateY(0);
+}
+
+.skill-action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* Skill Colors - RuneScape inspired */
+.skill-card[data-skill="farming"] {
+    --skill-color: #5caa1f;
+    --skill-color-light: #7ec850;
+}
+
+.skill-card[data-skill="mining"] {
+    --skill-color: #6b8e23;
+    --skill-color-light: #8db359;
+}
+
+.skill-card[data-skill="fishing"] {
+    --skill-color: #4682b4;
+    --skill-color-light: #87ceeb;
+}
+
+.skill-card[data-skill="cooking"] {
+    --skill-color: #ff6347;
+    --skill-color-light: #ff8c69;
+}
+
+.skill-card[data-skill="woodcutting"] {
+    --skill-color: #8b4513;
+    --skill-color-light: #a0522d;
+}
+
+.skill-card[data-skill="crafting"] {
+    --skill-color: #9370db;
+    --skill-color-light: #b19cd9;
+}
+
+.skill-card[data-skill="smithing"] {
+    --skill-color: #696969;
+    --skill-color-light: #808080;
+}
+
+.skill-card[data-skill="foraging"] {
+    --skill-color: #228b22;
+    --skill-color-light: #32cd32;
+}
+
+/* Level Milestone Badge */
+.skill-milestone {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    border: 3px solid #ff8c00;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.5);
+    animation: milestonePulse 2s infinite;
+}
+
+@keyframes milestonePulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.5);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(255, 215, 0, 0.8);
+    }
+}
+
+/* Max Level (99) Special Styling */
+.skill-card.max-level {
+    border-color: #ffd700;
+    background: linear-gradient(
+        135deg,
+        var(--bg-secondary) 0%,
+        rgba(255, 215, 0, 0.1) 100%
+    );
+}
+
+.skill-card.max-level::before {
+    background: linear-gradient(
+        90deg,
+        transparent,
+        #ffd700,
+        #ffed4e,
+        #ffd700,
+        transparent
+    );
+    animation: maxLevelShine 3s infinite;
+}
+
+@keyframes maxLevelShine {
+    0%, 100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+.skill-card.max-level .skill-level {
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+/* Skill Description */
+.skill-description {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+    line-height: 1.5;
+    font-style: italic;
+}
+
+/* Level Up Animation */
+@keyframes levelUp {
+    0% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+    25% {
+        transform: scale(1.05);
+        filter: brightness(1.3);
+    }
+    50% {
+        transform: scale(1.1);
+        filter: brightness(1.5);
+    }
+    75% {
+        transform: scale(1.05);
+        filter: brightness(1.3);
+    }
+    100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+}
+
+.skill-card.leveled-up {
+    animation: levelUp 0.6s ease;
+}
+
+.skill-card.leveled-up::before {
+    animation: maxLevelShine 0.6s ease;
+}
+
+/* Total Level Display */
+.skills-summary {
+    background: var(--bg-secondary);
+    border: 3px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.total-level {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--brand-primary);
+    margin-bottom: var(--spacing-xs);
+    text-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.total-level-label {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .skills-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+
+    .skill-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.75rem;
+    }
+
+    .skill-name {
+        font-size: 1.125rem;
+    }
+
+    .skill-level {
+        font-size: 1.25rem;
+    }
+
+    .skill-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 768px) {
+    .skills-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .skills-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .skill-card,
+    .skill-icon,
+    .skill-progress-fill,
+    .skill-action-btn {
+        transition: none;
+    }
+
+    .skill-progress-fill::after,
+    .skill-milestone,
+    .skill-card.max-level::before,
+    .skill-card.leveled-up {
+        animation: none;
+    }
+}

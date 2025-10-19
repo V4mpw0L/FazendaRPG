@@ -1,0 +1,976 @@
+/**
+ * FazendaRPG - Game Engine
+ * Main game engine that integrates all systems and manages game flow
+ * @version 0.0.1
+ */
+
+import Player from "./Player.js";
+import SaveManager from "./SaveManager.js";
+import SkillSystem from "../systems/SkillSystem.js";
+import FarmSystem from "../systems/FarmSystem.js";
+import InventorySystem from "../systems/InventorySystem.js";
+import QuestSystem from "../systems/QuestSystem.js";
+import TopBar from "../ui/TopBar.js";
+import SideMenu from "../ui/SideMenu.js";
+import ScreenManager from "../ui/ScreenManager.js";
+import Modal from "../ui/modals/Modal.js";
+import InventoryUI from "../ui/InventoryUI.js";
+import MarketUI from "../ui/MarketUI.js";
+import NPCSUI from "../ui/NPCSUI.js";
+import i18n from "../utils/i18n.js";
+import notifications from "../utils/notifications.js";
+
+export default class GameEngine {
+  constructor() {
+    this.player = null;
+    this.saveManager = null;
+    this.skillSystem = null;
+    this.farmSystem = null;
+    this.inventorySystem = null;
+    this.questSystem = null;
+    this.topBar = null;
+    this.sideMenu = null;
+    this.screenManager = null;
+    this.modal = null;
+    this.inventoryUI = null;
+    this.marketUI = null;
+    this.npcsUI = null;
+    this.initialized = false;
+    this.running = false;
+    this.lastUpdate = Date.now();
+    this.updateInterval = null;
+  }
+
+  /**
+   * Initialize game engine
+   * @returns {Promise<boolean>}
+   */
+  async init() {
+    if (this.initialized) {
+      console.warn("⚠️ Game engine already initialized");
+      return false;
+    }
+
+    try {
+      console.log("🎮 Initializing FazendaRPG v0.0.1...");
+
+      // Show loading overlay
+      this.showLoading(true);
+
+      // Initialize i18n
+      await i18n.init();
+
+      // Initialize core systems
+      this.player = new Player();
+      this.saveManager = new SaveManager();
+
+      // Initialize game systems
+      this.skillSystem = new SkillSystem(this.player);
+      await this.skillSystem.init();
+
+      this.farmSystem = new FarmSystem(this.player, this.skillSystem);
+      await this.farmSystem.init();
+
+      this.inventorySystem = new InventorySystem(this.player);
+      await this.inventorySystem.init();
+
+      this.questSystem = new QuestSystem(
+        this.player,
+        this.skillSystem,
+        this.inventorySystem,
+      );
+      await this.questSystem.init();
+
+      // Initialize UI components
+      this.screenManager = new ScreenManager();
+      this.screenManager.init();
+
+      this.topBar = new TopBar(this.player, this.skillSystem);
+      this.topBar.init();
+
+      this.sideMenu = new SideMenu(this.screenManager);
+      this.sideMenu.init();
+
+      this.modal = new Modal();
+      this.modal.init();
+
+      this.inventoryUI = new InventoryUI(
+        this.inventorySystem,
+        this.modal,
+        notifications,
+      );
+      this.inventoryUI.init();
+
+      this.marketUI = new MarketUI(
+        this.player,
+        this.inventorySystem,
+        this.modal,
+        notifications,
+      );
+      await this.marketUI.init();
+
+      this.npcsUI = new NPCSUI(this.player, this.modal, notifications);
+      await this.npcsUI.init();
+
+      // Attach global event listeners
+      this.attachEventListeners();
+
+      this.initialized = true;
+      console.log("✅ Game engine initialized successfully");
+
+      // Hide loading overlay
+      this.showLoading(false);
+
+      return true;
+    } catch (error) {
+      console.error("❌ Failed to initialize game engine:", error);
+      this.showLoading(false);
+      notifications.error(
+        "Failed to initialize game. Please refresh the page.",
+      );
+      return false;
+    }
+  }
+
+  /**
+   * Start the game
+   * @returns {boolean}
+   */
+  start() {
+    if (!this.initialized) {
+      console.error("❌ Cannot start game: not initialized");
+      return false;
+    }
+
+    if (this.running) {
+      console.warn("⚠️ Game already running");
+      return false;
+    }
+
+    console.log("🎮 Starting game...");
+
+    // Check if save exists
+    if (this.saveManager.hasSave()) {
+      this.loadGame();
+    } else {
+      this.showWelcomeScreen();
+    }
+
+    // Start game loop
+    this.startGameLoop();
+
+    // Start auto-save
+    this.saveManager.startAutoSave();
+
+    // Start farm update loop
+    this.farmSystem.startUpdateLoop();
+
+    this.running = true;
+    console.log("✅ Game started");
+
+    return true;
+  }
+
+  /**
+   * Stop the game
+   */
+  stop() {
+    if (!this.running) return;
+
+    console.log("🛑 Stopping game...");
+
+    // Stop game loop
+    this.stopGameLoop();
+
+    // Stop auto-save
+    this.saveManager.stopAutoSave();
+
+    // Stop farm update loop
+    this.farmSystem.stopUpdateLoop();
+
+    // Save game before stopping
+    this.saveGame();
+
+    this.running = false;
+    console.log("✅ Game stopped");
+  }
+
+  /**
+   * Start game loop
+   */
+  startGameLoop() {
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+    }
+
+    this.lastUpdate = Date.now();
+
+    this.updateInterval = setInterval(() => {
+      this.update();
+    }, 1000); // Update every second
+
+    console.log("🔄 Game loop started");
+  }
+
+  /**
+   * Stop game loop
+   */
+  stopGameLoop() {
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+      this.updateInterval = null;
+      console.log("🔄 Game loop stopped");
+    }
+  }
+
+  /**
+   * Game update loop
+   */
+  update() {
+    const now = Date.now();
+    const deltaTime = (now - this.lastUpdate) / 1000; // in seconds
+
+    // Update play time
+    this.player.updatePlayTime(deltaTime);
+
+    // Update energy regeneration
+    this.updateEnergyRegeneration();
+
+    this.lastUpdate = now;
+  }
+
+  /**
+   * Update energy regeneration
+   */
+  updateEnergyRegeneration() {
+    const lastRegen = parseInt(
+      localStorage.getItem("fazenda_last_energy_regen") || "0",
+    );
+    const now = Date.now();
+
+    // Regenerate 1 energy every 60 seconds
+    if (now - lastRegen >= 60000) {
+      if (this.player.data.energy < this.player.data.maxEnergy) {
+        this.player.addEnergy(1);
+        localStorage.setItem("fazenda_last_energy_regen", now.toString());
+        this.topBar.update();
+      }
+    }
+  }
+
+  /**
+   * Show welcome screen
+   */
+  showWelcomeScreen() {
+    this.screenManager.showScreen("welcome-screen");
+  }
+
+  /**
+   * Start new game
+   * @param {string} playerName - Player name
+   */
+  startNewGame(playerName) {
+    if (!playerName || playerName.trim().length === 0) {
+      notifications.error(i18n.t("welcome.name"));
+      return;
+    }
+
+    console.log(`🎮 Starting new game for: ${playerName}`);
+
+    // Initialize new player
+    this.player.initialize(playerName);
+
+    // Save initial state
+    this.saveGame();
+
+    // Show farm screen
+    this.screenManager.showScreen("farm-screen");
+
+    // Show welcome notification
+    notifications.success(i18n.t("notifications.welcome"));
+
+    // Render initial farm
+    this.renderFarm();
+  }
+
+  /**
+   * Load game from save
+   */
+  loadGame() {
+    console.log("📂 Loading game...");
+
+    const saveData = this.saveManager.load();
+
+    if (!saveData) {
+      console.warn("⚠️ No valid save data found, starting new game");
+      this.showWelcomeScreen();
+      return;
+    }
+
+    // Load player data
+    if (saveData.player) {
+      this.player.load(saveData.player);
+      console.log(`✅ Loaded player: ${this.player.data.name}`);
+    }
+
+    // Show farm screen
+    this.screenManager.showScreen("farm-screen");
+
+    // Render farm
+    this.renderFarm();
+
+    // Update UI
+    this.topBar.update();
+
+    notifications.success(`Welcome back, ${this.player.data.name}!`);
+  }
+
+  /**
+   * Save game
+   * @returns {boolean}
+   */
+  saveGame() {
+    const saveData = {
+      player: this.player.getData(),
+      savedAt: Date.now(),
+      version: "0.0.1",
+    };
+
+    const success = this.saveManager.save(saveData);
+
+    if (success) {
+      console.log("💾 Game saved");
+    }
+
+    return success;
+  }
+
+  /**
+   * Reset game
+   */
+  resetGame() {
+    if (!confirm(i18n.t("settings.confirmReset"))) {
+      return;
+    }
+
+    console.log("🔄 Resetting game...");
+
+    // Stop game
+    this.stop();
+
+    // Delete save data
+    this.saveManager.deleteSave(true);
+
+    // Reset player
+    this.player.reset();
+
+    // Reset systems
+    this.farmSystem.resetFarm();
+    this.inventorySystem.clearInventory();
+    this.questSystem.resetQuests();
+
+    // Clear screen history
+    this.screenManager.clearHistory();
+
+    // Show welcome screen
+    this.showWelcomeScreen();
+
+    notifications.success(i18n.t("settings.resetSuccess"));
+
+    // Restart game
+    this.start();
+  }
+
+  /**
+   * Export save
+   */
+  exportSave() {
+    const saveData = {
+      player: this.player.getData(),
+      exportedAt: Date.now(),
+      version: "0.0.1",
+    };
+
+    const success = this.saveManager.exportSave(saveData);
+
+    if (success) {
+      notifications.success(i18n.t("settings.exportSuccess"));
+    } else {
+      notifications.error(i18n.t("notifications.error"));
+    }
+  }
+
+  /**
+   * Import save
+   */
+  async importSave() {
+    const saveData = await this.saveManager.importSave();
+
+    if (!saveData) {
+      notifications.error(i18n.t("notifications.error"));
+      return;
+    }
+
+    // Stop game
+    this.stop();
+
+    // Load imported data
+    if (saveData.player) {
+      this.player.load(saveData.player);
+    }
+
+    // Save to localStorage
+    this.saveGame();
+
+    // Restart game
+    this.start();
+
+    notifications.success(i18n.t("settings.importSuccess"));
+  }
+
+  /**
+   * Render farm grid
+   */
+  renderFarm() {
+    const farmGrid = document.getElementById("farm-grid");
+    if (!farmGrid) return;
+
+    farmGrid.innerHTML = "";
+
+    const plots = this.farmSystem.getPlots();
+
+    plots.forEach((plot, index) => {
+      const tile = this.createFarmTile(index);
+      farmGrid.appendChild(tile);
+    });
+
+    // Update XP bar
+    this.updateXPBar();
+  }
+
+  /**
+   * Create farm tile element
+   * @param {number} index - Plot index
+   * @returns {HTMLElement}
+   */
+  createFarmTile(index) {
+    const tile = document.createElement("div");
+    tile.className = "farm-tile";
+    tile.dataset.index = index;
+
+    // Update tile appearance
+    this.updateFarmTile(tile, index);
+
+    // Add click handler
+    tile.addEventListener("click", () => this.handleFarmTileClick(index));
+
+    return tile;
+  }
+
+  /**
+   * Update farm tile appearance
+   * @param {HTMLElement} tile - Tile element
+   * @param {number} index - Plot index
+   */
+  updateFarmTile(tile, index) {
+    const icon = this.farmSystem.getCropStageIcon(index);
+    const isReady = this.farmSystem.isPlotReady(index);
+    const timeRemaining = this.farmSystem.getTimeRemaining(index);
+    const progress = this.farmSystem.getGrowthProgress(index);
+
+    // Set icon
+    tile.innerHTML = `<div class="farm-tile-icon">${icon}</div>`;
+
+    // Add ready class
+    if (isReady) {
+      tile.classList.add("ready");
+    } else {
+      tile.classList.remove("ready");
+    }
+
+    // Add timer if growing
+    if (timeRemaining > 0) {
+      const timerEl = document.createElement("div");
+      timerEl.className = "farm-tile-timer";
+      timerEl.textContent = this.formatTime(timeRemaining);
+      tile.appendChild(timerEl);
+    }
+
+    // Add progress bar if growing
+    if (progress > 0 && progress < 100) {
+      const progressBar = document.createElement("div");
+      progressBar.className = "farm-tile-progress";
+      progressBar.innerHTML = `<div class="farm-tile-progress-bar" style="width: ${progress}%"></div>`;
+      tile.appendChild(progressBar);
+    }
+  }
+
+  /**
+   * Handle farm tile click
+   * @param {number} index - Plot index
+   */
+  handleFarmTileClick(index) {
+    if (this.farmSystem.isPlotReady(index)) {
+      this.harvestPlot(index);
+    } else if (this.farmSystem.isPlotEmpty(index)) {
+      this.plantPlot(index);
+    }
+  }
+
+  /**
+   * Plant on a plot
+   * @param {number} index - Plot index
+   */
+  plantPlot(index) {
+    // For now, plant wheat by default
+    const cropId = "wheat";
+
+    const result = this.farmSystem.plant(index, cropId);
+
+    if (result.success) {
+      notifications.success(i18n.t("farm.planted"));
+      this.renderFarm();
+      this.topBar.update();
+
+      // Update quest progress
+      this.questSystem.handleGameEvent("plant", {
+        cropId,
+        amount: 1,
+      });
+    } else {
+      notifications.error(result.error);
+    }
+  }
+
+  /**
+   * Harvest a plot
+   * @param {number} index - Plot index
+   */
+  harvestPlot(index) {
+    const result = this.farmSystem.harvest(index);
+
+    if (result.success) {
+      let message = `${i18n.t("farm.harvested")} +${result.amount}x ${result.crop}`;
+
+      if (result.levelUp) {
+        notifications.levelUp(result.newLevel, "Farming");
+      } else {
+        notifications.success(message);
+      }
+
+      this.renderFarm();
+      this.topBar.update();
+
+      // Update quest progress
+      this.questSystem.handleGameEvent("harvest", {
+        cropId: result.crop,
+        amount: result.amount,
+      });
+    } else {
+      notifications.error(result.error);
+    }
+  }
+
+  /**
+   * Update XP bar
+   */
+  updateXPBar() {
+    const xpCurrent = document.getElementById("xp-current");
+    const xpNeeded = document.getElementById("xp-needed");
+    const xpBarFill = document.getElementById("xp-bar-fill");
+
+    if (!xpCurrent || !xpNeeded || !xpBarFill) return;
+
+    const level = this.player.data.level;
+    const currentXP = this.player.data.xp;
+    const nextLevelXP = this.skillSystem.xpTable[level] || 0;
+    const currentLevelXP = this.skillSystem.xpTable[level - 1] || 0;
+
+    const xpInLevel = currentXP - currentLevelXP;
+    const xpNeededForLevel = nextLevelXP - currentLevelXP;
+    const percentage = (xpInLevel / xpNeededForLevel) * 100;
+
+    xpCurrent.textContent = xpInLevel;
+    xpNeeded.textContent = xpNeededForLevel;
+    xpBarFill.style.width = `${percentage}%`;
+  }
+
+  /**
+   * Format time in seconds to MM:SS
+   * @param {number} seconds - Time in seconds
+   * @returns {string}
+   */
+  formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  }
+
+  /**
+   * Attach global event listeners
+   */
+  attachEventListeners() {
+    // Start game button
+    const startGameBtn = document.getElementById("start-game-btn");
+    if (startGameBtn) {
+      startGameBtn.addEventListener("click", () => {
+        const nameInput = document.getElementById("player-name");
+        const playerName = nameInput?.value.trim();
+        if (playerName) {
+          this.startNewGame(playerName);
+        }
+      });
+    }
+
+    // Auto-save event
+    window.addEventListener("save:auto", () => {
+      this.saveGame();
+    });
+
+    // Farm events
+    window.addEventListener("farm:cropReady", () => {
+      this.renderFarm();
+    });
+
+    // Settings events
+    this.attachSettingsEvents();
+
+    // Farm action buttons
+    const plantAllBtn = document.getElementById("plant-all-btn");
+    const harvestAllBtn = document.getElementById("harvest-all-btn");
+
+    if (plantAllBtn) {
+      plantAllBtn.addEventListener("click", () => this.plantAll());
+    }
+
+    if (harvestAllBtn) {
+      harvestAllBtn.addEventListener("click", () => this.harvestAll());
+    }
+
+    // Screen refresh events
+    window.addEventListener("screen:changed", (e) => {
+      this.handleScreenChange(e.detail.screenId);
+    });
+  }
+
+  /**
+   * Attach settings events
+   */
+  attachSettingsEvents() {
+    // Theme buttons
+    const themeBtns = document.querySelectorAll(".theme-btn");
+    themeBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const theme = btn.dataset.theme;
+        this.changeTheme(theme);
+      });
+    });
+
+    // Language buttons
+    const langBtns = document.querySelectorAll(".lang-btn");
+    langBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const lang = btn.dataset.lang;
+        this.changeLanguage(lang);
+      });
+    });
+
+    // Reset button
+    const resetBtn = document.getElementById("reset-game-btn");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", () => this.resetGame());
+    }
+
+    // Export button
+    const exportBtn = document.getElementById("export-save-btn");
+    if (exportBtn) {
+      exportBtn.addEventListener("click", () => this.exportSave());
+    }
+
+    // Import button
+    const importBtn = document.getElementById("import-save-btn");
+    if (importBtn) {
+      importBtn.addEventListener("click", () => this.importSave());
+    }
+  }
+
+  /**
+   * Change theme
+   * @param {string} theme - Theme name
+   */
+  changeTheme(theme) {
+    document.body.classList.remove("light-theme", "dark-theme");
+    document.body.classList.add(`${theme}-theme`);
+    localStorage.setItem("fazenda_theme", theme);
+
+    // Update active button
+    document.querySelectorAll(".theme-btn").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.theme === theme);
+    });
+
+    notifications.success(`Theme changed to ${theme}`);
+  }
+
+  /**
+   * Change language
+   * @param {string} lang - Language code
+   */
+  async changeLanguage(lang) {
+    const success = await i18n.setLanguage(lang);
+
+    if (success) {
+      // Update active button
+      document.querySelectorAll(".lang-btn").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.lang === lang);
+      });
+
+      notifications.success(`Language changed to ${lang}`);
+    }
+  }
+
+  /**
+   * Plant all empty plots
+   */
+  plantAll() {
+    const result = this.farmSystem.plantAll("wheat");
+
+    if (result.success) {
+      notifications.success(`Planted ${result.planted} crops!`);
+      this.renderFarm();
+      this.topBar.update();
+    } else {
+      notifications.error(result.errors || "Cannot plant");
+    }
+  }
+
+  /**
+   * Harvest all ready crops
+   */
+  harvestAll() {
+    const result = this.farmSystem.harvestAll();
+
+    if (result.success) {
+      notifications.success(`Harvested ${result.harvested} crops!`);
+      this.renderFarm();
+      this.topBar.update();
+    } else {
+      notifications.info("No crops ready to harvest");
+    }
+  }
+
+  /**
+   * Handle screen change
+   * @param {string} screenId - Screen ID
+   */
+  handleScreenChange(screenId) {
+    switch (screenId) {
+      case "farm-screen":
+        this.renderFarm();
+        break;
+      case "skills-screen":
+        this.renderSkills();
+        break;
+      case "inventory-screen":
+        this.renderInventory();
+        break;
+      case "quests-screen":
+        this.renderQuests();
+        break;
+      case "npcs-screen":
+        this.renderNPCs();
+        break;
+      case "market-screen":
+        this.renderMarket();
+        break;
+    }
+  }
+
+  /**
+   * Render skills screen
+   */
+  renderSkills() {
+    const skillsGrid = document.getElementById("skills-grid");
+    if (!skillsGrid) return;
+
+    skillsGrid.innerHTML = "";
+
+    const skills = this.skillSystem.getAllSkillStats();
+
+    skills.forEach((skill) => {
+      const card = this.createSkillCard(skill);
+      skillsGrid.appendChild(card);
+    });
+  }
+
+  /**
+   * Create skill card
+   * @param {Object} skill - Skill data
+   * @returns {HTMLElement}
+   */
+  createSkillCard(skill) {
+    const card = document.createElement("div");
+    card.className = "skill-card";
+    card.dataset.skill = skill.id;
+    card.style.setProperty("--skill-color", skill.color);
+    card.style.setProperty("--skill-color-light", skill.colorLight);
+
+    const isMaxLevel = skill.level >= 99;
+
+    card.innerHTML = `
+            <div class="skill-header">
+                <div class="skill-icon">${skill.icon}</div>
+                <div class="skill-info">
+                    <div class="skill-name">${skill.name}</div>
+                    <div class="skill-level">
+                        <span class="skill-level-label">Level</span>
+                        ${skill.level}
+                    </div>
+                </div>
+            </div>
+            <div class="skill-progress-container">
+                <div class="skill-progress-bar">
+                    <div class="skill-progress-fill" style="width: ${skill.progress}%">
+                        ${isMaxLevel ? "MAX" : Math.floor(skill.progress) + "%"}
+                    </div>
+                </div>
+                <div class="skill-progress-text">
+                    <span>${skill.xp.toLocaleString()} XP</span>
+                    <span>${isMaxLevel ? "MAX" : skill.xpForNext.toLocaleString() + " XP"}</span>
+                </div>
+            </div>
+        `;
+
+    return card;
+  }
+
+  /**
+   * Render inventory screen
+   */
+  renderInventory() {
+    if (this.inventoryUI) {
+      this.inventoryUI.render();
+    }
+  }
+
+  /**
+   * Render quests screen
+   */
+  renderQuests() {
+    const questsList = document.getElementById("quests-list");
+    if (!questsList) return;
+
+    questsList.innerHTML = "";
+
+    const activeQuests = this.questSystem.getActiveQuests();
+    const availableQuests = this.questSystem.getAvailableQuests();
+
+    if (activeQuests.length === 0 && availableQuests.length === 0) {
+      questsList.innerHTML = '<p class="text-center">No quests available</p>';
+      return;
+    }
+
+    // Render active quests
+    if (activeQuests.length > 0) {
+      const heading = document.createElement("h3");
+      heading.textContent = "Active Quests";
+      questsList.appendChild(heading);
+
+      activeQuests.forEach((quest) => {
+        const questEl = this.createQuestElement(quest, true);
+        questsList.appendChild(questEl);
+      });
+    }
+
+    // Render available quests
+    if (availableQuests.length > 0) {
+      const heading = document.createElement("h3");
+      heading.textContent = "Available Quests";
+      heading.style.marginTop = "20px";
+      questsList.appendChild(heading);
+
+      availableQuests.forEach((quest) => {
+        const questEl = this.createQuestElement(quest, false);
+        questsList.appendChild(questEl);
+      });
+    }
+  }
+
+  /**
+   * Create quest element
+   * @param {Object} quest - Quest data
+   * @param {boolean} isActive - Is quest active
+   * @returns {HTMLElement}
+   */
+  createQuestElement(quest, isActive) {
+    const questEl = document.createElement("div");
+    questEl.className = "quest-item";
+
+    const progress = isActive ? this.questSystem.getQuestProgress(quest.id) : 0;
+
+    questEl.innerHTML = `
+            <div class="quest-header">
+                <div class="quest-title">${quest.name}</div>
+                ${quest.rewards?.gold ? `<div class="quest-reward">${quest.rewards.gold} Gold</div>` : ""}
+            </div>
+            <div class="quest-description">${quest.description}</div>
+            ${
+              isActive
+                ? `
+                <div class="quest-progress">
+                    <div class="quest-progress-bar" style="width: ${progress}%"></div>
+                </div>
+            `
+                : ""
+            }
+        `;
+
+    return questEl;
+  }
+
+  /**
+   * Render NPCs screen
+   */
+  renderNPCs() {
+    if (this.npcsUI) {
+      this.npcsUI.render();
+    }
+  }
+
+  /**
+   * Render market screen
+   */
+  renderMarket() {
+    if (this.marketUI) {
+      this.marketUI.render();
+    }
+  }
+
+  /**
+   * Show loading overlay
+   * @param {boolean} show - Show or hide
+   */
+  showLoading(show) {
+    const overlay = document.getElementById("loading-overlay");
+    if (overlay) {
+      if (show) {
+        overlay.classList.add("active");
+      } else {
+        overlay.classList.remove("active");
+      }
+    }
+  }
+
+  /**
+   * Clean up and destroy game engine
+   */
+  destroy() {
+    this.stop();
+
+    if (this.topBar) this.topBar.destroy();
+    if (this.sideMenu) this.sideMenu.destroy();
+    if (this.screenManager) this.screenManager.destroy();
+
+    this.initialized = false;
+    console.log("🗑️ Game engine destroyed");
+  }
+}

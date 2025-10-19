@@ -1,0 +1,266 @@
+{
+  "version": "0.0.1",
+  "npcs": {
+    "old_farmer": {
+      "id": "old_farmer",
+      "name": "Old Farmer Joe",
+      "namePtBR": "Fazendeiro José",
+      "avatar": "👨‍🌾",
+      "role": "Farmer",
+      "rolePtBR": "Fazendeiro",
+      "description": "A wise old farmer who knows everything about crops.",
+      "descriptionPtBR": "Um sábio fazendeiro idoso que sabe tudo sobre culturas.",
+      "location": "farm",
+      "friendship": 0,
+      "maxFriendship": 100,
+      "quests": ["welcome_farmer", "first_harvest", "skilled_farmer", "daily_harvest"],
+      "shop": {
+        "items": [
+          { "id": "wheat_seed", "stock": 999, "priceMultiplier": 1.0 },
+          { "id": "corn_seed", "stock": 999, "priceMultiplier": 1.0 },
+          { "id": "tomato_seed", "stock": 999, "priceMultiplier": 1.0 },
+          { "id": "potato_seed", "stock": 999, "priceMultiplier": 1.0 },
+          { "id": "carrot_seed", "stock": 999, "priceMultiplier": 1.0 },
+          { "id": "fertilizer", "stock": 50, "priceMultiplier": 1.0 }
+        ]
+      },
+      "dialogue": {
+        "greeting": [
+          "Hello there, young farmer!",
+          "Beautiful day for farming, isn't it?",
+          "Welcome back to the farm!"
+        ],
+        "greetingPtBR": [
+          "Olá, jovem fazendeiro!",
+          "Lindo dia para plantar, não é?",
+          "Bem-vindo de volta à fazenda!"
+        ]
+      }
+    },
+    "merchant": {
+      "id": "merchant",
+      "name": "Marcus the Merchant",
+      "namePtBR": "Marcus o Mercador",
+      "avatar": "🧔",
+      "role": "Merchant",
+      "rolePtBR": "Mercador",
+      "description": "A traveling merchant with rare goods.",
+      "descriptionPtBR": "Um mercador viajante com mercadorias raras.",
+      "location": "city",
+      "friendship": 0,
+      "maxFriendship": 100,
+      "quests": ["diverse_crops", "wealthy_trader"],
+      "shop": {
+        "items": [
+          { "id": "fertilizer", "stock": 100, "priceMultiplier": 0.9 },
+          { "id": "basket", "stock": 5, "priceMultiplier": 1.0 },
+          { "id": "iron_tool", "stock": 3, "priceMultiplier": 1.0 }
+        ]
+      },
+      "dialogue": {
+        "greeting": [
+          "Looking for quality goods?",
+          "I have the best prices in town!",
+          "What can I get you today?"
+        ],
+        "greetingPtBR": [
+          "Procurando mercadorias de qualidade?",
+          "Tenho os melhores preços da cidade!",
+          "O que posso te oferecer hoje?"
+        ]
+      }
+    },
+    "fisherman": {
+      "id": "fisherman",
+      "name": "Captain Jack",
+      "namePtBR": "Capitão Jack",
+      "avatar": "🎣",
+      "role": "Fisherman",
+      "rolePtBR": "Pescador",
+      "description": "An expert fisherman who knows all the best spots.",
+      "descriptionPtBR": "Um pescador experiente que conhece todos os melhores lugares.",
+      "location": "river",
+      "friendship": 0,
+      "maxFriendship": 100,
+      "quests": ["master_fisher", "daily_fishing"],
+      "dialogue": {
+        "greeting": [
+          "The fish are biting today!",
+          "Care to join me for some fishing?",
+          "I caught a big one this morning!"
+        ],
+        "greetingPtBR": [
+          "Os peixes estão mordendo hoje!",
+          "Quer se juntar a mim para pescar?",
+          "Peguei um peixão esta manhã!"
+        ]
+      }
+    },
+    "chef": {
+      "id": "chef",
+      "name": "Chef Maria",
+      "namePtBR": "Chef Maria",
+      "avatar": "👩‍🍳",
+      "role": "Chef",
+      "rolePtBR": "Chefe de Cozinha",
+      "description": "A talented chef who creates delicious meals.",
+      "descriptionPtBR": "Uma chef talentosa que cria refeições deliciosas.",
+      "location": "tavern",
+      "friendship": 0,
+      "maxFriendship": 100,
+      "quests": ["cooking_intro"],
+      "shop": {
+        "items": [
+          { "id": "cooked_shrimp", "stock": 20, "priceMultiplier": 1.2 },
+          { "id": "cooked_fish", "stock": 15, "priceMultiplier": 1.2 },
+          { "id": "bread", "stock": 30, "priceMultiplier": 1.1 }
+        ]
+      },
+      "dialogue": {
+        "greeting": [
+          "Welcome to my kitchen!",
+          "Would you like to try my special?",
+          "Cooking is an art!"
+        ],
+        "greetingPtBR": [
+          "Bem-vindo à minha cozinha!",
+          "Gostaria de provar meu especial?",
+          "Cozinhar é uma arte!"
+        ]
+      }
+    },
+    "miner": {
+      "id": "miner",
+      "name": "Rocky Stone",
+      "namePtBR": "Pedro Pedreira",
+      "avatar": "⛏️",
+      "role": "Miner",
+      "rolePtBR": "Minerador",
+      "description": "A tough miner who digs deep for precious ores.",
+      "descriptionPtBR": "Um minerador resistente que cava fundo por minérios preciosos.",
+      "location": "mine",
+      "friendship": 0,
+      "maxFriendship": 100,
+      "quests": ["mining_basics"],
+      "shop": {
+        "items": [
+          { "id": "stone", "stock": 100, "priceMultiplier": 0.8 },
+          { "id": "coal", "stock": 50, "priceMultiplier": 0.9 },
+          { "id": "iron_ore", "stock": 30, "priceMultiplier": 1.0 }
+        ]
+      },
+      "dialogue": {
+        "greeting": [
+          "Strike the earth!",
+          "Mining is hard work but rewarding!",
+          "Found some good ore today!"
+        ],
+        "greetingPtBR": [
+          "Cave a terra!",
+          "Minerar é trabalho duro mas recompensador!",
+          "Encontrei um bom minério hoje!"
+        ]
+      }
+    },
+    "carpenter": {
+      "id": "carpenter",
+      "name": "Timber Tom",
+      "namePtBR": "Tom Madeireiro",
+      "avatar": "🪓",
+      "role": "Carpenter",
+      "rolePtBR": "Carpinteiro",
+      "description": "A skilled carpenter who works with wood.",
+      "descriptionPtBR": "Um carpinteiro habilidoso que trabalha com madeira.",
+      "location": "workshop",
+      "friendship": 0,
+      "maxFriendship": 100,
+      "quests": ["woodcutter_apprentice"],
+      "shop": {
+        "items": [
+          { "id": "logs", "stock": 100, "priceMultiplier": 0.9 },
+          { "id": "oak_logs", "stock": 50, "priceMultiplier": 0.9 },
+          { "id": "basket", "stock": 10, "priceMultiplier": 0.95 }
+        ]
+      },
+      "dialogue": {
+        "greeting": [
+          "Wood you like some help?",
+          "I'm crafting something special!",
+          "The forest provides!"
+        ],
+        "greetingPtBR": [
+          "Precisa de ajuda com madeira?",
+          "Estou criando algo especial!",
+          "A floresta provê!"
+        ]
+      }
+    },
+    "blacksmith": {
+      "id": "blacksmith",
+      "name": "Iron Ivan",
+      "namePtBR": "Ivan Ferreiro",
+      "avatar": "🔨",
+      "role": "Blacksmith",
+      "rolePtBR": "Ferreiro",
+      "description": "A master blacksmith who forges the finest tools.",
+      "descriptionPtBR": "Um mestre ferreiro que forja as melhores ferramentas.",
+      "location": "smithy",
+      "friendship": 0,
+      "maxFriendship": 100,
+      "quests": [],
+      "shop": {
+        "items": [
+          { "id": "iron_tool", "stock": 5, "priceMultiplier": 0.9 },
+          { "id": "bronze_bar", "stock": 20, "priceMultiplier": 1.0 },
+          { "id": "iron_bar", "stock": 10, "priceMultiplier": 1.0 }
+        ]
+      },
+      "dialogue": {
+        "greeting": [
+          "The forge is hot today!",
+          "Need something smithed?",
+          "Quality tools for quality work!"
+        ],
+        "greetingPtBR": [
+          "A forja está quente hoje!",
+          "Precisa forjar algo?",
+          "Ferramentas de qualidade para trabalho de qualidade!"
+        ]
+      }
+    },
+    "herbalist": {
+      "id": "herbalist",
+      "name": "Sage Sarah",
+      "namePtBR": "Sara Sábia",
+      "avatar": "🌿",
+      "role": "Herbalist",
+      "rolePtBR": "Herbalista",
+      "description": "A knowledgeable herbalist who knows nature's secrets.",
+      "descriptionPtBR": "Uma herbalista conhecedora que sabe os segredos da natureza.",
+      "location": "forest",
+      "friendship": 0,
+      "maxFriendship": 100,
+      "quests": ["herbalist_helper"],
+      "shop": {
+        "items": [
+          { "id": "herbs", "stock": 50, "priceMultiplier": 0.8 },
+          { "id": "berries", "stock": 40, "priceMultiplier": 0.9 },
+          { "id": "mushrooms", "stock": 20, "priceMultiplier": 1.0 },
+          { "id": "flowers", "stock": 30, "priceMultiplier": 1.0 }
+        ]
+      },
+      "dialogue": {
+        "greeting": [
+          "Nature provides all we need!",
+          "These herbs have amazing properties!",
+          "The forest is alive with magic!"
+        ],
+        "greetingPtBR": [
+          "A natureza provê tudo que precisamos!",
+          "Estas ervas têm propriedades incríveis!",
+          "A floresta está viva com magia!"
+        ]
+      }
+    }
+  }
+}

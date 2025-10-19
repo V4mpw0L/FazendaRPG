@@ -1,0 +1,663 @@
+/* ===================================
+   FazendaRPG - Mobile & Footer Styles
+   Mobile-first responsive optimizations
+   =================================== */
+
+/* ===================================
+   Footer Styles
+   =================================== */
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--footer-height);
+    background: var(--bg-secondary);
+    border-top: 3px solid var(--border-color);
+    box-shadow: 0 -4px 16px var(--shadow-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    z-index: var(--z-sticky);
+    font-size: 0.8125rem;
+}
+
+.light-theme .footer {
+    background: linear-gradient(to top, #ffffff 0%, #f0f9eb 100%);
+    border-top-color: #c8e0b8;
+}
+
+.dark-theme .footer {
+    background: linear-gradient(to top, #243329 0%, #1a2520 100%);
+    border-top-color: #3d5043;
+}
+
+.footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    width: 100%;
+    max-width: 1200px;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.footer-game-name {
+    font-weight: 700;
+    font-size: 0.9375rem;
+    color: var(--brand-primary);
+    text-shadow: 0 1px 2px var(--shadow-color);
+}
+
+.footer-copyright {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+.footer-dev {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+}
+
+.footer-dev-text {
+    color: var(--text-secondary);
+    font-size: 0.8125rem;
+}
+
+/* Gennisys Badge */
+.gennisys-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+        135deg,
+        var(--gennisys-green) 0%,
+        var(--gennisys-dark) 100%
+    );
+    padding: 6px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    box-shadow:
+        0 2px 8px rgba(0, 204, 102, 0.3),
+        0 1px 3px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all var(--transition-fast);
+    border: 2px solid var(--gennisys-dark);
+    position: relative;
+    overflow: hidden;
+}
+
+.gennisys-badge::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: left 0.5s;
+}
+
+.gennisys-badge:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow:
+        0 4px 16px rgba(0, 204, 102, 0.5),
+        0 2px 6px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    background: linear-gradient(135deg, #00e673 0%, #00b359 100%);
+}
+
+.gennisys-badge:hover::before {
+    left: 100%;
+}
+
+.gennisys-badge:active {
+    transform: translateY(0) scale(1);
+}
+
+.gennisys-text {
+    color: white;
+    font-weight: 700;
+    font-size: 0.875rem;
+    letter-spacing: 0.5px;
+    text-align: center;
+    text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.8),
+        0 1px 2px rgba(0, 0, 0, 0.6),
+        0 0 8px rgba(255, 255, 255, 0.2);
+}
+
+.footer-version {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    padding: 6px 12px;
+    background: var(--bg-accent);
+    border-radius: 12px;
+    border: 2px solid var(--border-color);
+    box-shadow: 0 2px 6px var(--shadow-color);
+    display: inline-block;
+}
+
+/* ===================================
+   Notification Toast
+   =================================== */
+
+.notification-toast {
+    position: fixed;
+    bottom: calc(var(--footer-height) + var(--spacing-md));
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 2px solid var(--brand-primary);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-md) var(--spacing-lg);
+    box-shadow: 0 4px 20px var(--shadow-color);
+    z-index: var(--z-toast);
+    max-width: 90%;
+    min-width: 280px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all var(--transition-normal);
+    font-weight: 600;
+    text-align: center;
+}
+
+.notification-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+}
+
+.notification-toast.success {
+    border-color: var(--success);
+    background: linear-gradient(
+        135deg,
+        rgba(39, 174, 96, 0.1) 0%,
+        var(--bg-secondary) 100%
+    );
+}
+
+.notification-toast.error {
+    border-color: var(--danger);
+    background: linear-gradient(
+        135deg,
+        rgba(231, 76, 60, 0.1) 0%,
+        var(--bg-secondary) 100%
+    );
+}
+
+.notification-toast.warning {
+    border-color: var(--warning);
+    background: linear-gradient(
+        135deg,
+        rgba(243, 156, 18, 0.1) 0%,
+        var(--bg-secondary) 100%
+    );
+}
+
+.notification-toast.info {
+    border-color: var(--info);
+    background: linear-gradient(
+        135deg,
+        rgba(52, 152, 219, 0.1) 0%,
+        var(--bg-secondary) 100%
+    );
+}
+
+/* ===================================
+   Modal Container
+   =================================== */
+
+.modal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: var(--z-modal);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.modal-container.active {
+    display: flex;
+    opacity: 1;
+}
+
+.modal {
+    background: var(--bg-secondary);
+    border: 3px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-xl);
+    max-width: 500px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px var(--shadow-color);
+    transform: scale(0.9);
+    transition: transform var(--transition-normal);
+}
+
+.modal-container.active .modal {
+    transform: scale(1);
+    animation: modalSlideIn var(--transition-normal);
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: scale(0.9) translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.modal-close {
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    line-height: 1;
+}
+
+.modal-close:hover {
+    background: var(--danger);
+    color: white;
+    border-color: var(--danger);
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    margin-bottom: var(--spacing-lg);
+    color: var(--text-secondary);
+}
+
+.modal-footer {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: flex-end;
+}
+
+/* ===================================
+   Loading Overlay
+   =================================== */
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+    z-index: var(--z-loading);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.loading-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    border-top-color: var(--brand-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-overlay p {
+    color: white;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+/* ===================================
+   Mobile Optimizations
+   =================================== */
+
+/* Touch-friendly tap targets */
+@media (hover: none) and (pointer: coarse) {
+    .btn,
+    .menu-item,
+    .city-card,
+    .farm-tile,
+    .skill-card,
+    .npc-card,
+    .inventory-item {
+        min-height: 44px;
+    }
+
+    /* Prevent text selection on interactive elements */
+    .btn,
+    .farm-tile,
+    .city-card,
+    .skill-card,
+    .menu-item {
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+}
+
+/* Small Mobile Devices (< 375px) */
+@media (max-width: 374px) {
+    :root {
+        --topbar-height: 55px;
+        --footer-height: 45px;
+        --spacing-md: 12px;
+        --spacing-lg: 20px;
+    }
+
+    .topbar {
+        padding: 0 var(--spacing-xs);
+    }
+
+    .status-item {
+        padding: 3px 6px;
+        font-size: 0.7rem;
+    }
+
+    .status-icon {
+        font-size: 0.9rem;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .farm-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-sm);
+    }
+
+    .footer-row {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+        text-align: center;
+    }
+
+    .footer-brand,
+    .footer-dev {
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .footer-game-name {
+        font-size: 0.8125rem;
+    }
+
+    .footer-dev-text {
+        font-size: 0.7rem;
+    }
+
+    .gennisys-text {
+        font-size: 0.75rem;
+    }
+
+    .footer-version {
+        font-size: 0.7rem;
+    }
+}
+
+/* Standard Mobile (375px - 480px) */
+@media (min-width: 375px) and (max-width: 480px) {
+    .farm-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-md);
+    }
+
+    .skills-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .city-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Large Mobile / Small Tablet (481px - 767px) */
+@media (min-width: 481px) and (max-width: 767px) {
+    .farm-grid {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 500px;
+    }
+
+    .skills-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .city-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .main-content {
+        max-width: 720px;
+    }
+
+    .farm-grid {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 600px;
+    }
+
+    .skills-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .city-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+    .footer-game-name {
+        font-size: 1rem;
+    }
+
+    .footer-dev-text {
+        font-size: 0.875rem;
+    }
+
+    .gennisys-text {
+        font-size: 1rem;
+    }
+
+    .footer-version {
+        font-size: 0.8125rem;
+    }
+
+    .notification-toast {
+        min-width: 350px;
+    }
+}
+
+/* ===================================
+   Landscape Orientation Adjustments
+   =================================== */
+
+@media (max-height: 600px) and (orientation: landscape) {
+    :root {
+        --topbar-height: 50px;
+        --footer-height: 40px;
+    }
+
+    .screen-header {
+        margin-bottom: var(--spacing-md);
+        padding: var(--spacing-sm);
+    }
+
+    .welcome-card {
+        margin: var(--spacing-md) auto;
+        padding: var(--spacing-lg);
+    }
+
+    .main-content {
+        padding: var(--spacing-sm);
+    }
+}
+
+/* ===================================
+   Safe Area Support (iOS notch)
+   =================================== */
+
+@supports (padding: max(0px)) {
+    .topbar {
+        padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+        padding-right: max(var(--spacing-md), env(safe-area-inset-right));
+    }
+
+    .main-content {
+        padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+        padding-right: max(var(--spacing-md), env(safe-area-inset-right));
+    }
+
+    .footer {
+        padding-bottom: max(var(--spacing-sm), env(safe-area-inset-bottom));
+    }
+
+    .side-menu {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+}
+
+/* ===================================
+   Print Styles
+   =================================== */
+
+@media print {
+    .topbar,
+    .footer,
+    .side-menu,
+    .menu-overlay,
+    .notification-toast,
+    .loading-overlay,
+    .btn,
+    .menu-toggle {
+        display: none !important;
+    }
+
+    body {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .main-content {
+        padding: 0;
+    }
+}
+
+/* ===================================
+   Accessibility - Focus Styles
+   =================================== */
+
+.btn:focus-visible,
+.menu-item:focus-visible,
+.farm-tile:focus-visible,
+.city-card:focus-visible,
+.skill-card:focus-visible,
+input:focus-visible,
+button:focus-visible {
+    outline: 3px solid var(--brand-primary);
+    outline-offset: 2px;
+}
+
+/* ===================================
+   Dark Mode Specific Mobile Adjustments
+   =================================== */
+
+.dark-theme .notification-toast {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+}
+
+.dark-theme .modal {
+    box-shadow: 0 8px 48px rgba(0, 0, 0, 0.9);
+}
+
+.dark-theme .gennisys-badge {
+    box-shadow:
+        0 2px 8px rgba(0, 204, 102, 0.5),
+        0 1px 3px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.dark-theme .gennisys-badge:hover {
+    box-shadow:
+        0 4px 16px rgba(0, 204, 102, 0.7),
+        0 2px 6px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.dark-theme .footer {
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.6);
+}

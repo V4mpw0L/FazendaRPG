@@ -1,0 +1,453 @@
+/* ===================================
+   FazendaRPG - Theme Styles
+   Light & Dark themes with farm aesthetics
+   =================================== */
+
+/* ===================================
+   Settings Screen Theme Selector
+   =================================== */
+
+.settings-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: var(--spacing-md);
+}
+
+.setting-group {
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.setting-group h3 {
+    margin-bottom: var(--spacing-md);
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: var(--spacing-sm);
+}
+
+/* Theme Selector */
+.theme-selector {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+}
+
+.theme-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    background: var(--bg-accent);
+    border: 3px solid var(--border-color);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    box-shadow: 0 2px 6px var(--shadow-color);
+}
+
+.theme-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px var(--shadow-color);
+}
+
+.theme-btn.active {
+    border-color: var(--brand-primary);
+    background: var(--brand-primary);
+    color: white;
+    box-shadow: 0 4px 12px rgba(92, 170, 31, 0.4);
+}
+
+.theme-btn span:first-child {
+    font-size: 3rem;
+    line-height: 1;
+}
+
+/* Light Theme Button Preview */
+.theme-btn[data-theme="light"] {
+    background: linear-gradient(135deg, #ffffff 0%, #f5f9f0 100%);
+}
+
+.theme-btn[data-theme="light"]:not(.active):hover {
+    background: linear-gradient(135deg, #f5f9f0 0%, #e8f5e0 100%);
+}
+
+/* Dark Theme Button Preview */
+.theme-btn[data-theme="dark"] {
+    background: linear-gradient(135deg, #243329 0%, #1a2520 100%);
+    color: #e8f5e0;
+}
+
+.theme-btn[data-theme="dark"]:not(.active):hover {
+    background: linear-gradient(135deg, #2d4435 0%, #243329 100%);
+}
+
+/* Language Selector */
+.language-selector {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+}
+
+.lang-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background: var(--bg-accent);
+    border: 3px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    box-shadow: 0 2px 6px var(--shadow-color);
+}
+
+.lang-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-color);
+    border-color: var(--brand-primary);
+}
+
+.lang-btn.active {
+    background: var(--brand-primary);
+    color: white;
+    border-color: var(--brand-tertiary);
+}
+
+.lang-btn span:first-child {
+    font-size: 1.5rem;
+}
+
+/* ===================================
+   Light Theme Customizations
+   =================================== */
+
+.light-theme {
+    /* Farm day colors */
+    --grass-color: #7ec850;
+    --dirt-color: #a0522d;
+    --sky-color: #87ceeb;
+    --sun-color: #ffd700;
+}
+
+/* Light theme shadows */
+.light-theme .topbar,
+.light-theme .screen-header,
+.light-theme .skill-card,
+.light-theme .city-card,
+.light-theme .welcome-card {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Light theme farm tiles */
+.light-theme .farm-tile {
+    background: linear-gradient(135deg, #8b6914 0%, #a0522d 100%);
+    border-color: #6b4910;
+}
+
+.light-theme .farm-tile.planted {
+    background: linear-gradient(135deg, #4a7c3a 0%, #5caa1f 100%);
+    border-color: #3d6b2f;
+}
+
+/* Light theme buttons */
+.light-theme .btn-primary {
+    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+}
+
+.light-theme .btn-success {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+}
+
+/* ===================================
+   Dark Theme Customizations
+   =================================== */
+
+.dark-theme {
+    /* Farm night colors */
+    --grass-color: #3d5043;
+    --dirt-color: #2d1f16;
+    --sky-color: #1a2838;
+    --moon-color: #e8f5e0;
+}
+
+/* Dark theme shadows */
+.dark-theme .topbar,
+.dark-theme .screen-header,
+.dark-theme .skill-card,
+.dark-theme .city-card,
+.dark-theme .welcome-card {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Dark theme farm tiles */
+.dark-theme .farm-tile {
+    background: linear-gradient(135deg, #3d2f1a 0%, #2d1f16 100%);
+    border-color: #1f1410;
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.5),
+        inset 0 -4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.dark-theme .farm-tile.planted {
+    background: linear-gradient(135deg, #2d4435 0%, #3d5043 100%);
+    border-color: #1a2520;
+}
+
+.dark-theme .farm-tile:hover {
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.6),
+        inset 0 -4px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Dark theme buttons */
+.dark-theme .btn-primary {
+    background: linear-gradient(135deg, var(--brand-tertiary) 0%, var(--brand-primary) 100%);
+    box-shadow: 0 4px 12px rgba(92, 170, 31, 0.3);
+}
+
+.dark-theme .btn-success {
+    background: linear-gradient(135deg, #1e8449 0%, #27ae60 100%);
+}
+
+.dark-theme .btn-secondary {
+    background: var(--bg-accent);
+    border-color: var(--border-color);
+}
+
+/* Dark theme skill cards */
+.dark-theme .skill-card {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+}
+
+.dark-theme .skill-icon {
+    background: linear-gradient(135deg, var(--bg-accent) 0%, var(--bg-secondary) 100%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Dark theme inputs */
+.dark-theme input,
+.dark-theme textarea {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.dark-theme input:focus,
+.dark-theme textarea:focus {
+    background: var(--bg-accent);
+}
+
+/* Dark theme city cards */
+.dark-theme .city-card {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-accent) 100%);
+}
+
+.dark-theme .city-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+/* ===================================
+   Animated Theme Transitions
+   =================================== */
+
+body {
+    transition:
+        background-color 0.5s ease,
+        color 0.5s ease;
+}
+
+.topbar,
+.side-menu,
+.screen-header,
+.skill-card,
+.city-card,
+.farm-tile,
+.btn,
+.status-item,
+.inventory-item,
+.market-item,
+.quest-item,
+.npc-card,
+.welcome-card {
+    transition:
+        background 0.3s ease,
+        background-color 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+/* ===================================
+   Special Theme Effects
+   =================================== */
+
+/* Light theme sun effect */
+.light-theme::before {
+    content: '';
+    position: fixed;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    animation: sunGlow 4s infinite alternate;
+}
+
+@keyframes sunGlow {
+    0% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+}
+
+/* Dark theme moon and stars effect */
+.dark-theme::before {
+    content: '';
+    position: fixed;
+    top: 50px;
+    right: 80px;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(232, 245, 224, 0.4) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    animation: moonGlow 6s infinite alternate;
+}
+
+@keyframes moonGlow {
+    0% {
+        opacity: 0.6;
+        box-shadow: 0 0 20px rgba(232, 245, 224, 0.3);
+    }
+    100% {
+        opacity: 0.9;
+        box-shadow: 0 0 40px rgba(232, 245, 224, 0.5);
+    }
+}
+
+/* Dark theme stars */
+.dark-theme::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(2px 2px at 20% 30%, white, transparent),
+        radial-gradient(2px 2px at 60% 70%, white, transparent),
+        radial-gradient(1px 1px at 50% 50%, white, transparent),
+        radial-gradient(1px 1px at 80% 10%, white, transparent),
+        radial-gradient(2px 2px at 90% 60%, white, transparent),
+        radial-gradient(1px 1px at 33% 80%, white, transparent),
+        radial-gradient(1px 1px at 70% 25%, white, transparent);
+    background-size: 200% 200%;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+    animation: starTwinkle 8s infinite alternate;
+}
+
+@keyframes starTwinkle {
+    0% {
+        opacity: 0.2;
+    }
+    100% {
+        opacity: 0.4;
+    }
+}
+
+/* Ensure content is above theme effects */
+.topbar,
+.main-content,
+.footer {
+    position: relative;
+    z-index: var(--z-base);
+}
+
+/* ===================================
+   Responsive Theme Adjustments
+   =================================== */
+
+@media (max-width: 480px) {
+    .theme-selector,
+    .language-selector {
+        grid-template-columns: 1fr;
+    }
+
+    .theme-btn span:first-child {
+        font-size: 2.5rem;
+    }
+}
+
+/* ===================================
+   Accessibility - Reduced Motion
+   =================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .light-theme::before,
+    .dark-theme::before,
+    .dark-theme::after {
+        animation: none;
+    }
+
+    body,
+    .topbar,
+    .side-menu,
+    .screen-header,
+    .skill-card,
+    .city-card,
+    .farm-tile,
+    .btn {
+        transition: none;
+    }
+}
+
+/* ===================================
+   High Contrast Mode Support
+   =================================== */
+
+@media (prefers-contrast: high) {
+    :root {
+        --border-light: #000000;
+        --border-dark: #ffffff;
+    }
+
+    .light-theme {
+        --border-color: #000000;
+    }
+
+    .dark-theme {
+        --border-color: #ffffff;
+    }
+
+    .farm-tile,
+    .skill-card,
+    .city-card,
+    .btn {
+        border-width: 3px;
+    }
+}

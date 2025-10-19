@@ -2,55 +2,303 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#5caa1f" />
+  <meta name="description" content="FazendaRPG - Um jogo de fazenda RPG completo para mobile" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
   <title>🌾 FazendaRPG</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- Icons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
+  <link rel="apple-touch-icon" href="assets/icon-192.png" />
+
+  <!-- Styles -->
   <link rel="stylesheet" href="style/main.css" />
+  <link rel="stylesheet" href="style/topbar.css" />
+  <link rel="stylesheet" href="style/skills.css" />
+  <link rel="stylesheet" href="style/themes.css" />
+  <link rel="stylesheet" href="style/mobile.css" />
 </head>
-<body>
+<body class="light-theme">
 
-  <!-- Tela de nome inicial -->
-  <div id="start-screen" class="modal">
-    <h2>👩‍🌾 Bem-vindo à FazendaRPG!</h2>
-    <p>Digite seu nome:</p>
-    <input type="text" id="player-name" placeholder="Seu nome" />
-    <button onclick="startGame()">Começar</button>
-  </div>
-
-  <!-- Jogo principal -->
-  <div id="game-container" class="hidden">
-    <div class="header">
-      <h1>🌾 FazendaRPG</h1>
-      <div>
-        <a href="cidade.html" class="cidade-btn">🏩 Cidade</a>
-        <button class="reset-btn" onclick="resetGame()">🧹 Resetar</button>
-        <button class="tema-btn" onclick="trocarTema()">🌃 Tema</button>
-        <button class="perfil-btn" onclick="abrirPerfil()">👤 Perfil</button>
+  <!-- Top Bar -->
+  <div id="topbar" class="topbar">
+    <div class="topbar-status">
+      <div class="status-item">
+        <span class="status-icon">💰</span>
+        <span id="topbar-gold">0</span>
+      </div>
+      <div class="status-item">
+        <span class="status-icon">⚡</span>
+        <span id="topbar-energy">0/100</span>
+      </div>
+      <div class="status-item">
+        <span class="status-icon">⭐</span>
+        <span id="topbar-level">1</span>
+      </div>
+      <div class="status-item">
+        <span class="status-icon">🌾</span>
+        <span id="topbar-farming">1</span>
       </div>
     </div>
 
-    <!-- HUD estilizada -->
-    <div id="hud" class="hud-box"></div>
-
-    <!-- Grid da fazenda -->
-    <div id="farm-grid" class="farm-grid"></div>
+    <button id="menu-toggle" class="menu-toggle" aria-label="Menu">
+      <span class="hamburger"></span>
+    </button>
   </div>
 
-  <!-- Modal de Perfil -->
-  <div id="perfil-modal" class="modal hidden">
-    <h3>📌 Perfil do Jogador</h3>
-    <div id="perfil-content"></div>
-    <button onclick="fecharPerfil()">Fechar</button>
+  <!-- Side Menu -->
+  <div id="side-menu" class="side-menu">
+    <div class="menu-header">
+      <h2 id="menu-title">Menu</h2>
+      <button id="menu-close" class="menu-close">&times;</button>
+    </div>
+
+    <nav class="menu-nav">
+      <button class="menu-item" data-page="farm">
+        <span class="menu-icon">🌾</span>
+        <span class="menu-text" data-i18n="menu.farm">Fazenda</span>
+      </button>
+      <button class="menu-item" data-page="skills">
+        <span class="menu-icon">📊</span>
+        <span class="menu-text" data-i18n="menu.skills">Skills</span>
+      </button>
+      <button class="menu-item" data-page="inventory">
+        <span class="menu-icon">🎒</span>
+        <span class="menu-text" data-i18n="menu.inventory">Inventário</span>
+      </button>
+      <button class="menu-item" data-page="city">
+        <span class="menu-icon">🏘️</span>
+        <span class="menu-text" data-i18n="menu.city">Cidade</span>
+      </button>
+      <button class="menu-item" data-page="market">
+        <span class="menu-icon">🛒</span>
+        <span class="menu-text" data-i18n="menu.market">Mercado</span>
+      </button>
+      <button class="menu-item" data-page="quests">
+        <span class="menu-icon">📜</span>
+        <span class="menu-text" data-i18n="menu.quests">Missões</span>
+      </button>
+      <button class="menu-item" data-page="npcs">
+        <span class="menu-icon">👥</span>
+        <span class="menu-text" data-i18n="menu.npcs">NPCs</span>
+      </button>
+      <button class="menu-item" data-page="settings">
+        <span class="menu-icon">⚙️</span>
+        <span class="menu-text" data-i18n="menu.settings">Configurações</span>
+      </button>
+    </nav>
   </div>
 
-  <!-- Notificação flutuante -->
-  <div id="notification" class="hidden"></div>
+  <!-- Overlay for menu -->
+  <div id="menu-overlay" class="menu-overlay"></div>
+
+  <!-- Main Content -->
+  <main id="main-content" class="main-content">
+
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="screen active">
+      <div class="welcome-card">
+        <h1>🌾 FazendaRPG</h1></h1>
+        <p data-i18n="welcome.subtitle">Bem-vindo ao seu RPG de Fazenda!</p>
+        <div class="welcome-form">
+          <label for="player-name" data-i18n="welcome.name">Digite seu nome:</label>
+          <input type="text" id="player-name" maxlength="20" placeholder="Farmer" />
+          <button id="start-game-btn" class="btn btn-primary" data-i18n="welcome.start">Começar Aventura</button>
+        </div>
+        <div class="welcome-version">v0.0.1</div>
+      </div>
+    </div>
+
+    <!-- Farm Screen -->
+    <div id="farm-screen" class="screen">
+      <div class="screen-header">
+        <h1 class="game-title">🌾 FazendaRPG</h1>
+        <h2 data-i18n="farm.title">Sua Fazenda</h2>
+        <div class="xp-bar-container">
+          <div class="xp-bar">
+            <div id="xp-bar-fill" class="xp-bar-fill"></div>
+          </div>
+          <div class="xp-text">
+            <span id="xp-current">0</span> / <span id="xp-needed">100</span> XP
+          </div>
+        </div>
+      </div>
+
+      <div id="farm-grid" class="farm-grid"></div>
+
+      <div class="farm-actions">
+        <button id="plant-all-btn" class="btn btn-success" data-i18n="farm.plantAll">
+          🌱 Plantar Tudo
+        </button>
+        <button id="harvest-all-btn" class="btn btn-primary" data-i18n="farm.harvestAll">
+          🧺 Colher Tudo
+        </button>
+      </div>
+    </div>
+
+    <!-- Skills Screen -->
+    <div id="skills-screen" class="screen">
+      <div class="screen-header">
+        <h2 data-i18n="skills.title">Suas Habilidades</h2>
+      </div>
+      <div id="skills-grid" class="skills-grid"></div>
+    </div>
+
+    <!-- Inventory Screen -->
+    <div id="inventory-screen" class="screen">
+      <div class="screen-header">
+        <h2 data-i18n="inventory.title">Inventário</h2>
+      </div>
+      <div id="inventory-grid" class="inventory-grid"></div>
+    </div>
+
+    <!-- City Screen -->
+    <div id="city-screen" class="screen">
+      <div class="screen-header">
+        <h2 data-i18n="city.title">Cidade</h2>
+      </div>
+      <div class="city-grid">
+        <div class="city-card" data-location="bank">
+          <div class="city-icon">🏦</div>
+          <h3 data-i18n="city.bank">Banco</h3>
+          <p data-i18n="city.bankDesc">Gerencie seu dinheiro</p>
+        </div>
+        <div class="city-card" data-location="tavern">
+          <div class="city-icon">🍺</div>
+          <h3 data-i18n="city.tavern">Taverna</h3>
+          <p data-i18n="city.tavernDesc">Descanse e ouça histórias</p>
+        </div>
+        <div class="city-card" data-location="plaza">
+          <div class="city-icon">⛲</div>
+          <h3 data-i18n="city.plaza">Praça</h3>
+          <p data-i18n="city.plazaDesc">Centro da cidade</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Market Screen -->
+    <div id="market-screen" class="screen">
+      <div class="screen-header">
+        <h2 data-i18n="market.title">Mercado</h2>
+      </div>
+      <div id="market-grid" class="market-grid"></div>
+    </div>
+
+    <!-- Quests Screen -->
+    <div id="quests-screen" class="screen">
+      <div class="screen-header">
+        <h2 data-i18n="quests.title">Missões</h2>
+      </div>
+      <div id="quests-list" class="quests-list"></div>
+    </div>
+
+    <!-- NPCs Screen -->
+    <div id="npcs-screen" class="screen">
+      <div class="screen-header">
+        <h2 data-i18n="npcs.title">NPCs</h2>
+      </div>
+      <div id="npcs-grid" class="npcs-grid"></div>
+    </div>
+
+    <!-- Settings Screen -->
+    <div id="settings-screen" class="screen">
+      <div class="screen-header">
+        <h2 data-i18n="settings.title">Configurações</h2>
+      </div>
+
+      <div class="settings-container">
+        <div class="setting-group">
+          <h3 data-i18n="settings.theme">Tema</h3>
+          <div class="theme-selector">
+            <button class="theme-btn" data-theme="light">
+              <span>☀️</span>
+              <span data-i18n="settings.lightTheme">Dia</span>
+            </button>
+            <button class="theme-btn" data-theme="dark">
+              <span>🌙</span>
+              <span data-i18n="settings.darkTheme">Noite</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <h3 data-i18n="settings.language">Idioma</h3>
+          <div class="language-selector">
+            <button class="lang-btn" data-lang="pt-BR">
+              <span>🇧🇷</span>
+              <span>Português (BR)</span>
+            </button>
+            <button class="lang-btn" data-lang="en-US">
+              <span>🇺🇸</span>
+              <span>English (US)</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <h3 data-i18n="settings.data">Dados do Jogo</h3>
+          <button id="export-save-btn" class="btn btn-secondary" data-i18n="settings.export">
+            📦 Exportar Save
+          </button>
+          <button id="import-save-btn" class="btn btn-secondary" data-i18n="settings.import">
+            📥 Importar Save
+          </button>
+          <button id="reset-game-btn" class="btn btn-danger" data-i18n="settings.reset">
+            🗑️ Resetar Jogo
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-row">
+      <div class="footer-brand">
+        <span class="footer-game-name">🌾 FazendaRPG</span>
+        <span class="footer-copyright">© 2024</span>
+      </div>
+      <div class="footer-dev">
+        <span class="footer-dev-text" data-i18n="footer.developed">Desenvolvido por:</span>
+        <a href="https://gennisys.com" target="_blank" rel="noopener noreferrer" class="gennisys-badge">
+          <span class="gennisys-text">Gennisys</span>
+        </a>
+      </div>
+      <div class="footer-version">v0.0.1</div>
+    </div>
+  </footer>
+
+  <!-- Notification Toast -->
+  <div id="notification-toast" class="notification-toast"></div>
+
+  <!-- Modal Container -->
+  <div id="modal-container" class="modal-container"></div>
+
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="loading-spinner"></div>
+    <p data-i18n="loading">Carregando...</p>
+  </div>
 
   <!-- Scripts -->
-  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/app.js"></script>
+
+  <!-- Service Worker Registration -->
   <script>
-    // Aplica o tema salvo ao carregar a página
-    const temaSalvo = localStorage.getItem("tema") || "white";
-    document.body.classList.add(temaSalvo);
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('✅ Service Worker registered'))
+          .catch(err => console.error('❌ SW registration failed:', err));
+      });
+    }
   </script>
 </body>
 </html>

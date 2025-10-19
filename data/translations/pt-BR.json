@@ -1,0 +1,227 @@
+{
+  "meta": {
+    "language": "pt-BR",
+    "name": "Português (Brasil)",
+    "version": "0.0.1"
+  },
+  "welcome": {
+    "title": "🌾 FazendaRPG",
+    "subtitle": "Bem-vindo ao seu RPG de Fazenda!",
+    "name": "Digite seu nome:",
+    "start": "Começar Aventura",
+    "loading": "Carregando sua fazenda..."
+  },
+  "menu": {
+    "farm": "Fazenda",
+    "skills": "Habilidades",
+    "inventory": "Inventário",
+    "city": "Cidade",
+    "market": "Mercado",
+    "quests": "Missões",
+    "npcs": "NPCs",
+    "settings": "Configurações"
+  },
+  "farm": {
+    "title": "Sua Fazenda",
+    "plantAll": "🌱 Plantar Tudo",
+    "harvestAll": "🧺 Colher Tudo",
+    "plant": "Plantar",
+    "harvest": "Colher",
+    "water": "Regar",
+    "fertilize": "Adubar",
+    "empty": "Vazio",
+    "growing": "Crescendo",
+    "ready": "Pronto!",
+    "needSeeds": "Você precisa de sementes!",
+    "needEnergy": "Energia insuficiente!",
+    "planted": "Plantado!",
+    "harvested": "Colhido!",
+    "timeRemaining": "Tempo restante"
+  },
+  "skills": {
+    "title": "Suas Habilidades",
+    "totalLevel": "Nível Total",
+    "level": "Nível",
+    "xp": "XP",
+    "nextLevel": "Próximo Nível",
+    "train": "Treinar",
+    "farming": {
+      "name": "Agricultura",
+      "description": "Plante e colha culturas para ganhar experiência em agricultura."
+    },
+    "mining": {
+      "name": "Mineração",
+      "description": "Mine pedras e minérios preciosos das profundezas da terra."
+    },
+    "fishing": {
+      "name": "Pesca",
+      "description": "Pesque diversos tipos de peixes em rios e lagos."
+    },
+    "cooking": {
+      "name": "Culinária",
+      "description": "Cozinhe alimentos deliciosos e nutritivos."
+    },
+    "woodcutting": {
+      "name": "Corte de Madeira",
+      "description": "Corte árvores para obter madeira e lenha."
+    },
+    "crafting": {
+      "name": "Artesanato",
+      "description": "Crie ferramentas e itens úteis."
+    },
+    "smithing": {
+      "name": "Ferraria",
+      "description": "Forje armas e armaduras poderosas."
+    },
+    "foraging": {
+      "name": "Coleta",
+      "description": "Colete ervas, frutas e recursos selvagens."
+    }
+  },
+  "inventory": {
+    "title": "Inventário",
+    "empty": "Seu inventário está vazio",
+    "slots": "Espaços",
+    "weight": "Peso",
+    "use": "Usar",
+    "drop": "Descartar",
+    "sell": "Vender",
+    "quantity": "Quantidade"
+  },
+  "city": {
+    "title": "Cidade",
+    "shop": "Loja",
+    "shopDesc": "Compre sementes e ferramentas",
+    "bank": "Banco",
+    "bankDesc": "Gerencie seu dinheiro",
+    "tavern": "Taverna",
+    "tavernDesc": "Descanse e ouça histórias",
+    "guild": "Guilda",
+    "guildDesc": "Aceite missões desafiadoras",
+    "smithy": "Ferraria",
+    "smithyDesc": "Forje e melhore equipamentos",
+    "market": "Mercado",
+    "marketDesc": "Compre e venda itens"
+  },
+  "market": {
+    "title": "Mercado",
+    "buy": "Comprar",
+    "sell": "Vender",
+    "price": "Preço",
+    "stock": "Estoque",
+    "purchased": "Comprado!",
+    "sold": "Vendido!",
+    "notEnoughGold": "Ouro insuficiente!",
+    "outOfStock": "Fora de estoque!"
+  },
+  "quests": {
+    "title": "Missões",
+    "active": "Ativas",
+    "completed": "Completas",
+    "available": "Disponíveis",
+    "accept": "Aceitar",
+    "abandon": "Abandonar",
+    "claim": "Reivindicar",
+    "reward": "Recompensa",
+    "progress": "Progresso",
+    "objectives": "Objetivos",
+    "description": "Descrição"
+  },
+  "npcs": {
+    "title": "NPCs",
+    "talk": "Conversar",
+    "trade": "Negociar",
+    "gift": "Presentear",
+    "friendship": "Amizade",
+    "farmer": "Fazendeiro",
+    "merchant": "Mercador",
+    "blacksmith": "Ferreiro",
+    "fisherman": "Pescador",
+    "chef": "Chef",
+    "miner": "Minerador",
+    "carpenter": "Carpinteiro",
+    "herbalist": "Herbalista"
+  },
+  "settings": {
+    "title": "Configurações",
+    "theme": "Tema",
+    "lightTheme": "Modo Dia",
+    "darkTheme": "Modo Noite",
+    "language": "Idioma",
+    "data": "Dados do Jogo",
+    "export": "📦 Exportar Save",
+    "import": "📥 Importar Save",
+    "reset": "🗑️ Resetar Jogo",
+    "confirmReset": "Tem certeza que deseja resetar o jogo? Esta ação não pode ser desfeita!",
+    "resetSuccess": "Jogo resetado com sucesso!",
+    "exportSuccess": "Save exportado com sucesso!",
+    "importSuccess": "Save importado com sucesso!",
+    "sound": "Som",
+    "music": "Música",
+    "notifications": "Notificações",
+    "volume": "Volume"
+  },
+  "stats": {
+    "gold": "Ouro",
+    "energy": "Energia",
+    "level": "Nível",
+    "xp": "Experiência",
+    "health": "Vida",
+    "stamina": "Stamina"
+  },
+  "items": {
+    "seed": "Semente",
+    "wheat": "Trigo",
+    "corn": "Milho",
+    "tomato": "Tomate",
+    "potato": "Batata",
+    "carrot": "Cenoura",
+    "wood": "Madeira",
+    "stone": "Pedra",
+    "iron": "Ferro",
+    "gold": "Ouro",
+    "fish": "Peixe",
+    "coal": "Carvão",
+    "fertilizer": "Fertilizante"
+  },
+  "notifications": {
+    "welcome": "Bem-vindo à FazendaRPG!",
+    "levelUp": "Parabéns! Você subiu para o nível {level}!",
+    "skillLevelUp": "{skill} subiu para o nível {level}!",
+    "questComplete": "Missão '{quest}' completa!",
+    "achievement": "Conquista desbloqueada: {achievement}!",
+    "itemReceived": "Você recebeu: {item} x{amount}",
+    "notEnoughSpace": "Inventário cheio!",
+    "saved": "Progresso salvo!",
+    "error": "Ocorreu um erro. Tente novamente."
+  },
+  "footer": {
+    "developed": "Desenvolvido por:"
+  },
+  "loading": "Carregando...",
+  "saving": "Salvando...",
+  "confirm": "Confirmar",
+  "cancel": "Cancelar",
+  "close": "Fechar",
+  "ok": "OK",
+  "yes": "Sim",
+  "no": "Não",
+  "back": "Voltar",
+  "next": "Próximo",
+  "previous": "Anterior",
+  "save": "Salvar",
+  "load": "Carregar",
+  "delete": "Deletar",
+  "new": "Novo",
+  "edit": "Editar",
+  "search": "Buscar",
+  "filter": "Filtrar",
+  "sort": "Ordenar",
+  "all": "Todos",
+  "none": "Nenhum",
+  "total": "Total",
+  "available": "Disponível",
+  "unavailable": "Indisponível",
+  "locked": "Bloqueado",
+  "unlocked": "Desbloqueado"
+}

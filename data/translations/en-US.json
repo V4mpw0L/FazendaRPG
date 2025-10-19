@@ -1,0 +1,227 @@
+{
+  "meta": {
+    "language": "en-US",
+    "name": "English (United States)",
+    "version": "0.0.1"
+  },
+  "welcome": {
+    "title": "🌾 FazendaRPG",
+    "subtitle": "Welcome to your Farm RPG!",
+    "name": "Enter your name:",
+    "start": "Start Adventure",
+    "loading": "Loading your farm..."
+  },
+  "menu": {
+    "farm": "Farm",
+    "skills": "Skills",
+    "inventory": "Inventory",
+    "city": "City",
+    "market": "Market",
+    "quests": "Quests",
+    "npcs": "NPCs",
+    "settings": "Settings"
+  },
+  "farm": {
+    "title": "Your Farm",
+    "plantAll": "🌱 Plant All",
+    "harvestAll": "🧺 Harvest All",
+    "plant": "Plant",
+    "harvest": "Harvest",
+    "water": "Water",
+    "fertilize": "Fertilize",
+    "empty": "Empty",
+    "growing": "Growing",
+    "ready": "Ready!",
+    "needSeeds": "You need seeds!",
+    "needEnergy": "Not enough energy!",
+    "planted": "Planted!",
+    "harvested": "Harvested!",
+    "timeRemaining": "Time remaining"
+  },
+  "skills": {
+    "title": "Your Skills",
+    "totalLevel": "Total Level",
+    "level": "Level",
+    "xp": "XP",
+    "nextLevel": "Next Level",
+    "train": "Train",
+    "farming": {
+      "name": "Farming",
+      "description": "Plant and harvest crops to gain farming experience."
+    },
+    "mining": {
+      "name": "Mining",
+      "description": "Mine stones and precious ores from the depths of the earth."
+    },
+    "fishing": {
+      "name": "Fishing",
+      "description": "Catch various types of fish in rivers and lakes."
+    },
+    "cooking": {
+      "name": "Cooking",
+      "description": "Cook delicious and nutritious food."
+    },
+    "woodcutting": {
+      "name": "Woodcutting",
+      "description": "Chop trees to obtain wood and logs."
+    },
+    "crafting": {
+      "name": "Crafting",
+      "description": "Create useful tools and items."
+    },
+    "smithing": {
+      "name": "Smithing",
+      "description": "Forge powerful weapons and armor."
+    },
+    "foraging": {
+      "name": "Foraging",
+      "description": "Gather herbs, fruits and wild resources."
+    }
+  },
+  "inventory": {
+    "title": "Inventory",
+    "empty": "Your inventory is empty",
+    "slots": "Slots",
+    "weight": "Weight",
+    "use": "Use",
+    "drop": "Drop",
+    "sell": "Sell",
+    "quantity": "Quantity"
+  },
+  "city": {
+    "title": "City",
+    "shop": "Shop",
+    "shopDesc": "Buy seeds and tools",
+    "bank": "Bank",
+    "bankDesc": "Manage your money",
+    "tavern": "Tavern",
+    "tavernDesc": "Rest and hear stories",
+    "guild": "Guild",
+    "guildDesc": "Accept challenging quests",
+    "smithy": "Smithy",
+    "smithyDesc": "Forge and upgrade equipment",
+    "market": "Market",
+    "marketDesc": "Buy and sell items"
+  },
+  "market": {
+    "title": "Market",
+    "buy": "Buy",
+    "sell": "Sell",
+    "price": "Price",
+    "stock": "Stock",
+    "purchased": "Purchased!",
+    "sold": "Sold!",
+    "notEnoughGold": "Not enough gold!",
+    "outOfStock": "Out of stock!"
+  },
+  "quests": {
+    "title": "Quests",
+    "active": "Active",
+    "completed": "Completed",
+    "available": "Available",
+    "accept": "Accept",
+    "abandon": "Abandon",
+    "claim": "Claim",
+    "reward": "Reward",
+    "progress": "Progress",
+    "objectives": "Objectives",
+    "description": "Description"
+  },
+  "npcs": {
+    "title": "NPCs",
+    "talk": "Talk",
+    "trade": "Trade",
+    "gift": "Gift",
+    "friendship": "Friendship",
+    "farmer": "Farmer",
+    "merchant": "Merchant",
+    "blacksmith": "Blacksmith",
+    "fisherman": "Fisherman",
+    "chef": "Chef",
+    "miner": "Miner",
+    "carpenter": "Carpenter",
+    "herbalist": "Herbalist"
+  },
+  "settings": {
+    "title": "Settings",
+    "theme": "Theme",
+    "lightTheme": "Light Mode",
+    "darkTheme": "Dark Mode",
+    "language": "Language",
+    "data": "Game Data",
+    "export": "📦 Export Save",
+    "import": "📥 Import Save",
+    "reset": "🗑️ Reset Game",
+    "confirmReset": "Are you sure you want to reset the game? This action cannot be undone!",
+    "resetSuccess": "Game reset successfully!",
+    "exportSuccess": "Save exported successfully!",
+    "importSuccess": "Save imported successfully!",
+    "sound": "Sound",
+    "music": "Music",
+    "notifications": "Notifications",
+    "volume": "Volume"
+  },
+  "stats": {
+    "gold": "Gold",
+    "energy": "Energy",
+    "level": "Level",
+    "xp": "Experience",
+    "health": "Health",
+    "stamina": "Stamina"
+  },
+  "items": {
+    "seed": "Seed",
+    "wheat": "Wheat",
+    "corn": "Corn",
+    "tomato": "Tomato",
+    "potato": "Potato",
+    "carrot": "Carrot",
+    "wood": "Wood",
+    "stone": "Stone",
+    "iron": "Iron",
+    "gold": "Gold",
+    "fish": "Fish",
+    "coal": "Coal",
+    "fertilizer": "Fertilizer"
+  },
+  "notifications": {
+    "welcome": "Welcome to FazendaRPG!",
+    "levelUp": "Congratulations! You reached level {level}!",
+    "skillLevelUp": "{skill} reached level {level}!",
+    "questComplete": "Quest '{quest}' completed!",
+    "achievement": "Achievement unlocked: {achievement}!",
+    "itemReceived": "You received: {item} x{amount}",
+    "notEnoughSpace": "Inventory full!",
+    "saved": "Progress saved!",
+    "error": "An error occurred. Please try again."
+  },
+  "footer": {
+    "developed": "Developed by:"
+  },
+  "loading": "Loading...",
+  "saving": "Saving...",
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+  "close": "Close",
+  "ok": "OK",
+  "yes": "Yes",
+  "no": "No",
+  "back": "Back",
+  "next": "Next",
+  "previous": "Previous",
+  "save": "Save",
+  "load": "Load",
+  "delete": "Delete",
+  "new": "New",
+  "edit": "Edit",
+  "search": "Search",
+  "filter": "Filter",
+  "sort": "Sort",
+  "all": "All",
+  "none": "None",
+  "total": "Total",
+  "available": "Available",
+  "unavailable": "Unavailable",
+  "locked": "Locked",
+  "unlocked": "Unlocked"
+}

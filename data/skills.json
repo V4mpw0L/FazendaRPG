@@ -1,0 +1,401 @@
+{
+  "version": "0.0.1",
+  "maxLevel": 99,
+  "skills": {
+    "farming": {
+      "id": "farming",
+      "name": "Farming",
+      "icon": "🌾",
+      "color": "#5caa1f",
+      "colorLight": "#7ec850",
+      "description": "Plant and harvest crops to gain farming experience.",
+      "baseXP": 10,
+      "actions": [
+        {
+          "id": "plant_wheat",
+          "name": "Plant Wheat",
+          "xp": 8,
+          "energyCost": 2,
+          "timeSeconds": 30,
+          "requiredLevel": 1,
+          "requiredItems": { "wheat_seed": 1 },
+          "produces": { "wheat": 1 }
+        },
+        {
+          "id": "plant_corn",
+          "name": "Plant Corn",
+          "xp": 15,
+          "energyCost": 3,
+          "timeSeconds": 60,
+          "requiredLevel": 5,
+          "requiredItems": { "corn_seed": 1 },
+          "produces": { "corn": 2 }
+        },
+        {
+          "id": "plant_tomato",
+          "name": "Plant Tomato",
+          "xp": 25,
+          "energyCost": 4,
+          "timeSeconds": 90,
+          "requiredLevel": 10,
+          "requiredItems": { "tomato_seed": 1 },
+          "produces": { "tomato": 3 }
+        },
+        {
+          "id": "plant_potato",
+          "name": "Plant Potato",
+          "xp": 35,
+          "energyCost": 5,
+          "timeSeconds": 120,
+          "requiredLevel": 15,
+          "requiredItems": { "potato_seed": 1 },
+          "produces": { "potato": 4 }
+        },
+        {
+          "id": "plant_carrot",
+          "name": "Plant Carrot",
+          "xp": 45,
+          "energyCost": 6,
+          "timeSeconds": 150,
+          "requiredLevel": 20,
+          "requiredItems": { "carrot_seed": 1 },
+          "produces": { "carrot": 5 }
+        }
+      ]
+    },
+    "mining": {
+      "id": "mining",
+      "name": "Mining",
+      "icon": "⛏️",
+      "color": "#6b8e23",
+      "colorLight": "#8db359",
+      "description": "Mine stones and precious ores from the depths of the earth.",
+      "baseXP": 12,
+      "actions": [
+        {
+          "id": "mine_stone",
+          "name": "Mine Stone",
+          "xp": 10,
+          "energyCost": 3,
+          "timeSeconds": 20,
+          "requiredLevel": 1,
+          "produces": { "stone": 1 }
+        },
+        {
+          "id": "mine_coal",
+          "name": "Mine Coal",
+          "xp": 25,
+          "energyCost": 5,
+          "timeSeconds": 45,
+          "requiredLevel": 10,
+          "produces": { "coal": 1 }
+        },
+        {
+          "id": "mine_iron",
+          "name": "Mine Iron",
+          "xp": 45,
+          "energyCost": 7,
+          "timeSeconds": 60,
+          "requiredLevel": 20,
+          "produces": { "iron_ore": 1 }
+        },
+        {
+          "id": "mine_gold",
+          "name": "Mine Gold",
+          "xp": 85,
+          "energyCost": 10,
+          "timeSeconds": 90,
+          "requiredLevel": 40,
+          "produces": { "gold_ore": 1 }
+        }
+      ]
+    },
+    "fishing": {
+      "id": "fishing",
+      "name": "Fishing",
+      "icon": "🎣",
+      "color": "#4682b4",
+      "colorLight": "#87ceeb",
+      "description": "Catch various types of fish in rivers and lakes.",
+      "baseXP": 8,
+      "actions": [
+        {
+          "id": "catch_shrimp",
+          "name": "Catch Shrimp",
+          "xp": 10,
+          "energyCost": 2,
+          "timeSeconds": 15,
+          "requiredLevel": 1,
+          "produces": { "raw_shrimp": 1 }
+        },
+        {
+          "id": "catch_fish",
+          "name": "Catch Fish",
+          "xp": 20,
+          "energyCost": 4,
+          "timeSeconds": 30,
+          "requiredLevel": 5,
+          "produces": { "raw_fish": 1 }
+        },
+        {
+          "id": "catch_salmon",
+          "name": "Catch Salmon",
+          "xp": 40,
+          "energyCost": 6,
+          "timeSeconds": 45,
+          "requiredLevel": 15,
+          "produces": { "raw_salmon": 1 }
+        },
+        {
+          "id": "catch_lobster",
+          "name": "Catch Lobster",
+          "xp": 70,
+          "energyCost": 8,
+          "timeSeconds": 60,
+          "requiredLevel": 30,
+          "produces": { "raw_lobster": 1 }
+        }
+      ]
+    },
+    "cooking": {
+      "id": "cooking",
+      "name": "Cooking",
+      "icon": "🍳",
+      "color": "#ff6347",
+      "colorLight": "#ff8c69",
+      "description": "Cook delicious and nutritious food.",
+      "baseXP": 10,
+      "actions": [
+        {
+          "id": "cook_shrimp",
+          "name": "Cook Shrimp",
+          "xp": 15,
+          "energyCost": 2,
+          "timeSeconds": 10,
+          "requiredLevel": 1,
+          "requiredItems": { "raw_shrimp": 1 },
+          "produces": { "cooked_shrimp": 1 }
+        },
+        {
+          "id": "cook_fish",
+          "name": "Cook Fish",
+          "xp": 25,
+          "energyCost": 3,
+          "timeSeconds": 15,
+          "requiredLevel": 5,
+          "requiredItems": { "raw_fish": 1 },
+          "produces": { "cooked_fish": 1 }
+        },
+        {
+          "id": "cook_salmon",
+          "name": "Cook Salmon",
+          "xp": 45,
+          "energyCost": 4,
+          "timeSeconds": 20,
+          "requiredLevel": 15,
+          "requiredItems": { "raw_salmon": 1 },
+          "produces": { "cooked_salmon": 1 }
+        },
+        {
+          "id": "bake_bread",
+          "name": "Bake Bread",
+          "xp": 35,
+          "energyCost": 5,
+          "timeSeconds": 25,
+          "requiredLevel": 10,
+          "requiredItems": { "wheat": 2 },
+          "produces": { "bread": 1 }
+        }
+      ]
+    },
+    "woodcutting": {
+      "id": "woodcutting",
+      "name": "Woodcutting",
+      "icon": "🪓",
+      "color": "#8b4513",
+      "colorLight": "#a0522d",
+      "description": "Chop trees to obtain wood and logs.",
+      "baseXP": 10,
+      "actions": [
+        {
+          "id": "chop_normal",
+          "name": "Chop Normal Tree",
+          "xp": 12,
+          "energyCost": 3,
+          "timeSeconds": 20,
+          "requiredLevel": 1,
+          "produces": { "logs": 1 }
+        },
+        {
+          "id": "chop_oak",
+          "name": "Chop Oak Tree",
+          "xp": 25,
+          "energyCost": 5,
+          "timeSeconds": 35,
+          "requiredLevel": 10,
+          "produces": { "oak_logs": 1 }
+        },
+        {
+          "id": "chop_willow",
+          "name": "Chop Willow Tree",
+          "xp": 45,
+          "energyCost": 7,
+          "timeSeconds": 50,
+          "requiredLevel": 25,
+          "produces": { "willow_logs": 1 }
+        },
+        {
+          "id": "chop_maple",
+          "name": "Chop Maple Tree",
+          "xp": 75,
+          "energyCost": 9,
+          "timeSeconds": 70,
+          "requiredLevel": 45,
+          "produces": { "maple_logs": 1 }
+        }
+      ]
+    },
+    "crafting": {
+      "id": "crafting",
+      "name": "Crafting",
+      "icon": "🔨",
+      "color": "#9370db",
+      "colorLight": "#b19cd9",
+      "description": "Create useful tools and items.",
+      "baseXP": 15,
+      "actions": [
+        {
+          "id": "craft_rope",
+          "name": "Craft Rope",
+          "xp": 20,
+          "energyCost": 3,
+          "timeSeconds": 15,
+          "requiredLevel": 1,
+          "requiredItems": { "wheat": 3 },
+          "produces": { "rope": 1 }
+        },
+        {
+          "id": "craft_basket",
+          "name": "Craft Basket",
+          "xp": 35,
+          "energyCost": 5,
+          "timeSeconds": 25,
+          "requiredLevel": 10,
+          "requiredItems": { "logs": 2 },
+          "produces": { "basket": 1 }
+        },
+        {
+          "id": "craft_fence",
+          "name": "Craft Fence",
+          "xp": 50,
+          "energyCost": 7,
+          "timeSeconds": 40,
+          "requiredLevel": 20,
+          "requiredItems": { "oak_logs": 3 },
+          "produces": { "fence": 1 }
+        }
+      ]
+    },
+    "smithing": {
+      "id": "smithing",
+      "name": "Smithing",
+      "icon": "⚒️",
+      "color": "#696969",
+      "colorLight": "#808080",
+      "description": "Forge powerful weapons and armor.",
+      "baseXP": 20,
+      "actions": [
+        {
+          "id": "smelt_bronze",
+          "name": "Smelt Bronze Bar",
+          "xp": 25,
+          "energyCost": 5,
+          "timeSeconds": 30,
+          "requiredLevel": 1,
+          "requiredItems": { "stone": 2, "coal": 1 },
+          "produces": { "bronze_bar": 1 }
+        },
+        {
+          "id": "smelt_iron",
+          "name": "Smelt Iron Bar",
+          "xp": 50,
+          "energyCost": 7,
+          "timeSeconds": 45,
+          "requiredLevel": 15,
+          "requiredItems": { "iron_ore": 1, "coal": 2 },
+          "produces": { "iron_bar": 1 }
+        },
+        {
+          "id": "forge_tool",
+          "name": "Forge Iron Tool",
+          "xp": 75,
+          "energyCost": 10,
+          "timeSeconds": 60,
+          "requiredLevel": 25,
+          "requiredItems": { "iron_bar": 2, "logs": 1 },
+          "produces": { "iron_tool": 1 }
+        }
+      ]
+    },
+    "foraging": {
+      "id": "foraging",
+      "name": "Foraging",
+      "icon": "🌿",
+      "color": "#228b22",
+      "colorLight": "#32cd32",
+      "description": "Gather herbs, fruits and wild resources.",
+      "baseXP": 8,
+      "actions": [
+        {
+          "id": "gather_herbs",
+          "name": "Gather Herbs",
+          "xp": 12,
+          "energyCost": 2,
+          "timeSeconds": 15,
+          "requiredLevel": 1,
+          "produces": { "herbs": 1 }
+        },
+        {
+          "id": "gather_berries",
+          "name": "Gather Berries",
+          "xp": 18,
+          "energyCost": 3,
+          "timeSeconds": 20,
+          "requiredLevel": 5,
+          "produces": { "berries": 2 }
+        },
+        {
+          "id": "gather_mushrooms",
+          "name": "Gather Mushrooms",
+          "xp": 30,
+          "energyCost": 4,
+          "timeSeconds": 30,
+          "requiredLevel": 15,
+          "produces": { "mushrooms": 1 }
+        },
+        {
+          "id": "gather_flowers",
+          "name": "Gather Flowers",
+          "xp": 40,
+          "energyCost": 5,
+          "timeSeconds": 40,
+          "requiredLevel": 25,
+          "produces": { "flowers": 3 }
+        }
+      ]
+    }
+  },
+  "xpTable": [
+    0, 83, 174, 276, 388, 512, 650, 801, 969, 1154,
+    1358, 1584, 1833, 2107, 2411, 2746, 3115, 3523, 3973, 4470,
+    5018, 5624, 6291, 7028, 7842, 8740, 9730, 10824, 12031, 13363,
+    14833, 16456, 18247, 20224, 22406, 24815, 27473, 30408, 33648, 37224,
+    41171, 45529, 50339, 55649, 61512, 67983, 75127, 83014, 91721, 101333,
+    111945, 123660, 136594, 150872, 166636, 184040, 203254, 224466, 247886, 273742,
+    302288, 333804, 368599, 407015, 449428, 496254, 547953, 605032, 668051, 737627,
+    814445, 899257, 992895, 1096278, 1210421, 1336443, 1475581, 1629200, 1798808, 1986068,
+    2192818, 2421087, 2673114, 2951373, 3258594, 3597792, 3972294, 4385776, 4842295, 5346332,
+    5902831, 6517253, 7195629, 7944614, 8771558, 9684577, 10692629, 11805606, 13034431, 14391160
+  ],
+  "milestones": [10, 25, 50, 75, 99]
+}
