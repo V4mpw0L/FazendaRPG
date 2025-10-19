@@ -38,7 +38,7 @@
     "harvested": "Colhido!",
     "timeRemaining": "Tempo restante",
     "noSeeds": "Sem sementes disponíveis",
-    "noCropsReady": "Nenhuma cultura pronta para colher"
+    "noCropsReady": "Nenhum cultivo pronto para colher"
   },
   "skills": {
     "title": "Suas Habilidades",
@@ -49,7 +49,7 @@
     "train": "Treinar",
     "farming": {
       "name": "Agricultura",
-      "description": "Plante e colha culturas para ganhar experiência em agricultura."
+      "description": "Plante e colha cultivos para ganhar experiência em agricultura."
     },
     "mining": {
       "name": "Mineração",
@@ -102,7 +102,6 @@
     "title": "Cidade",
     "shop": "Loja",
     "shopDesc": "Compre sementes e ferramentas",
-    "marketDesc": "Compre e venda itens",
     "bank": "Banco",
     "bankDesc": "Gerencie seu dinheiro",
     "tavern": "Taverna",
@@ -153,7 +152,7 @@
     "categories": {
       "all": "Todos",
       "seeds": "Sementes",
-      "crops": "Culturas",
+      "crops": "Cultivos",
       "fish": "Peixes",
       "minerals": "Minerais",
       "wood": "Madeira",
@@ -273,8 +272,8 @@
     "notEnoughSpace": "Inventário cheio!",
     "saved": "Progresso salvo!",
     "error": "Ocorreu um erro. Tente novamente.",
-    "plantedMultiple": "Plantadas {count} culturas!",
-    "harvestedMultiple": "Colhidas {count} culturas!"
+    "plantedMultiple": "Plantados {count} cultivos!",
+    "harvestedMultiple": "Colhidos {count} cultivos!"
   },
   "footer": {
     "developed": "Desenvolvido por:"

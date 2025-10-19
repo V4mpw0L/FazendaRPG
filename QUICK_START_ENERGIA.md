@@ -34,7 +34,7 @@ Level 10: 145/145  ← continua crescendo!
 ### 2. Suba Skills = +5 Energia Também!
 ```
 🌾 Farming Level 3: 115/115 energia
-🌱 Planta várias culturas e ganha XP
+🌱 Planta vários cultivos e ganha XP
 🎉 FARMING LEVEL UP!
 ⚡ Agora você tem 120/120 energia
 ```
@@ -84,7 +84,7 @@ Energia: 555/555 🔥
 ### Dia Típico
 ```
 1. Acorda com 80/130 energia
-2. Planta culturas (ganha Farming XP)
+2. Planta cultivos (ganha Farming XP)
 3. 🎉 Farming sobe para nível 5!
 4. Energia restaura: 135/135
 5. Continua jogando com mais energia!

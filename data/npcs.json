@@ -9,7 +9,7 @@
       "role": "Farmer",
       "rolePtBR": "Fazendeiro",
       "description": "A wise old farmer who knows everything about crops.",
-      "descriptionPtBR": "Um sábio fazendeiro idoso que sabe tudo sobre culturas.",
+      "descriptionPtBR": "Um sábio fazendeiro idoso que sabe tudo sobre cultivos.",
       "location": "farm",
       "friendship": 0,
       "maxFriendship": 100,

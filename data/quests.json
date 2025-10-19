@@ -6,7 +6,7 @@
       "name": "Welcome, Farmer!",
       "namePtBR": "Bem-vindo, Fazendeiro!",
       "description": "Plant your first crops to get started on your farming journey.",
-      "descriptionPtBR": "Plante suas primeiras culturas para começar sua jornada na fazenda.",
+      "descriptionPtBR": "Plante seus primeiros cultivos para começar sua jornada na fazenda.",
       "npc": "old_farmer",
       "requiredLevel": 1,
       "objectives": [
@@ -32,7 +32,7 @@
       "name": "First Harvest",
       "namePtBR": "Primeira Colheita",
       "description": "Harvest 5 crops to complete your first harvest.",
-      "descriptionPtBR": "Colha 5 culturas para completar sua primeira colheita.",
+      "descriptionPtBR": "Colha 5 cultivos para completar sua primeira colheita.",
       "npc": "old_farmer",
       "requiredLevel": 1,
       "prerequisites": ["welcome_farmer"],
@@ -84,9 +84,9 @@
     "diverse_crops": {
       "id": "diverse_crops",
       "name": "Diverse Crops",
-      "namePtBR": "Culturas Diversas",
+      "namePtBR": "Cultivos Diversos",
       "description": "Plant 3 different types of crops.",
-      "descriptionPtBR": "Plante 3 tipos diferentes de culturas.",
+      "descriptionPtBR": "Plante 3 tipos diferentes de cultivos.",
       "npc": "merchant",
       "requiredLevel": 5,
       "objectives": [
@@ -265,7 +265,7 @@
       "name": "Daily Harvest",
       "namePtBR": "Colheita Diária",
       "description": "Harvest 10 crops. This quest can be repeated daily.",
-      "descriptionPtBR": "Colha 10 culturas. Esta missão pode ser repetida diariamente.",
+      "descriptionPtBR": "Colha 10 cultivos. Esta missão pode ser repetida diariamente.",
       "npc": "old_farmer",
       "requiredLevel": 1,
       "objectives": [

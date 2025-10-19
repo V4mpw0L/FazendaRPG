@@ -24,8 +24,8 @@
 - [ ] Notificação: "Bem-vindo de volta, [seu nome]!" (não "Welcome back")
 
 ### Ações de Plantar
-- [ ] Ao plantar 1 cultura: "Plantado!" 
-- [ ] Ao plantar várias (botão Plantar Tudo): "Plantadas X culturas!" (não "Planted X crops")
+- [ ] Ao plantar 1 cultivo: "Plantado!" 
+- [ ] Ao plantar vários (botão Plantar Tudo): "Plantados X cultivos!" (não "Planted X crops")
 - [ ] Sem energia: "Energia insuficiente" (não "Not enough energy")
 - [ ] Sem sementes: "Você precisa de sementes!"
 

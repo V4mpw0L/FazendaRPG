@@ -12,7 +12,7 @@ FazendaRPG é um jogo de gerenciamento de fazenda completo desenvolvido com tecn
 
 ### ✨ Características Principais
 
-- 🌱 **Sistema de Agricultura Completo** - Plante, cultive e colha diversos tipos de culturas
+- 🌱 **Sistema de Agricultura Completo** - Plante, cultive e colha diversos tipos de cultivos
 - 📊 **8 Habilidades Únicas** - Farming, Mining, Fishing, Cooking, Woodcutting, Crafting, Smithing, Foraging
 - 🎯 **Sistema de Missões** - Missões diárias e de história com NPCs
 - 🎒 **Sistema de Inventário** - Gerenciamento completo de itens com stacking
@@ -50,7 +50,7 @@ FazendaRPG/
 │   └── generate-icons.html # Gerador de ícones
 │
 ├── data/                   # Dados do jogo (JSON)
-│   ├── crops.json         # Definições de culturas
+│   ├── crops.json         # Definições de cultivos
 │   ├── items.json         # Database de itens
 │   ├── skills.json        # Configurações de skills
 │   ├── quests.json        # Missões e objetivos
@@ -127,7 +127,7 @@ php -S localhost:8000
 
 Inspirado em RuneScape, cada habilidade evolui até o nível 99:
 
-- **🌾 Farming** - Plante e colha culturas (Core do jogo)
+- **🌾 Farming** - Plante e colha cultivos (Core do jogo)
 - **⛏️ Mining** - Mine pedras e minérios preciosos
 - **🎣 Fishing** - Pesque diversos tipos de peixes
 - **🍳 Cooking** - Cozinhe alimentos nutritivos
@@ -144,9 +144,9 @@ O jogo usa a mesma fórmula de XP do RuneScape:
 XP para próximo nível = Σ(level + 300 * 2^(level/7)) / 4
 ```
 
-### Sistema de Culturas
+### Sistema de Cultivos
 
-Cada cultura tem:
+Cada cultivo tem:
 - **Tempo de Crescimento** - Tempo real até a colheita
 - **Nível Requerido** - Nível mínimo de Farming
 - **XP Ganho** - Experiência ao colher
@@ -184,7 +184,7 @@ Edite `data/items.json`:
 }
 ```
 
-### Adicionar Nova Cultura
+### Adicionar Novo Cultivo
 
 Edite `data/crops.json`:
 
@@ -193,7 +193,7 @@ Edite `data/crops.json`:
   "new_crop": {
     "id": "new_crop",
     "name": "New Crop",
-    "namePtBR": "Nova Cultura",
+    "namePtBR": "Novo Cultivo",
     "icon": "🌺",
     "seedId": "new_crop_seed",
     "growthTime": 120,
@@ -346,7 +346,7 @@ Em `style/themes.css`:
 - [ ] Sistema de NPCs completo com diálogos
 - [ ] Loja funcional com compra/venda
 - [ ] Banco para guardar items
-- [ ] Mais culturas (10+ tipos)
+- [ ] Mais cultivos (10+ tipos)
 - [ ] Sistema de clima
 - [ ] Eventos aleatórios
 

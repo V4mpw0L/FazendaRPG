@@ -91,7 +91,7 @@ energiaSystemTest.displayStats()
 - Ao subir de nível: **+5 maxEnergy + energia restaurada!**
 
 ### 2. Suba Skills
-- Plante culturas (Farming XP)
+- Plante cultivos (Farming XP)
 - Minere recursos (Mining XP)
 - Pesque (Fishing XP)
 - Etc...

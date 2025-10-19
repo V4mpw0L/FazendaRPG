@@ -12,10 +12,10 @@
 
 ### 1. ❌ Textos em Inglês
 - ✅ "Welcome back, {nome}!" → **"Bem-vindo de volta, {nome}!"**
-- ✅ "Planted X crops!" → **"Plantadas X culturas!"**
-- ✅ "Harvested X crops!" → **"Colhidas X culturas!"**
+- ✅ "Planted X crops!" → **"Plantados X cultivos!"**
+- ✅ "Harvested X crops!" → **"Colhidos X cultivos!"**
 - ✅ "No seeds available" → **"Sem sementes disponíveis"**
-- ✅ "No crops ready to harvest" → **"Nenhuma cultura pronta para colher"**
+- ✅ "No crops ready to harvest" → **"Nenhum cultivo pronto para colher"**
 - ✅ "Not enough energy" → **"Energia insuficiente"**
 - ✅ "Not enough items" → **"Itens insuficientes"**
 - ✅ "Not enough inventory space" → **"Espaço insuficiente no inventário"**
@@ -69,12 +69,12 @@
 {
   "farm": {
     "noSeeds": "Sem sementes disponíveis",
-    "noCropsReady": "Nenhuma cultura pronta para colher"
+    "noCropsReady": "Nenhum cultivo pronto para colher"
   },
   "notifications": {
     "welcomeBack": "Bem-vindo de volta, {name}!",
-    "plantedMultiple": "Plantadas {count} culturas!",
-    "harvestedMultiple": "Colhidas {count} culturas!"
+    "plantedMultiple": "Plantados {count} cultivos!",
+    "harvestedMultiple": "Colhidos {count} cultivos!"
   },
   "inventory": {
     "usedItem": "Você usou {item}!",
@@ -276,13 +276,13 @@ if (!this.data.name || this.data.name.trim() === "") {
 4. ✅ Deve aparecer: **"Bem-vindo de volta, [SEU NOME]!"**
 
 ### Teste 2: Todas as Ações em Português
-1. Plante culturas → ✅ "Plantado!"
-2. Use botão "Plantar Tudo" → ✅ "Plantadas X culturas!"
-3. Colha culturas → ✅ "Colhido!"
-4. Use botão "Colher Tudo" → ✅ "Colhidas X culturas!"
+1. Plante cultivos → ✅ "Plantado!"
+2. Use botão "Plantar Tudo" → ✅ "Plantados X cultivos!"
+3. Colha cultivos → ✅ "Colhido!"
+4. Use botão "Colher Tudo" → ✅ "Colhidos X cultivos!"
 5. Tente plantar sem energia → ✅ "Energia insuficiente"
 6. Tente plantar sem sementes → ✅ "Sem sementes disponíveis"
-7. Tente colher sem crops prontos → ✅ "Nenhuma cultura pronta para colher"
+7. Tente colher sem crops prontos → ✅ "Nenhum cultivo pronto para colher"
 
 ### Teste 3: Inventário em Português
 1. Abra inventário
