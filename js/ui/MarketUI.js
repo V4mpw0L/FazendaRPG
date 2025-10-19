@@ -190,7 +190,7 @@ export default class MarketUI {
 
       #market-grid {
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
         gap: 0.5rem;
         padding: var(--spacing-md);
         min-height: 400px;
@@ -201,14 +201,13 @@ export default class MarketUI {
         border: 2px solid var(--border-color);
         border-radius: 8px;
         padding: 0.5rem;
-        cursor: pointer;
         transition: all var(--transition-fast);
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
         gap: 0.25rem;
-        aspect-ratio: 1;
+        min-height: 160px;
       }
 
       .market-item:hover {
@@ -244,6 +243,31 @@ export default class MarketUI {
         text-align: center;
         font-size: 0.625rem;
         color: var(--text-secondary);
+      }
+
+      .market-item-action {
+        width: 100%;
+        padding: 0.4rem 0.5rem;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        background: var(--brand-primary);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .market-item-action:hover {
+        background: var(--brand-tertiary);
+        transform: scale(1.05);
+        box-shadow: 0 2px 8px var(--shadow-color);
+      }
+
+      .market-item-action:active {
+        transform: scale(0.98);
       }
 
       .market-pagination {
@@ -287,31 +311,36 @@ export default class MarketUI {
       }
 
       .market-quick-actions {
-        margin-top: 0.75rem;
-        display: flex;
-        gap: 0.375rem;
-        flex-wrap: wrap;
+        margin-top: 1rem;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.5rem;
       }
 
       .quick-buy-btn {
-        flex: 1;
-        min-width: 45%;
-        padding: 0.5rem;
-        font-size: 0.75rem;
-        font-weight: 600;
-        background: var(--bg-accent);
-        border: 2px solid var(--border-color);
-        border-radius: 6px;
+        padding: 0.625rem 0.5rem;
+        font-size: 0.8125rem;
+        font-weight: 700;
+        background: var(--brand-primary);
+        color: white;
+        border: 2px solid var(--brand-tertiary);
+        border-radius: 8px;
         cursor: pointer;
         transition: all var(--transition-fast);
-        color: var(--text-primary);
+        white-space: nowrap;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       }
 
       .quick-buy-btn:hover {
-        background: var(--brand-primary);
+        background: var(--brand-tertiary);
         color: white;
-        border-color: var(--brand-tertiary);
-        transform: scale(1.05);
+        border-color: var(--brand-primary);
+        transform: scale(1.08);
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+      }
+
+      .quick-buy-btn:active {
+        transform: scale(0.98);
       }
 
       .market-preview {
@@ -337,7 +366,7 @@ export default class MarketUI {
 
       @media (max-width: 768px) {
         #market-grid {
-          grid-template-columns: repeat(4, 1fr);
+          grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
           gap: 0.375rem;
         }
 
@@ -349,7 +378,7 @@ export default class MarketUI {
 
       @media (max-width: 480px) {
         #market-grid {
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
           gap: 0.375rem;
           padding: var(--spacing-sm);
         }
@@ -366,6 +395,7 @@ export default class MarketUI {
 
         .market-item {
           padding: 0.375rem;
+          min-height: 140px;
         }
 
         .market-item-icon {
@@ -378,6 +408,21 @@ export default class MarketUI {
 
         .market-item-price {
           font-size: 0.6875rem;
+        }
+
+        .market-item-action {
+          font-size: 0.625rem;
+          padding: 0.375rem 0.5rem;
+        }
+
+        .market-quick-actions {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0.375rem;
+        }
+
+        .quick-buy-btn {
+          font-size: 0.75rem;
+          padding: 0.5rem 0.375rem;
         }
       }
     `;
@@ -567,15 +612,23 @@ export default class MarketUI {
     const price = type === "buy" ? item.buyPrice : item.sellPrice;
     const stock = type === "buy" ? "∞" : item.count;
     const itemName = item.namePtBR || item.name;
+    const buttonText =
+      type === "buy" ? i18n.t("market.buy") : i18n.t("market.sell");
+    const buttonIcon = type === "buy" ? "🛒" : "💰";
 
     card.innerHTML = `
-      <div class="market-item-icon">${item.icon || "📦"}</div>
-      <div class="market-item-name" title="${itemName}">${itemName}</div>
-      <div class="market-item-price">${price}g</div>
-      ${type === "sell" ? `<div class="market-item-stock">${stock}</div>` : ""}
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; flex: 1;">
+        <div class="market-item-icon">${item.icon || "📦"}</div>
+        <div class="market-item-name" title="${itemName}">${itemName}</div>
+        <div class="market-item-price">${price}g</div>
+        ${type === "sell" ? `<div class="market-item-stock">${i18n.t("market.youHave")}: ${stock}</div>` : ""}
+      </div>
+      <button class="market-item-action">${buttonIcon} ${buttonText}</button>
     `;
 
-    card.addEventListener("click", () => {
+    const button = card.querySelector(".market-item-action");
+    button.addEventListener("click", (e) => {
+      e.stopPropagation();
       if (type === "buy") {
         this.showBuyDialog(item);
       } else {
