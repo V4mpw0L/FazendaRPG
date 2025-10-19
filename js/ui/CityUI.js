@@ -116,7 +116,7 @@ export default class CityUI {
 
                 <div class="bank-balances">
                     <div class="balance-card">
-                        <div class="balance-label">💰 Seu Ouro</div>
+                        <div class="balance-label"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> Seu Ouro</div>
                         <div class="balance-value">${playerGold}g</div>
                     </div>
                     <div class="balance-card highlight">
@@ -142,7 +142,7 @@ export default class CityUI {
 
                 <div class="bank-actions">
                     <div class="action-section">
-                        <h3>💰 Depositar</h3>
+                        <h3><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> Depositar</h3>
                         <input
                             type="number"
                             id="deposit-amount"
@@ -294,7 +294,7 @@ export default class CityUI {
       content,
       buttons: [
         {
-          text: "💰 Depositar",
+          text: '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> Depositar',
           class: "btn-success",
           onClick: () => {
             const amount =
@@ -413,7 +413,7 @@ export default class CityUI {
                         <div class="service-icon">😴</div>
                         <h3>Descansar</h3>
                         <p>Restaura 50 de energia</p>
-                        <div class="service-price">${restPrice}g</div>
+                        <div class="service-price"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${restPrice}g</div>
                         <div class="service-energy">⚡ +50</div>
                     </div>
 
@@ -424,7 +424,7 @@ export default class CityUI {
                             <div class="service-icon">${meal.icon}</div>
                             <h3>${meal.name}</h3>
                             <p>${meal.description}</p>
-                            <div class="service-price">${meal.price}g ${meal.price < meal.basePrice ? `<span class="discount">-${meal.basePrice - meal.price}g</span>` : ""}</div>
+                            <div class="service-price"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${meal.price}g ${meal.price < meal.basePrice ? `<span class="discount">-${meal.basePrice - meal.price}g</span>` : ""}</div>
                             <div class="service-benefits">
                                 <span>⚡ +${meal.energy}</span>
                                 <span>❤️ +${meal.health}</span>

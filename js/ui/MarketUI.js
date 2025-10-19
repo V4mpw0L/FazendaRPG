@@ -81,7 +81,7 @@ export default class MarketUI {
     controlsDiv.innerHTML = `
       <div class="market-tabs">
         <button class="market-tab active" data-tab="buy">🛒 ${i18n.t("market.buy")}</button>
-        <button class="market-tab" data-tab="sell">💰 ${i18n.t("market.sell")}</button>
+        <button class="market-tab" data-tab="sell"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${i18n.t("market.sell")}</button>
       </div>
       <div class="market-categories">
         <button class="category-btn active" data-category="all">📦 ${i18n.t("market.categories.all")}</button>
@@ -632,7 +632,10 @@ export default class MarketUI {
     const itemName = item.namePtBR || item.name;
     const buttonText =
       type === "buy" ? i18n.t("market.buy") : i18n.t("market.sell");
-    const buttonIcon = type === "buy" ? "🛒" : "💰";
+    const buttonIcon =
+      type === "buy"
+        ? "🛒"
+        : '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">';
 
     // Check if it's a seed and get required level
     let requiredLevelInfo = "";
@@ -650,7 +653,7 @@ export default class MarketUI {
       <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; flex: 1;">
         <div class="market-item-icon">${item.icon || "📦"}</div>
         <div class="market-item-name" title="${itemName}">${itemName}</div>
-        <div class="market-item-price">${price}g</div>
+        <div class="market-item-price"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g</div>
         ${type === "sell" ? `<div class="market-item-stock">${i18n.t("market.youHave")}: ${stock}</div>` : ""}
         ${requiredLevelInfo}
       </div>
@@ -691,7 +694,7 @@ export default class MarketUI {
         <div style="font-size: 4rem; margin-bottom: 0.5rem;">${item.icon || "📦"}</div>
         <h3 style="margin: 0.5rem 0; color: var(--text-primary);">${itemName}</h3>
         <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0.5rem 0;">${itemDesc}</p>
-        <p style="color: var(--brand-primary); font-weight: 700; font-size: 1.125rem;">${unitPrice}g ${i18n.t("market.perUnit")}</p>
+        <p style="color: var(--brand-primary); font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g ${i18n.t("market.perUnit")}</p>
       </div>
 
       <div style="margin: 1rem 0;">
@@ -718,15 +721,15 @@ export default class MarketUI {
       <div class="market-preview" id="buy-preview">
         <div class="market-preview-row">
           <span>${i18n.t("market.yourGold")}:</span>
-          <span>${playerGold}g</span>
+          <span><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${playerGold}g</span>
         </div>
         <div class="market-preview-row">
           <span>${i18n.t("market.cost")}:</span>
-          <span id="preview-cost">${unitPrice}g</span>
+          <span id="preview-cost"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g</span>
         </div>
         <div class="market-preview-row">
           <span>${i18n.t("market.remaining")}:</span>
-          <span id="preview-remaining" class="market-preview-total">${playerGold - unitPrice}g</span>
+          <span id="preview-remaining" class="market-preview-total"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${playerGold - unitPrice}g</span>
         </div>
       </div>
     `;
@@ -778,9 +781,10 @@ export default class MarketUI {
         const costEl = document.getElementById("preview-cost");
         const remainingEl = document.getElementById("preview-remaining");
 
-        if (costEl) costEl.textContent = `${cost}g`;
+        if (costEl)
+          costEl.innerHTML = `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${cost}g`;
         if (remainingEl) {
-          remainingEl.textContent = `${remaining}g`;
+          remainingEl.innerHTML = `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${remaining}g`;
           remainingEl.style.color =
             remaining >= 0 ? "var(--brand-primary)" : "#e74c3c";
         }
@@ -878,7 +882,7 @@ export default class MarketUI {
         <div style="font-size: 4rem; margin-bottom: 0.5rem;">${item.icon || "📦"}</div>
         <h3 style="margin: 0.5rem 0; color: var(--text-primary);">${itemName}</h3>
         <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0.5rem 0;">${itemDesc}</p>
-        <p style="color: var(--brand-primary); font-weight: 700; font-size: 1.125rem;">${unitPrice}g ${i18n.t("market.perUnit")}</p>
+        <p style="color: var(--brand-primary); font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g ${i18n.t("market.perUnit")}</p>
         <p style="color: var(--text-secondary); font-size: 0.875rem;">${i18n.t("market.youHave")}: ${maxSellable}</p>
       </div>
 
@@ -910,17 +914,17 @@ export default class MarketUI {
         </div>
         <div class="market-preview-row">
           <span>${i18n.t("market.willReceive")}:</span>
-          <span id="preview-receive">${unitPrice}g</span>
+          <span id="preview-receive"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g</span>
         </div>
         <div class="market-preview-row">
           <span>${i18n.t("market.newTotal")}:</span>
-          <span id="preview-total" class="market-preview-total">${playerGold + unitPrice}g</span>
+          <span id="preview-total" class="market-preview-total"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${playerGold + unitPrice}g</span>
         </div>
       </div>
     `;
 
     this.modal.show({
-      title: `💰 ${i18n.t("market.sellTitle")}`,
+      title: `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${i18n.t("market.sellTitle")}`,
       content,
       buttons: [
         {
@@ -929,7 +933,7 @@ export default class MarketUI {
           onClick: () => true,
         },
         {
-          text: `💰 ${i18n.t("market.sell")}`,
+          text: `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${i18n.t("market.sell")}`,
           class: "btn-success",
           onClick: () => {
             const amount = parseInt(
@@ -959,8 +963,10 @@ export default class MarketUI {
         const receiveEl = document.getElementById("preview-receive");
         const totalEl = document.getElementById("preview-total");
 
-        if (receiveEl) receiveEl.textContent = `${willReceive}g`;
-        if (totalEl) totalEl.textContent = `${newTotal}g`;
+        if (receiveEl)
+          receiveEl.innerHTML = `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${willReceive}g`;
+        if (totalEl)
+          totalEl.innerHTML = `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${newTotal}g`;
       };
 
       amountInput?.addEventListener("input", updatePreview);

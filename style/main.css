@@ -802,7 +802,7 @@ a:hover {
 }
 
 .market-item-price::before {
-    content: "💰 ";
+    content: "";
 }
 
 /* ===================================

@@ -5,273 +5,313 @@
  */
 
 export default class Modal {
-    constructor() {
-        this.container = null;
-        this.currentModal = null;
-        this.onCloseCallback = null;
+  constructor() {
+    this.container = null;
+    this.currentModal = null;
+    this.onCloseCallback = null;
+  }
+
+  /**
+   * Initialize modal system
+   */
+  init() {
+    this.container = document.getElementById("modal-container");
+    if (!this.container) {
+      console.error("❌ Modal container not found");
+      return false;
     }
 
-    /**
-     * Initialize modal system
-     */
-    init() {
-        this.container = document.getElementById('modal-container');
-        if (!this.container) {
-            console.error('❌ Modal container not found');
-            return false;
-        }
+    // Click outside to close
+    this.container.addEventListener("click", (e) => {
+      if (e.target === this.container) {
+        this.close();
+      }
+    });
 
-        // Click outside to close
-        this.container.addEventListener('click', (e) => {
-            if (e.target === this.container) {
-                this.close();
-            }
-        });
+    console.log("✅ Modal system initialized");
+    return true;
+  }
 
-        console.log('✅ Modal system initialized');
-        return true;
-    }
+  /**
+   * Show a modal
+   * @param {Object} options - Modal options
+   * @returns {Promise} Resolves when modal is closed
+   */
+  show(options = {}) {
+    return new Promise((resolve) => {
+      const {
+        title = "Modal",
+        content = "",
+        buttons = [],
+        closable = true,
+        theme = "default",
+        size = "medium",
+        onClose = null,
+      } = options;
 
-    /**
-     * Show a modal
-     * @param {Object} options - Modal options
-     * @returns {Promise} Resolves when modal is closed
-     */
-    show(options = {}) {
-        return new Promise((resolve) => {
-            const {
-                title = 'Modal',
-                content = '',
-                buttons = [],
-                closable = true,
-                theme = 'default',
-                size = 'medium',
-                onClose = null
-            } = options;
+      this.onCloseCallback = onClose;
 
-            this.onCloseCallback = onClose;
-
-            // Create modal HTML
-            const modalHTML = `
+      // Create modal HTML
+      const modalHTML = `
                 <div class="modal modal-${size} modal-${theme}">
                     <div class="modal-header">
                         <h3 class="modal-title">${title}</h3>
-                        ${closable ? '<button class="modal-close" data-action="close">&times;</button>' : ''}
+                        ${closable ? '<button class="modal-close" data-action="close">&times;</button>' : ""}
                     </div>
                     <div class="modal-body">
                         ${content}
                     </div>
-                    ${buttons.length > 0 ? `
+                    ${
+                      buttons.length > 0
+                        ? `
                         <div class="modal-footer">
-                            ${buttons.map((btn, index) => `
+                            ${buttons
+                              .map(
+                                (btn, index) => `
                                 <button
-                                    class="btn ${btn.class || 'btn-secondary'}"
+                                    class="btn ${btn.class || "btn-secondary"}"
                                     data-action="button"
                                     data-index="${index}"
-                                    ${btn.disabled ? 'disabled' : ''}
+                                    ${btn.disabled ? "disabled" : ""}
                                 >
                                     ${btn.text}
                                 </button>
-                            `).join('')}
+                            `,
+                              )
+                              .join("")}
                         </div>
-                    ` : ''}
+                    `
+                        : ""
+                    }
                 </div>
             `;
 
-            this.container.innerHTML = modalHTML;
-            this.currentModal = this.container.querySelector('.modal');
+      this.container.innerHTML = modalHTML;
+      this.currentModal = this.container.querySelector(".modal");
 
-            // Add event listeners
-            this.container.querySelectorAll('[data-action="close"]').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    this.close();
-                    resolve({ action: 'close' });
-                });
-            });
-
-            this.container.querySelectorAll('[data-action="button"]').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const index = parseInt(btn.dataset.index);
-                    const button = buttons[index];
-
-                    if (button.onClick) {
-                        const result = button.onClick();
-                        if (result === false) return; // Don't close if returns false
-                    }
-
-                    this.close();
-                    resolve({ action: 'button', index, button });
-                });
-            });
-
-            // Show modal
-            requestAnimationFrame(() => {
-                this.container.classList.add('active');
-            });
-
-            // ESC key to close
-            if (closable) {
-                const escHandler = (e) => {
-                    if (e.key === 'Escape') {
-                        document.removeEventListener('keydown', escHandler);
-                        this.close();
-                        resolve({ action: 'escape' });
-                    }
-                };
-                document.addEventListener('keydown', escHandler);
-            }
-        });
-    }
-
-    /**
-     * Close current modal
-     */
-    close() {
-        if (!this.container) return;
-
-        this.container.classList.remove('active');
-
-        if (this.onCloseCallback) {
-            this.onCloseCallback();
-        }
-
-        setTimeout(() => {
-            this.container.innerHTML = '';
-            this.currentModal = null;
-            this.onCloseCallback = null;
-        }, 300);
-    }
-
-    /**
-     * Show item details modal
-     * @param {Object} item - Item data
-     * @param {Object} options - Additional options
-     */
-    showItemDetails(item, options = {}) {
-        const {
-            onUse = null,
-            onSell = null,
-            showActions = true,
-            planted = null,
-            harvested = null,
-            xpGained = 0
-        } = options;
-
-        const buttons = [];
-
-        if (showActions) {
-            if (item.consumable && onUse) {
-                buttons.push({
-                    text: `🍽️ Usar`,
-                    class: 'btn-success',
-                    onClick: () => {
-                        onUse(item);
-                        return true;
-                    }
-                });
-            }
-
-            if (item.sellPrice > 0 && onSell) {
-                buttons.push({
-                    text: `💰 Vender (${item.sellPrice}g)`,
-                    class: 'btn-primary',
-                    onClick: () => {
-                        onSell(item);
-                        return true;
-                    }
-                });
-            }
-        }
-
-        buttons.push({
-            text: 'Fechar',
-            class: 'btn-secondary',
-            onClick: () => true
+      // Add event listeners
+      this.container
+        .querySelectorAll('[data-action="close"]')
+        .forEach((btn) => {
+          btn.addEventListener("click", () => {
+            this.close();
+            resolve({ action: "close" });
+          });
         });
 
-        const categoryColors = {
-            seed: '#5caa1f',
-            crop: '#f39c12',
-            food: '#e74c3c',
-            tool: '#95a5a6',
-            resource: '#8b4513',
-            other: '#7f8c8d'
+      this.container
+        .querySelectorAll('[data-action="button"]')
+        .forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const index = parseInt(btn.dataset.index);
+            const button = buttons[index];
+
+            if (button.onClick) {
+              const result = button.onClick();
+              if (result === false) return; // Don't close if returns false
+            }
+
+            this.close();
+            resolve({ action: "button", index, button });
+          });
+        });
+
+      // Show modal
+      requestAnimationFrame(() => {
+        this.container.classList.add("active");
+      });
+
+      // ESC key to close
+      if (closable) {
+        const escHandler = (e) => {
+          if (e.key === "Escape") {
+            document.removeEventListener("keydown", escHandler);
+            this.close();
+            resolve({ action: "escape" });
+          }
         };
+        document.addEventListener("keydown", escHandler);
+      }
+    });
+  }
 
-        const categoryColor = categoryColors[item.category] || categoryColors.other;
+  /**
+   * Close current modal
+   */
+  close() {
+    if (!this.container) return;
 
-        const statsHTML = [];
+    this.container.classList.remove("active");
 
-        if (item.energyRestore) {
-            statsHTML.push(`<div class="stat-item">⚡ Restaura: <strong>${item.energyRestore} energia</strong></div>`);
-        }
+    if (this.onCloseCallback) {
+      this.onCloseCallback();
+    }
 
-        if (item.healthRestore) {
-            statsHTML.push(`<div class="stat-item">❤️ Restaura: <strong>${item.healthRestore} vida</strong></div>`);
-        }
+    setTimeout(() => {
+      this.container.innerHTML = "";
+      this.currentModal = null;
+      this.onCloseCallback = null;
+    }, 300);
+  }
 
-        if (item.growTime) {
-            const minutes = Math.floor(item.growTime / 60000);
-            statsHTML.push(`<div class="stat-item">⏱️ Tempo de crescimento: <strong>${minutes}min</strong></div>`);
-        }
+  /**
+   * Show item details modal
+   * @param {Object} item - Item data
+   * @param {Object} options - Additional options
+   */
+  showItemDetails(item, options = {}) {
+    const {
+      onUse = null,
+      onSell = null,
+      showActions = true,
+      planted = null,
+      harvested = null,
+      xpGained = 0,
+    } = options;
 
-        if (item.sellPrice > 0) {
-            statsHTML.push(`<div class="stat-item">💰 Valor de venda: <strong>${item.sellPrice} ouro</strong></div>`);
-        }
+    const buttons = [];
 
-        if (item.buyPrice > 0) {
-            statsHTML.push(`<div class="stat-item">🛒 Valor de compra: <strong>${item.buyPrice} ouro</strong></div>`);
-        }
+    if (showActions) {
+      if (item.consumable && onUse) {
+        buttons.push({
+          text: `🍽️ Usar`,
+          class: "btn-success",
+          onClick: () => {
+            onUse(item);
+            return true;
+          },
+        });
+      }
 
-        if (xpGained > 0) {
-            statsHTML.push(`<div class="stat-item">⭐ XP ganho: <strong>${xpGained}</strong></div>`);
-        }
+      if (item.sellPrice > 0 && onSell) {
+        buttons.push({
+          text: `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> Vender (${item.sellPrice}g)`,
+          class: "btn-primary",
+          onClick: () => {
+            onSell(item);
+            return true;
+          },
+        });
+      }
+    }
 
-        // Planting/harvesting info
-        const activityHTML = [];
-        if (planted !== null) {
-            activityHTML.push(`<div class="activity-item">🌱 Plantado: <strong>${planted}x</strong></div>`);
-        }
-        if (harvested !== null) {
-            activityHTML.push(`<div class="activity-item">🧺 Colhido: <strong>${harvested}x</strong></div>`);
-        }
+    buttons.push({
+      text: "Fechar",
+      class: "btn-secondary",
+      onClick: () => true,
+    });
 
-        const content = `
+    const categoryColors = {
+      seed: "#5caa1f",
+      crop: "#f39c12",
+      food: "#e74c3c",
+      tool: "#95a5a6",
+      resource: "#8b4513",
+      other: "#7f8c8d",
+    };
+
+    const categoryColor = categoryColors[item.category] || categoryColors.other;
+
+    const statsHTML = [];
+
+    if (item.energyRestore) {
+      statsHTML.push(
+        `<div class="stat-item">⚡ Restaura: <strong>${item.energyRestore} energia</strong></div>`,
+      );
+    }
+
+    if (item.healthRestore) {
+      statsHTML.push(
+        `<div class="stat-item">❤️ Restaura: <strong>${item.healthRestore} vida</strong></div>`,
+      );
+    }
+
+    if (item.growTime) {
+      const minutes = Math.floor(item.growTime / 60000);
+      statsHTML.push(
+        `<div class="stat-item">⏱️ Tempo de crescimento: <strong>${minutes}min</strong></div>`,
+      );
+    }
+
+    if (item.sellPrice > 0) {
+      statsHTML.push(
+        `<div class="stat-item"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> Valor de venda: <strong>${item.sellPrice} ouro</strong></div>`,
+      );
+    }
+
+    if (item.buyPrice > 0) {
+      statsHTML.push(
+        `<div class="stat-item">🛒 Valor de compra: <strong>${item.buyPrice} ouro</strong></div>`,
+      );
+    }
+
+    if (xpGained > 0) {
+      statsHTML.push(
+        `<div class="stat-item">⭐ XP ganho: <strong>${xpGained}</strong></div>`,
+      );
+    }
+
+    // Planting/harvesting info
+    const activityHTML = [];
+    if (planted !== null) {
+      activityHTML.push(
+        `<div class="activity-item">🌱 Plantado: <strong>${planted}x</strong></div>`,
+      );
+    }
+    if (harvested !== null) {
+      activityHTML.push(
+        `<div class="activity-item">🧺 Colhido: <strong>${harvested}x</strong></div>`,
+      );
+    }
+
+    const content = `
             <div class="item-modal-content">
                 <div class="item-header">
-                    <div class="item-icon-large" style="font-size: 4rem;">${item.icon || '📦'}</div>
+                    <div class="item-icon-large" style="font-size: 4rem;">${item.icon || "📦"}</div>
                     <div class="item-info">
                         <h2 class="item-name">${item.name}</h2>
                         <div class="item-category" style="background: ${categoryColor}20; color: ${categoryColor}; border-color: ${categoryColor};">
-                            ${item.category?.toUpperCase() || 'ITEM'}
+                            ${item.category?.toUpperCase() || "ITEM"}
                         </div>
                     </div>
                 </div>
 
                 <div class="item-description">
-                    <p>${item.description || 'Sem descrição disponível.'}</p>
+                    <p>${item.description || "Sem descrição disponível."}</p>
                 </div>
 
-                ${statsHTML.length > 0 ? `
+                ${
+                  statsHTML.length > 0
+                    ? `
                     <div class="item-stats">
                         <h4>📊 Estatísticas</h4>
-                        ${statsHTML.join('')}
+                        ${statsHTML.join("")}
                     </div>
-                ` : ''}
+                `
+                    : ""
+                }
 
-                ${activityHTML.length > 0 ? `
+                ${
+                  activityHTML.length > 0
+                    ? `
                     <div class="item-activity">
                         <h4>📝 Atividade</h4>
-                        ${activityHTML.join('')}
+                        ${activityHTML.join("")}
                     </div>
-                ` : ''}
+                `
+                    : ""
+                }
 
-                ${item.count > 0 ? `
+                ${
+                  item.count > 0
+                    ? `
                     <div class="item-quantity">
                         <span class="quantity-label">Quantidade no inventário:</span>
                         <span class="quantity-value">${item.count}</span>
                     </div>
-                ` : ''}
+                `
+                    : ""
+                }
             </div>
 
             <style>
@@ -373,93 +413,93 @@ export default class Modal {
             </style>
         `;
 
-        return this.show({
-            title: '📦 Detalhes do Item',
-            content,
-            buttons,
-            closable: true,
-            size: 'medium',
-            theme: 'default'
-        });
-    }
+    return this.show({
+      title: "📦 Detalhes do Item",
+      content,
+      buttons,
+      closable: true,
+      size: "medium",
+      theme: "default",
+    });
+  }
 
-    /**
-     * Show confirmation dialog
-     * @param {Object} options - Confirmation options
-     */
-    showConfirm(options = {}) {
-        const {
-            title = 'Confirmar',
-            message = 'Tem certeza?',
-            confirmText = 'Confirmar',
-            cancelText = 'Cancelar',
-            confirmClass = 'btn-danger',
-            onConfirm = null,
-            onCancel = null
-        } = options;
+  /**
+   * Show confirmation dialog
+   * @param {Object} options - Confirmation options
+   */
+  showConfirm(options = {}) {
+    const {
+      title = "Confirmar",
+      message = "Tem certeza?",
+      confirmText = "Confirmar",
+      cancelText = "Cancelar",
+      confirmClass = "btn-danger",
+      onConfirm = null,
+      onCancel = null,
+    } = options;
 
-        return this.show({
-            title,
-            content: `<p style="font-size: 1.125rem; text-align: center; padding: 1rem 0;">${message}</p>`,
-            buttons: [
-                {
-                    text: cancelText,
-                    class: 'btn-secondary',
-                    onClick: () => {
-                        if (onCancel) onCancel();
-                        return true;
-                    }
-                },
-                {
-                    text: confirmText,
-                    class: confirmClass,
-                    onClick: () => {
-                        if (onConfirm) onConfirm();
-                        return true;
-                    }
-                }
-            ],
-            closable: true
-        });
-    }
+    return this.show({
+      title,
+      content: `<p style="font-size: 1.125rem; text-align: center; padding: 1rem 0;">${message}</p>`,
+      buttons: [
+        {
+          text: cancelText,
+          class: "btn-secondary",
+          onClick: () => {
+            if (onCancel) onCancel();
+            return true;
+          },
+        },
+        {
+          text: confirmText,
+          class: confirmClass,
+          onClick: () => {
+            if (onConfirm) onConfirm();
+            return true;
+          },
+        },
+      ],
+      closable: true,
+    });
+  }
 
-    /**
-     * Show alert dialog
-     * @param {Object} options - Alert options
-     */
-    showAlert(options = {}) {
-        const {
-            title = 'Aviso',
-            message = '',
-            buttonText = 'OK',
-            type = 'info'
-        } = options;
+  /**
+   * Show alert dialog
+   * @param {Object} options - Alert options
+   */
+  showAlert(options = {}) {
+    const {
+      title = "Aviso",
+      message = "",
+      buttonText = "OK",
+      type = "info",
+    } = options;
 
-        const icons = {
-            info: 'ℹ️',
-            success: '✅',
-            warning: '⚠️',
-            error: '❌'
-        };
+    const icons = {
+      info: "ℹ️",
+      success: "✅",
+      warning: "⚠️",
+      error: "❌",
+    };
 
-        return this.show({
-            title: `${icons[type] || icons.info} ${title}`,
-            content: `<p style="font-size: 1.125rem; text-align: center; padding: 1rem 0;">${message}</p>`,
-            buttons: [
-                {
-                    text: buttonText,
-                    class: 'btn-primary',
-                    onClick: () => true
-                }
-            ],
-            closable: true
-        });
-    }
+    return this.show({
+      title: `${icons[type] || icons.info} ${title}`,
+      content: `<p style="font-size: 1.125rem; text-align: center; padding: 1rem 0;">${message}</p>`,
+      buttons: [
+        {
+          text: buttonText,
+          class: "btn-primary",
+          onClick: () => true,
+        },
+      ],
+      closable: true,
+    });
+  }
 
-    /**
-     * Check if modal is currently open
-     */
-    isOpen() {
-        return this.container && this.container.classList.contains('active');
-    }
+  /**
+   * Check if modal is currently open
+   */
+  isOpen() {
+    return this.container && this.container.classList.contains("active");
+  }
 }

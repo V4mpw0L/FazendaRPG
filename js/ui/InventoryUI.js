@@ -60,7 +60,7 @@ export default class InventoryUI {
       <div class="inventory-controls">
         <div class="inventory-stats">
           <span id="inv-items-count" class="stat-badge">0 ${i18n.t("inventory.items")}</span>
-          <span id="inv-total-value" class="stat-badge">💰 0g</span>
+          <span id="inv-total-value" class="stat-badge"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> 0g</span>
         </div>
         <div class="inventory-actions">
           <select id="inv-sort" class="control-select">
@@ -81,7 +81,7 @@ export default class InventoryUI {
             <option value="materials">${i18n.t("market.categories.materials")}</option>
           </select>
           <button id="inv-sell-all" class="btn btn-sm btn-success">
-            💰 ${i18n.t("market.sellAll")}
+            <img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${i18n.t("market.sellAll")}
           </button>
         </div>
       </div>
@@ -586,7 +586,7 @@ export default class InventoryUI {
         <h3 style="margin: 0.5rem 0; color: var(--text-primary);">${itemName}</h3>
         <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0.5rem 0;">${itemDesc}</p>
         ${isConsumable && item.energyRestore ? `<p style="color: #5caa1f; font-weight: 600; font-size: 0.875rem;">⚡ Restaura ${item.energyRestore} de energia</p>` : ""}
-        <p style="color: var(--brand-primary); font-weight: 700; font-size: 1.125rem;">${sellPrice}g ${i18n.t("market.perUnit")}</p>
+        <p style="color: var(--brand-primary); font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${sellPrice}g ${i18n.t("market.perUnit")}</p>
         <p style="color: var(--text-secondary); font-size: 0.875rem;">${i18n.t("market.youHave")}: ${maxSellable}</p>
       </div>
 
@@ -614,7 +614,7 @@ export default class InventoryUI {
       <div style="background: var(--bg-accent); padding: var(--spacing-md); border-radius: 8px; margin-top: var(--spacing-md); border: 2px solid var(--border-color);">
         <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.875rem;">
           <span>${i18n.t("market.willReceive")}:</span>
-          <span id="preview-receive" style="font-weight: 700; color: var(--brand-primary);">${sellPrice}g</span>
+          <span id="preview-receive" style="font-weight: 700; color: var(--brand-primary);"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${sellPrice}g</span>
         </div>
       </div>
     `;
@@ -668,7 +668,7 @@ export default class InventoryUI {
 
     // Add sell button
     buttons.push({
-      text: `💰 ${i18n.t("market.sell")}`,
+      text: `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${i18n.t("market.sell")}`,
       class: "btn-success",
       onClick: () => {
         const amount = parseInt(
@@ -698,7 +698,8 @@ export default class InventoryUI {
         const amount = parseInt(amountInput?.value || "1");
         const willReceive = amount * sellPrice;
         const receiveEl = document.getElementById("preview-receive");
-        if (receiveEl) receiveEl.textContent = `${willReceive}g`;
+        if (receiveEl)
+          receiveEl.innerHTML = `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${willReceive}g`;
       };
 
       amountInput?.addEventListener("input", updatePreview);
@@ -784,7 +785,7 @@ export default class InventoryUI {
       itemTypes === 1 ? i18n.t("market.itemType") : i18n.t("market.itemTypes");
 
     this.modal.show({
-      title: `💰 ${i18n.t("market.sellAll")}`,
+      title: `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${i18n.t("market.sellAll")}`,
       content: `<p style="font-size: 1.125rem; text-align: center; padding: 1rem 0;">${i18n.t(
         "market.sellAllConfirm",
         {
@@ -800,7 +801,7 @@ export default class InventoryUI {
           onClick: () => true,
         },
         {
-          text: `💰 ${i18n.t("market.sell")}`,
+          text: `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${i18n.t("market.sell")}`,
           class: "btn-success",
           onClick: () => {
             const result = this.inventorySystem.sellAllItems();
@@ -846,7 +847,7 @@ export default class InventoryUI {
     }
 
     if (valueEl) {
-      valueEl.textContent = `💰 ${totalValue}g`;
+      valueEl.innerHTML = `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${totalValue}g`;
     }
   }
 

@@ -275,7 +275,7 @@ export default class NPCSUI {
             <h4 style="margin: 0 0 0.25rem 0; color: var(--text-primary);">${itemName}</h4>
             <p style="margin: 0; color: var(--text-secondary); font-size: 0.875rem;">${itemDesc}</p>
             <div style="margin-top: 0.5rem; display: flex; gap: 1rem; align-items: center;">
-              <span style="color: var(--brand-primary); font-weight: 700; font-size: 1.125rem;">${price}g</span>
+              <span style="color: var(--brand-primary); font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g</span>
               <span style="color: var(--text-secondary); font-size: 0.875rem;">Estoque: ${stock}</span>
             </div>
           </div>
@@ -284,7 +284,7 @@ export default class NPCSUI {
                   data-price="${price}"
                   ${!canAfford ? "disabled" : ""}
                   style="min-width: 100px;">
-            💰 Comprar
+            <img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> Comprar
           </button>
         </div>
       `;
@@ -339,8 +339,8 @@ export default class NPCSUI {
       <div style="text-align: center; margin-bottom: 1rem;">
         <div style="font-size: 4rem; margin-bottom: 0.5rem;">${itemData.icon || "📦"}</div>
         <h3 style="margin: 0.5rem 0; color: var(--text-primary);">${itemName}</h3>
-        <p style="color: var(--brand-primary); font-weight: 700; font-size: 1.125rem;">${price}g por unidade</p>
-        <p style="color: var(--text-secondary); font-size: 0.875rem;">Você tem: ${this.player.data.gold}g</p>
+        <p style="color: var(--brand-primary); font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g por unidade</p>
+        <p style="color: var(--text-secondary); font-size: 0.875rem;">Você tem: <img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${this.player.data.gold}g</p>
       </div>
 
       <div style="margin: 1rem 0;">
@@ -367,13 +367,13 @@ export default class NPCSUI {
       <div style="background: var(--bg-accent); padding: var(--spacing-md); border-radius: 8px; margin-top: var(--spacing-md); border: 2px solid var(--border-color);">
         <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.875rem;">
           <span>Total:</span>
-          <span id="preview-cost" style="font-weight: 700; color: var(--brand-primary);">${price}g</span>
+          <span id="preview-cost" style="font-weight: 700; color: var(--brand-primary);"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g</span>
         </div>
       </div>
     `;
 
     this.modal.show({
-      title: `💰 Comprar ${itemName}`,
+      title: `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> Comprar ${itemName}`,
       content,
       buttons: [
         {
@@ -385,7 +385,7 @@ export default class NPCSUI {
           },
         },
         {
-          text: `💰 Comprar`,
+          text: `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> Comprar`,
           class: "btn-success",
           onClick: () => {
             const amount = parseInt(
@@ -432,7 +432,8 @@ export default class NPCSUI {
         const amount = parseInt(amountInput?.value || "1");
         const totalCost = amount * price;
         const costEl = document.getElementById("preview-cost");
-        if (costEl) costEl.textContent = `${totalCost}g`;
+        if (costEl)
+          costEl.innerHTML = `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${totalCost}g`;
       };
 
       amountInput?.addEventListener("input", updatePreview);

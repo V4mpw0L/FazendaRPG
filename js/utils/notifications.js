@@ -513,7 +513,7 @@ class NotificationManager {
       warning: "⚠",
       info: "ℹ",
       levelup: "⭐",
-      gold: "💰",
+      gold: '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">',
       xp: "⚡",
       item: "📦",
       quest: "📜",
@@ -591,7 +591,7 @@ class NotificationManager {
     const message = `${prefix}${Math.abs(amount)} Gold`;
 
     return this.show(message, "gold", {
-      icon: "💰",
+      icon: '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">',
       duration: 2500,
     });
   }
@@ -627,7 +627,8 @@ class NotificationManager {
   quest(questName, rewards = {}) {
     let message = `Quest completed!`;
 
-    if (rewards.gold) message += ` +${rewards.gold}💰`;
+    if (rewards.gold)
+      message += ` +${rewards.gold}<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">`;
     if (rewards.xp) message += ` +${rewards.xp}⚡`;
 
     return this.show(message, "success", {
