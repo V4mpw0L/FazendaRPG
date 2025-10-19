@@ -57,8 +57,8 @@
     font-weight: 600;
     font-size: 0.8rem;
     white-space: nowrap;
-    min-width: 100px;
-    max-width: 100px;
+    min-width: 110px;
+    max-width: 110px;
     flex-shrink: 1;
 }
 
@@ -334,8 +334,8 @@
     .status-item {
         padding: 4px 6px;
         font-size: 0.7rem;
-        min-width: 80px;
-        max-width: 80px;
+        min-width: 85px;
+        max-width: 85px;
     }
 
     .status-icon {
@@ -378,8 +378,8 @@
     .status-item {
         padding: 8px 14px;
         font-size: 0.875rem;
-        min-width: 130px;
-        max-width: 130px;
+        min-width: 135px;
+        max-width: 135px;
     }
 
     .status-icon {
