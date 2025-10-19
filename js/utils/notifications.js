@@ -4,6 +4,8 @@
  * @version 0.0.2
  */
 
+import i18n from "./i18n.js";
+
 class NotificationManager {
   constructor() {
     this.container = null;
@@ -559,12 +561,15 @@ class NotificationManager {
   /**
    * Level up notification
    */
-  levelUp(skill, level) {
-    const title = skill ? `${skill} Level Up!` : "Level Up!";
-    const message = `You reached level ${level}!`;
+  levelUp(level, skill = null) {
+    let message;
+    if (skill) {
+      message = i18n.t("notifications.skillLevelUp", { skill, level });
+    } else {
+      message = i18n.t("notifications.levelUp", { level });
+    }
 
     return this.show(message, "levelup", {
-      title,
       icon: "🎉",
       duration: 5000,
     });

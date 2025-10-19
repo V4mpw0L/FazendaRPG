@@ -583,7 +583,7 @@ export default class GameEngine {
       let message = `${i18n.t("farm.harvested")} +${result.amount}x ${result.crop}`;
 
       if (result.levelUp) {
-        notifications.levelUp(result.newLevel, "Farming");
+        notifications.levelUp(result.newLevel, i18n.t("skills.farming.name"));
       } else {
         notifications.success(message);
       }

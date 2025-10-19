@@ -5,6 +5,7 @@
  */
 
 import i18n from "../utils/i18n.js";
+import notifications from "../utils/notifications.js";
 
 export default class InventoryUI {
   constructor(inventorySystem, modal, notifications) {
@@ -490,117 +491,112 @@ export default class InventoryUI {
             </div>
         `;
 
-    this.modal
-      .show({
-        title: "💰 Vender Item",
-        content,
-        buttons: [
-          {
-            text: "Cancelar",
-            class: "btn-secondary",
-            onClick: () => true,
-          },
-          {
-            text: "Vender",
-            class: "btn-success",
-            onClick: () => {
-              const input = document.getElementById("sell-amount");
-              amount = parseInt(input?.value || "1");
+    this.modal.show({
+      title: "💰 Vender Item",
+      content,
+      buttons: [
+        {
+          text: "Cancelar",
+          class: "btn-secondary",
+          onClick: () => true,
+        },
+        {
+          text: "Vender",
+          class: "btn-success",
+          onClick: () => {
+            const input = document.getElementById("sell-amount");
+            amount = parseInt(input?.value || "1");
 
-              if (amount < 1 || amount > maxAmount) {
-                this.notifications.show(
-                  i18n.t("market.invalidAmount"),
-                  "error",
-                );
-                return false;
-              }
+            if (amount < 1 || amount > maxAmount) {
+              this.notifications.show(i18n.t("market.invalidAmount"), "error");
+              return false;
+            }
 
-              const result = this.inventorySystem.sellItem(item.id, amount);
-              if (result.success) {
-                this.notifications.show(
-                  i18n.t("market.soldItem", {
-                    amount: amount,
-                    item: item.name,
-                    gold: result.gold,
-                  }),
-                  "success",
-                );
-                this.render();
-                return true;
-              } else {
-                this.notifications.show(
-                  result.error || i18n.t("market.sellError"),
-                  "error",
-                );
-                return false;
-              }
-            },
+            const result = this.inventorySystem.sellItem(item.id, amount);
+            if (result.success) {
+              this.notifications.show(
+                i18n.t("market.soldItem", {
+                  amount: amount,
+                  item: item.name,
+                  gold: result.gold,
+                }),
+                "success",
+              );
+              this.render();
+              return true;
+            } else {
+              this.notifications.show(
+                result.error || i18n.t("market.sellError"),
+                "error",
+              );
+              return false;
+            }
           },
-        ],
-        closable: true,
-      })
-      .then(() => {
-        // Setup amount input listener after modal is shown
-        setTimeout(() => {
-          const input = document.getElementById("sell-amount");
+        },
+      ],
+      closable: true,
+    });
+
+    // Setup amount input listener after modal is shown
+    setTimeout(() => {
+      const input = document.getElementById("sell-amount");
+      if (input) {
+        input.addEventListener("input", (e) => {
+          amount = parseInt(e.target.value) || 1;
+          amount = Math.max(1, Math.min(maxAmount, amount));
+          e.target.value = amount;
+          updatePreview();
+        });
+      }
+
+      // Setup quick amount buttons
+      const btn1 = document.getElementById("sell-btn-1");
+      const btn25 = document.getElementById("sell-btn-25");
+      const btn50 = document.getElementById("sell-btn-50");
+      const btnMax = document.getElementById("sell-btn-max");
+
+      if (btn1) {
+        btn1.addEventListener("click", () => {
           if (input) {
-            input.addEventListener("input", (e) => {
-              amount = parseInt(e.target.value) || 1;
-              amount = Math.max(1, Math.min(maxAmount, amount));
-              e.target.value = amount;
-              updatePreview();
-            });
+            input.value = "1";
+            amount = 1;
+            updatePreview();
           }
+        });
+      }
 
-          // Setup quick amount buttons
-          const btn1 = document.getElementById("sell-btn-1");
-          const btn25 = document.getElementById("sell-btn-25");
-          const btn50 = document.getElementById("sell-btn-50");
-          const btnMax = document.getElementById("sell-btn-max");
-
-          if (btn1) {
-            btn1.addEventListener("click", () => {
-              if (input) {
-                input.value = "1";
-                amount = 1;
-                updatePreview();
-              }
-            });
+      if (btn25) {
+        btn25.addEventListener("click", () => {
+          if (input) {
+            const value = Math.floor(maxAmount * 0.25);
+            input.value = value;
+            amount = value;
+            updatePreview();
           }
+        });
+      }
 
-          if (btn25) {
-            btn25.addEventListener("click", () => {
-              if (input) {
-                const value = Math.floor(maxAmount * 0.25);
-                input.value = value;
-                amount = value;
-                updatePreview();
-              }
-            });
+      if (btn50) {
+        btn50.addEventListener("click", () => {
+          if (input) {
+            const value = Math.floor(maxAmount * 0.5);
+            input.value = value;
+            amount = value;
+            updatePreview();
           }
+        });
+      }
 
-          if (btn50) {
-            btn50.addEventListener("click", () => {
-              if (input) {
-                const value = Math.floor(maxAmount * 0.5);
-                input.value = value;
-                amount = value;
-                updatePreview();
-              }
-            });
+      if (btnMax) {
+        btnMax.addEventListener("click", () => {
+          if (input) {
+            input.value = maxAmount;
+            amount = maxAmount;
+            updatePreview();
           }
-
-          if (btnMax) {
-            btnMax.addEventListener("click", () => {
-              if (input) {
-                input.value = maxAmount;
-                amount = maxAmount;
-                updatePreview();
-              }
-            });
-          }
-        }, 100);
-      });
+        });
+      }
+    }, 100);
   }
 
   /**
