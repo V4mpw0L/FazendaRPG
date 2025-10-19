@@ -118,8 +118,15 @@ export default class GameEngine {
       this.npcsUI = new NPCSUI(this.player, this.modal, notifications);
       await this.npcsUI.init();
 
-      this.cityUI = new CityUI(this.player, this.modal, notifications);
+      this.cityUI = new CityUI(
+        this.player,
+        this.modal,
+        notifications,
+        this.inventorySystem,
+        this.screenManager,
+      );
       this.cityUI.init();
+      this.cityUI.setMarketUI(this.marketUI);
 
       // Attach global event listeners
       this.attachEventListeners();

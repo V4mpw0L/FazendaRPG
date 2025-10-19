@@ -7,14 +7,18 @@
 import BankSystem from "../systems/city/BankSystem.js";
 import TavernSystem from "../systems/city/TavernSystem.js";
 import i18n from "../utils/i18n.js";
+import MarketUI from "./MarketUI.js";
 
 export default class CityUI {
-  constructor(player, modal, notifications) {
+  constructor(player, modal, notifications, inventorySystem, screenManager) {
     this.player = player;
     this.modal = modal;
     this.notifications = notifications;
+    this.inventorySystem = inventorySystem;
+    this.screenManager = screenManager;
     this.bankSystem = new BankSystem(player);
     this.tavernSystem = new TavernSystem(player);
+    this.marketUI = null;
     this.container = null;
   }
 
@@ -61,6 +65,9 @@ export default class CityUI {
    */
   handleLocationClick(location) {
     switch (location) {
+      case "market":
+        this.showMarketScreen();
+        break;
       case "bank":
         this.showBankUI();
         break;
@@ -73,6 +80,22 @@ export default class CityUI {
       default:
         this.notifications.show("Em breve!", "info");
     }
+  }
+
+  /**
+   * Show Market Screen
+   */
+  showMarketScreen() {
+    if (this.screenManager) {
+      this.screenManager.showScreen("market-screen");
+    }
+  }
+
+  /**
+   * Set Market UI reference
+   */
+  setMarketUI(marketUI) {
+    this.marketUI = marketUI;
   }
 
   /**
