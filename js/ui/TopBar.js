@@ -30,11 +30,8 @@ export default class TopBar {
     this.elements = {
       gold: document.getElementById("topbar-gold"),
       energy: document.getElementById("topbar-energy"),
-      energyFill: document.getElementById("topbar-energy-fill"),
       level: document.getElementById("topbar-level"),
-      levelFill: document.getElementById("topbar-level-fill"),
       farming: document.getElementById("topbar-farming"),
-      farmingFill: document.getElementById("topbar-farming-fill"),
       menuToggle: document.getElementById("menu-toggle"),
     };
   }
@@ -89,19 +86,13 @@ export default class TopBar {
     const energy = this.player.data.energy;
     const maxEnergy = this.player.data.maxEnergy;
     const energyText = `${energy}/${maxEnergy}`;
-    const energyPercent = (energy / maxEnergy) * 100;
 
     if (this.elements.energy.textContent !== energyText) {
       this.elements.energy.textContent = energyText;
-      this.animateUpdate(this.elements.energy.parentElement.parentElement);
-
-      // Update progress bar
-      if (this.elements.energyFill) {
-        this.elements.energyFill.style.width = `${energyPercent}%`;
-      }
+      this.animateUpdate(this.elements.energy.parentElement);
 
       // Add warning class if energy is low
-      const statusItem = this.elements.energy.parentElement.parentElement;
+      const statusItem = this.elements.energy.parentElement;
       if (energy < 20) {
         statusItem.classList.add("energy-low");
       } else {
@@ -117,18 +108,10 @@ export default class TopBar {
     if (!this.elements.level) return;
 
     const level = this.player.data.level;
-    const xp = this.player.data.xp || 0;
-    const xpNeeded = this.player.getXPForNextLevel();
-    const levelPercent = (xp / xpNeeded) * 100;
 
     if (this.elements.level.textContent !== level.toString()) {
       this.elements.level.textContent = level;
-      this.animateUpdate(this.elements.level.parentElement.parentElement);
-
-      // Update progress bar
-      if (this.elements.levelFill) {
-        this.elements.levelFill.style.width = `${levelPercent}%`;
-      }
+      this.animateUpdate(this.elements.level.parentElement);
     }
   }
 
@@ -139,18 +122,10 @@ export default class TopBar {
     if (!this.elements.farming) return;
 
     const farmingLevel = this.skillSystem.getLevel("farming");
-    const farmingXP = this.skillSystem.getXP("farming");
-    const xpNeeded = this.skillSystem.getXPForNextLevel("farming");
-    const farmingPercent = (farmingXP / xpNeeded) * 100;
 
     if (this.elements.farming.textContent !== farmingLevel.toString()) {
       this.elements.farming.textContent = farmingLevel;
-      this.animateUpdate(this.elements.farming.parentElement.parentElement);
-
-      // Update progress bar
-      if (this.elements.farmingFill) {
-        this.elements.farmingFill.style.width = `${farmingPercent}%`;
-      }
+      this.animateUpdate(this.elements.farming.parentElement);
     }
   }
 
