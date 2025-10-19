@@ -774,11 +774,18 @@ a:hover {
 
 .npcs-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: var(--spacing-md);
     padding: var(--spacing-md);
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
+}
+
+.npcs-empty {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-secondary);
+    grid-column: 1 / -1;
 }
 
 .npc-card {
@@ -786,27 +793,37 @@ a:hover {
     border: 2px solid var(--border-color);
     border-radius: var(--border-radius);
     padding: var(--spacing-md);
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
     cursor: pointer;
     transition: all var(--transition-fast);
     box-shadow: 0 2px 8px var(--shadow-color);
 }
 
 .npc-card:hover {
-    transform: scale(1.05);
+    transform: translateY(-4px);
     border-color: var(--brand-primary);
-    box-shadow: 0 4px 12px var(--shadow-color);
+    box-shadow: 0 6px 16px var(--shadow-color);
 }
 
 .npc-avatar {
     font-size: 4rem;
-    margin-bottom: var(--spacing-sm);
+    line-height: 1;
+    margin-bottom: var(--spacing-xs);
+}
+
+.npc-info {
+    text-align: center;
+    width: 100%;
 }
 
 .npc-name {
     font-weight: 600;
+    font-size: 1.125rem;
     color: var(--text-primary);
-    margin-bottom: var(--spacing-xs);
+    margin: 0 0 var(--spacing-xs) 0;
 }
 
 .npc-role {
@@ -814,6 +831,57 @@ a:hover {
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    margin: 0 0 var(--spacing-sm) 0;
+}
+
+.npc-description {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: var(--spacing-sm) 0;
+    line-height: 1.4;
+}
+
+.npc-badge {
+    display: inline-block;
+    background: var(--brand-primary);
+    color: white;
+    padding: 0.25rem 0.625rem;
+    border-radius: 12px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    margin: 0.25rem;
+    letter-spacing: 0.3px;
+}
+
+.npc-friendship {
+    width: 100%;
+    margin-top: var(--spacing-sm);
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--border-color);
+}
+
+.friendship-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.375rem;
+    text-align: center;
+}
+
+.friendship-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--bg-accent);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.friendship-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #e74c3c, #f39c12, #5caa1f);
+    transition: width 0.3s ease;
+    border-radius: 4px;
 }
 
 /* ===================================
@@ -866,6 +934,30 @@ a:hover {
     }
 }
 
+@media (max-width: 480px) {
+    .npcs-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-sm);
+    }
+
+    .npc-card {
+        padding: var(--spacing-sm);
+    }
+
+    .npc-avatar {
+        font-size: 3rem;
+    }
+
+    .npc-name {
+        font-size: 1rem;
+    }
+
+    .npc-description {
+        font-size: 0.8125rem;
+    }
+}
+
 @media (min-width: 768px) {
     :root {
         --topbar-height: 70px;
@@ -889,6 +981,10 @@ a:hover {
     .btn {
         width: auto;
         min-width: 150px;
+    }
+
+    .npcs-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     }
 }
 
