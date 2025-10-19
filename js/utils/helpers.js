@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Helper Utilities
  * Common utility functions used throughout the game
- * @version 0.0.2
+ * @version 0.0.3
  */
 
 /**
