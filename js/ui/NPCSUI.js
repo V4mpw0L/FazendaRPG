@@ -162,11 +162,23 @@ export default class NPCSUI {
 
     const buttons = [];
 
+    // Talk button - ALWAYS FIRST
+    buttons.push({
+      text: "💬 Conversar",
+      class: "btn-primary",
+      onClick: () => {
+        this.increaseFriendship(npc.id, 1);
+        this.notifications.show("Você conversou com " + name, "success");
+        this.render();
+        return true;
+      },
+    });
+
     // Shop button
-    if (npc.shop) {
+    if (npc.shop && npc.shop.items) {
       buttons.push({
-        text: "🛒 Ver Loja",
-        class: "btn-primary",
+        text: "🛒 Loja",
+        class: "btn-success",
         onClick: () => {
           this.showNPCShop(npc);
           return false; // Don't close modal
@@ -178,25 +190,13 @@ export default class NPCSUI {
     if (npc.quests && npc.quests.length > 0) {
       buttons.push({
         text: "📜 Missões",
-        class: "btn-success",
+        class: "btn-secondary",
         onClick: () => {
           this.notifications.show("Sistema de missões em breve!", "info");
           return false;
         },
       });
     }
-
-    // Talk button
-    buttons.push({
-      text: "💬 Conversar",
-      class: "btn-secondary",
-      onClick: () => {
-        this.increaseFriendship(npc.id, 1);
-        this.notifications.show("Você conversou com " + name, "success");
-        this.render();
-        return true;
-      },
-    });
 
     buttons.push({
       text: "Sair",
