@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Farm System
  * Manages farming mechanics, crop planting, growth, and harvesting
- * @version 0.0.1
+ * @version 0.0.2
  */
 
 import { getTimeRemaining, isPast, clamp } from "../utils/helpers.js";

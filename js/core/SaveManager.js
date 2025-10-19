@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Save Manager
  * Handles saving and loading game data with automatic backups and fallbacks
- * @version 0.0.1
+ * @version 0.0.2
  */
 
 import { safeJSONParse, safeJSONStringify, downloadFile, loadFile } from '../utils/helpers.js';
@@ -65,7 +65,7 @@ export default class SaveManager {
             const saveData = {
                 ...data,
                 savedAt: Date.now(),
-                version: '0.0.1'
+                version: '0.0.2'
             };
 
             const jsonData = safeJSONStringify(saveData);
@@ -237,7 +237,7 @@ export default class SaveManager {
             const saveData = {
                 ...data,
                 exportedAt: Date.now(),
-                version: '0.0.1'
+                version: '0.0.2'
             };
 
             const jsonData = JSON.stringify(saveData, null, 2);
