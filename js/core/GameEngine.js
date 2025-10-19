@@ -330,6 +330,7 @@ export default class GameEngine {
 
     // Update UI
     this.topBar.update();
+    this.updateXPBar();
 
     notifications.success(`Welcome back, ${this.player.data.name}!`);
   }
@@ -594,7 +595,7 @@ export default class GameEngine {
   }
 
   /**
-   * Update XP bar
+   * Update XP bar (FARMING XP na tela da fazenda)
    */
   updateXPBar() {
     const xpCurrent = document.getElementById("xp-current");
@@ -603,14 +604,16 @@ export default class GameEngine {
 
     if (!xpCurrent || !xpNeeded || !xpBarFill) return;
 
-    const level = this.player.data.level;
-    const currentXP = this.player.data.xp;
+    // Pega XP de FARMING, não do player
+    const farmingSkill = this.player.data.skills.farming;
+    const level = farmingSkill.level;
+    const currentXP = farmingSkill.xp;
     const nextLevelXP = this.skillSystem.xpTable[level] || 0;
     const currentLevelXP = this.skillSystem.xpTable[level - 1] || 0;
 
     const xpInLevel = currentXP - currentLevelXP;
     const xpNeededForLevel = nextLevelXP - currentLevelXP;
-    const percentage = (xpInLevel / xpNeededForLevel) * 100;
+    const percentage = Math.min(100, (xpInLevel / xpNeededForLevel) * 100);
 
     xpCurrent.textContent = xpInLevel;
     xpNeeded.textContent = xpNeededForLevel;
@@ -695,6 +698,13 @@ export default class GameEngine {
     window.addEventListener("player:xpChanged", () => {
       this.topBar.update();
       this.updateXPBar();
+    });
+
+    window.addEventListener("player:skillXpChanged", (e) => {
+      // Atualiza barra de XP se for farming
+      if (e.detail.skill === "farming") {
+        this.updateXPBar();
+      }
     });
 
     // Settings events

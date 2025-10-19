@@ -70,6 +70,19 @@ export default class Player {
       // NPCs
       npcs: {},
 
+      // City Systems
+      bank: {
+        balance: 0,
+        transactions: [],
+      },
+
+      tavern: {
+        reputation: 0,
+        mealsEaten: 0,
+        storiesHeard: 0,
+        lastVisit: null,
+      },
+
       // Achievements
       achievements: [],
 
@@ -143,12 +156,26 @@ export default class Player {
     const defaults = this.getDefaultData();
     const merged = { ...defaults };
 
-    // Merge basic properties
+    // First copy all defaults
+    Object.keys(defaults).forEach((key) => {
+      if (
+        typeof defaults[key] === "object" &&
+        !Array.isArray(defaults[key]) &&
+        defaults[key] !== null
+      ) {
+        merged[key] = { ...defaults[key] };
+      } else {
+        merged[key] = defaults[key];
+      }
+    });
+
+    // Then override with loaded data
     Object.keys(loadedData).forEach((key) => {
       if (key in defaults) {
         if (
           typeof defaults[key] === "object" &&
-          !Array.isArray(defaults[key])
+          !Array.isArray(defaults[key]) &&
+          defaults[key] !== null
         ) {
           merged[key] = { ...defaults[key], ...loadedData[key] };
         } else {
