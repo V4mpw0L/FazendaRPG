@@ -332,9 +332,14 @@ export default class GameEngine {
     this.topBar.update();
     this.updateXPBar();
 
-    notifications.success(
-      i18n.t("notifications.welcomeBack", { name: this.player.data.name }),
-    );
+    // Debug: Check player name
+    console.log("🔍 Player name:", this.player.data.name);
+    const welcomeMsg = i18n.t("notifications.welcomeBack", {
+      name: this.player.data.name,
+    });
+    console.log("🔍 Welcome message:", welcomeMsg);
+
+    notifications.success(welcomeMsg);
   }
 
   /**
@@ -697,6 +702,11 @@ export default class GameEngine {
       this.topBar.update();
     });
 
+    // Player data changed (NPCs, etc)
+    window.addEventListener("player:dataChanged", () => {
+      this.saveGame();
+    });
+
     window.addEventListener("player:xpChanged", () => {
       this.topBar.update();
       this.updateXPBar();
@@ -835,7 +845,7 @@ export default class GameEngine {
       this.renderFarm();
       this.topBar.update();
     } else {
-      notifications.info("No crops ready to harvest");
+      notifications.info(i18n.t("farm.noCropsReady"));
     }
   }
 

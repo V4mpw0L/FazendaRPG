@@ -6,6 +6,7 @@
 
 import BankSystem from "../systems/city/BankSystem.js";
 import TavernSystem from "../systems/city/TavernSystem.js";
+import i18n from "../utils/i18n.js";
 
 export default class CityUI {
   constructor(player, modal, notifications) {

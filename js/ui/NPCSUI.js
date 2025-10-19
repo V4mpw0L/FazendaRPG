@@ -5,90 +5,134 @@
  */
 
 export default class NPCSUI {
-    constructor(player, modal, notifications) {
-        this.player = player;
-        this.modal = modal;
-        this.notifications = notifications;
-        this.container = null;
-        this.npcsData = null;
+  constructor(player, modal, notifications) {
+    this.player = player;
+    this.modal = modal;
+    this.notifications = notifications;
+    this.container = null;
+    this.npcsData = null;
+    this.initialized = false;
+  }
+
+  /**
+   * Initialize NPCs UI
+   */
+  async init() {
+    this.container = document.getElementById("npcs-grid");
+    if (!this.container) {
+      console.error("❌ NPCs container not found");
+      return false;
     }
 
-    /**
-     * Initialize NPCs UI
-     */
-    async init() {
-        this.container = document.getElementById('npcs-grid');
-        if (!this.container) {
-            console.error('❌ NPCs container not found');
-            return false;
-        }
+    // Load NPCs data
+    try {
+      const response = await fetch("./data/npcs.json");
+      if (!response.ok) {
+        throw new Error("Failed to load NPCs data");
+      }
 
-        // Load NPCs data
-        try {
-            const response = await fetch('./data/npcs.json');
-            if (!response.ok) {
-                throw new Error('Failed to load NPCs data');
-            }
+      const data = await response.json();
+      this.npcsData = data.npcs;
 
-            const data = await response.json();
-            this.npcsData = data.npcs;
+      // Initialize NPC friendship from player data
+      this.loadNPCFriendship();
 
-            console.log('✅ NPCs UI initialized');
-            return true;
-        } catch (error) {
-            console.error('❌ Failed to initialize NPCs UI:', error);
-            return false;
-        }
+      this.initialized = true;
+      console.log("✅ NPCs UI initialized");
+      return true;
+    } catch (error) {
+      console.error("❌ Failed to initialize NPCs UI:", error);
+      return false;
+    }
+  }
+
+  /**
+   * Load NPC friendship from player data
+   */
+  loadNPCFriendship() {
+    if (!this.player.data.npcs) {
+      this.player.data.npcs = {};
     }
 
-    /**
-     * Render NPCs
-     */
-    render() {
-        if (!this.container || !this.npcsData) return;
+    // Sync NPC friendship from player data
+    Object.keys(this.npcsData).forEach((npcId) => {
+      if (this.player.data.npcs[npcId] !== undefined) {
+        this.npcsData[npcId].friendship = this.player.data.npcs[npcId];
+      } else {
+        // Initialize if not exists
+        this.player.data.npcs[npcId] = this.npcsData[npcId].friendship || 0;
+      }
+    });
+  }
 
-        this.container.innerHTML = '';
+  /**
+   * Save NPC friendship to player data
+   */
+  saveNPCFriendship() {
+    if (!this.player.data.npcs) {
+      this.player.data.npcs = {};
+    }
 
-        const npcs = Object.values(this.npcsData);
+    // Save all NPC friendship values to player data
+    Object.keys(this.npcsData).forEach((npcId) => {
+      this.player.data.npcs[npcId] = this.npcsData[npcId].friendship;
+    });
 
-        if (npcs.length === 0) {
-            this.container.innerHTML = `
+    // Dispatch event to trigger save
+    window.dispatchEvent(new CustomEvent("player:dataChanged"));
+  }
+
+  /**
+   * Render NPCs
+   */
+  render() {
+    if (!this.container || !this.npcsData) return;
+
+    // Reload friendship data to ensure sync
+    this.loadNPCFriendship();
+
+    this.container.innerHTML = "";
+
+    const npcs = Object.values(this.npcsData);
+
+    if (npcs.length === 0) {
+      this.container.innerHTML = `
                 <div class="npcs-empty">
                     <div style="font-size: 4rem; margin-bottom: 1rem;">👥</div>
                     <p>Nenhum NPC disponível</p>
                 </div>
             `;
-            return;
-        }
-
-        npcs.forEach(npc => {
-            const npcCard = this.createNPCCard(npc);
-            this.container.appendChild(npcCard);
-        });
+      return;
     }
 
-    /**
-     * Create NPC card element
-     * @param {Object} npc - NPC data
-     * @returns {HTMLElement}
-     */
-    createNPCCard(npc) {
-        const card = document.createElement('div');
-        card.className = 'npc-card';
+    npcs.forEach((npc) => {
+      const npcCard = this.createNPCCard(npc);
+      this.container.appendChild(npcCard);
+    });
+  }
 
-        const friendshipPercent = (npc.friendship / npc.maxFriendship) * 100;
-        const name = npc.namePtBR || npc.name;
-        const role = npc.rolePtBR || npc.role;
-        const description = npc.descriptionPtBR || npc.description;
+  /**
+   * Create NPC card element
+   * @param {Object} npc - NPC data
+   * @returns {HTMLElement}
+   */
+  createNPCCard(npc) {
+    const card = document.createElement("div");
+    card.className = "npc-card";
 
-        card.innerHTML = `
+    const friendshipPercent = (npc.friendship / npc.maxFriendship) * 100;
+    const name = npc.namePtBR || npc.name;
+    const role = npc.rolePtBR || npc.role;
+    const description = npc.descriptionPtBR || npc.description;
+
+    card.innerHTML = `
             <div class="npc-avatar">${npc.avatar}</div>
             <div class="npc-info">
                 <h3 class="npc-name">${name}</h3>
                 <p class="npc-role">${role}</p>
                 <p class="npc-description">${description}</p>
-                ${npc.shop ? '<div class="npc-badge">🛒 Loja</div>' : ''}
-                ${npc.quests && npc.quests.length > 0 ? '<div class="npc-badge">📜 Missões</div>' : ''}
+                ${npc.shop ? '<div class="npc-badge">🛒 Loja</div>' : ""}
+                ${npc.quests && npc.quests.length > 0 ? '<div class="npc-badge">📜 Missões</div>' : ""}
             </div>
             <div class="npc-friendship">
                 <div class="friendship-label">Amizade: ${Math.floor(friendshipPercent)}%</div>
@@ -98,67 +142,68 @@ export default class NPCSUI {
             </div>
         `;
 
-        card.addEventListener('click', () => {
-            this.showNPCDialog(npc);
-        });
+    card.addEventListener("click", () => {
+      this.showNPCDialog(npc);
+    });
 
-        return card;
+    return card;
+  }
+
+  /**
+   * Show NPC dialog
+   * @param {Object} npc - NPC data
+   */
+  showNPCDialog(npc) {
+    const name = npc.namePtBR || npc.name;
+    const greetings = npc.dialogue?.greetingPtBR ||
+      npc.dialogue?.greeting || ["Olá!"];
+    const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+
+    const buttons = [];
+
+    // Shop button
+    if (npc.shop) {
+      buttons.push({
+        text: "🛒 Ver Loja",
+        class: "btn-primary",
+        onClick: () => {
+          this.showNPCShop(npc);
+          return false; // Don't close modal
+        },
+      });
     }
 
-    /**
-     * Show NPC dialog
-     * @param {Object} npc - NPC data
-     */
-    showNPCDialog(npc) {
-        const name = npc.namePtBR || npc.name;
-        const greetings = npc.dialogue?.greetingPtBR || npc.dialogue?.greeting || ['Olá!'];
-        const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+    // Quests button
+    if (npc.quests && npc.quests.length > 0) {
+      buttons.push({
+        text: "📜 Missões",
+        class: "btn-success",
+        onClick: () => {
+          this.notifications.show("Sistema de missões em breve!", "info");
+          return false;
+        },
+      });
+    }
 
-        const buttons = [];
+    // Talk button
+    buttons.push({
+      text: "💬 Conversar",
+      class: "btn-secondary",
+      onClick: () => {
+        this.increaseFriendship(npc.id, 1);
+        this.notifications.show("Você conversou com " + name, "success");
+        this.render();
+        return true;
+      },
+    });
 
-        // Shop button
-        if (npc.shop) {
-            buttons.push({
-                text: '🛒 Ver Loja',
-                class: 'btn-primary',
-                onClick: () => {
-                    this.showNPCShop(npc);
-                    return false; // Don't close modal
-                }
-            });
-        }
+    buttons.push({
+      text: "Sair",
+      class: "btn-secondary",
+      onClick: () => true,
+    });
 
-        // Quests button
-        if (npc.quests && npc.quests.length > 0) {
-            buttons.push({
-                text: '📜 Missões',
-                class: 'btn-success',
-                onClick: () => {
-                    this.notifications.show('Sistema de missões em breve!', 'info');
-                    return false;
-                }
-            });
-        }
-
-        // Talk button
-        buttons.push({
-            text: '💬 Conversar',
-            class: 'btn-secondary',
-            onClick: () => {
-                this.increaseFriendship(npc.id, 1);
-                this.notifications.show('Você conversou com ' + name, 'success');
-                this.render();
-                return true;
-            }
-        });
-
-        buttons.push({
-            text: 'Sair',
-            class: 'btn-secondary',
-            onClick: () => true
-        });
-
-        const content = `
+    const content = `
             <div style="text-align: center; padding: 1rem 0;">
                 <div style="font-size: 5rem; margin-bottom: 1rem;">${npc.avatar}</div>
                 <h2 style="margin: 0.5rem 0;">${name}</h2>
@@ -178,44 +223,56 @@ export default class NPCSUI {
             </div>
         `;
 
-        this.modal.show({
-            title: `👥 ${name}`,
-            content,
-            buttons,
-            closable: true,
-            size: 'medium'
-        });
+    this.modal.show({
+      title: `👥 ${name}`,
+      content,
+      buttons,
+      closable: true,
+      size: "medium",
+    });
+  }
+
+  /**
+   * Show NPC shop
+   * @param {Object} npc - NPC data
+   */
+  showNPCShop(npc) {
+    this.notifications.show("Sistema de loja em desenvolvimento!", "info");
+    // TODO: Implement shop system
+  }
+
+  /**
+   * Increase friendship with NPC
+   * @param {string} npcId - NPC ID
+   * @param {number} amount - Amount to increase
+   */
+  increaseFriendship(npcId, amount) {
+    if (!this.npcsData[npcId]) return;
+
+    const oldFriendship = this.npcsData[npcId].friendship;
+    this.npcsData[npcId].friendship = Math.min(
+      this.npcsData[npcId].maxFriendship,
+      this.npcsData[npcId].friendship + amount,
+    );
+
+    // Save to player data
+    if (!this.player.data.npcs) {
+      this.player.data.npcs = {};
     }
+    this.player.data.npcs[npcId] = this.npcsData[npcId].friendship;
 
-    /**
-     * Show NPC shop
-     * @param {Object} npc - NPC data
-     */
-    showNPCShop(npc) {
-        this.notifications.show('Sistema de loja em desenvolvimento!', 'info');
-        // TODO: Implement shop system
-    }
+    // Trigger save
+    this.saveNPCFriendship();
 
-    /**
-     * Increase friendship with NPC
-     * @param {string} npcId - NPC ID
-     * @param {number} amount - Amount to increase
-     */
-    increaseFriendship(npcId, amount) {
-        if (!this.npcsData[npcId]) return;
+    console.log(
+      `💚 ${npcId} friendship: ${oldFriendship} → ${this.npcsData[npcId].friendship}`,
+    );
+  }
 
-        this.npcsData[npcId].friendship = Math.min(
-            this.npcsData[npcId].maxFriendship,
-            this.npcsData[npcId].friendship + amount
-        );
-
-        // TODO: Save to player data
-    }
-
-    /**
-     * Refresh render
-     */
-    refresh() {
-        this.render();
-    }
+  /**
+   * Refresh render
+   */
+  refresh() {
+    this.render();
+  }
 }

@@ -5,6 +5,7 @@
  */
 
 import { getTimeRemaining, isPast, clamp } from "../utils/helpers.js";
+import i18n from "../utils/i18n.js";
 
 export default class FarmSystem {
   constructor(player, skillSystem, inventorySystem) {
@@ -238,7 +239,7 @@ export default class FarmSystem {
     // Check if player has seeds
     const seedId = cropData.seedId;
     if (!this.player.hasItem(seedId, 1)) {
-      return { success: false, error: "No seeds available" };
+      return { success: false, error: i18n.t("farm.noSeeds") };
     }
 
     // Check energy

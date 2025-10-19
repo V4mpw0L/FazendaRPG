@@ -4,6 +4,8 @@
  * @version 0.0.1
  */
 
+import i18n from "../utils/i18n.js";
+
 export default class InventorySystem {
   constructor(player) {
     this.player = player;

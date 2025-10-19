@@ -36,7 +36,9 @@
     "needEnergy": "Energia insuficiente!",
     "planted": "Plantado!",
     "harvested": "Colhido!",
-    "timeRemaining": "Tempo restante"
+    "timeRemaining": "Tempo restante",
+    "noSeeds": "Sem sementes disponíveis",
+    "noCropsReady": "Nenhuma cultura pronta para colher"
   },
   "skills": {
     "title": "Suas Habilidades",

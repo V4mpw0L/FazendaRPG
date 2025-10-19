@@ -139,6 +139,13 @@ export default class Player {
     try {
       // Merge with defaults to ensure all properties exist
       this.data = this.mergeWithDefaults(data);
+
+      // Migration: Fix saves with empty names (from older versions)
+      if (!this.data.name || this.data.name.trim() === "") {
+        this.data.name = "Fazendeiro";
+        console.warn("⚠️ Save had no name, using default: Fazendeiro");
+      }
+
       console.log("✅ Player data loaded:", this.data.name);
       return true;
     } catch (error) {

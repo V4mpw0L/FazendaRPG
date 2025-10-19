@@ -5,6 +5,7 @@
  */
 
 import { calculateLevelFromXP, calculateXPForLevel } from "../utils/helpers.js";
+import i18n from "../utils/i18n.js";
 
 export default class SkillSystem {
   constructor(player) {

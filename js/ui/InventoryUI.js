@@ -4,6 +4,8 @@
  * @version 0.0.1
  */
 
+import i18n from "../utils/i18n.js";
+
 export default class InventoryUI {
   constructor(inventorySystem, modal, notifications) {
     this.inventorySystem = inventorySystem;
