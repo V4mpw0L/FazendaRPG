@@ -311,6 +311,19 @@
     transform: rotate(90deg);
 }
 
+.dark-theme .modal-close {
+    border-color: #8b0000;
+    color: #8b0000;
+    background: transparent;
+}
+
+.dark-theme .modal-close:hover {
+    background: #8b0000;
+    color: white;
+    border-color: #6b0000;
+    transform: rotate(90deg);
+}
+
 .modal-body {
     margin-bottom: var(--spacing-lg);
     color: var(--text-secondary);
