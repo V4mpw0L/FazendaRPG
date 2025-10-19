@@ -1,9 +1,35 @@
 #!/bin/bash
 # FazendaRPG - Project Integrity Checker
 # Verifies that all required files exist and are properly structured
+#
+# 📍 Location: tests/check-integrity.sh
+# 🚀 Usage: Run from project root directory
+#
+#   cd /path/to/FazendaRPG
+#   ./tests/check-integrity.sh
+#
+# or
+#
+#   cd /path/to/FazendaRPG
+#   bash tests/check-integrity.sh
+#
 
-echo "🌾 FazendaRPG v0.0.1 - Integrity Check"
+echo "🌾 FazendaRPG v0.0.5 - Integrity Check"
 echo "======================================"
+echo ""
+
+# Check if running from project root
+if [ ! -f "index.html" ] || [ ! -f "manifest.json" ]; then
+    echo "❌ ERROR: This script must be run from the project root directory!"
+    echo ""
+    echo "Usage:"
+    echo "  cd /path/to/FazendaRPG"
+    echo "  ./tests/check-integrity.sh"
+    echo ""
+    exit 1
+fi
+
+echo "✅ Running from correct directory"
 echo ""
 
 ERRORS=0
@@ -150,7 +176,7 @@ fi
 echo ""
 echo "Project Status: "
 if [ $ERRORS -eq 0 ]; then
-    echo -e "${GREEN}READY TO RUN!${NC}"
+    echo -e "${GREEN}✅ READY TO RUN!${NC}"
     echo ""
     echo "🚀 To start the game, run a local server:"
     echo "   python3 -m http.server 8000"
@@ -158,8 +184,17 @@ if [ $ERRORS -eq 0 ]; then
     echo "   npx http-server -p 8000"
     echo ""
     echo "Then open: http://localhost:8000"
+    echo ""
+    echo "📚 Documentation:"
+    echo "   Quick Start:     QUICK_START_ENERGIA.md"
+    echo "   Navigation:      NAVEGACAO.md"
+    echo "   Full Docs:       docs/INDEX.md"
 else
-    echo -e "${RED}NOT READY - Fix errors above${NC}"
+    echo -e "${RED}❌ NOT READY - Fix errors above${NC}"
 fi
+
+echo ""
+echo "📁 Location: tests/check-integrity.sh"
+echo "📝 Last updated: v0.0.5 (Janeiro 2024)"
 
 exit $ERRORS

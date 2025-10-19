@@ -11,7 +11,90 @@ Esta pasta contém todos os testes automatizados do projeto FazendaRPG.
 ```
 tests/
 ├── README.md                    # Este arquivo
-└── energia-system-test.js       # Suite de testes do sistema de energia
+├── TEST_INSTRUCTIONS.md         # Instruções detalhadas de teste
+├── energia-system-test.js       # Suite de testes do sistema de energia
+├── test-debug.html              # Página HTML para debug de testes
+└── check-integrity.sh           # Script de verificação de integridade
+```
+
+---
+
+## 📄 Arquivos
+
+### Scripts de Teste
+- **energia-system-test.js** - Suite de 7 testes automatizados do sistema de energia
+- **check-integrity.sh** - Script bash para verificar integridade do projeto
+
+### Páginas de Debug
+- **test-debug.html** - Página HTML dedicada para debug e testes manuais
+
+### Documentação
+- **README.md** - Este arquivo (documentação principal de testes)
+- **TEST_INSTRUCTIONS.md** - Instruções detalhadas para executar testes
+
+---
+
+## 🔧 Ferramentas Disponíveis
+
+### 🧪 energia-system-test.js
+**Suite de testes automatizados do sistema de energia**
+
+- 7 testes completos
+- Valida level ups, skills, saves, migração
+- Executável no console do navegador
+
+**Como usar:**
+```javascript
+// No console (F12)
+energiaSystemTest.quickTest()     // Teste rápido
+energiaSystemTest.runAll()        // Suite completa
+energiaSystemTest.displayStats()  // Ver estatísticas
+```
+
+### 🔍 check-integrity.sh
+**Script de verificação de integridade do projeto**
+
+- Verifica todos os arquivos essenciais
+- Valida estrutura de pastas
+- Checa sintaxe JSON
+- Verifica assets PWA
+
+**Como usar:**
+```bash
+# Da raiz do projeto:
+cd FazendaRPG
+./tests/check-integrity.sh
+
+# ou
+bash tests/check-integrity.sh
+```
+
+**O que verifica:**
+- ✅ Arquivos core (index.html, manifest.json, sw.js)
+- ✅ Estrutura de pastas (assets, data, js, style, docs, tests)
+- ✅ Arquivos JavaScript (core, systems, ui, utils)
+- ✅ Arquivos de dados (skills, items, crops, quests, npcs)
+- ✅ Traduções (pt-BR, en-US)
+- ✅ Estilos CSS
+- ✅ Ícones PWA
+- ✅ Sintaxe JSON
+
+### 🐛 test-debug.html
+**Página HTML para debug e testes manuais**
+
+- Interface dedicada para testes
+- Console integrado
+- Debug de funcionalidades específicas
+
+**Como usar:**
+```bash
+# Abra o arquivo no navegador:
+open tests/test-debug.html
+
+# ou com servidor local:
+cd FazendaRPG
+python3 -m http.server 8000
+# Acesse: http://localhost:8000/tests/test-debug.html
 ```
 
 ---
@@ -257,6 +340,62 @@ Se encontrar problemas com os testes:
 
 ---
 
+## 📊 Resumo dos Arquivos
+
+| Arquivo | Tipo | Descrição | Como Executar |
+|---------|------|-----------|---------------|
+| `energia-system-test.js` | JavaScript | 7 testes automatizados | Console do navegador |
+| `check-integrity.sh` | Bash Script | Verificação de integridade | Terminal na raiz |
+| `test-debug.html` | HTML | Página de debug | Navegador |
+| `README.md` | Markdown | Este arquivo | - |
+| `TEST_INSTRUCTIONS.md` | Markdown | Instruções detalhadas | - |
+
+---
+
+## 🎯 Workflow de Testes Recomendado
+
+### Antes de Commitar
+```bash
+# 1. Verificar integridade
+./tests/check-integrity.sh
+
+# 2. Testar no navegador
+# Abra index.html e execute no console:
+energiaSystemTest.runAll()
+
+# 3. Verificar erros no console
+# Certifique-se de que não há erros
+```
+
+### Desenvolvimento de Nova Feature
+```bash
+# 1. Desenvolva a feature
+# 2. Crie testes se necessário
+# 3. Execute testes existentes
+# 4. Verifique integridade
+# 5. Documente mudanças
+```
+
+### Debug de Problemas
+```bash
+# 1. Use test-debug.html para debug isolado
+# 2. Execute energiaSystemTest.displayStats()
+# 3. Verifique docs/development/DEBUG.md
+# 4. Use check-integrity.sh para validar estrutura
+```
+
+---
+
+## 📚 Documentação Relacionada
+
+- [TEST_INSTRUCTIONS.md](TEST_INSTRUCTIONS.md) - Instruções detalhadas de teste
+- [../docs/updates/ENERGIA_SYSTEM_UPDATE.md](../docs/updates/ENERGIA_SYSTEM_UPDATE.md) - Doc técnica
+- [../docs/development/DEBUG.md](../docs/development/DEBUG.md) - Guia de debug
+- [../NAVEGACAO.md](../NAVEGACAO.md) - Navegação geral do projeto
+
+---
+
 **Última Atualização:** Janeiro 2024  
 **Versão:** 0.0.5  
-**Status:** ✅ Funcional
+**Status:** ✅ Completo e Funcional  
+**Arquivos de Teste:** 5 (2 scripts, 2 docs, 1 HTML)
