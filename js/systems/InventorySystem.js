@@ -236,6 +236,41 @@ export default class InventorySystem {
   }
 
   /**
+   * Sell all items in inventory
+   * @returns {Object} Result
+   */
+  sellAllItems() {
+    const items = this.getSellables();
+
+    if (items.length === 0) {
+      return { success: false, error: i18n.t("errors.noItemsToSell") };
+    }
+
+    let totalGold = 0;
+    let itemCount = 0;
+
+    items.forEach((item) => {
+      const value = item.sellPrice * item.count;
+      totalGold += value;
+      itemCount += item.count;
+      this.removeItem(item.id, item.count);
+    });
+
+    this.player.addGold(totalGold);
+
+    console.log(`💰 Sold all items for ${totalGold} gold`);
+
+    // Dispatch event
+    window.dispatchEvent(
+      new CustomEvent("inventory:itemSold", {
+        detail: { itemCount, gold: totalGold },
+      }),
+    );
+
+    return { success: true, itemCount, gold: totalGold };
+  }
+
+  /**
    * Get inventory as array of items with data
    * @returns {Array} Inventory items
    */
