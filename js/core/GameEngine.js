@@ -332,7 +332,9 @@ export default class GameEngine {
     this.topBar.update();
     this.updateXPBar();
 
-    notifications.success(`Welcome back, ${this.player.data.name}!`);
+    notifications.success(
+      i18n.t("notifications.welcomeBack", { name: this.player.data.name }),
+    );
   }
 
   /**
@@ -810,7 +812,9 @@ export default class GameEngine {
     const result = this.farmSystem.plantAll("wheat");
 
     if (result.success) {
-      notifications.success(`Planted ${result.planted} crops!`);
+      notifications.success(
+        i18n.t("notifications.plantedMultiple", { count: result.planted }),
+      );
       this.renderFarm();
       this.topBar.update();
     } else {
@@ -825,7 +829,9 @@ export default class GameEngine {
     const result = this.farmSystem.harvestAll();
 
     if (result.success) {
-      notifications.success(`Harvested ${result.harvested} crops!`);
+      notifications.success(
+        i18n.t("notifications.harvestedMultiple", { count: result.harvested }),
+      );
       this.renderFarm();
       this.topBar.update();
     } else {

@@ -243,7 +243,7 @@ export default class FarmSystem {
 
     // Check energy
     if (!this.player.hasEnergy(cropData.energyCost)) {
-      return { success: false, error: "Not enough energy" };
+      return { success: false, error: i18n.t("errors.notEnoughEnergy") };
     }
 
     // Consume seed and energy

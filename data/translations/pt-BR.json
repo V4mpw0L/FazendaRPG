@@ -86,7 +86,9 @@
     "use": "Usar",
     "drop": "Descartar",
     "sell": "Vender",
-    "quantity": "Quantidade"
+    "quantity": "Quantidade",
+    "usedItem": "Você usou {item}!",
+    "cannotUse": "Não foi possível usar o item"
   },
   "city": {
     "title": "Cidade",
@@ -105,16 +107,40 @@
     "market": "Mercado",
     "marketDesc": "Compre e venda itens"
   },
+  "bank": {
+    "deposit": "Depositar",
+    "withdraw": "Sacar",
+    "balance": "Saldo",
+    "deposited": "Depositou {amount}g + {interest}g de juros! Total no banco: {newBalance}g",
+    "withdrawn": "Sacou {amount}g! Saldo no banco: {newBalance}g"
+  },
+  "tavern": {
+    "rest": "Descansar",
+    "meal": "Refeição",
+    "story": "Ouvir História",
+    "rested": "Você descansou e recuperou {restored} de energia!",
+    "ateFood": "Você comeu! {effects}",
+    "energyRestored": "⚡ +{amount} energia",
+    "healthRestored": "❤️ +{amount} vida"
+  },
   "market": {
     "title": "Mercado",
     "buy": "Comprar",
     "sell": "Vender",
+    "sellAll": "Vender Tudo",
     "price": "Preço",
     "stock": "Estoque",
     "purchased": "Comprado!",
     "sold": "Vendido!",
     "notEnoughGold": "Ouro insuficiente!",
-    "outOfStock": "Fora de estoque!"
+    "outOfStock": "Fora de estoque!",
+    "soldItem": "Vendeu {amount}x {item} por {gold} ouro!",
+    "soldMultiple": "Vendeu {items} itens por {gold} ouro!",
+    "sellAllConfirm": "Vender todos os itens vendáveis por {gold} ouro?<br><br><small>{count} {itemText}</small>",
+    "itemType": "tipo de item",
+    "itemTypes": "tipos de itens",
+    "invalidAmount": "Quantidade inválida",
+    "sellError": "Erro ao vender"
   },
   "quests": {
     "title": "Missões",
@@ -171,6 +197,14 @@
     "health": "Vida",
     "stamina": "Stamina"
   },
+  "errors": {
+    "notEnoughEnergy": "Energia insuficiente",
+    "notEnoughItems": "Itens insuficientes",
+    "notEnoughSpace": "Espaço insuficiente no inventário",
+    "cannotSell": "Este item não pode ser vendido",
+    "notEnoughGold": "Ouro insuficiente",
+    "invalidAmount": "Quantidade inválida"
+  },
   "items": {
     "seed": "Semente",
     "wheat": "Trigo",
@@ -188,6 +222,7 @@
   },
   "notifications": {
     "welcome": "Bem-vindo à FazendaRPG!",
+    "welcomeBack": "Bem-vindo de volta, {name}!",
     "levelUp": "Parabéns! Você subiu para o nível {level}!",
     "skillLevelUp": "{skill} subiu para o nível {level}!",
     "questComplete": "Missão '{quest}' completa!",
@@ -195,7 +230,9 @@
     "itemReceived": "Você recebeu: {item} x{amount}",
     "notEnoughSpace": "Inventário cheio!",
     "saved": "Progresso salvo!",
-    "error": "Ocorreu um erro. Tente novamente."
+    "error": "Ocorreu um erro. Tente novamente.",
+    "plantedMultiple": "Plantadas {count} culturas!",
+    "harvestedMultiple": "Colhidas {count} culturas!"
   },
   "footer": {
     "developed": "Desenvolvido por:"

@@ -407,11 +407,14 @@ export default class InventoryUI {
       onUse: (item) => {
         const result = this.inventorySystem.useItem(item.id);
         if (result.success) {
-          this.notifications.show(`Você usou ${item.name}!`, "success");
+          this.notifications.show(
+            i18n.t("inventory.usedItem", { item: item.name }),
+            "success",
+          );
           this.render();
         } else {
           this.notifications.show(
-            result.error || "Não foi possível usar o item",
+            result.error || i18n.t("inventory.cannotUse"),
             "error",
           );
         }
@@ -502,21 +505,28 @@ export default class InventoryUI {
               amount = parseInt(input?.value || "1");
 
               if (amount < 1 || amount > maxAmount) {
-                this.notifications.show("Quantidade inválida", "error");
+                this.notifications.show(
+                  i18n.t("market.invalidAmount"),
+                  "error",
+                );
                 return false;
               }
 
               const result = this.inventorySystem.sellItem(item.id, amount);
               if (result.success) {
                 this.notifications.show(
-                  `Vendeu ${amount}x ${item.name} por ${result.gold} ouro!`,
+                  i18n.t("market.soldItem", {
+                    amount: amount,
+                    item: item.name,
+                    gold: result.gold,
+                  }),
                   "success",
                 );
                 this.render();
                 return true;
               } else {
                 this.notifications.show(
-                  result.error || "Erro ao vender",
+                  result.error || i18n.t("market.sellError"),
                   "error",
                 );
                 return false;
@@ -558,10 +568,17 @@ export default class InventoryUI {
     }, 0);
 
     this.modal.showConfirm({
-      title: "💰 Vender Tudo",
-      message: `Vender todos os itens vendáveis por ${totalValue} ouro?<br><br><small>${sellable.length} ${sellable.length === 1 ? "tipo de item" : "tipos de itens"}</small>`,
-      confirmText: "Vender Tudo",
-      cancelText: "Cancelar",
+      title: `💰 ${i18n.t("market.sellAll")}`,
+      message: i18n.t("market.sellAllConfirm", {
+        gold: totalValue,
+        count: sellable.length,
+        itemText:
+          sellable.length === 1
+            ? i18n.t("market.itemType")
+            : i18n.t("market.itemTypes"),
+      }),
+      confirmText: i18n.t("market.sellAll"),
+      cancelText: i18n.t("cancel"),
       confirmClass: "btn-success",
       onConfirm: () => {
         let totalGold = 0;
@@ -576,7 +593,10 @@ export default class InventoryUI {
         });
 
         this.notifications.show(
-          `Vendeu ${itemsSold} itens por ${totalGold} ouro!`,
+          i18n.t("market.soldMultiple", {
+            items: itemsSold,
+            gold: totalGold,
+          }),
           "success",
         );
 

@@ -4,85 +4,85 @@
  * @version 0.0.1
  */
 
-import BankSystem from '../systems/city/BankSystem.js';
-import TavernSystem from '../systems/city/TavernSystem.js';
+import BankSystem from "../systems/city/BankSystem.js";
+import TavernSystem from "../systems/city/TavernSystem.js";
 
 export default class CityUI {
-    constructor(player, modal, notifications) {
-        this.player = player;
-        this.modal = modal;
-        this.notifications = notifications;
-        this.bankSystem = new BankSystem(player);
-        this.tavernSystem = new TavernSystem(player);
-        this.container = null;
+  constructor(player, modal, notifications) {
+    this.player = player;
+    this.modal = modal;
+    this.notifications = notifications;
+    this.bankSystem = new BankSystem(player);
+    this.tavernSystem = new TavernSystem(player);
+    this.container = null;
+  }
+
+  /**
+   * Initialize City UI
+   */
+  init() {
+    this.container = document.querySelector("#city-screen .city-grid");
+    if (!this.container) {
+      console.error("❌ City container not found");
+      return false;
     }
 
-    /**
-     * Initialize City UI
-     */
-    init() {
-        this.container = document.querySelector('#city-screen .city-grid');
-        if (!this.container) {
-            console.error('❌ City container not found');
-            return false;
-        }
+    // Initialize systems
+    this.bankSystem.init();
+    this.tavernSystem.init();
 
-        // Initialize systems
-        this.bankSystem.init();
-        this.tavernSystem.init();
+    // Add event listeners to city cards
+    this.setupEventListeners();
 
-        // Add event listeners to city cards
-        this.setupEventListeners();
+    console.log("✅ City UI initialized");
+    return true;
+  }
 
-        console.log('✅ City UI initialized');
-        return true;
+  /**
+   * Setup event listeners
+   */
+  setupEventListeners() {
+    // Wait for DOM to be ready
+    setTimeout(() => {
+      const cityCards = document.querySelectorAll(".city-card");
+      cityCards.forEach((card) => {
+        const location = card.dataset.location;
+        card.addEventListener("click", () => {
+          this.handleLocationClick(location);
+        });
+      });
+    }, 100);
+  }
+
+  /**
+   * Handle location click
+   * @param {string} location - Location name
+   */
+  handleLocationClick(location) {
+    switch (location) {
+      case "bank":
+        this.showBankUI();
+        break;
+      case "tavern":
+        this.showTavernUI();
+        break;
+      case "plaza":
+        this.showPlazaUI();
+        break;
+      default:
+        this.notifications.show("Em breve!", "info");
     }
+  }
 
-    /**
-     * Setup event listeners
-     */
-    setupEventListeners() {
-        // Wait for DOM to be ready
-        setTimeout(() => {
-            const cityCards = document.querySelectorAll('.city-card');
-            cityCards.forEach(card => {
-                const location = card.dataset.location;
-                card.addEventListener('click', () => {
-                    this.handleLocationClick(location);
-                });
-            });
-        }, 100);
-    }
+  /**
+   * Show Bank UI
+   */
+  showBankUI() {
+    const stats = this.bankSystem.getStats();
+    const balance = this.bankSystem.getBalance();
+    const playerGold = this.player.data.gold;
 
-    /**
-     * Handle location click
-     * @param {string} location - Location name
-     */
-    handleLocationClick(location) {
-        switch (location) {
-            case 'bank':
-                this.showBankUI();
-                break;
-            case 'tavern':
-                this.showTavernUI();
-                break;
-            case 'plaza':
-                this.showPlazaUI();
-                break;
-            default:
-                this.notifications.show('Em breve!', 'info');
-        }
-    }
-
-    /**
-     * Show Bank UI
-     */
-    showBankUI() {
-        const stats = this.bankSystem.getStats();
-        const balance = this.bankSystem.getBalance();
-        const playerGold = this.player.data.gold;
-
-        const content = `
+    const content = `
             <div class="bank-ui">
                 <div class="bank-header">
                     <div style="font-size: 4rem; margin-bottom: 1rem;">🏦</div>
@@ -265,90 +265,99 @@ export default class CityUI {
             </div>
         `;
 
-        this.modal.show({
-            title: '🏦 Banco',
-            content,
-            buttons: [
-                {
-                    text: '💰 Depositar',
-                    class: 'btn-success',
-                    onClick: () => {
-                        const amount = parseInt(document.getElementById('deposit-amount').value) || 0;
-                        this.handleDeposit(amount);
-                        return false;
-                    }
-                },
-                {
-                    text: '🏦 Sacar',
-                    class: 'btn-primary',
-                    onClick: () => {
-                        const amount = parseInt(document.getElementById('withdraw-amount').value) || 0;
-                        this.handleWithdraw(amount);
-                        return false;
-                    }
-                },
-                {
-                    text: 'Fechar',
-                    class: 'btn-secondary',
-                    onClick: () => true
-                }
-            ],
-            closable: true,
-            size: 'medium'
-        });
+    this.modal.show({
+      title: "🏦 Banco",
+      content,
+      buttons: [
+        {
+          text: "💰 Depositar",
+          class: "btn-success",
+          onClick: () => {
+            const amount =
+              parseInt(document.getElementById("deposit-amount").value) || 0;
+            this.handleDeposit(amount);
+            return false;
+          },
+        },
+        {
+          text: "🏦 Sacar",
+          class: "btn-primary",
+          onClick: () => {
+            const amount =
+              parseInt(document.getElementById("withdraw-amount").value) || 0;
+            this.handleWithdraw(amount);
+            return false;
+          },
+        },
+        {
+          text: "Fechar",
+          class: "btn-secondary",
+          onClick: () => true,
+        },
+      ],
+      closable: true,
+      size: "medium",
+    });
+  }
+
+  /**
+   * Handle deposit
+   * @param {number} amount - Amount to deposit
+   */
+  handleDeposit(amount) {
+    const result = this.bankSystem.deposit(amount);
+
+    if (result.success) {
+      this.notifications.show(
+        i18n.t("bank.deposited", {
+          amount: result.amount,
+          interest: result.interest,
+          newBalance: result.newBalance,
+        }),
+        "success",
+      );
+      this.modal.close();
+
+      // Dispatch event to update UI
+      window.dispatchEvent(new CustomEvent("player:goldChanged"));
+    } else {
+      this.notifications.show(result.error, "error");
     }
+  }
 
-    /**
-     * Handle deposit
-     * @param {number} amount - Amount to deposit
-     */
-    handleDeposit(amount) {
-        const result = this.bankSystem.deposit(amount);
+  /**
+   * Handle withdraw
+   * @param {number} amount - Amount to withdraw
+   */
+  handleWithdraw(amount) {
+    const result = this.bankSystem.withdraw(amount);
 
-        if (result.success) {
-            this.notifications.show(
-                `Depositou ${result.amount}g + ${result.interest}g de juros! Total no banco: ${result.newBalance}g`,
-                'success'
-            );
-            this.modal.close();
+    if (result.success) {
+      this.notifications.show(
+        i18n.t("bank.withdrawn", {
+          amount: result.amount,
+          newBalance: result.newBalance,
+        }),
+        "success",
+      );
+      this.modal.close();
 
-            // Dispatch event to update UI
-            window.dispatchEvent(new CustomEvent('player:goldChanged'));
-        } else {
-            this.notifications.show(result.error, 'error');
-        }
+      // Dispatch event to update UI
+      window.dispatchEvent(new CustomEvent("player:goldChanged"));
+    } else {
+      this.notifications.show(result.error, "error");
     }
+  }
 
-    /**
-     * Handle withdraw
-     * @param {number} amount - Amount to withdraw
-     */
-    handleWithdraw(amount) {
-        const result = this.bankSystem.withdraw(amount);
+  /**
+   * Show Tavern UI
+   */
+  showTavernUI() {
+    const stats = this.tavernSystem.getStats();
+    const meals = this.tavernSystem.getAvailableMeals();
+    const restPrice = this.tavernSystem.getRestPrice();
 
-        if (result.success) {
-            this.notifications.show(
-                `Sacou ${result.amount}g! Saldo no banco: ${result.newBalance}g`,
-                'success'
-            );
-            this.modal.close();
-
-            // Dispatch event to update UI
-            window.dispatchEvent(new CustomEvent('player:goldChanged'));
-        } else {
-            this.notifications.show(result.error, 'error');
-        }
-    }
-
-    /**
-     * Show Tavern UI
-     */
-    showTavernUI() {
-        const stats = this.tavernSystem.getStats();
-        const meals = this.tavernSystem.getAvailableMeals();
-        const restPrice = this.tavernSystem.getRestPrice();
-
-        const content = `
+    const content = `
             <div class="tavern-ui">
                 <div class="tavern-header">
                     <div style="font-size: 4rem; margin-bottom: 1rem;">🍺</div>
@@ -384,18 +393,22 @@ export default class CityUI {
                         <div class="service-energy">⚡ +50</div>
                     </div>
 
-                    ${meals.map(meal => `
+                    ${meals
+                      .map(
+                        (meal) => `
                         <div class="service-card meal-card" data-meal="${meal.type}">
                             <div class="service-icon">${meal.icon}</div>
                             <h3>${meal.name}</h3>
                             <p>${meal.description}</p>
-                            <div class="service-price">${meal.price}g ${meal.price < meal.basePrice ? `<span class="discount">-${meal.basePrice - meal.price}g</span>` : ''}</div>
+                            <div class="service-price">${meal.price}g ${meal.price < meal.basePrice ? `<span class="discount">-${meal.basePrice - meal.price}g</span>` : ""}</div>
                             <div class="service-benefits">
                                 <span>⚡ +${meal.energy}</span>
                                 <span>❤️ +${meal.health}</span>
                             </div>
                         </div>
-                    `).join('')}
+                    `,
+                      )
+                      .join("")}
 
                     <div class="service-card story-card">
                         <div class="service-icon">📖</div>
@@ -524,107 +537,117 @@ export default class CityUI {
             </div>
         `;
 
+    this.modal
+      .show({
+        title: "🍺 Taverna",
+        content,
+        buttons: [
+          {
+            text: "😴 Descansar",
+            class: "btn-primary",
+            onClick: () => {
+              this.handleRest();
+              return false;
+            },
+          },
+          {
+            text: "📖 Histórias",
+            class: "btn-secondary",
+            onClick: () => {
+              this.handleStory();
+              return false;
+            },
+          },
+          {
+            text: "Fechar",
+            class: "btn-secondary",
+            onClick: () => true,
+          },
+        ],
+        closable: true,
+        size: "medium",
+      })
+      .then(() => {
+        // Add meal card click listeners
+        setTimeout(() => {
+          document.querySelectorAll(".meal-card").forEach((card) => {
+            card.addEventListener("click", () => {
+              const mealType = card.dataset.meal;
+              this.handleMeal(mealType);
+            });
+          });
+        }, 100);
+      });
+  }
+
+  /**
+   * Handle rest
+   */
+  handleRest() {
+    const result = this.tavernSystem.rest();
+
+    if (result.success) {
+      this.notifications.show(
+        i18n.t("tavern.rested", { restored: result.restored }),
+        "success",
+      );
+      this.modal.close();
+
+      // Dispatch event to update UI
+      window.dispatchEvent(new CustomEvent("player:energyChanged"));
+    } else {
+      this.notifications.show(result.error, "error");
+    }
+  }
+
+  /**
+   * Handle meal purchase
+   * @param {string} mealType - Type of meal
+   */
+  handleMeal(mealType) {
+    const result = this.tavernSystem.buyMeal(mealType);
+
+    if (result.success) {
+      const messages = [];
+      if (result.energyRestored > 0) {
+        messages.push(
+          i18n.t("tavern.energyRestored", { amount: result.energyRestored }),
+        );
+      }
+      if (result.healthRestored > 0) {
+        messages.push(
+          i18n.t("tavern.healthRestored", { amount: result.healthRestored }),
+        );
+      }
+
+      this.notifications.show(
+        i18n.t("tavern.ateFood", { effects: messages.join(", ") }),
+        "success",
+      );
+      this.modal.close();
+
+      // Dispatch events
+      window.dispatchEvent(new CustomEvent("player:energyChanged"));
+      window.dispatchEvent(new CustomEvent("player:goldChanged"));
+    } else {
+      this.notifications.show(result.error, "error");
+    }
+  }
+
+  /**
+   * Handle story
+   */
+  handleStory() {
+    const result = this.tavernSystem.listenToStory();
+
+    if (result.success) {
+      this.modal.close();
+
+      // Show story modal
+      setTimeout(() => {
         this.modal.show({
-            title: '🍺 Taverna',
-            content,
-            buttons: [
-                {
-                    text: '😴 Descansar',
-                    class: 'btn-primary',
-                    onClick: () => {
-                        this.handleRest();
-                        return false;
-                    }
-                },
-                {
-                    text: '📖 Histórias',
-                    class: 'btn-secondary',
-                    onClick: () => {
-                        this.handleStory();
-                        return false;
-                    }
-                },
-                {
-                    text: 'Fechar',
-                    class: 'btn-secondary',
-                    onClick: () => true
-                }
-            ],
-            closable: true,
-            size: 'medium'
-        }).then(() => {
-            // Add meal card click listeners
-            setTimeout(() => {
-                document.querySelectorAll('.meal-card').forEach(card => {
-                    card.addEventListener('click', () => {
-                        const mealType = card.dataset.meal;
-                        this.handleMeal(mealType);
-                    });
-                });
-            }, 100);
-        });
-    }
-
-    /**
-     * Handle rest
-     */
-    handleRest() {
-        const result = this.tavernSystem.rest();
-
-        if (result.success) {
-            this.notifications.show(
-                `Você descansou e recuperou ${result.restored} de energia!`,
-                'success'
-            );
-            this.modal.close();
-
-            // Dispatch event to update UI
-            window.dispatchEvent(new CustomEvent('player:energyChanged'));
-        } else {
-            this.notifications.show(result.error, 'error');
-        }
-    }
-
-    /**
-     * Handle meal purchase
-     * @param {string} mealType - Type of meal
-     */
-    handleMeal(mealType) {
-        const result = this.tavernSystem.buyMeal(mealType);
-
-        if (result.success) {
-            const messages = [];
-            if (result.energyRestored > 0) messages.push(`⚡ +${result.energyRestored} energia`);
-            if (result.healthRestored > 0) messages.push(`❤️ +${result.healthRestored} vida`);
-
-            this.notifications.show(
-                `Você comeu! ${messages.join(', ')}`,
-                'success'
-            );
-            this.modal.close();
-
-            // Dispatch events
-            window.dispatchEvent(new CustomEvent('player:energyChanged'));
-            window.dispatchEvent(new CustomEvent('player:goldChanged'));
-        } else {
-            this.notifications.show(result.error, 'error');
-        }
-    }
-
-    /**
-     * Handle story
-     */
-    handleStory() {
-        const result = this.tavernSystem.listenToStory();
-
-        if (result.success) {
-            this.modal.close();
-
-            // Show story modal
-            setTimeout(() => {
-                this.modal.show({
-                    title: `📖 ${result.story.title}`,
-                    content: `
+          title: `📖 ${result.story.title}`,
+          content: `
                         <div style="text-align: center; padding: 1.5rem 0;">
                             <div style="font-size: 5rem; margin-bottom: 1rem;">${result.story.icon}</div>
                             <p style="font-size: 1.125rem; line-height: 1.6; color: var(--text-secondary); font-style: italic;">
@@ -637,34 +660,36 @@ export default class CityUI {
                             </div>
                         </div>
                     `,
-                    buttons: [
-                        {
-                            text: 'Que história incrível!',
-                            class: 'btn-primary',
-                            onClick: () => true
-                        }
-                    ],
-                    closable: true
-                });
-            }, 300);
+          buttons: [
+            {
+              text: "Que história incrível!",
+              class: "btn-primary",
+              onClick: () => true,
+            },
+          ],
+          closable: true,
+        });
+      }, 300);
 
-            // Dispatch event
-            window.dispatchEvent(new CustomEvent('player:xpChanged'));
-        } else {
-            this.notifications.show(result.error, 'error');
-        }
+      // Dispatch event
+      window.dispatchEvent(new CustomEvent("player:xpChanged"));
+    } else {
+      this.notifications.show(result.error, "error");
     }
+  }
 
-    /**
-     * Show Plaza UI
-     */
-    showPlazaUI() {
-        const playerName = this.player.data.name || 'Fazendeiro';
-        const level = this.player.data.level || 1;
-        const totalSkillLevel = Object.values(this.player.data.skills || {})
-            .reduce((sum, skill) => sum + (skill.level || 1), 0);
+  /**
+   * Show Plaza UI
+   */
+  showPlazaUI() {
+    const playerName = this.player.data.name || "Fazendeiro";
+    const level = this.player.data.level || 1;
+    const totalSkillLevel = Object.values(this.player.data.skills || {}).reduce(
+      (sum, skill) => sum + (skill.level || 1),
+      0,
+    );
 
-        const content = `
+    const content = `
             <div class="plaza-ui">
                 <div class="plaza-header">
                     <div style="font-size: 4rem; margin-bottom: 1rem;">⛲</div>
@@ -829,26 +854,26 @@ export default class CityUI {
             </div>
         `;
 
-        this.modal.show({
-            title: '⛲ Praça da Cidade',
-            content,
-            buttons: [
-                {
-                    text: 'OK',
-                    class: 'btn-primary',
-                    onClick: () => true
-                }
-            ],
-            closable: true,
-            size: 'medium'
-        });
-    }
+    this.modal.show({
+      title: "⛲ Praça da Cidade",
+      content,
+      buttons: [
+        {
+          text: "OK",
+          class: "btn-primary",
+          onClick: () => true,
+        },
+      ],
+      closable: true,
+      size: "medium",
+    });
+  }
 
-    /**
-     * Refresh city UI
-     */
-    refresh() {
-        // Re-setup event listeners
-        this.setupEventListeners();
-    }
+  /**
+   * Refresh city UI
+   */
+  refresh() {
+    // Re-setup event listeners
+    this.setupEventListeners();
+  }
 }
