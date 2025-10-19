@@ -367,7 +367,7 @@ export default class NPCSUI {
       <div style="background: var(--bg-accent); padding: var(--spacing-md); border-radius: 8px; margin-top: var(--spacing-md); border: 2px solid var(--border-color);">
         <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.875rem;">
           <span>Total:</span>
-          <span id="preview-cost" style="font-weight: 700; color: #b8860b;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g</span>
+          <span id="preview-cost" style="font-weight: 700; color: #8B0000;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g</span>
         </div>
       </div>
     `;
@@ -432,8 +432,10 @@ export default class NPCSUI {
         const amount = parseInt(amountInput?.value || "1");
         const totalCost = amount * price;
         const costEl = document.getElementById("preview-cost");
-        if (costEl)
+        if (costEl) {
           costEl.innerHTML = `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${totalCost}g`;
+          costEl.style.color = "#8B0000";
+        }
       };
 
       amountInput?.addEventListener("input", updatePreview);

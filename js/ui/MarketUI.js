@@ -730,7 +730,7 @@ export default class MarketUI {
         </div>
         <div class="market-preview-row">
           <span>${i18n.t("market.cost")}:</span>
-          <span id="preview-cost" style="color: #b8860b; font-weight: 700;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g</span>
+          <span id="preview-cost" style="color: #8B0000; font-weight: 700;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g</span>
         </div>
         <div class="market-preview-row">
           <span>${i18n.t("market.remaining")}:</span>
@@ -786,8 +786,10 @@ export default class MarketUI {
         const costEl = document.getElementById("preview-cost");
         const remainingEl = document.getElementById("preview-remaining");
 
-        if (costEl)
+        if (costEl) {
           costEl.innerHTML = `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${cost}g`;
+          costEl.style.color = "#8B0000";
+        }
         if (remainingEl) {
           remainingEl.innerHTML = `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${remaining}g`;
           remainingEl.style.color = remaining >= 0 ? "#b8860b" : "#e74c3c";
