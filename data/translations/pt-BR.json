@@ -83,6 +83,8 @@
   "inventory": {
     "title": "Inventário",
     "empty": "Seu inventário está vazio",
+    "emptyHint": "Comece plantando e colhendo!",
+    "items": "itens",
     "slots": "Espaços",
     "weight": "Peso",
     "use": "Usar",
@@ -90,7 +92,11 @@
     "sell": "Vender",
     "quantity": "Quantidade",
     "usedItem": "Você usou {item}!",
-    "cannotUse": "Não foi possível usar o item"
+    "cannotUse": "Não foi possível usar o item",
+    "sortName": "Ordenar: Nome",
+    "sortCount": "Ordenar: Quantidade",
+    "sortValue": "Ordenar: Valor",
+    "sortCategory": "Ordenar: Categoria"
   },
   "city": {
     "title": "Cidade",

@@ -712,18 +712,37 @@ export default class MarketUI {
     this.modal.show({
       title: `🛒 ${i18n.t("market.buyTitle")}`,
       content,
-      confirmText: i18n.t("market.buy"),
-      cancelText: i18n.t("common.cancel"),
-      onConfirm: () => {
-        const amount = parseInt(
-          document.getElementById("buy-amount")?.value || "1",
-        );
-        if (amount > 0 && amount <= maxAffordable) {
-          this.buyItem(item, amount);
-        } else {
-          this.notifications.error(i18n.t("market.invalidAmount"));
-        }
-      },
+      buttons: [
+        {
+          text: i18n.t("common.cancel"),
+          class: "btn-secondary",
+          onClick: () => true,
+        },
+        {
+          text: `🛒 ${i18n.t("market.buy")}`,
+          class: "btn-success",
+          onClick: () => {
+            const amount = parseInt(
+              document.getElementById("buy-amount")?.value || "1",
+            );
+            const totalCost = amount * unitPrice;
+
+            if (amount < 1 || amount > maxAffordable) {
+              this.notifications.error(i18n.t("market.invalidAmount"));
+              return false;
+            }
+
+            if (totalCost > playerGold) {
+              this.notifications.error(i18n.t("market.notEnoughGold"));
+              return false;
+            }
+
+            this.buyItem(item, amount);
+            return true;
+          },
+        },
+      ],
+      closable: true,
     });
 
     // Setup quick buttons and preview update after modal renders
@@ -741,7 +760,19 @@ export default class MarketUI {
         if (remainingEl) {
           remainingEl.textContent = `${remaining}g`;
           remainingEl.style.color =
-            remaining >= 0 ? "var(--brand-primary)" : "var(--danger-color)";
+            remaining >= 0 ? "var(--brand-primary)" : "#e74c3c";
+        }
+
+        // Disable/enable buy button based on gold
+        const buyBtn = document.querySelector(".modal-footer .btn-success");
+        if (buyBtn) {
+          if (remaining < 0 || amount > maxAffordable || amount < 1) {
+            buyBtn.disabled = true;
+            buyBtn.style.opacity = "0.5";
+          } else {
+            buyBtn.disabled = false;
+            buyBtn.style.opacity = "1";
+          }
         }
       };
 
@@ -869,18 +900,30 @@ export default class MarketUI {
     this.modal.show({
       title: `💰 ${i18n.t("market.sellTitle")}`,
       content,
-      confirmText: i18n.t("market.sell"),
-      cancelText: i18n.t("common.cancel"),
-      onConfirm: () => {
-        const amount = parseInt(
-          document.getElementById("sell-amount")?.value || "1",
-        );
-        if (amount > 0 && amount <= maxSellable) {
-          this.sellItem(item, amount);
-        } else {
-          this.notifications.error(i18n.t("market.invalidAmount"));
-        }
-      },
+      buttons: [
+        {
+          text: i18n.t("common.cancel"),
+          class: "btn-secondary",
+          onClick: () => true,
+        },
+        {
+          text: `💰 ${i18n.t("market.sell")}`,
+          class: "btn-success",
+          onClick: () => {
+            const amount = parseInt(
+              document.getElementById("sell-amount")?.value || "1",
+            );
+            if (amount > 0 && amount <= maxSellable) {
+              this.sellItem(item, amount);
+              return true;
+            } else {
+              this.notifications.error(i18n.t("market.invalidAmount"));
+              return false;
+            }
+          },
+        },
+      ],
+      closable: true,
     });
 
     // Setup quick buttons and preview update after modal renders

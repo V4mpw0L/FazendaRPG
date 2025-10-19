@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Inventory UI
- * Manages inventory display, item interactions, and selling
- * @version 0.0.2
+ * Professional slot-based inventory with 5x5 grid and pagination
+ * @version 0.0.3
  */
 
 import i18n from "../utils/i18n.js";
@@ -15,6 +15,8 @@ export default class InventoryUI {
     this.container = null;
     this.sortBy = "name";
     this.filterCategory = "all";
+    this.currentPage = 0;
+    this.slotsPerPage = 25; // 5x5 grid
   }
 
   /**
@@ -35,13 +37,14 @@ export default class InventoryUI {
     window.addEventListener("inventory:cleared", () => this.render());
 
     this.setupControls();
+    this.addStyles();
 
     console.log("✅ Inventory UI initialized");
     return true;
   }
 
   /**
-   * Setup inventory controls (sort, filter, etc.)
+   * Setup inventory controls
    */
   setupControls() {
     const screenHeader = document.querySelector(
@@ -53,261 +56,375 @@ export default class InventoryUI {
     if (screenHeader.querySelector(".inventory-controls")) return;
 
     const controlsHTML = `
-            <div class="inventory-controls">
-                <div class="inventory-stats">
-                    <span id="inv-items-count" class="stat-badge">0 itens</span>
-                    <span id="inv-total-value" class="stat-badge">💰 0g</span>
-                </div>
-                <div class="inventory-actions">
-                    <select id="inv-sort" class="control-select">
-                        <option value="name">Ordenar: Nome</option>
-                        <option value="count">Ordenar: Quantidade</option>
-                        <option value="value">Ordenar: Valor</option>
-                        <option value="category">Ordenar: Categoria</option>
-                    </select>
-                    <select id="inv-filter" class="control-select">
-                        <option value="all">Todos</option>
-                        <option value="seed">Sementes</option>
-                        <option value="crop">Colheitas</option>
-                        <option value="food">Comida</option>
-                        <option value="tool">Ferramentas</option>
-                        <option value="resource">Recursos</option>
-                    </select>
-                    <button id="inv-sell-all" class="btn btn-sm btn-primary">
-                        💰 Vender Tudo
-                    </button>
-                </div>
-            </div>
-        `;
+      <div class="inventory-controls">
+        <div class="inventory-stats">
+          <span id="inv-items-count" class="stat-badge">0 ${i18n.t("inventory.items")}</span>
+          <span id="inv-total-value" class="stat-badge">💰 0g</span>
+        </div>
+        <div class="inventory-actions">
+          <select id="inv-sort" class="control-select">
+            <option value="name">${i18n.t("inventory.sortName")}</option>
+            <option value="count">${i18n.t("inventory.sortCount")}</option>
+            <option value="value">${i18n.t("inventory.sortValue")}</option>
+            <option value="category">${i18n.t("inventory.sortCategory")}</option>
+          </select>
+          <select id="inv-filter" class="control-select">
+            <option value="all">${i18n.t("market.categories.all")}</option>
+            <option value="seeds">${i18n.t("market.categories.seeds")}</option>
+            <option value="crops">${i18n.t("market.categories.crops")}</option>
+            <option value="fish">${i18n.t("market.categories.fish")}</option>
+            <option value="minerals">${i18n.t("market.categories.minerals")}</option>
+            <option value="wood">${i18n.t("market.categories.wood")}</option>
+            <option value="food">${i18n.t("market.categories.food")}</option>
+            <option value="tools">${i18n.t("market.categories.tools")}</option>
+            <option value="materials">${i18n.t("market.categories.materials")}</option>
+          </select>
+          <button id="inv-sell-all" class="btn btn-sm btn-success">
+            💰 ${i18n.t("market.sellAll")}
+          </button>
+        </div>
+      </div>
+    `;
 
     screenHeader.insertAdjacentHTML("beforeend", controlsHTML);
 
     // Add event listeners
     document.getElementById("inv-sort")?.addEventListener("change", (e) => {
       this.sortBy = e.target.value;
+      this.currentPage = 0;
       this.render();
     });
 
     document.getElementById("inv-filter")?.addEventListener("change", (e) => {
       this.filterCategory = e.target.value;
+      this.currentPage = 0;
       this.render();
     });
 
     document.getElementById("inv-sell-all")?.addEventListener("click", () => {
       this.sellAllItems();
     });
-
-    // Add styles
-    this.addControlStyles();
   }
 
   /**
-   * Add control styles
+   * Add styles
    */
-  addControlStyles() {
+  addStyles() {
     if (document.getElementById("inventory-ui-styles")) return;
 
     const style = document.createElement("style");
     style.id = "inventory-ui-styles";
     style.textContent = `
-            .inventory-controls {
-                margin-top: var(--spacing-md);
-                display: flex;
-                flex-direction: column;
-                gap: var(--spacing-md);
-            }
+      .inventory-controls {
+        margin-top: var(--spacing-md);
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
+      }
 
-            .inventory-stats {
-                display: flex;
-                gap: var(--spacing-sm);
-                flex-wrap: wrap;
-            }
+      .inventory-stats {
+        display: flex;
+        gap: var(--spacing-sm);
+        flex-wrap: wrap;
+      }
 
-            .stat-badge {
-                padding: 6px 12px;
-                background: var(--bg-accent);
-                border: 2px solid var(--border-color);
-                border-radius: 12px;
-                font-size: 0.875rem;
-                font-weight: 600;
-                color: var(--text-primary);
-                box-shadow: 0 2px 4px var(--shadow-color);
-            }
+      .stat-badge {
+        padding: 0.5rem 0.875rem;
+        background: var(--bg-accent);
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        box-shadow: 0 2px 4px var(--shadow-color);
+      }
 
-            .inventory-actions {
-                display: flex;
-                gap: var(--spacing-sm);
-                flex-wrap: wrap;
-                align-items: center;
-            }
+      .inventory-actions {
+        display: flex;
+        gap: var(--spacing-sm);
+        flex-wrap: wrap;
+        align-items: center;
+      }
 
-            .control-select {
-                padding: 8px 12px;
-                background: var(--bg-secondary);
-                border: 2px solid var(--border-color);
-                border-radius: 8px;
-                color: var(--text-primary);
-                font-size: 0.875rem;
-                font-weight: 600;
-                cursor: pointer;
-                transition: all var(--transition-fast);
-                flex: 1;
-                min-width: 150px;
-            }
+      .control-select {
+        padding: 0.5rem 0.75rem;
+        background: var(--bg-secondary);
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        flex: 1;
+        min-width: 140px;
+      }
 
-            .control-select:hover {
-                border-color: var(--brand-primary);
-            }
+      .control-select:hover {
+        border-color: var(--brand-primary);
+      }
 
-            .control-select:focus {
-                outline: none;
-                border-color: var(--brand-primary);
-                box-shadow: 0 0 0 3px rgba(92, 170, 31, 0.2);
-            }
+      .control-select:focus {
+        outline: none;
+        border-color: var(--brand-primary);
+        box-shadow: 0 0 0 3px rgba(92, 170, 31, 0.2);
+      }
 
-            .btn-sm {
-                padding: 8px 16px;
-                font-size: 0.875rem;
-            }
+      #inventory-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: repeat(5, 1fr);
+        gap: 0.5rem;
+        padding: var(--spacing-md);
+        height: auto;
+        max-width: 100%;
+        grid-auto-flow: row;
+        overflow: hidden;
+      }
 
-            .inventory-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: var(--spacing-md);
-                padding: var(--spacing-md) 0;
-            }
+      .inventory-slot {
+        background: var(--bg-secondary);
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        padding: 0.5rem;
+        aspect-ratio: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.25rem;
+        position: relative;
+        transition: all var(--transition-fast);
+        cursor: pointer;
+      }
 
-            .inventory-item {
-                background: var(--bg-secondary);
-                border: 2px solid var(--border-color);
-                border-radius: var(--border-radius-sm);
-                padding: var(--spacing-md);
-                cursor: pointer;
-                transition: all var(--transition-fast);
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: var(--spacing-sm);
-                position: relative;
-                overflow: hidden;
-            }
+      .inventory-slot.empty {
+        background: rgba(92, 170, 31, 0.05);
+        border: 3px dashed var(--brand-primary);
+        opacity: 0.6;
+        cursor: default;
+      }
 
-            .inventory-item:hover {
-                transform: translateY(-4px);
-                box-shadow: 0 6px 16px var(--shadow-color);
-                border-color: var(--brand-primary);
-            }
+      .inventory-slot.empty:hover {
+        transform: none;
+        box-shadow: none;
+        border-color: var(--brand-primary);
+        opacity: 0.7;
+      }
 
-            .inventory-item:active {
-                transform: translateY(-2px);
-            }
+      .inventory-slot:not(.empty):hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px var(--shadow-color);
+        border-color: var(--brand-primary);
+      }
 
-            .inventory-item::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 4px;
-                background: var(--brand-primary);
-                opacity: 0;
-                transition: opacity var(--transition-fast);
-            }
+      .inventory-slot-icon {
+        font-size: 2rem;
+        line-height: 1;
+      }
 
-            .inventory-item:hover::before {
-                opacity: 1;
-            }
+      .inventory-slot-name {
+        font-weight: 600;
+        font-size: 0.625rem;
+        text-align: center;
+        color: var(--text-primary);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+      }
 
-            .inventory-item-icon {
-                font-size: 3rem;
-                line-height: 1;
-                text-align: center;
-            }
+      .inventory-slot-value {
+        font-size: 0.625rem;
+        font-weight: 700;
+        color: var(--brand-primary);
+      }
 
-            .inventory-item-name {
-                font-weight: 600;
-                font-size: 0.875rem;
-                color: var(--text-primary);
-                text-align: center;
-                word-break: break-word;
-            }
+      .inventory-slot-count {
+        position: absolute;
+        top: 0.25rem;
+        right: 0.25rem;
+        background: var(--brand-primary);
+        color: white;
+        padding: 0.125rem 0.375rem;
+        border-radius: 10px;
+        font-size: 0.625rem;
+        font-weight: 700;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        min-width: 1.25rem;
+        text-align: center;
+      }
 
-            .inventory-item-count {
-                position: absolute;
-                top: 8px;
-                right: 8px;
-                background: var(--brand-primary);
-                color: white;
-                padding: 4px 8px;
-                border-radius: 12px;
-                font-size: 0.75rem;
-                font-weight: 700;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            }
+      .inventory-slot-category {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 0.125rem;
+        font-size: 0.5rem;
+        font-weight: 700;
+        text-align: center;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        color: white;
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
+      }
 
-            .inventory-item-value {
-                font-size: 0.75rem;
-                color: var(--text-secondary);
-                font-weight: 600;
-            }
+      .inventory-pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-md);
+        background: var(--bg-secondary);
+        border-top: 2px solid var(--border-color);
+      }
 
-            .inventory-item-category {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                padding: 4px;
-                font-size: 0.65rem;
-                font-weight: 700;
-                text-align: center;
-                letter-spacing: 0.5px;
-                text-transform: uppercase;
-                opacity: 0.8;
-            }
+      .pagination-btn {
+        padding: 0.5rem 1rem;
+        background: var(--bg-accent);
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        color: var(--text-primary);
+      }
 
-            .inventory-empty {
-                grid-column: 1 / -1;
-                text-align: center;
-                padding: var(--spacing-xl);
-                color: var(--text-secondary);
-            }
+      .pagination-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
 
-            .inventory-empty-icon {
-                font-size: 4rem;
-                margin-bottom: var(--spacing-md);
-            }
+      .pagination-btn:not(:disabled):hover {
+        background: var(--brand-primary);
+        border-color: var(--brand-tertiary);
+        color: white;
+        transform: translateY(-2px);
+      }
 
-            .inventory-empty-text {
-                font-size: 1.125rem;
-                font-weight: 600;
-            }
+      .pagination-info {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
 
-            @media (max-width: 480px) {
-                .inventory-grid {
-                    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-                    gap: var(--spacing-sm);
-                }
+      .inventory-empty {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 3rem 1rem;
+        color: var(--text-secondary);
+      }
 
-                .inventory-item-icon {
-                    font-size: 2.5rem;
-                }
+      .inventory-empty-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+      }
 
-                .inventory-item-name {
-                    font-size: 0.75rem;
-                }
+      .inventory-empty-text {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
 
-                .inventory-controls {
-                    gap: var(--spacing-sm);
-                }
+      .quick-buy-btn {
+        padding: 0.625rem 0.5rem;
+        font-size: 0.8125rem;
+        font-weight: 700;
+        background: var(--brand-primary);
+        color: white;
+        border: 2px solid var(--brand-tertiary);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        white-space: nowrap;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
 
-                .control-select {
-                    min-width: 120px;
-                    font-size: 0.75rem;
-                }
-            }
-        `;
+      .quick-buy-btn:hover {
+        background: var(--brand-tertiary);
+        color: white;
+        border-color: var(--brand-primary);
+        transform: scale(1.08);
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+      }
+
+      .quick-buy-btn:active {
+        transform: scale(0.98);
+      }
+
+      @media (max-width: 768px) {
+        #inventory-grid {
+          grid-template-columns: repeat(4, 1fr);
+          grid-template-rows: repeat(7, 1fr);
+          gap: 0.375rem;
+        }
+
+        .inventory-slot-icon {
+          font-size: 1.75rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        #inventory-grid {
+          grid-template-columns: repeat(3, 1fr);
+          grid-template-rows: repeat(9, 1fr);
+          gap: 0.375rem;
+          padding: var(--spacing-sm);
+        }
+
+        .inventory-slot {
+          padding: 0.375rem;
+        }
+
+        .inventory-slot-icon {
+          font-size: 1.5rem;
+        }
+
+        .inventory-slot-name {
+          font-size: 0.5625rem;
+        }
+
+        .inventory-slot-value {
+          font-size: 0.5625rem;
+        }
+
+        .control-select {
+          min-width: 120px;
+          font-size: 0.75rem;
+        }
+      }
+    `;
 
     document.head.appendChild(style);
+  }
+
+  /**
+   * Get category color
+   */
+  getCategoryColor(category) {
+    const colors = {
+      seeds: "#5caa1f",
+      crops: "#f39c12",
+      fish: "#3498db",
+      minerals: "#9b59b6",
+      wood: "#8b4513",
+      food: "#e74c3c",
+      tools: "#34495e",
+      materials: "#95a5a6",
+    };
+    return colors[category] || "#95a5a6";
+  }
+
+  /**
+   * Get translated category name
+   */
+  getCategoryName(category) {
+    const key = `market.categories.${category}`;
+    const translated = i18n.t(key);
+    return translated !== key ? translated : category.toUpperCase();
   }
 
   /**
@@ -330,205 +447,194 @@ export default class InventoryUI {
     // Clear container
     this.container.innerHTML = "";
 
-    if (items.length === 0) {
-      this.container.innerHTML = `
-                <div class="inventory-empty">
-                    <div class="inventory-empty-icon">📦</div>
-                    <div class="inventory-empty-text">
-                        ${this.filterCategory === "all" ? "Inventário vazio" : "Nenhum item nesta categoria"}
-                    </div>
-                    <p style="margin-top: 0.5rem; font-size: 0.875rem;">
-                        ${this.filterCategory === "all" ? "Comece plantando e colhendo!" : "Tente outra categoria."}
-                    </p>
-                </div>
-            `;
+    // Calculate pagination
+    const totalPages = Math.ceil(Math.max(items.length, 1) / this.slotsPerPage);
+
+    // Ensure currentPage is valid
+    if (this.currentPage >= totalPages) {
+      this.currentPage = Math.max(0, totalPages - 1);
+    }
+
+    // Get items for current page
+    const startIdx = this.currentPage * this.slotsPerPage;
+    const endIdx = startIdx + this.slotsPerPage;
+    const paginatedItems = items.slice(startIdx, endIdx);
+
+    // ALWAYS create EXACTLY 5x5 grid (25 slots), filling empty slots
+    console.log(
+      `📦 Creating ${this.slotsPerPage} slots for page ${this.currentPage + 1} (${paginatedItems.length} items on this page)`,
+    );
+
+    for (let i = 0; i < this.slotsPerPage; i++) {
+      const item = paginatedItems[i]; // Will be undefined for empty slots
+      const slot = this.createSlot(item, i);
+      this.container.appendChild(slot);
+    }
+
+    console.log(`✅ Created ${this.container.children.length} slots total`);
+
+    // Render pagination only if more than 25 items
+    this.renderPagination(items.length);
+  }
+
+  /**
+   * Create inventory slot
+   */
+  createSlot(item, index) {
+    const slot = document.createElement("div");
+
+    if (!item) {
+      // Empty slot
+      slot.className = "inventory-slot empty";
+      slot.innerHTML = "";
+      return slot;
+    }
+
+    // Filled slot
+    slot.className = "inventory-slot";
+    const itemName = item.namePtBR || item.name;
+    const categoryColor = this.getCategoryColor(item.category);
+    const categoryName = this.getCategoryName(item.category);
+
+    slot.innerHTML = `
+      ${item.count > 1 ? `<div class="inventory-slot-count">${item.count}</div>` : ""}
+      <div class="inventory-slot-icon">${item.icon || "📦"}</div>
+      <div class="inventory-slot-name" title="${itemName}">${itemName}</div>
+      <div class="inventory-slot-value">${item.sellPrice || 0}g</div>
+      <div class="inventory-slot-category" style="background: ${categoryColor};">
+        ${categoryName}
+      </div>
+    `;
+
+    slot.addEventListener("click", () => {
+      this.showItemDialog(item);
+    });
+
+    return slot;
+  }
+
+  /**
+   * Render pagination
+   */
+  renderPagination(totalItems) {
+    const inventoryScreen = document.getElementById("inventory-screen");
+    if (!inventoryScreen) return;
+
+    let paginationDiv = inventoryScreen.querySelector(".inventory-pagination");
+    if (!paginationDiv) {
+      paginationDiv = document.createElement("div");
+      paginationDiv.className = "inventory-pagination";
+      inventoryScreen.appendChild(paginationDiv);
+    }
+
+    // Only show pagination if MORE than 25 items
+    if (totalItems <= this.slotsPerPage) {
+      paginationDiv.style.display = "none";
       return;
     }
 
-    // Category colors
-    const categoryColors = {
-      seed: "#5caa1f",
-      crop: "#f39c12",
-      food: "#e74c3c",
-      tool: "#95a5a6",
-      resource: "#8b4513",
-      other: "#7f8c8d",
-    };
+    const totalPages = Math.ceil(totalItems / this.slotsPerPage);
+    const currentPage = this.currentPage + 1;
 
-    // Render items
-    items.forEach((item) => {
-      const itemEl = document.createElement("div");
-      itemEl.className = "inventory-item";
+    paginationDiv.style.display = "flex";
+    paginationDiv.innerHTML = `
+      <button class="pagination-btn" id="inv-prev-page" ${this.currentPage === 0 ? "disabled" : ""}>
+        ◀ ${i18n.t("market.previous")}
+      </button>
+      <span class="pagination-info">
+        ${i18n.t("market.page")} ${currentPage} ${i18n.t("market.of")} ${totalPages}
+      </span>
+      <button class="pagination-btn" id="inv-next-page" ${this.currentPage >= totalPages - 1 ? "disabled" : ""}>
+        ${i18n.t("market.next")} ▶
+      </button>
+    `;
 
-      const categoryColor =
-        categoryColors[item.category] || categoryColors.other;
-      const sellValue = (item.sellPrice || 0) * item.count;
-
-      itemEl.innerHTML = `
-                <div class="inventory-item-count">${item.count}</div>
-                <div class="inventory-item-icon">${item.icon || "📦"}</div>
-                <div class="inventory-item-name">${item.name}</div>
-                ${sellValue > 0 ? `<div class="inventory-item-value">💰 ${sellValue}g</div>` : ""}
-                <div class="inventory-item-category" style="background: ${categoryColor}; color: white;">
-                    ${item.category || "other"}
-                </div>
-            `;
-
-      itemEl.addEventListener("click", () => {
-        this.showItemDetails(item);
-      });
-
-      this.container.appendChild(itemEl);
-    });
-  }
-
-  /**
-   * Update inventory statistics
-   */
-  updateStats() {
-    const stats = this.inventorySystem.getStats();
-
-    const itemsCountEl = document.getElementById("inv-items-count");
-    const totalValueEl = document.getElementById("inv-total-value");
-
-    if (itemsCountEl) {
-      itemsCountEl.textContent = `${stats.totalItems} ${stats.totalItems === 1 ? "item" : "itens"}`;
-    }
-
-    if (totalValueEl) {
-      totalValueEl.textContent = `💰 ${stats.totalValue}g`;
-    }
-  }
-
-  /**
-   * Show item details in modal
-   * @param {Object} item - Item data
-   */
-  showItemDetails(item) {
-    this.modal.showItemDetails(item, {
-      showActions: true,
-      onUse: (item) => {
-        const result = this.inventorySystem.useItem(item.id);
-        if (result.success) {
-          this.notifications.show(
-            i18n.t("inventory.usedItem", { item: item.name }),
-            "success",
-          );
-          this.render();
-        } else {
-          this.notifications.show(
-            result.error || i18n.t("inventory.cannotUse"),
-            "error",
-          );
-        }
-      },
-      onSell: (item) => {
-        // Fecha o modal atual antes de abrir o de venda
-        this.modal.close();
-        // Aguarda o modal fechar antes de abrir o próximo
-        setTimeout(() => {
-          this.showSellDialog(item);
-        }, 350);
-      },
-    });
-  }
-
-  /**
-   * Show sell dialog
-   * @param {Object} item - Item to sell
-   */
-  showSellDialog(item) {
-    const maxAmount = item.count;
-    const unitPrice = item.sellPrice || 0;
-
-    if (unitPrice === 0) {
-      this.notifications.show("Este item não pode ser vendido", "warning");
-      return;
-    }
-
-    let amount = 1;
-    const updatePreview = () => {
-      const total = amount * unitPrice;
-      const previewEl = document.getElementById("sell-preview");
-      if (previewEl) {
-        previewEl.textContent = `Total: ${total} ouro`;
+    // Add event listeners
+    document.getElementById("inv-prev-page")?.addEventListener("click", () => {
+      if (this.currentPage > 0) {
+        this.currentPage--;
+        this.render();
+        this.container.scrollIntoView({ behavior: "smooth", block: "start" });
       }
-    };
+    });
+
+    document.getElementById("inv-next-page")?.addEventListener("click", () => {
+      if (this.currentPage < totalPages - 1) {
+        this.currentPage++;
+        this.render();
+        this.container.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  }
+
+  /**
+   * Show item dialog
+   */
+  showItemDialog(item) {
+    const itemName = item.namePtBR || item.name;
+    const itemDesc = item.descriptionPtBR || item.description || "";
+    const sellPrice = item.sellPrice || 0;
+    const maxSellable = item.count || 0;
 
     const content = `
-            <div style="padding: 1rem 0;">
-                <div style="text-align: center; margin-bottom: 1.5rem;">
-                    <div style="font-size: 3rem; margin-bottom: 0.5rem;">${item.icon || "📦"}</div>
-                    <h3 style="margin: 0;">${item.name}</h3>
-                    <p style="color: var(--text-secondary); margin: 0.5rem 0;">
-                        Valor unitário: ${unitPrice} ouro
-                    </p>
-                </div>
+      <div style="text-align: center; margin-bottom: 1rem;">
+        <div style="font-size: 4rem; margin-bottom: 0.5rem;">${item.icon || "📦"}</div>
+        <h3 style="margin: 0.5rem 0; color: var(--text-primary);">${itemName}</h3>
+        <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0.5rem 0;">${itemDesc}</p>
+        <p style="color: var(--brand-primary); font-weight: 700; font-size: 1.125rem;">${sellPrice}g ${i18n.t("market.perUnit")}</p>
+        <p style="color: var(--text-secondary); font-size: 0.875rem;">${i18n.t("market.youHave")}: ${maxSellable}</p>
+      </div>
 
-                <div style="margin-bottom: 1.5rem;">
-                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
-                        Quantidade (máx: ${maxAmount})
-                    </label>
-                    <input
-                        type="number"
-                        id="sell-amount"
-                        min="1"
-                        max="${maxAmount}"
-                        value="1"
-                        style="width: 100%; padding: 0.75rem; font-size: 1rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-accent); color: var(--text-primary);"
-                    />
-                    <div style="margin-top: 0.5rem; display: flex; gap: 0.5rem;">
-                        <button id="sell-btn-1" class="btn btn-sm btn-secondary">1</button>
-                        <button id="sell-btn-25" class="btn btn-sm btn-secondary">25%</button>
-                        <button id="sell-btn-50" class="btn btn-sm btn-secondary">50%</button>
-                        <button id="sell-btn-max" class="btn btn-sm btn-secondary">Tudo</button>
-                    </div>
-                </div>
+      <div style="margin: 1rem 0;">
+        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">
+          ${i18n.t("market.quantity")}:
+        </label>
+        <input
+          type="number"
+          id="sell-amount"
+          min="1"
+          max="${maxSellable}"
+          value="1"
+          style="width: 100%; padding: 0.75rem; font-size: 1rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-accent); color: var(--text-primary);"
+        >
+      </div>
 
-                <div id="sell-preview" style="padding: 1rem; background: var(--brand-primary); color: white; border-radius: 8px; text-align: center; font-size: 1.25rem; font-weight: 700;">
-                    Total: ${unitPrice} ouro
-                </div>
-            </div>
-        `;
+      <div style="margin-top: 1rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;">
+        <button class="quick-buy-btn" id="quick-1">1</button>
+        <button class="quick-buy-btn" id="quick-25">25%</button>
+        <button class="quick-buy-btn" id="quick-50">50%</button>
+        <button class="quick-buy-btn" id="quick-max">${i18n.t("market.all")}</button>
+      </div>
+
+      <div style="background: var(--bg-accent); padding: var(--spacing-md); border-radius: 8px; margin-top: var(--spacing-md); border: 2px solid var(--border-color);">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.875rem;">
+          <span>${i18n.t("market.willReceive")}:</span>
+          <span id="preview-receive" style="font-weight: 700; color: var(--brand-primary);">${sellPrice}g</span>
+        </div>
+      </div>
+    `;
 
     this.modal.show({
-      title: "💰 Vender Item",
+      title: `💰 ${i18n.t("inventory.sell")}`,
       content,
       buttons: [
         {
-          text: "Cancelar",
+          text: i18n.t("common.cancel"),
           class: "btn-secondary",
           onClick: () => true,
         },
         {
-          text: "Vender",
+          text: `💰 ${i18n.t("market.sell")}`,
           class: "btn-success",
           onClick: () => {
-            const input = document.getElementById("sell-amount");
-            amount = parseInt(input?.value || "1");
-
-            if (amount < 1 || amount > maxAmount) {
-              this.notifications.show(i18n.t("market.invalidAmount"), "error");
-              return false;
-            }
-
-            const result = this.inventorySystem.sellItem(item.id, amount);
-            if (result.success) {
-              this.notifications.show(
-                i18n.t("market.soldItem", {
-                  amount: amount,
-                  item: item.name,
-                  gold: result.gold,
-                }),
-                "success",
-              );
-              this.render();
+            const amount = parseInt(
+              document.getElementById("sell-amount")?.value || "1",
+            );
+            if (amount > 0 && amount <= maxSellable) {
+              this.sellItem(item, amount);
               return true;
             } else {
-              this.notifications.show(
-                result.error || i18n.t("market.sellError"),
-                "error",
-              );
+              this.notifications.error(i18n.t("market.invalidAmount"));
               return false;
             }
           },
@@ -537,123 +643,167 @@ export default class InventoryUI {
       closable: true,
     });
 
-    // Setup amount input listener after modal is shown
+    // Setup quick buttons
     setTimeout(() => {
-      const input = document.getElementById("sell-amount");
-      if (input) {
-        input.addEventListener("input", (e) => {
-          amount = parseInt(e.target.value) || 1;
-          amount = Math.max(1, Math.min(maxAmount, amount));
-          e.target.value = amount;
+      const amountInput = document.getElementById("sell-amount");
+      const updatePreview = () => {
+        const amount = parseInt(amountInput?.value || "1");
+        const willReceive = amount * sellPrice;
+        const receiveEl = document.getElementById("preview-receive");
+        if (receiveEl) receiveEl.textContent = `${willReceive}g`;
+      };
+
+      amountInput?.addEventListener("input", updatePreview);
+
+      document.getElementById("quick-1")?.addEventListener("click", () => {
+        if (amountInput) {
+          amountInput.value = "1";
           updatePreview();
-        });
-      }
+        }
+      });
 
-      // Setup quick amount buttons
-      const btn1 = document.getElementById("sell-btn-1");
-      const btn25 = document.getElementById("sell-btn-25");
-      const btn50 = document.getElementById("sell-btn-50");
-      const btnMax = document.getElementById("sell-btn-max");
+      document.getElementById("quick-25")?.addEventListener("click", () => {
+        if (amountInput) {
+          amountInput.value = Math.max(
+            1,
+            Math.floor(maxSellable * 0.25),
+          ).toString();
+          updatePreview();
+        }
+      });
 
-      if (btn1) {
-        btn1.addEventListener("click", () => {
-          if (input) {
-            input.value = "1";
-            amount = 1;
-            updatePreview();
-          }
-        });
-      }
+      document.getElementById("quick-50")?.addEventListener("click", () => {
+        if (amountInput) {
+          amountInput.value = Math.max(
+            1,
+            Math.floor(maxSellable * 0.5),
+          ).toString();
+          updatePreview();
+        }
+      });
 
-      if (btn25) {
-        btn25.addEventListener("click", () => {
-          if (input) {
-            const value = Math.floor(maxAmount * 0.25);
-            input.value = value;
-            amount = value;
-            updatePreview();
-          }
-        });
-      }
+      document.getElementById("quick-max")?.addEventListener("click", () => {
+        if (amountInput) {
+          amountInput.value = maxSellable.toString();
+          updatePreview();
+        }
+      });
+    }, 50);
+  }
 
-      if (btn50) {
-        btn50.addEventListener("click", () => {
-          if (input) {
-            const value = Math.floor(maxAmount * 0.5);
-            input.value = value;
-            amount = value;
-            updatePreview();
-          }
-        });
-      }
-
-      if (btnMax) {
-        btnMax.addEventListener("click", () => {
-          if (input) {
-            input.value = maxAmount;
-            amount = maxAmount;
-            updatePreview();
-          }
-        });
-      }
-    }, 100);
+  /**
+   * Sell item
+   */
+  sellItem(item, amount) {
+    const result = this.inventorySystem.sellItem(item.id, amount);
+    if (result.success) {
+      this.notifications.success(
+        i18n.t("market.sellSuccess", {
+          amount,
+          item: item.namePtBR || item.name,
+          value: result.gold,
+        }),
+      );
+      window.dispatchEvent(new CustomEvent("player:dataChanged"));
+      this.render();
+      return true;
+    } else {
+      this.notifications.error(result.error || i18n.t("market.sellError"));
+      return false;
+    }
   }
 
   /**
    * Sell all items
    */
   sellAllItems() {
-    const sellable = this.inventorySystem.getSellables();
+    const sellables = this.inventorySystem.getSellables();
 
-    if (sellable.length === 0) {
-      this.notifications.show("Nenhum item pode ser vendido", "warning");
+    if (sellables.length === 0) {
+      this.notifications.error(
+        i18n.t("market.noSellItems") || "Nenhum item para vender",
+      );
       return;
     }
 
-    const totalValue = sellable.reduce((sum, item) => {
-      return sum + item.sellPrice * item.count;
-    }, 0);
+    let totalGold = 0;
+    sellables.forEach((item) => {
+      totalGold += (item.sellPrice || 0) * item.count;
+    });
 
-    this.modal.showConfirm({
+    const itemTypes = new Set(sellables.map((i) => i.category)).size;
+    const itemText =
+      itemTypes === 1 ? i18n.t("market.itemType") : i18n.t("market.itemTypes");
+
+    this.modal.show({
       title: `💰 ${i18n.t("market.sellAll")}`,
-      message: i18n.t("market.sellAllConfirm", {
-        gold: totalValue,
-        count: sellable.length,
-        itemText:
-          sellable.length === 1
-            ? i18n.t("market.itemType")
-            : i18n.t("market.itemTypes"),
-      }),
-      confirmText: i18n.t("market.sellAll"),
-      cancelText: i18n.t("cancel"),
-      confirmClass: "btn-success",
-      onConfirm: () => {
-        let totalGold = 0;
-        let itemsSold = 0;
-
-        sellable.forEach((item) => {
-          const result = this.inventorySystem.sellItem(item.id, item.count);
-          if (result.success) {
-            totalGold += result.gold;
-            itemsSold += result.amount;
-          }
-        });
-
-        this.notifications.show(
-          i18n.t("market.soldMultiple", {
-            items: itemsSold,
-            gold: totalGold,
-          }),
-          "success",
-        );
-
-        this.render();
-      },
+      content: `<p style="font-size: 1.125rem; text-align: center; padding: 1rem 0;">${i18n.t(
+        "market.sellAllConfirm",
+        {
+          gold: totalGold,
+          count: sellables.length,
+          itemText: itemText,
+        },
+      )}</p>`,
+      buttons: [
+        {
+          text: i18n.t("common.cancel"),
+          class: "btn-secondary",
+          onClick: () => true,
+        },
+        {
+          text: `💰 ${i18n.t("market.sell")}`,
+          class: "btn-success",
+          onClick: () => {
+            const result = this.inventorySystem.sellAllItems();
+            if (result.success) {
+              this.notifications.success(
+                i18n.t("market.soldMultiple", {
+                  items: result.itemCount,
+                  gold: result.gold,
+                }),
+              );
+              window.dispatchEvent(new CustomEvent("player:dataChanged"));
+              this.render();
+              return true;
+            } else {
+              this.notifications.error(
+                result.error || i18n.t("market.sellError"),
+              );
+              return false;
+            }
+          },
+        },
+      ],
+      closable: true,
     });
   }
 
   /**
-   * Clear and re-render
+   * Update stats
+   */
+  updateStats() {
+    const items = this.inventorySystem.getInventoryArray();
+    const totalValue = items.reduce(
+      (sum, item) => sum + (item.sellPrice || 0) * item.count,
+      0,
+    );
+
+    const countEl = document.getElementById("inv-items-count");
+    const valueEl = document.getElementById("inv-total-value");
+
+    if (countEl) {
+      const itemWord = items.length === 1 ? "item" : "itens";
+      countEl.textContent = `${items.length} ${itemWord}`;
+    }
+
+    if (valueEl) {
+      valueEl.textContent = `💰 ${totalValue}g`;
+    }
+  }
+
+  /**
+   * Refresh inventory
    */
   refresh() {
     this.render();
