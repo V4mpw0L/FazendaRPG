@@ -116,14 +116,28 @@
     <!-- Farm Screen -->
     <div id="farm-screen" class="screen">
       <div class="screen-header">
-        <h1 class="game-title">🌾 FazendaRPG</h1>
-        <h2 data-i18n="farm.title">Sua Fazenda</h2>
+        <div class="farm-welcome-header">
+          <div class="farm-player-info">
+            <h1 class="farm-player-name">
+              <span class="farm-player-icon">👨‍🌾</span>
+              <span id="farm-player-name-text">Fazendeiro</span>
+            </h1>
+            <div class="farm-player-level">
+              <span class="level-badge">
+                <span class="level-icon">⭐</span>
+                <span class="level-text">Nível <span id="farm-player-level">1</span></span>
+              </span>
+            </div>
+          </div>
+          <h2 class="farm-subtitle" data-i18n="farm.title">Sua Fazenda</h2>
+        </div>
         <div class="xp-bar-container">
           <div class="xp-bar">
             <div id="xp-bar-fill" class="xp-bar-fill"></div>
           </div>
           <div class="xp-text">
-            <span id="xp-current">0</span> / <span id="xp-needed">100</span> XP
+            <span class="xp-label">Farming XP:</span>
+            <span id="xp-current">0</span> / <span id="xp-needed">100</span>
           </div>
         </div>
       </div>

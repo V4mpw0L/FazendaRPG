@@ -572,8 +572,19 @@ export default class GameEngine {
     // Get player's farming level
     const farmingLevel = this.skillSystem.getLevel("farming");
 
+    // Sort seeds by required level (lowest first)
+    const sortedSeeds = seeds.sort((a, b) => {
+      const cropIdA = a.id.replace("_seed", "");
+      const cropIdB = b.id.replace("_seed", "");
+      const cropDataA = this.farmSystem.getCropData(cropIdA);
+      const cropDataB = this.farmSystem.getCropData(cropIdB);
+      const levelA = cropDataA ? cropDataA.requiredLevel : 999;
+      const levelB = cropDataB ? cropDataB.requiredLevel : 999;
+      return levelA - levelB;
+    });
+
     // Create seed selection content
-    const seedsHTML = seeds
+    const seedsHTML = sortedSeeds
       .map((seed) => {
         const cropId = seed.id.replace("_seed", "");
         const cropData = this.farmSystem.getCropData(cropId);
@@ -706,8 +717,15 @@ export default class GameEngine {
     const xpCurrent = document.getElementById("xp-current");
     const xpNeeded = document.getElementById("xp-needed");
     const xpBarFill = document.getElementById("xp-bar-fill");
+    const playerNameText = document.getElementById("farm-player-name-text");
+    const playerLevelText = document.getElementById("farm-player-level");
 
     if (!xpCurrent || !xpNeeded || !xpBarFill) return;
+
+    // Update player name
+    if (playerNameText) {
+      playerNameText.textContent = this.player.data.name || "Fazendeiro";
+    }
 
     // Pega XP de FARMING, não do player
     const farmingSkill = this.player.data.skills.farming;
@@ -719,6 +737,11 @@ export default class GameEngine {
     const xpInLevel = currentXP - currentLevelXP;
     const xpNeededForLevel = nextLevelXP - currentLevelXP;
     const percentage = Math.min(100, (xpInLevel / xpNeededForLevel) * 100);
+
+    // Update player level
+    if (playerLevelText) {
+      playerLevelText.textContent = level;
+    }
 
     xpCurrent.textContent = xpInLevel;
     xpNeeded.textContent = xpNeededForLevel;

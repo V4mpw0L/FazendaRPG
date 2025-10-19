@@ -470,6 +470,28 @@
         font-size: 1.5rem;
     }
 
+    /* Farm Header Mobile */
+    .farm-player-name {
+        font-size: 1.25rem;
+    }
+
+    .farm-player-icon {
+        font-size: 1.5rem;
+    }
+
+    .level-badge {
+        padding: 0.25rem 0.625rem;
+        font-size: 0.75rem;
+    }
+
+    .farm-subtitle {
+        font-size: 0.9375rem;
+    }
+
+    .xp-bar-container {
+        max-width: 100%;
+    }
+
     .farm-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: var(--spacing-sm);
@@ -596,6 +618,19 @@
     .screen-header {
         margin-bottom: var(--spacing-md);
         padding: var(--spacing-sm);
+    }
+
+    .farm-player-name {
+        font-size: 1.25rem;
+    }
+
+    .farm-player-icon {
+        font-size: 1.5rem;
+    }
+
+    .level-badge {
+        padding: 0.25rem 0.625rem;
+        font-size: 0.75rem;
     }
 
     .welcome-card {
