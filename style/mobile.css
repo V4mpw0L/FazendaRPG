@@ -291,10 +291,11 @@
     width: 32px;
     height: 32px;
     background: transparent;
-    border: 2px solid var(--border-color);
+    border: 2px solid #8b0000;
     border-radius: 50%;
-    color: var(--text-primary);
+    color: #8b0000;
     font-size: 1.25rem;
+    font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -304,9 +305,9 @@
 }
 
 .modal-close:hover {
-    background: var(--danger);
+    background: #8b0000;
     color: white;
-    border-color: var(--danger);
+    border-color: #6b0000;
     transform: rotate(90deg);
 }
 

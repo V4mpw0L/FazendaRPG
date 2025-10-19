@@ -147,19 +147,23 @@ class NotificationManager {
                 align-items: center;
                 justify-content: center;
                 cursor: pointer;
-                color: var(--text-secondary);
+                color: #8b0000;
                 font-size: 18px;
+                font-weight: 700;
                 line-height: 1;
                 flex-shrink: 0;
                 transition: all 0.2s ease;
-                opacity: 0.6;
-                background: rgba(0, 0, 0, 0.05);
+                opacity: 0.8;
+                background: transparent;
+                border: 2px solid #8b0000;
             }
 
             .notification-close:hover {
                 opacity: 1;
-                background: rgba(0, 0, 0, 0.1);
-                transform: scale(1.1);
+                background: #8b0000;
+                color: white;
+                border-color: #6b0000;
+                transform: scale(1.1) rotate(90deg);
             }
 
             .notification-close:active {
@@ -343,11 +347,15 @@ class NotificationManager {
             }
 
             .dark-theme .notification-close {
-                background: rgba(255, 255, 255, 0.05);
+                border-color: #8b0000;
+                color: #8b0000;
+                background: transparent;
             }
 
             .dark-theme .notification-close:hover {
-                background: rgba(255, 255, 255, 0.1);
+                background: #8b0000;
+                color: white;
+                border-color: #6b0000;
             }
 
             /* Mobile Responsive */
