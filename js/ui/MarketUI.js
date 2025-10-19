@@ -658,7 +658,7 @@ export default class MarketUI {
       <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; flex: 1;">
         <div class="market-item-icon">${item.icon || "📦"}</div>
         <div class="market-item-name" title="${itemName}">${itemName}</div>
-        <div class="market-item-price"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g</div>
+        <div class="market-item-price" style="color: #b8860b;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g</div>
         ${type === "sell" ? `<div class="market-item-stock">${i18n.t("market.youHave")}: ${stock}</div>` : ""}
         ${requiredLevelInfo}
       </div>
