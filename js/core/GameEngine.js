@@ -559,24 +559,95 @@ export default class GameEngine {
    * @param {number} index - Plot index
    */
   plantPlot(index) {
-    // For now, plant wheat by default
-    const cropId = "wheat";
+    // Get available seeds from inventory
+    const seeds = this.inventorySystem.getItemsByCategory("seeds");
 
-    const result = this.farmSystem.plant(index, cropId);
-
-    if (result.success) {
-      notifications.success(i18n.t("farm.planted"));
-      this.renderFarm();
-      this.topBar.update();
-
-      // Update quest progress
-      this.questSystem.handleGameEvent("plant", {
-        cropId,
-        amount: 1,
-      });
-    } else {
-      notifications.error(result.error);
+    if (seeds.length === 0) {
+      notifications.error(i18n.t("farm.noSeeds"));
+      return;
     }
+
+    // Create seed selection content
+    const seedsHTML = seeds
+      .map((seed) => {
+        const cropId = seed.id.replace("_seed", "");
+        const cropData = this.farmSystem.getCropData(cropId);
+        const growthTime = cropData ? cropData.growthTime : 0;
+
+        return `
+        <div class="seed-option" data-crop-id="${cropId}" data-seed-id="${seed.id}" style="
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          padding: 1rem;
+          border: 2px solid var(--border-color);
+          border-radius: 8px;
+          cursor: pointer;
+          transition: all 0.2s;
+          margin-bottom: 0.5rem;
+        ">
+          <div style="font-size: 2rem;">${seed.icon}</div>
+          <div style="flex: 1;">
+            <div style="font-weight: 600; color: var(--text-primary);">${seed.namePtBR || seed.name}</div>
+            <div style="font-size: 0.875rem; color: var(--text-secondary);">
+              ⏱️ ${growthTime}s | 📦 Quantidade: ${seed.count}
+            </div>
+          </div>
+        </div>
+      `;
+      })
+      .join("");
+
+    const content = `
+      <div style="max-height: 400px; overflow-y: auto;">
+        <p style="margin-bottom: 1rem; color: var(--text-secondary);">Escolha qual semente plantar:</p>
+        ${seedsHTML}
+      </div>
+      <style>
+        .seed-option:hover {
+          background: var(--accent-color);
+          border-color: var(--primary-color);
+          transform: translateX(4px);
+        }
+      </style>
+    `;
+
+    this.modal.show({
+      title: "🌱 Escolher Semente",
+      content: content,
+      closable: true,
+      size: "medium",
+    });
+
+    // Add click handlers to seed options
+    setTimeout(() => {
+      document.querySelectorAll(".seed-option").forEach((option) => {
+        option.addEventListener("click", () => {
+          const cropId = option.dataset.cropId;
+          const seedId = option.dataset.seedId;
+
+          // Close modal
+          this.modal.close();
+
+          // Plant the selected seed
+          const result = this.farmSystem.plant(index, cropId);
+
+          if (result.success) {
+            notifications.success(i18n.t("farm.planted"));
+            this.renderFarm();
+            this.topBar.update();
+
+            // Update quest progress
+            this.questSystem.handleGameEvent("plant", {
+              cropId,
+              amount: 1,
+            });
+          } else {
+            notifications.error(result.error);
+          }
+        });
+      });
+    }, 100);
   }
 
   /**
