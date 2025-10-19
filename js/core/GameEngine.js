@@ -17,6 +17,7 @@ import Modal from "../ui/modals/Modal.js";
 import InventoryUI from "../ui/InventoryUI.js";
 import MarketUI from "../ui/MarketUI.js";
 import NPCSUI from "../ui/NPCSUI.js";
+import CityUI from "../ui/CityUI.js";
 import i18n from "../utils/i18n.js";
 import notifications from "../utils/notifications.js";
 
@@ -35,6 +36,7 @@ export default class GameEngine {
     this.inventoryUI = null;
     this.marketUI = null;
     this.npcsUI = null;
+    this.cityUI = null;
     this.initialized = false;
     this.running = false;
     this.lastUpdate = Date.now();
@@ -111,6 +113,9 @@ export default class GameEngine {
 
       this.npcsUI = new NPCSUI(this.player, this.modal, notifications);
       await this.npcsUI.init();
+
+      this.cityUI = new CityUI(this.player, this.modal, notifications);
+      this.cityUI.init();
 
       // Attach global event listeners
       this.attachEventListeners();
@@ -506,6 +511,19 @@ export default class GameEngine {
   }
 
   /**
+   * Update all farm tiles (for real-time updates)
+   */
+  updateFarmTiles() {
+    const farmGrid = document.getElementById("farm-grid");
+    if (!farmGrid) return;
+
+    const tiles = farmGrid.querySelectorAll(".farm-tile");
+    tiles.forEach((tile, index) => {
+      this.updateFarmTile(tile, index);
+    });
+  }
+
+  /**
    * Handle farm tile click
    * @param {number} index - Plot index
    */
@@ -650,6 +668,29 @@ export default class GameEngine {
 
     window.addEventListener("farm:cleared", () => {
       this.renderFarm();
+    });
+
+    // Farm update event (every second from FarmSystem)
+    window.addEventListener("farm:update", () => {
+      // Only update if we're on the farm screen
+      const farmScreen = document.getElementById("farm-screen");
+      if (farmScreen && farmScreen.classList.contains("active")) {
+        this.updateFarmTiles();
+      }
+    });
+
+    // Player events for city systems
+    window.addEventListener("player:goldChanged", () => {
+      this.topBar.update();
+    });
+
+    window.addEventListener("player:energyChanged", () => {
+      this.topBar.update();
+    });
+
+    window.addEventListener("player:xpChanged", () => {
+      this.topBar.update();
+      this.updateXPBar();
     });
 
     // Settings events
@@ -801,6 +842,9 @@ export default class GameEngine {
         break;
       case "market-screen":
         this.renderMarket();
+        break;
+      case "city-screen":
+        this.renderCity();
         break;
     }
   }
@@ -962,6 +1006,15 @@ export default class GameEngine {
   renderMarket() {
     if (this.marketUI) {
       this.marketUI.render();
+    }
+  }
+
+  /**
+   * Render city screen
+   */
+  renderCity() {
+    if (this.cityUI) {
+      this.cityUI.refresh();
     }
   }
 
