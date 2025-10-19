@@ -374,7 +374,7 @@ export default class MarketUI {
       .market-preview-total {
         font-weight: 700;
         font-size: 1.125rem;
-        color: var(--brand-primary);
+        color: #b8860b;
       }
 
       @media (max-width: 768px) {
@@ -694,7 +694,7 @@ export default class MarketUI {
         <div style="font-size: 4rem; margin-bottom: 0.5rem;">${item.icon || "📦"}</div>
         <h3 style="margin: 0.5rem 0; color: var(--text-primary);">${itemName}</h3>
         <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0.5rem 0;">${itemDesc}</p>
-        <p style="color: var(--brand-primary); font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g ${i18n.t("market.perUnit")}</p>
+        <p style="color: #b8860b; font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g ${i18n.t("market.perUnit")}</p>
       </div>
 
       <div style="margin: 1rem 0;">
@@ -785,8 +785,7 @@ export default class MarketUI {
           costEl.innerHTML = `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${cost}g`;
         if (remainingEl) {
           remainingEl.innerHTML = `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${remaining}g`;
-          remainingEl.style.color =
-            remaining >= 0 ? "var(--brand-primary)" : "#e74c3c";
+          remainingEl.style.color = remaining >= 0 ? "#b8860b" : "#e74c3c";
         }
 
         // Disable/enable buy button based on gold
@@ -882,7 +881,7 @@ export default class MarketUI {
         <div style="font-size: 4rem; margin-bottom: 0.5rem;">${item.icon || "📦"}</div>
         <h3 style="margin: 0.5rem 0; color: var(--text-primary);">${itemName}</h3>
         <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0.5rem 0;">${itemDesc}</p>
-        <p style="color: var(--brand-primary); font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g ${i18n.t("market.perUnit")}</p>
+        <p style="color: #b8860b; font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g ${i18n.t("market.perUnit")}</p>
         <p style="color: var(--text-secondary); font-size: 0.875rem;">${i18n.t("market.youHave")}: ${maxSellable}</p>
       </div>
 

@@ -307,17 +307,17 @@ class NotificationManager {
             }
 
             .notification.gold .notification-icon {
-                background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+                background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
                 color: white;
             }
 
             .notification.gold .notification-value {
-                color: #f39c12;
-                background: rgba(241, 196, 15, 0.15);
+                color: #b8860b;
+                background: rgba(184, 134, 11, 0.15);
             }
 
             .notification.gold .notification-progress {
-                color: #f1c40f;
+                color: #b8860b;
             }
 
             /* Animations */

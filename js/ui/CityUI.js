@@ -217,7 +217,7 @@ export default class CityUI {
                     .balance-value {
                         font-size: 1.5rem;
                         font-weight: 700;
-                        color: var(--brand-primary);
+                        color: #b8860b;
                     }
                     .bank-info {
                         background: var(--bg-accent);
@@ -521,7 +521,7 @@ export default class CityUI {
                         margin: 0 0 0.75rem 0;
                     }
                     .service-price {
-                        background: var(--brand-primary);
+                        background: #b8860b;
                         color: white;
                         padding: 0.5rem;
                         border-radius: 8px;

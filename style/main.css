@@ -795,7 +795,7 @@ a:hover {
 }
 
 .market-item-price {
-    color: var(--brand-primary);
+    color: #b8860b;
     font-weight: 700;
     font-size: 1.125rem;
     margin-bottom: var(--spacing-md);
