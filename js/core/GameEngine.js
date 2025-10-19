@@ -940,17 +940,141 @@ export default class GameEngine {
    * Plant all empty plots
    */
   plantAll() {
-    const result = this.farmSystem.plantAll("wheat");
+    // Get available seeds from inventory
+    const seeds = this.inventorySystem.getItemsByCategory("seeds");
 
-    if (result.success) {
-      notifications.success(
-        i18n.t("notifications.plantedMultiple", { count: result.planted }),
-      );
-      this.renderFarm();
-      this.topBar.update();
-    } else {
-      notifications.error(result.errors || "Cannot plant");
+    if (seeds.length === 0) {
+      notifications.error(i18n.t("farm.noSeeds"));
+      return;
     }
+
+    // Count empty plots
+    const plots = this.farmSystem.getPlots();
+    const emptyPlots = plots.filter((plot) => !plot.cropId).length;
+
+    if (emptyPlots === 0) {
+      notifications.info("Nenhum plot vazio para plantar");
+      return;
+    }
+
+    // Get player's farming level
+    const farmingLevel = this.skillSystem.getLevel("farming");
+
+    // Sort seeds by required level (lowest first)
+    const sortedSeeds = seeds.sort((a, b) => {
+      const cropIdA = a.id.replace("_seed", "");
+      const cropIdB = b.id.replace("_seed", "");
+      const cropDataA = this.farmSystem.getCropData(cropIdA);
+      const cropDataB = this.farmSystem.getCropData(cropIdB);
+      const levelA = cropDataA ? cropDataA.requiredLevel : 999;
+      const levelB = cropDataB ? cropDataB.requiredLevel : 999;
+      return levelA - levelB;
+    });
+
+    // Create seed selection content
+    const seedsHTML = sortedSeeds
+      .map((seed) => {
+        const cropId = seed.id.replace("_seed", "");
+        const cropData = this.farmSystem.getCropData(cropId);
+        const growthTime = cropData ? cropData.growthTime : 0;
+        const requiredLevel = cropData ? cropData.requiredLevel : 1;
+        const canPlant = farmingLevel >= requiredLevel;
+
+        return `
+        <div class="seed-option ${!canPlant ? "seed-locked" : ""}" data-crop-id="${cropId}" data-seed-id="${seed.id}" data-can-plant="${canPlant}" style="
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          padding: 1rem;
+          border: 2px solid var(--border-color);
+          border-radius: 8px;
+          cursor: ${canPlant ? "pointer" : "not-allowed"};
+          transition: all 0.2s;
+          margin-bottom: 0.5rem;
+          opacity: ${canPlant ? "1" : "0.5"};
+          background: ${canPlant ? "transparent" : "rgba(128, 128, 128, 0.1)"};
+        ">
+          <div style="font-size: 2rem;">${seed.icon}</div>
+          <div style="flex: 1;">
+            <div style="font-weight: 600; color: var(--text-primary);">${seed.namePtBR || seed.name}</div>
+            <div style="font-size: 0.875rem; color: var(--text-secondary);">
+              ⏱️ ${growthTime}s | 📦 Quantidade: ${seed.count} | 🌟 Nível: ${requiredLevel}
+            </div>
+            ${!canPlant ? `<div style="font-size: 0.75rem; color: #ff6b6b; font-weight: 600; margin-top: 0.25rem;">🔒 Requer Farming Nível ${requiredLevel}</div>` : ""}
+          </div>
+        </div>
+      `;
+      })
+      .join("");
+
+    const content = `
+      <div style="max-height: 400px; overflow-y: auto;">
+        <div style="background: var(--bg-accent); padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid var(--brand-primary);">
+          <p style="margin: 0; color: var(--text-primary); font-weight: 600;">
+            🌾 ${emptyPlots} plot(s) vazio(s) será(ão) plantado(s)
+          </p>
+        </div>
+        <p style="margin-bottom: 1rem; color: var(--text-secondary);">Escolha qual semente plantar:</p>
+        ${seedsHTML}
+      </div>
+      <style>
+        .seed-option:not(.seed-locked):hover {
+          background: var(--accent-color);
+          border-color: var(--primary-color);
+          transform: translateX(4px);
+        }
+        .seed-locked {
+          filter: grayscale(0.5);
+        }
+      </style>
+    `;
+
+    this.modal.show({
+      title: "🌱 Plantar Tudo - Escolher Semente",
+      content: content,
+      closable: true,
+      size: "medium",
+    });
+
+    // Add click handlers to seed options
+    setTimeout(() => {
+      document.querySelectorAll(".seed-option").forEach((option) => {
+        option.addEventListener("click", () => {
+          const canPlant = option.dataset.canPlant === "true";
+
+          // Ignore clicks on locked seeds
+          if (!canPlant) {
+            return;
+          }
+
+          const cropId = option.dataset.cropId;
+
+          // Close modal
+          this.modal.close();
+
+          // Plant all empty plots with selected seed
+          const result = this.farmSystem.plantAll(cropId);
+
+          if (result.success) {
+            notifications.success(
+              i18n.t("notifications.plantedMultiple", {
+                count: result.planted,
+              }),
+            );
+            this.renderFarm();
+            this.topBar.update();
+
+            // Update quest progress
+            this.questSystem.handleGameEvent("plant", {
+              cropId,
+              amount: result.planted,
+            });
+          } else {
+            notifications.error(result.errors || "Cannot plant");
+          }
+        });
+      });
+    }, 100);
   }
 
   /**
