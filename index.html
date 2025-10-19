@@ -41,6 +41,14 @@
     <div class="topbar-player">
       <h1 class="topbar-player-name" id="topbar-player-name">Fazendeiro</h1>
       <div class="topbar-player-level">Nível <span id="topbar-level">1</span></div>
+      <div class="topbar-farming-xp">
+        <div class="topbar-farming-bar">
+          <div class="topbar-farming-fill" id="topbar-farming-fill" style="width: 0%"></div>
+        </div>
+        <div class="topbar-farming-text">
+          <span id="topbar-farming-current">0</span>/<span id="topbar-farming-needed">100</span>
+        </div>
+      </div>
     </div>
 
 
@@ -132,23 +140,24 @@
 
     <!-- Farm Screen -->
     <div id="farm-screen" class="screen">
-      <div class="screen-header">
-        <div class="farm-welcome-header">
-          <div class="farm-player-info">
-            <h1 class="farm-player-name">
-              <span class="farm-player-icon">👨‍🌾</span>
-              <span id="farm-player-name-text">Fazendeiro</span>
-            </h1>
+      <div class="farm-view" id="farm-view">
+        <div class="farm-header">
+          <div class="farm-welcome-message">
+            <div class="welcome-greeting">
+              <span class="welcome-icon">👨‍🌾</span>
+              <span class="welcome-text">Bem-vindo, <strong id="welcome-player-name">Fazendeiro</strong>!</span>
+            </div>
+            <h2 class="farm-subtitle" data-i18n="farm.title">Sua Fazenda</h2>
             <div class="farm-player-level">
               <span class="level-badge">
                 <span class="level-icon">⭐</span>
                 <span class="level-text">Nível <span id="farm-player-level">1</span></span>
               </span>
             </div>
+            <p class="welcome-subtitle">🌾 Plante, colha e prospere em sua fazenda! 🚜</p>
           </div>
-          <h2 class="farm-subtitle" data-i18n="farm.title">Sua Fazenda</h2>
         </div>
-        <div class="xp-bar-container">
+        <div class="xp-bar-container" style="display: none;">
           <div class="xp-bar">
             <div id="xp-bar-fill" class="xp-bar-fill"></div>
           </div>

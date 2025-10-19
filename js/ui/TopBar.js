@@ -30,6 +30,9 @@ export default class TopBar {
     this.elements = {
       playerName: document.getElementById("topbar-player-name"),
       level: document.getElementById("topbar-level"),
+      farmingFill: document.getElementById("topbar-farming-fill"),
+      farmingCurrent: document.getElementById("topbar-farming-current"),
+      farmingNeeded: document.getElementById("topbar-farming-needed"),
       gold: document.getElementById("topbar-gold"),
       energy: document.getElementById("topbar-energy"),
       energyFill: document.getElementById("topbar-energy-fill"),
@@ -59,6 +62,7 @@ export default class TopBar {
   update() {
     this.updatePlayerName();
     this.updateLevel();
+    this.updateFarmingXP();
     this.updateGold();
     this.updateEnergy();
   }
@@ -88,6 +92,39 @@ export default class TopBar {
     if (this.elements.level.textContent !== farmingLevel.toString()) {
       this.elements.level.textContent = farmingLevel;
     }
+  }
+
+  /**
+   * Update Farming XP bar
+   */
+  updateFarmingXP() {
+    if (
+      !this.elements.farmingFill ||
+      !this.elements.farmingCurrent ||
+      !this.elements.farmingNeeded
+    )
+      return;
+
+    // Get farming skill data
+    const farmingSkill = this.player.data.skills.farming;
+    const level = farmingSkill.level;
+    const currentXP = farmingSkill.xp;
+    const nextLevelXP = this.skillSystem?.xpTable[level] || 0;
+    const currentLevelXP = this.skillSystem?.xpTable[level - 1] || 0;
+
+    const xpInLevel = currentXP - currentLevelXP;
+    const xpNeededForLevel = nextLevelXP - currentLevelXP;
+    const percentage =
+      xpNeededForLevel > 0
+        ? Math.min((xpInLevel / xpNeededForLevel) * 100, 100)
+        : 0;
+
+    // Update bar fill
+    this.elements.farmingFill.style.width = `${percentage}%`;
+
+    // Update text
+    this.elements.farmingCurrent.textContent = xpInLevel;
+    this.elements.farmingNeeded.textContent = xpNeededForLevel;
   }
 
   /**

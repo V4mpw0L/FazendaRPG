@@ -6,22 +6,22 @@
 /* CSS Variables for theming */
 :root {
     /* Light Theme Colors */
-    --bg-primary-light: #f5f9f0;
+    --bg-primary-light: #f0f8ec;
     --bg-secondary-light: #ffffff;
-    --bg-accent-light: #e8f5e0;
-    --text-primary-light: #2d3436;
-    --text-secondary-light: #636e72;
-    --border-light: #d4e4cc;
-    --shadow-light: rgba(0, 0, 0, 0.1);
+    --bg-accent-light: #e6f4e0;
+    --text-primary-light: #1a2520;
+    --text-secondary-light: #4a5a50;
+    --border-light: #c8dcc0;
+    --shadow-light: rgba(0, 0, 0, 0.08);
 
     /* Dark Theme Colors */
-    --bg-primary-dark: #1a2520;
-    --bg-secondary-dark: #243329;
-    --bg-accent-dark: #2d4435;
+    --bg-primary-dark: #0f1813;
+    --bg-secondary-dark: #1a2520;
+    --bg-accent-dark: #243329;
     --text-primary-dark: #e8f5e0;
     --text-secondary-dark: #b8c9b0;
-    --border-dark: #3d5043;
-    --shadow-dark: rgba(0, 0, 0, 0.4);
+    --border-dark: #2d4435;
+    --shadow-dark: rgba(0, 0, 0, 0.5);
 
     /* Brand Colors */
     --brand-primary: #5caa1f;
@@ -94,6 +94,8 @@ body {
     height: 100%;
     padding: 0;
     margin: 0;
+    background-attachment: fixed;
+    background-size: cover;
     transition:
         background-color var(--transition-normal),
         color var(--transition-normal);
@@ -101,7 +103,10 @@ body {
 
 /* Light Theme (Default) */
 body.light-theme {
-    background: linear-gradient(to bottom, #f5f9f0 0%, #e8f5e0 100%);
+    background:
+        linear-gradient(135deg, rgba(92, 170, 31, 0.03) 0%, transparent 50%),
+        linear-gradient(45deg, rgba(126, 200, 80, 0.05) 0%, transparent 100%),
+        linear-gradient(to bottom, #f0f8ec 0%, #e6f4e0 100%);
     color: var(--text-primary-light);
     --bg-primary: var(--bg-primary-light);
     --bg-secondary: var(--bg-secondary-light);
@@ -114,7 +119,18 @@ body.light-theme {
 
 /* Dark Theme */
 body.dark-theme {
-    background: linear-gradient(to bottom, #1a2520 0%, #0d1812 100%);
+    background:
+        radial-gradient(
+            circle at 20% 50%,
+            rgba(92, 170, 31, 0.08) 0%,
+            transparent 50%
+        ),
+        radial-gradient(
+            circle at 80% 80%,
+            rgba(61, 139, 15, 0.06) 0%,
+            transparent 50%
+        ),
+        linear-gradient(to bottom, #0f1813 0%, #1a2520 50%, #0f1813 100%);
     color: var(--text-primary-dark);
     --bg-primary: var(--bg-primary-dark);
     --bg-secondary: var(--bg-secondary-dark);
@@ -488,12 +504,15 @@ a:hover {
    =================================== */
 
 /* Farm Welcome Header */
+/* Old farm header - NOT USED ANYMORE */
+/*
 .farm-welcome-header {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
     margin-bottom: var(--spacing-md);
 }
+*/
 
 .farm-player-info {
     display: flex;
@@ -502,6 +521,8 @@ a:hover {
     gap: var(--spacing-xs);
 }
 
+/* Old farm player name - NOT USED ANYMORE */
+/*
 .farm-player-name {
     display: flex;
     align-items: center;
@@ -512,12 +533,15 @@ a:hover {
     color: var(--text-primary);
     text-shadow: 0 2px 4px var(--shadow-color);
 }
+*/
 
 .farm-player-icon {
     font-size: 2rem;
     filter: drop-shadow(0 2px 4px var(--shadow-color));
 }
 
+/* Old farm player name text - NOT USED ANYMORE */
+/*
 #farm-player-name-text {
     background: linear-gradient(
         135deg,
@@ -528,6 +552,7 @@ a:hover {
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
+*/
 
 .farm-player-level {
     display: flex;
@@ -574,12 +599,108 @@ a:hover {
     letter-spacing: 0.5px;
 }
 
+/* Moved to inside farm-welcome-message */
+
+.farm-header {
+    margin-bottom: var(--spacing-md);
+}
+
+.farm-welcome-message {
+    margin: 0 auto var(--spacing-md);
+    max-width: 600px;
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: var(--bg-secondary);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 12px var(--shadow-color);
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.farm-welcome-message:hover {
+    box-shadow: 0 6px 16px var(--shadow-color);
+}
+
+.welcome-greeting {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+}
+
+.welcome-icon {
+    font-size: 2rem;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.welcome-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.welcome-text strong {
+    color: var(--brand-primary);
+    font-weight: 700;
+}
+
 .farm-subtitle {
     font-size: 1.125rem;
     font-weight: 600;
     color: var(--text-secondary);
-    margin: 0;
-    opacity: 0.8;
+    margin: var(--spacing-xs) 0;
+    opacity: 0.9;
+}
+
+.farm-player-level {
+    display: flex;
+    justify-content: center;
+    margin: var(--spacing-sm) 0;
+}
+
+.welcome-subtitle {
+    margin: var(--spacing-sm) 0 0;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* Dark theme specific adjustments */
+.dark-theme .farm-welcome-message {
+    background: rgba(26, 37, 32, 0.9);
+    border-color: rgba(92, 170, 31, 0.4);
+}
+
+.dark-theme .welcome-text strong {
+    color: #7ec850;
+    text-shadow: 0 0 10px rgba(92, 170, 31, 0.3);
+}
+
+.dark-theme .farm-subtitle {
+    color: #b8c9b0;
+}
+
+/* Light theme specific adjustments */
+.light-theme .farm-welcome-message {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(92, 170, 31, 0.3);
+}
+
+.light-theme .welcome-text strong {
+    color: #5caa1f;
 }
 
 .xp-bar-container {
@@ -669,6 +790,7 @@ a:hover {
 
 .inventory-item {
     background: var(--bg-secondary);
+    backdrop-filter: blur(10px);
     border: 2px solid var(--border-color);
     border-radius: var(--border-radius-sm);
     padding: var(--spacing-md);
@@ -676,12 +798,14 @@ a:hover {
     transition: all var(--transition-fast);
     cursor: pointer;
     position: relative;
+    box-shadow: 0 2px 8px var(--shadow-color);
 }
 
 .inventory-item:hover {
     transform: translateY(-4px);
-    box-shadow: 0 4px 12px var(--shadow-color);
+    box-shadow: 0 6px 16px var(--shadow-color);
     border-color: var(--brand-primary);
+    background: var(--bg-accent);
 }
 
 .inventory-item-icon {
@@ -728,19 +852,21 @@ a:hover {
 
 .city-card {
     background: var(--bg-secondary);
-    border: 3px solid var(--border-color);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--border-color);
     border-radius: var(--border-radius);
-    padding: var(--spacing-md);
+    padding: var(--spacing-lg);
     text-align: center;
+    transition: all var(--transition-normal);
     cursor: pointer;
-    transition: all var(--transition-fast);
     box-shadow: 0 4px 12px var(--shadow-color);
 }
 
 .city-card:hover {
     transform: translateY(-8px);
     border-color: var(--brand-primary);
-    box-shadow: 0 8px 24px var(--shadow-color);
+    box-shadow: 0 12px 32px var(--shadow-color);
+    background: var(--bg-accent);
 }
 
 .city-icon {

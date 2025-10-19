@@ -360,12 +360,6 @@ export default class GameEngine {
 
     // Debug: Check player name
     console.log("🔍 Player name:", this.player.data.name);
-    const welcomeMsg = i18n.t("notifications.welcomeBack", {
-      name: this.player.data.name,
-    });
-    console.log("🔍 Welcome message:", welcomeMsg);
-
-    notifications.success(welcomeMsg);
   }
 
   /**
@@ -742,6 +736,12 @@ export default class GameEngine {
     // Update player name
     if (playerNameText) {
       playerNameText.textContent = this.player.data.name || "Fazendeiro";
+    }
+
+    // Update welcome message name
+    const welcomePlayerName = document.getElementById("welcome-player-name");
+    if (welcomePlayerName) {
+      welcomePlayerName.textContent = this.player.data.name || "Fazendeiro";
     }
 
     // Pega XP de FARMING, não do player
