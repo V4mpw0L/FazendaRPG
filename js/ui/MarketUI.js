@@ -371,6 +371,11 @@ export default class MarketUI {
         font-size: 0.875rem;
       }
 
+      .market-preview-row span:last-child {
+        color: #b8860b;
+        font-weight: 700;
+      }
+
       .market-preview-total {
         font-weight: 700;
         font-size: 1.125rem;
@@ -721,11 +726,11 @@ export default class MarketUI {
       <div class="market-preview" id="buy-preview">
         <div class="market-preview-row">
           <span>${i18n.t("market.yourGold")}:</span>
-          <span><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${playerGold}g</span>
+          <span style="color: #b8860b; font-weight: 700;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${playerGold}g</span>
         </div>
         <div class="market-preview-row">
           <span>${i18n.t("market.cost")}:</span>
-          <span id="preview-cost"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g</span>
+          <span id="preview-cost" style="color: #b8860b; font-weight: 700;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g</span>
         </div>
         <div class="market-preview-row">
           <span>${i18n.t("market.remaining")}:</span>
@@ -909,11 +914,11 @@ export default class MarketUI {
       <div class="market-preview" id="sell-preview">
         <div class="market-preview-row">
           <span>${i18n.t("market.yourGold")}:</span>
-          <span>${playerGold}g</span>
+          <span style="color: #b8860b; font-weight: 700;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${playerGold}g</span>
         </div>
         <div class="market-preview-row">
           <span>${i18n.t("market.willReceive")}:</span>
-          <span id="preview-receive"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g</span>
+          <span id="preview-receive" style="color: #b8860b; font-weight: 700;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g</span>
         </div>
         <div class="market-preview-row">
           <span>${i18n.t("market.newTotal")}:</span>

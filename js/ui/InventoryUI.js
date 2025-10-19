@@ -60,7 +60,7 @@ export default class InventoryUI {
       <div class="inventory-controls">
         <div class="inventory-stats">
           <span id="inv-items-count" class="stat-badge">0 ${i18n.t("inventory.items")}</span>
-          <span id="inv-total-value" class="stat-badge"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> 0g</span>
+          <span id="inv-total-value" class="stat-badge" style="color: #b8860b; font-weight: 700;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> 0g</span>
         </div>
         <div class="inventory-actions">
           <select id="inv-sort" class="control-select">
@@ -240,7 +240,7 @@ export default class InventoryUI {
       .inventory-slot-value {
         font-size: 0.625rem;
         font-weight: 700;
-        color: var(--brand-primary);
+        color: #b8860b;
       }
 
       .inventory-slot-count {
@@ -503,7 +503,7 @@ export default class InventoryUI {
       ${item.count > 1 ? `<div class="inventory-slot-count">${item.count}</div>` : ""}
       <div class="inventory-slot-icon">${item.icon || "📦"}</div>
       <div class="inventory-slot-name" title="${itemName}">${itemName}</div>
-      <div class="inventory-slot-value">${item.sellPrice || 0}g</div>
+      <div class="inventory-slot-value" style="color: #b8860b;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 0.75em; height: 0.75em; vertical-align: middle;"> ${item.sellPrice || 0}g</div>
       <div class="inventory-slot-category" style="background: ${categoryColor};">
         ${categoryName}
       </div>
@@ -848,6 +848,8 @@ export default class InventoryUI {
 
     if (valueEl) {
       valueEl.innerHTML = `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${totalValue}g`;
+      valueEl.style.color = "#b8860b";
+      valueEl.style.fontWeight = "700";
     }
   }
 

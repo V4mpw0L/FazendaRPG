@@ -132,11 +132,11 @@ export default class CityUI {
                     </div>
                     <div class="info-item">
                         <span>💵 Depósito Mínimo:</span>
-                        <strong>${stats.minDeposit}g</strong>
+                        <strong style="color: #b8860b;">${stats.minDeposit}g</strong>
                     </div>
                     <div class="info-item">
                         <span>💎 Total Depositado:</span>
-                        <strong>${stats.totalDeposited}g</strong>
+                        <strong style="color: #b8860b;">${stats.totalDeposited}g</strong>
                     </div>
                 </div>
 
@@ -235,6 +235,9 @@ export default class CityUI {
                     }
                     .info-item:last-child {
                         border-bottom: none;
+                    }
+                    .info-item strong {
+                        color: #b8860b;
                     }
                     .bank-actions {
                         display: grid;
@@ -438,7 +441,7 @@ export default class CityUI {
                         <div class="service-icon">📖</div>
                         <h3>Ouvir Histórias</h3>
                         <p>Ganhe XP e diversão</p>
-                        <div class="service-price">10g</div>
+                        <div class="service-price"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> 10g</div>
                         <div class="service-xp">⭐ +5 XP</div>
                     </div>
                 </div>
