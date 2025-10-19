@@ -477,9 +477,10 @@ export default class InventoryUI {
                         style="width: 100%; padding: 0.75rem; font-size: 1rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-accent); color: var(--text-primary);"
                     />
                     <div style="margin-top: 0.5rem; display: flex; gap: 0.5rem;">
-                        <button class="btn btn-sm btn-secondary" onclick="document.getElementById('sell-amount').value = 1; document.getElementById('sell-amount').dispatchEvent(new Event('input'));">1</button>
-                        <button class="btn btn-sm btn-secondary" onclick="document.getElementById('sell-amount').value = Math.floor(${maxAmount} / 2); document.getElementById('sell-amount').dispatchEvent(new Event('input'));">50%</button>
-                        <button class="btn btn-sm btn-secondary" onclick="document.getElementById('sell-amount').value = ${maxAmount}; document.getElementById('sell-amount').dispatchEvent(new Event('input'));">Tudo</button>
+                        <button id="sell-btn-1" class="btn btn-sm btn-secondary">1</button>
+                        <button id="sell-btn-25" class="btn btn-sm btn-secondary">25%</button>
+                        <button id="sell-btn-50" class="btn btn-sm btn-secondary">50%</button>
+                        <button id="sell-btn-max" class="btn btn-sm btn-secondary">Tudo</button>
                     </div>
                 </div>
 
@@ -548,6 +549,54 @@ export default class InventoryUI {
               amount = Math.max(1, Math.min(maxAmount, amount));
               e.target.value = amount;
               updatePreview();
+            });
+          }
+
+          // Setup quick amount buttons
+          const btn1 = document.getElementById("sell-btn-1");
+          const btn25 = document.getElementById("sell-btn-25");
+          const btn50 = document.getElementById("sell-btn-50");
+          const btnMax = document.getElementById("sell-btn-max");
+
+          if (btn1) {
+            btn1.addEventListener("click", () => {
+              if (input) {
+                input.value = "1";
+                amount = 1;
+                updatePreview();
+              }
+            });
+          }
+
+          if (btn25) {
+            btn25.addEventListener("click", () => {
+              if (input) {
+                const value = Math.floor(maxAmount * 0.25);
+                input.value = value;
+                amount = value;
+                updatePreview();
+              }
+            });
+          }
+
+          if (btn50) {
+            btn50.addEventListener("click", () => {
+              if (input) {
+                const value = Math.floor(maxAmount * 0.5);
+                input.value = value;
+                amount = value;
+                updatePreview();
+              }
+            });
+          }
+
+          if (btnMax) {
+            btnMax.addEventListener("click", () => {
+              if (input) {
+                input.value = maxAmount;
+                amount = maxAmount;
+                updatePreview();
+              }
             });
           }
         }, 100);
