@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <!-- Definições -->
+  <defs>
+    <!-- Padrão de grama noturna -->
+    <pattern id="grass-dark" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+      <rect width="100" height="100" fill="#2d4435"/>
+      <rect x="0" y="0" width="50" height="50" fill="#1a2520" opacity="0.3"/>
+      <rect x="50" y="50" width="50" height="50" fill="#1a2520" opacity="0.3"/>
+      <circle cx="20" cy="30" r="2" fill="#3d5043" opacity="0.4"/>
+      <circle cx="65" cy="75" r="2" fill="#3d5043" opacity="0.4"/>
+      <circle cx="80" cy="20" r="2" fill="#3d5043" opacity="0.4"/>
+      <circle cx="35" cy="85" r="2" fill="#3d5043" opacity="0.4"/>
+    </pattern>
+
+    <!-- Padrão de terra cultivada noturna -->
+    <pattern id="soil-dark" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+      <rect width="100" height="100" fill="#4a3218"/>
+      <rect x="5" y="5" width="90" height="20" fill="#5a3d1f" opacity="0.5"/>
+      <rect x="5" y="30" width="90" height="20" fill="#5a3d1f" opacity="0.5"/>
+      <rect x="5" y="55" width="90" height="20" fill="#5a3d1f" opacity="0.5"/>
+      <rect x="5" y="80" width="90" height="20" fill="#5a3d1f" opacity="0.5"/>
+      <circle cx="15" cy="15" r="1.5" fill="#3d2816" opacity="0.6"/>
+      <circle cx="45" cy="40" r="1.5" fill="#3d2816" opacity="0.6"/>
+      <circle cx="75" cy="65" r="1.5" fill="#3d2816" opacity="0.6"/>
+      <circle cx="25" cy="90" r="1.5" fill="#3d2816" opacity="0.6"/>
+      <circle cx="85" cy="25" r="1.5" fill="#3d2816" opacity="0.6"/>
+    </pattern>
+
+    <!-- Gradiente do céu noturno -->
+    <linearGradient id="sky-dark" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1929;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1a2838;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#243329;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Lua -->
+    <radialGradient id="moon-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#fff8dc;stop-opacity:0.9" />
+      <stop offset="70%" style="stop-color:#e8e0c8;stop-opacity:0.5" />
+      <stop offset="100%" style="stop-color:#e8e0c8;stop-opacity:0" />
+    </radialGradient>
+
+    <!-- Estrela -->
+    <g id="star">
+      <circle cx="0" cy="0" r="1.5" fill="white" opacity="0.9">
+        <animate attributeName="opacity" values="0.9;0.5;0.9" dur="3s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+  </defs>
+
+  <!-- Céu noturno -->
+  <rect width="400" height="200" fill="url(#sky-dark)"/>
+
+  <!-- Lua -->
+  <circle cx="320" cy="60" r="35" fill="url(#moon-glow)"/>
+  <circle cx="320" cy="60" r="25" fill="#fff8dc" opacity="0.85"/>
+  <ellipse cx="315" cy="55" rx="5" ry="7" fill="#e8e0c8" opacity="0.3"/>
+  <ellipse cx="325" cy="65" rx="4" ry="6" fill="#e8e0c8" opacity="0.3"/>
+
+  <!-- Estrelas -->
+  <use href="#star" x="50" y="40"/>
+  <use href="#star" x="120" y="30"/>
+  <use href="#star" x="180" y="50"/>
+  <use href="#star" x="90" y="70"/>
+  <use href="#star" x="230" y="35"/>
+  <use href="#star" x="280" y="80"/>
+  <use href="#star" x="150" y="65"/>
+  <use href="#star" x="350" y="45"/>
+  <use href="#star" x="70" y="85"/>
+  <use href="#star" x="200" y="75"/>
+  <use href="#star" x="260" y="55"/>
+  <use href="#star" x="380" y="70"/>
+
+  <!-- Campo (parte de cima - grama noturna) -->
+  <rect y="200" width="400" height="100" fill="url(#grass-dark)"/>
+
+  <!-- Terra cultivada noturna (parte de baixo) -->
+  <rect y="300" width="400" height="100" fill="url(#soil-dark)"/>
+
+  <!-- Linha de separação suave -->
+  <rect y="298" width="400" height="4" fill="#3d5043" opacity="0.4"/>
+
+  <!-- Brilho suave da lua no campo -->
+  <rect y="200" width="400" height="200" fill="white" opacity="0.015"/>
+
+  <!-- Textura sutil -->
+  <rect width="400" height="400" fill="black" opacity="0.05"/>
+</svg>
