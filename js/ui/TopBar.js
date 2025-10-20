@@ -194,11 +194,25 @@ export default class TopBar {
    * @returns {string} Formatted number
    */
   formatNumber(num) {
-    if (num >= 1000000) {
-      return (num / 1000000).toFixed(1) + "M";
+    // Quadrillion
+    if (num >= 1000000000000000) {
+      return (num / 1000000000000000).toFixed(3) + "Q";
     }
+    // Trillion
+    if (num >= 1000000000000) {
+      return (num / 1000000000000).toFixed(3) + "T";
+    }
+    // Billion
+    if (num >= 1000000000) {
+      return (num / 1000000000).toFixed(3) + "B";
+    }
+    // Million
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(3) + "M";
+    }
+    // Thousand
     if (num >= 1000) {
-      return (num / 1000).toFixed(1) + "K";
+      return (num / 1000).toFixed(3) + "K";
     }
     return num.toString();
   }
