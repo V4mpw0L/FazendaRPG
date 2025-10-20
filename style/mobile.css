@@ -132,6 +132,7 @@
     border: 2px solid rgba(0, 204, 102, 0.3);
     position: relative;
     overflow: hidden;
+    margin-top: 6px;
 }
 
 .gennisys-badge::before {
@@ -190,6 +191,7 @@
     transition: all var(--transition-fast);
     border: 2px solid rgba(255, 248, 220, 0.3);
     position: relative;
+    margin-top: 6px;
 }
 
 .footer-version-card:hover {
