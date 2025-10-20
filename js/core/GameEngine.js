@@ -21,6 +21,7 @@ import CityUI from "../ui/CityUI.js";
 import AvatarSelector from "../ui/AvatarSelector.js";
 import FertilizerAnimation from "../animations/FertilizerAnimation.js";
 import HarvestAnimation from "../animations/HarvestAnimation.js";
+import PlantAnimation from "../animations/PlantAnimation.js";
 import i18n from "../utils/i18n.js";
 import notifications from "../utils/notifications.js";
 
@@ -150,6 +151,9 @@ export default class GameEngine {
 
       // Initialize Harvest Animation
       this.harvestAnimation = new HarvestAnimation();
+
+      // Initialize Plant Animation
+      this.plantAnimation = new PlantAnimation();
 
       // Attach global event listeners
       this.attachEventListeners();
@@ -700,11 +704,36 @@ export default class GameEngine {
         </div>
       </div>
       ${optionsHTML}
+      <div class="growing-option destroy-crop" data-action="destroy" style="
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        border: 2px solid #dc3545;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 1rem;
+        background: rgba(220, 53, 69, 0.05);
+      ">
+        <div style="font-size: 2rem;">🗑️</div>
+        <div style="flex: 1;">
+          <div style="font-weight: 600; color: #dc3545;">Destruir Cultivo</div>
+          <div style="font-size: 0.875rem; color: var(--text-secondary);">
+            Remove este cultivo permanentemente
+          </div>
+        </div>
+      </div>
       <style>
         .growing-option:hover {
           background: var(--bg-accent);
           border-color: var(--brand-primary);
           transform: translateX(4px);
+        }
+        .destroy-crop:hover {
+          background: rgba(220, 53, 69, 0.15) !important;
+          border-color: #c82333 !important;
+          transform: translateX(4px) !important;
         }
       </style>
     `;
@@ -735,6 +764,98 @@ export default class GameEngine {
           } else {
             notifications.error(result.error || "Não foi possível fertilizar");
           }
+        });
+      }
+
+      // Add click handler for destroy option
+      const destroyOption = document.querySelector(
+        '.growing-option[data-action="destroy"]',
+      );
+      if (destroyOption) {
+        destroyOption.addEventListener("click", () => {
+          this.modal.close();
+
+          // Confirm destruction
+          const confirmContent = `
+            <div style="text-align: center;">
+              <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+              <p style="margin-bottom: 1rem; color: var(--text-primary);">
+                Tem certeza que deseja <strong style="color: #dc3545;">destruir</strong> este cultivo?
+              </p>
+              <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                Esta ação não pode ser desfeita e você não receberá nada de volta.
+              </p>
+              <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button id="confirm-destroy" style="
+                  padding: 0.75rem 1.5rem;
+                  background: #dc3545;
+                  color: white;
+                  border: none;
+                  border-radius: 8px;
+                  font-weight: 600;
+                  cursor: pointer;
+                  transition: all 0.2s;
+                ">Sim, Destruir</button>
+                <button id="cancel-destroy" style="
+                  padding: 0.75rem 1.5rem;
+                  background: var(--bg-secondary);
+                  color: var(--text-primary);
+                  border: 2px solid var(--border-color);
+                  border-radius: 8px;
+                  font-weight: 600;
+                  cursor: pointer;
+                  transition: all 0.2s;
+                ">Cancelar</button>
+              </div>
+            </div>
+            <style>
+              #confirm-destroy:hover {
+                background: #c82333;
+                transform: scale(1.05);
+              }
+              #cancel-destroy:hover {
+                background: var(--bg-accent);
+                border-color: var(--brand-primary);
+              }
+            </style>
+          `;
+
+          this.modal.show({
+            title: "⚠️ Confirmar Destruição",
+            content: confirmContent,
+            closable: true,
+            size: "small",
+          });
+
+          setTimeout(() => {
+            const confirmBtn = document.getElementById("confirm-destroy");
+            const cancelBtn = document.getElementById("cancel-destroy");
+
+            if (confirmBtn) {
+              confirmBtn.addEventListener("click", () => {
+                this.modal.close();
+
+                // Clear the plot
+                const plot = this.farmSystem.getPlot(index);
+                if (plot) {
+                  plot.cropId = null;
+                  plot.crop = null;
+                  plot.plantedAt = null;
+                  plot.fertilized = false;
+
+                  notifications.success("🗑️ Cultivo destruído!");
+                  this.renderFarm();
+                  this.topBar.update();
+                }
+              });
+            }
+
+            if (cancelBtn) {
+              cancelBtn.addEventListener("click", () => {
+                this.modal.close();
+              });
+            }
+          }, 100);
         });
       }
     }, 100);
@@ -848,6 +969,14 @@ export default class GameEngine {
           const result = this.farmSystem.plant(index, cropId);
 
           if (result.success) {
+            // Play plant animation
+            const plotElement = document.querySelector(
+              `.farm-plot[data-index="${index}"]`,
+            );
+            if (plotElement && this.plantAnimation) {
+              this.plantAnimation.animate(plotElement);
+            }
+
             notifications.success(i18n.t("farm.planted"));
             this.renderFarm();
             this.topBar.update();
@@ -1267,26 +1396,58 @@ export default class GameEngine {
           // Close modal
           this.modal.close();
 
-          // Plant all empty plots with selected seed
+          // Collect empty plot indices before planting
+          const emptyPlotIndices = [];
+          const plots = this.farmSystem.getPlots();
+          for (let i = 0; i < plots.length; i++) {
+            if (!plots[i].cropId) {
+              emptyPlotIndices.push(i);
+            }
+          }
+
+          // Plant all empty plots with selected seed (DATA IMMEDIATELY)
           const result = this.farmSystem.plantAll(cropId);
 
-          if (result.success) {
-            notifications.success(
-              i18n.t("notifications.plantedMultiple", {
-                count: result.planted,
-              }),
-            );
+          if (!result.success) {
+            return;
+          }
+
+          // Show notification
+          notifications.success(
+            i18n.t("notifications.plantedMultiple", {
+              count: result.planted,
+            }),
+          );
+
+          // Play animations on the DOM elements (they still exist)
+          if (this.plantAnimation && emptyPlotIndices.length > 0) {
+            emptyPlotIndices.forEach((index, i) => {
+              const plotElement = document.querySelector(
+                `.farm-plot[data-index="${index}"]`,
+              );
+              if (plotElement) {
+                // Stagger animations slightly for visual effect
+                setTimeout(() => {
+                  this.plantAnimation.animate(plotElement);
+                }, i * 80);
+              }
+            });
+          }
+
+          // Calculate delay: last animation start time + animation duration
+          const animationDelay = emptyPlotIndices.length * 80 + 1000;
+
+          // RENDER UI AFTER animations complete
+          setTimeout(() => {
             this.renderFarm();
             this.topBar.update();
+          }, animationDelay);
 
-            // Update quest progress
-            this.questSystem.handleGameEvent("plant", {
-              cropId,
-              amount: result.planted,
-            });
-          } else {
-            notifications.error(result.errors || i18n.t("farm.noEmptyPlots"));
-          }
+          // Update quest progress
+          this.questSystem.handleGameEvent("plant", {
+            cropId,
+            amount: result.planted,
+          });
         });
       });
     }, 100);
