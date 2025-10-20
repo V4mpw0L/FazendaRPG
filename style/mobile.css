@@ -359,6 +359,15 @@
         padding: 0.625rem 0.75rem;
         font-size: 0.8125rem;
     }
+
+    .screen-header {
+        max-width: 95%;
+        padding: var(--spacing-md) var(--spacing-sm);
+    }
+
+    .screen-header h2 {
+        font-size: 1.3rem;
+    }
 }
 
 /* ===================================
@@ -668,7 +677,12 @@
 
     .screen-header {
         margin-bottom: var(--spacing-md);
-        padding: var(--spacing-sm);
+        padding: var(--spacing-md) var(--spacing-sm);
+        max-width: 95%;
+    }
+
+    .screen-header h2 {
+        font-size: 1.4rem;
     }
 
     .farm-player-name {

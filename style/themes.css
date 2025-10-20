@@ -146,11 +146,19 @@
 
 /* Light theme shadows */
 .light-theme .topbar,
-.light-theme .screen-header,
 .light-theme .skill-card,
 .light-theme .city-card,
 .light-theme .welcome-card {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Light theme screen-header */
+.light-theme .screen-header {
+    background: linear-gradient(135deg, #a0522d 0%, #8b6914 40%, #654321 100%);
+    border-color: rgba(139, 105, 20, 0.7);
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 /* Light theme farm tiles */
@@ -191,11 +199,20 @@
 
 /* Dark theme shadows */
 .dark-theme .topbar,
-.dark-theme .screen-header,
 .dark-theme .skill-card,
 .dark-theme .city-card,
 .dark-theme .welcome-card {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Dark theme screen-header */
+.dark-theme .screen-header {
+    background: linear-gradient(135deg, #654321 0%, #5a3d1f 40%, #4a3218 100%);
+    border-color: rgba(92, 170, 31, 0.4);
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 0 30px rgba(92, 170, 31, 0.2);
 }
 
 /* Dark theme farm tiles */
