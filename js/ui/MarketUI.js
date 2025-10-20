@@ -657,7 +657,7 @@ export default class MarketUI {
       type === "buy" ? i18n.t("market.buy") : i18n.t("market.sell");
     const buttonIcon =
       type === "buy"
-        ? "🛒"
+        ? ""
         : '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">';
 
     // Check if it's a seed and get required level
@@ -728,10 +728,26 @@ export default class MarketUI {
     const itemName = item.namePtBR || item.name;
     const itemDesc = item.descriptionPtBR || item.description || "";
 
+    // Get category color and name
+    const categoryColors = {
+      seeds: "#5caa1f",
+      crops: "#ffa500",
+      fish: "#4682b4",
+      minerals: "#696969",
+      wood: "#8b4513",
+      food: "#ff6347",
+      tools: "#9370db",
+      materials: "#228b22",
+    };
+    const categoryColor = categoryColors[item.category] || "#5caa1f";
+    const categoryName =
+      i18n.t(`market.categories.${item.category}`) || item.category;
+
     const content = `
       <div style="text-align: center; margin-bottom: 1rem;">
         <div style="font-size: 4rem; margin-bottom: 0.5rem;">${item.icon || "📦"}</div>
         <h3 style="margin: 0.5rem 0; color: var(--text-primary);">${itemName}</h3>
+        <div style="display: inline-block; background: ${categoryColor}; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.625rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">${categoryName}</div>
         <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0.5rem 0;">${itemDesc}</p>
         <p style="color: #b8860b; font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g ${i18n.t("market.perUnit")}</p>
       </div>
@@ -915,12 +931,27 @@ export default class MarketUI {
 
     const itemName = item.namePtBR || item.name;
     const itemDesc = item.descriptionPtBR || item.description || "";
-    const playerGold = this.player.data.gold || 0;
+
+    // Get category color and name
+    const categoryColors = {
+      seeds: "#5caa1f",
+      crops: "#ffa500",
+      fish: "#4682b4",
+      minerals: "#696969",
+      wood: "#8b4513",
+      food: "#ff6347",
+      tools: "#9370db",
+      materials: "#228b22",
+    };
+    const categoryColor = categoryColors[item.category] || "#5caa1f";
+    const categoryName =
+      i18n.t(`market.categories.${item.category}`) || item.category;
 
     const content = `
       <div style="text-align: center; margin-bottom: 1rem;">
         <div style="font-size: 4rem; margin-bottom: 0.5rem;">${item.icon || "📦"}</div>
         <h3 style="margin: 0.5rem 0; color: var(--text-primary);">${itemName}</h3>
+        <div style="display: inline-block; background: ${categoryColor}; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.625rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">${categoryName}</div>
         <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0.5rem 0;">${itemDesc}</p>
         <p style="color: #b8860b; font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g ${i18n.t("market.perUnit")}</p>
         <p style="color: var(--text-secondary); font-size: 0.875rem;">${i18n.t("market.youHave")}: ${maxSellable}</p>
