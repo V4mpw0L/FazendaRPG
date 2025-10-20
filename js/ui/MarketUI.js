@@ -930,6 +930,7 @@ export default class MarketUI {
       return;
     }
 
+    const playerGold = this.player.data.gold || 0;
     const itemName = item.namePtBR || item.name;
     const itemDesc = item.descriptionPtBR || item.description || "";
 
