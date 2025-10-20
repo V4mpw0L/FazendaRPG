@@ -1,73 +1,267 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
-  <!-- Definições -->
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
   <defs>
-    <!-- Padrão de grama -->
-    <pattern id="grass" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-      <rect width="100" height="100" fill="#7ec850"/>
-      <rect x="0" y="0" width="50" height="50" fill="#5caa1f" opacity="0.15"/>
-      <rect x="50" y="50" width="50" height="50" fill="#5caa1f" opacity="0.15"/>
-      <circle cx="20" cy="30" r="2" fill="#4a9020" opacity="0.3"/>
-      <circle cx="65" cy="75" r="2" fill="#4a9020" opacity="0.3"/>
-      <circle cx="80" cy="20" r="2" fill="#4a9020" opacity="0.3"/>
-      <circle cx="35" cy="85" r="2" fill="#4a9020" opacity="0.3"/>
-    </pattern>
-
-    <!-- Padrão de terra cultivada -->
-    <pattern id="soil" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-      <rect width="100" height="100" fill="#8b6914"/>
-      <rect x="5" y="5" width="90" height="20" fill="#a0522d" opacity="0.4"/>
-      <rect x="5" y="30" width="90" height="20" fill="#a0522d" opacity="0.4"/>
-      <rect x="5" y="55" width="90" height="20" fill="#a0522d" opacity="0.4"/>
-      <rect x="5" y="80" width="90" height="20" fill="#a0522d" opacity="0.4"/>
-      <circle cx="15" cy="15" r="1.5" fill="#654321" opacity="0.5"/>
-      <circle cx="45" cy="40" r="1.5" fill="#654321" opacity="0.5"/>
-      <circle cx="75" cy="65" r="1.5" fill="#654321" opacity="0.5"/>
-      <circle cx="25" cy="90" r="1.5" fill="#654321" opacity="0.5"/>
-      <circle cx="85" cy="25" r="1.5" fill="#654321" opacity="0.5"/>
-    </pattern>
-
-    <!-- Gradiente do céu -->
+    <!-- Gradiente do céu diurno -->
     <linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" style="stop-color:#87ceeb;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#b0e0f6;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#e8f5e0;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#a8d8f0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d4e8f0;stop-opacity:1" />
     </linearGradient>
 
-    <!-- Nuvem -->
-    <g id="cloud">
-      <ellipse cx="0" cy="0" rx="25" ry="15" fill="white" opacity="0.8"/>
-      <ellipse cx="-15" cy="0" rx="20" ry="12" fill="white" opacity="0.8"/>
-      <ellipse cx="15" cy="0" rx="20" ry="12" fill="white" opacity="0.8"/>
-      <ellipse cx="-7" cy="-8" rx="15" ry="10" fill="white" opacity="0.8"/>
-      <ellipse cx="7" cy="-8" rx="15" ry="10" fill="white" opacity="0.8"/>
-    </g>
+    <!-- Sol com brilho intenso -->
+    <radialGradient id="sun-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#fff9e6;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#ffeb3b;stop-opacity:0.9" />
+      <stop offset="60%" style="stop-color:#ffd54f;stop-opacity:0.5" />
+      <stop offset="100%" style="stop-color:#ffe082;stop-opacity:0" />
+    </radialGradient>
+
+    <!-- Gradientes de terra -->
+    <linearGradient id="grass" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8bc34a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#689f38;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="soil" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#a0826d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6d4c41;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Copa das árvores -->
+    <radialGradient id="tree-leaves" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#7cb342;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#558b2f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#33691e;stop-opacity:0.8" />
+    </radialGradient>
   </defs>
 
   <!-- Céu -->
-  <rect width="400" height="200" fill="url(#sky)"/>
+  <rect width="1600" height="600" fill="url(#sky)"/>
 
-  <!-- Nuvens -->
-  <use href="#cloud" x="80" y="50" opacity="0.6"/>
-  <use href="#cloud" x="250" y="80" opacity="0.5"/>
-  <use href="#cloud" x="350" y="40" opacity="0.7"/>
-
-  <!-- Campo (parte de cima - grama) -->
-  <rect y="200" width="400" height="100" fill="url(#grass)"/>
-
-  <!-- Terra cultivada (parte de baixo) -->
-  <rect y="300" width="400" height="100" fill="url(#soil)"/>
-
-  <!-- Linha de separação suave -->
-  <rect y="298" width="400" height="4" fill="#5caa1f" opacity="0.3"/>
-
-  <!-- Detalhes decorativos - plantinhas -->
-  <g opacity="0.4">
-    <path d="M 30 290 L 30 280 L 25 285 M 30 280 L 35 285" stroke="#4a9020" stroke-width="1.5" fill="none"/>
-    <path d="M 120 295 L 120 285 L 115 290 M 120 285 L 125 290" stroke="#4a9020" stroke-width="1.5" fill="none"/>
-    <path d="M 250 292 L 250 282 L 245 287 M 250 282 L 255 287" stroke="#4a9020" stroke-width="1.5" fill="none"/>
-    <path d="M 370 288 L 370 278 L 365 283 M 370 278 L 375 283" stroke="#4a9020" stroke-width="1.5" fill="none"/>
+  <!-- SOL GIGANTE -->
+  <g>
+    <circle cx="1400" cy="120" r="180" fill="url(#sun-glow)"/>
+    <circle cx="1400" cy="120" r="95" fill="#ffeb3b"/>
+    <circle cx="1400" cy="120" r="85" fill="#fff9e6" opacity="0.6"/>
+    <!-- Raios do sol -->
+    <g opacity="0.4" stroke="#ffd54f" stroke-width="4" stroke-linecap="round">
+      <line x1="1400" y1="0" x2="1400" y2="25"/>
+      <line x1="1520" y1="120" x2="1580" y2="120"/>
+      <line x1="1485" y1="35" x2="1535" y2="15"/>
+      <line x1="1485" y1="205" x2="1535" y2="225"/>
+      <line x1="1315" y1="35" x2="1265" y2="15"/>
+      <line x1="1315" y1="205" x2="1265" y2="225"/>
+    </g>
   </g>
 
-  <!-- Textura sutil -->
-  <rect width="400" height="400" fill="white" opacity="0.02"/>
+  <!-- Montanhas distantes -->
+  <path d="M 0 400 Q 200 300 400 350 Q 600 280 800 330 Q 1000 260 1200 320 Q 1400 290 1600 350 L 1600 600 L 0 600 Z" fill="#9fa8a3" opacity="0.3"/>
+  <path d="M 0 450 Q 250 370 500 420 Q 750 350 1000 400 Q 1250 340 1600 410 L 1600 600 L 0 600 Z" fill="#7d8a7f" opacity="0.4"/>
+
+  <!-- Nuvens grandes e fofas -->
+  <g opacity="0.85">
+    <!-- Nuvem 1 -->
+    <ellipse cx="200" cy="100" rx="70" ry="40" fill="white"/>
+    <ellipse cx="150" cy="110" rx="55" ry="35" fill="white"/>
+    <ellipse cx="250" cy="105" rx="60" ry="38" fill="white"/>
+    <ellipse cx="190" cy="75" rx="50" ry="30" fill="white"/>
+    <ellipse cx="220" cy="80" rx="45" ry="28" fill="white"/>
+
+    <!-- Nuvem 2 -->
+    <ellipse cx="600" cy="150" rx="80" ry="45" fill="white"/>
+    <ellipse cx="540" cy="165" rx="60" ry="38" fill="white"/>
+    <ellipse cx="660" cy="160" rx="65" ry="40" fill="white"/>
+    <ellipse cx="590" cy="125" rx="55" ry="32" fill="white"/>
+
+    <!-- Nuvem 3 -->
+    <ellipse cx="1000" cy="80" rx="75" ry="42" fill="white"/>
+    <ellipse cx="950" cy="95" rx="58" ry="36" fill="white"/>
+    <ellipse cx="1050" cy="90" rx="62" ry="39" fill="white"/>
+    <ellipse cx="990" cy="60" rx="50" ry="30" fill="white"/>
+  </g>
+
+  <!-- Pássaros voando -->
+  <g opacity="0.5" stroke="#2c3e50" stroke-width="2.5" fill="none" stroke-linecap="round">
+    <path d="M 350 180 Q 345 175 340 180">
+      <animateTransform attributeName="transform" type="translate" from="0 0" to="300 -40" dur="35s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 360 185 Q 355 180 350 185">
+      <animateTransform attributeName="transform" type="translate" from="0 0" to="300 -40" dur="35s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 370 178 Q 365 173 360 178">
+      <animateTransform attributeName="transform" type="translate" from="0 0" to="300 -40" dur="35s" repeatCount="indefinite"/>
+    </path>
+  </g>
+
+  <!-- Campo de grama -->
+  <rect y="600" width="1600" height="200" fill="url(#grass)"/>
+
+  <!-- ÁRVORES GRANDES - Esquerda -->
+  <g>
+    <!-- Árvore 1 -->
+    <rect x="60" y="480" width="35" height="150" fill="#5d4037" rx="8"/>
+    <rect x="65" y="490" width="8" height="60" fill="#4e342e"/>
+    <ellipse cx="77" cy="460" rx="85" ry="90" fill="url(#tree-leaves)"/>
+    <ellipse cx="55" cy="475" rx="70" ry="75" fill="#558b2f" opacity="0.8"/>
+    <ellipse cx="100" cy="470" rx="65" ry="70" fill="#689f38" opacity="0.7"/>
+    <circle cx="60" cy="440" r="25" fill="#7cb342" opacity="0.6"/>
+    <circle cx="95" cy="450" r="22" fill="#8bc34a" opacity="0.5"/>
+
+    <!-- Árvore 2 -->
+    <rect x="180" y="500" width="30" height="130" fill="#5d4037" rx="7"/>
+    <rect x="185" y="510" width="7" height="50" fill="#4e342e"/>
+    <ellipse cx="195" cy="485" rx="75" ry="80" fill="url(#tree-leaves)"/>
+    <ellipse cx="175" cy="495" rx="60" ry="65" fill="#558b2f" opacity="0.8"/>
+    <ellipse cx="215" cy="490" rx="58" ry="62" fill="#689f38" opacity="0.7"/>
+  </g>
+
+  <!-- ÁRVORES GRANDES - Direita -->
+  <g>
+    <!-- Árvore 3 -->
+    <rect x="1420" y="490" width="32" height="140" fill="#5d4037" rx="7"/>
+    <rect x="1425" y="500" width="7" height="55" fill="#4e342e"/>
+    <ellipse cx="1436" cy="470" rx="80" ry="85" fill="url(#tree-leaves)"/>
+    <ellipse cx="1415" cy="485" rx="65" ry="70" fill="#558b2f" opacity="0.8"/>
+    <ellipse cx="1458" cy="480" rx="62" ry="68" fill="#689f38" opacity="0.7"/>
+
+    <!-- Árvore 4 -->
+    <rect x="1520" y="510" width="28" height="120" fill="#5d4037" rx="6"/>
+    <ellipse cx="1534" cy="495" rx="70" ry="75" fill="url(#tree-leaves)"/>
+    <ellipse cx="1515" cy="505" rx="55" ry="60" fill="#558b2f" opacity="0.8"/>
+  </g>
+
+  <!-- MOINHO Medieval -->
+  <g>
+    <!-- Base do moinho -->
+    <path d="M 1200 520 L 1180 630 L 1280 630 L 1260 520 Z" fill="#8d6e63"/>
+    <path d="M 1200 520 L 1180 630 L 1230 630 L 1220 520 Z" fill="#a1887f" opacity="0.6"/>
+    <!-- Telhado cônico -->
+    <path d="M 1170 520 L 1230 450 L 1290 520 Z" fill="#d32f2f"/>
+    <path d="M 1170 520 L 1230 450 L 1230 520 Z" fill="#c62828" opacity="0.7"/>
+    <!-- Janelas -->
+    <rect x="1210" y="560" width="20" height="25" fill="#5d4037" rx="2"/>
+    <rect x="1210" y="595" width="20" height="25" fill="#5d4037" rx="2"/>
+    <!-- Pás do moinho -->
+    <g transform="translate(1230, 470)">
+      <rect x="-8" y="-60" width="16" height="120" fill="#6d4c41" rx="4">
+        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="8s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="-60" y="-8" width="120" height="16" fill="#795548" rx="4">
+        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="8s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+    <circle cx="1230" cy="470" r="12" fill="#4e342e"/>
+  </g>
+
+  <!-- CERCA Medieval -->
+  <g fill="#795548" opacity="0.7">
+    <!-- Cerca horizontal superior -->
+    <rect y="615" width="1600" height="8" fill="#6d4c41"/>
+    <rect y="640" width="1600" height="8" fill="#6d4c41"/>
+    <!-- Estacas verticais -->
+    <rect x="0" y="605" width="12" height="50" rx="2"/>
+    <rect x="80" y="605" width="12" height="50" rx="2"/>
+    <rect x="160" y="605" width="12" height="50" rx="2"/>
+    <rect x="240" y="605" width="12" height="50" rx="2"/>
+    <rect x="320" y="605" width="12" height="50" rx="2"/>
+    <rect x="400" y="605" width="12" height="50" rx="2"/>
+    <rect x="480" y="605" width="12" height="50" rx="2"/>
+    <rect x="560" y="605" width="12" height="50" rx="2"/>
+    <rect x="640" y="605" width="12" height="50" rx="2"/>
+    <rect x="720" y="605" width="12" height="50" rx="2"/>
+    <rect x="800" y="605" width="12" height="50" rx="2"/>
+    <rect x="880" y="605" width="12" height="50" rx="2"/>
+    <rect x="960" y="605" width="12" height="50" rx="2"/>
+    <rect x="1040" y="605" width="12" height="50" rx="2"/>
+    <rect x="1120" y="605" width="12" height="50" rx="2"/>
+    <rect x="1200" y="605" width="12" height="50" rx="2"/>
+    <rect x="1280" y="605" width="12" height="50" rx="2"/>
+    <rect x="1360" y="605" width="12" height="50" rx="2"/>
+    <rect x="1440" y="605" width="12" height="50" rx="2"/>
+    <rect x="1520" y="605" width="12" height="50" rx="2"/>
+  </g>
+
+  <!-- Textura de grama detalhada -->
+  <g opacity="0.15">
+    <rect x="0" y="600" width="200" height="200" fill="#558b2f"/>
+    <rect x="400" y="600" width="200" height="200" fill="#558b2f"/>
+    <rect x="800" y="600" width="200" height="200" fill="#558b2f"/>
+    <rect x="1200" y="600" width="200" height="200" fill="#558b2f"/>
+  </g>
+
+  <!-- Flores no campo -->
+  <g opacity="0.75">
+    <!-- Flores amarelas -->
+    <circle cx="300" cy="670" r="4" fill="#ffeb3b"/>
+    <circle cx="450" cy="690" r="4" fill="#ffd54f"/>
+    <circle cx="600" cy="675" r="4" fill="#ffeb3b"/>
+    <circle cx="750" cy="695" r="4" fill="#ffd54f"/>
+    <circle cx="900" cy="685" r="4" fill="#ffeb3b"/>
+    <circle cx="1050" cy="700" r="4" fill="#ffd54f"/>
+    <circle cx="350" cy="720" r="4" fill="#ffeb3b"/>
+    <circle cx="500" cy="735" r="4" fill="#ffd54f"/>
+    <circle cx="650" cy="715" r="4" fill="#ffeb3b"/>
+
+    <!-- Flores vermelhas -->
+    <circle cx="380" cy="680" r="4" fill="#e57373"/>
+    <circle cx="530" cy="700" r="4" fill="#ef5350"/>
+    <circle cx="680" cy="690" r="4" fill="#e57373"/>
+    <circle cx="830" cy="710" r="4" fill="#ef5350"/>
+    <circle cx="980" cy="695" r="4" fill="#e57373"/>
+
+    <!-- Flores roxas -->
+    <circle cx="420" cy="665" r="4" fill="#ba68c8"/>
+    <circle cx="570" cy="685" r="4" fill="#ab47bc"/>
+    <circle cx="720" cy="705" r="4" fill="#ba68c8"/>
+    <circle cx="870" cy="725" r="4" fill="#ab47bc"/>
+  </g>
+
+  <!-- Tufos de grama abundantes -->
+  <g opacity="0.4" stroke="#558b2f" stroke-width="3" fill="none" stroke-linecap="round">
+    <path d="M 50 780 L 54 765 L 58 780"/>
+    <path d="M 120 775 L 124 760 L 128 775"/>
+    <path d="M 190 785 L 194 770 L 198 785"/>
+    <path d="M 260 778 L 264 763 L 268 778"/>
+    <path d="M 330 782 L 334 767 L 338 782"/>
+    <path d="M 400 776 L 404 761 L 408 776"/>
+    <path d="M 470 788 L 474 773 L 478 788"/>
+    <path d="M 540 780 L 544 765 L 548 780"/>
+    <path d="M 610 784 L 614 769 L 618 784"/>
+    <path d="M 680 777 L 684 762 L 688 777"/>
+    <path d="M 750 786 L 754 771 L 758 786"/>
+    <path d="M 820 779 L 824 764 L 828 779"/>
+    <path d="M 890 783 L 894 768 L 898 783"/>
+    <path d="M 960 781 L 964 766 L 968 781"/>
+    <path d="M 1030 787 L 1034 772 L 1038 787"/>
+    <path d="M 1100 775 L 1104 760 L 1108 775"/>
+    <path d="M 1170 782 L 1174 767 L 1178 782"/>
+    <path d="M 1240 778 L 1244 763 L 1248 778"/>
+    <path d="M 1310 785 L 1314 770 L 1318 785"/>
+    <path d="M 1380 780 L 1384 765 L 1388 780"/>
+    <path d="M 1450 776 L 1454 761 L 1458 776"/>
+    <path d="M 1520 784 L 1524 769 L 1528 784"/>
+  </g>
+
+  <!-- Terra cultivada -->
+  <rect y="800" width="1600" height="100" fill="url(#soil)"/>
+
+  <!-- Sulcos da terra -->
+  <g opacity="0.5">
+    <rect y="805" width="1600" height="18" fill="#5d4037" rx="2"/>
+    <rect y="830" width="1600" height="18" fill="#5d4037" rx="2"/>
+    <rect y="855" width="1600" height="18" fill="#5d4037" rx="2"/>
+    <rect y="880" width="1600" height="18" fill="#5d4037" rx="2"/>
+  </g>
+
+  <!-- Pedrinhas -->
+  <g opacity="0.3" fill="#795548">
+    <circle cx="250" cy="750" r="3"/>
+    <circle cx="480" cy="770" r="3.5"/>
+    <circle cx="710" cy="760" r="3"/>
+    <circle cx="940" cy="775" r="3.5"/>
+    <circle cx="1170" cy="765" r="3"/>
+    <circle cx="1400" cy="755" r="3.5"/>
+  </g>
+
+  <!-- Brilho solar geral -->
+  <rect width="1600" height="900" fill="url(#sun-glow)" opacity="0.03"/>
 </svg>

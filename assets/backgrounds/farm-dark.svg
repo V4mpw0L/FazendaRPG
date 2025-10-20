@@ -1,88 +1,414 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
-  <!-- Definições -->
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
   <defs>
-    <!-- Padrão de grama noturna -->
-    <pattern id="grass-dark" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-      <rect width="100" height="100" fill="#2d4435"/>
-      <rect x="0" y="0" width="50" height="50" fill="#1a2520" opacity="0.3"/>
-      <rect x="50" y="50" width="50" height="50" fill="#1a2520" opacity="0.3"/>
-      <circle cx="20" cy="30" r="2" fill="#3d5043" opacity="0.4"/>
-      <circle cx="65" cy="75" r="2" fill="#3d5043" opacity="0.4"/>
-      <circle cx="80" cy="20" r="2" fill="#3d5043" opacity="0.4"/>
-      <circle cx="35" cy="85" r="2" fill="#3d5043" opacity="0.4"/>
-    </pattern>
-
-    <!-- Padrão de terra cultivada noturna -->
-    <pattern id="soil-dark" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-      <rect width="100" height="100" fill="#4a3218"/>
-      <rect x="5" y="5" width="90" height="20" fill="#5a3d1f" opacity="0.5"/>
-      <rect x="5" y="30" width="90" height="20" fill="#5a3d1f" opacity="0.5"/>
-      <rect x="5" y="55" width="90" height="20" fill="#5a3d1f" opacity="0.5"/>
-      <rect x="5" y="80" width="90" height="20" fill="#5a3d1f" opacity="0.5"/>
-      <circle cx="15" cy="15" r="1.5" fill="#3d2816" opacity="0.6"/>
-      <circle cx="45" cy="40" r="1.5" fill="#3d2816" opacity="0.6"/>
-      <circle cx="75" cy="65" r="1.5" fill="#3d2816" opacity="0.6"/>
-      <circle cx="25" cy="90" r="1.5" fill="#3d2816" opacity="0.6"/>
-      <circle cx="85" cy="25" r="1.5" fill="#3d2816" opacity="0.6"/>
-    </pattern>
-
     <!-- Gradiente do céu noturno -->
-    <linearGradient id="sky-dark" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#0a1929;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#1a2838;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#243329;stop-opacity:1" />
+    <linearGradient id="sky-night" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0e27;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1a1f3a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#141b2d;stop-opacity:1" />
     </linearGradient>
 
-    <!-- Lua -->
+    <!-- Lua com brilho mágico -->
     <radialGradient id="moon-glow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" style="stop-color:#fff8dc;stop-opacity:0.9" />
-      <stop offset="70%" style="stop-color:#e8e0c8;stop-opacity:0.5" />
-      <stop offset="100%" style="stop-color:#e8e0c8;stop-opacity:0" />
+      <stop offset="0%" style="stop-color:#fff8dc;stop-opacity:0.6" />
+      <stop offset="40%" style="stop-color:#f5e6d3;stop-opacity:0.4" />
+      <stop offset="70%" style="stop-color:#e8dcc8;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#d4c9b0;stop-opacity:0" />
     </radialGradient>
 
-    <!-- Estrela -->
+    <!-- Gradientes de terra noturna -->
+    <linearGradient id="grass-night" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2d4435;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a2920;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="soil-night" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3e2723;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2c1810;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Copa das árvores noturna -->
+    <radialGradient id="tree-leaves-night" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#2e5c3f;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#1e3a2a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f1f15;stop-opacity:0.9" />
+    </radialGradient>
+
+    <!-- Estrela brilhante -->
     <g id="star">
-      <circle cx="0" cy="0" r="1.5" fill="white" opacity="0.9">
-        <animate attributeName="opacity" values="0.9;0.5;0.9" dur="3s" repeatCount="indefinite"/>
+      <circle cx="0" cy="0" r="2.5" fill="white" opacity="0.95">
+        <animate attributeName="opacity" values="0.95;0.5;0.95" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="0" cy="0" r="5" fill="white" opacity="0.3">
+        <animate attributeName="opacity" values="0.3;0.1;0.3" dur="3s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+
+    <!-- Estrela pequena -->
+    <g id="star-small">
+      <circle cx="0" cy="0" r="1.8" fill="white" opacity="0.85">
+        <animate attributeName="opacity" values="0.85;0.4;0.85" dur="4s" repeatCount="indefinite"/>
       </circle>
     </g>
   </defs>
 
   <!-- Céu noturno -->
-  <rect width="400" height="200" fill="url(#sky-dark)"/>
+  <rect width="1600" height="600" fill="url(#sky-night)"/>
 
-  <!-- Lua -->
-  <circle cx="320" cy="60" r="35" fill="url(#moon-glow)"/>
-  <circle cx="320" cy="60" r="25" fill="#fff8dc" opacity="0.85"/>
-  <ellipse cx="315" cy="55" rx="5" ry="7" fill="#e8e0c8" opacity="0.3"/>
-  <ellipse cx="325" cy="65" rx="4" ry="6" fill="#e8e0c8" opacity="0.3"/>
+  <!-- LUA GIGANTE E BRILHANTE -->
+  <g>
+    <circle cx="1400" cy="120" r="220" fill="url(#moon-glow)"/>
+    <circle cx="1400" cy="120" r="100" fill="#fff8dc" opacity="0.98"/>
+    <circle cx="1400" cy="120" r="88" fill="#f5f0e6" opacity="0.7"/>
+    <!-- Crateras visíveis -->
+    <ellipse cx="1380" cy="100" rx="20" ry="26" fill="#e8dcc8" opacity="0.6"/>
+    <ellipse cx="1415" cy="135" rx="18" ry="24" fill="#e8dcc8" opacity="0.6"/>
+    <circle cx="1385" cy="145" r="12" fill="#d4c9b0" opacity="0.5"/>
+    <circle cx="1420" cy="105" r="10" fill="#d4c9b0" opacity="0.45"/>
+    <ellipse cx="1405" cy="125" rx="8" ry="11" fill="#e8dcc8" opacity="0.4"/>
+    <circle cx="1395" cy="115" r="6" fill="#d4c9b0" opacity="0.35"/>
+    <!-- Brilho da lua -->
+    <circle cx="1380" cy="100" r="25" fill="white" opacity="0.15"/>
+  </g>
 
-  <!-- Estrelas -->
-  <use href="#star" x="50" y="40"/>
-  <use href="#star" x="120" y="30"/>
-  <use href="#star" x="180" y="50"/>
-  <use href="#star" x="90" y="70"/>
-  <use href="#star" x="230" y="35"/>
-  <use href="#star" x="280" y="80"/>
-  <use href="#star" x="150" y="65"/>
-  <use href="#star" x="350" y="45"/>
-  <use href="#star" x="70" y="85"/>
-  <use href="#star" x="200" y="75"/>
-  <use href="#star" x="260" y="55"/>
-  <use href="#star" x="380" y="70"/>
+  <!-- CONSTELAÇÕES E ESTRELAS -->
+  <!-- Estrelas grandes -->
+  <use href="#star" x="120" y="60"/>
+  <use href="#star" x="280" y="130"/>
+  <use href="#star" x="440" y="90"/>
+  <use href="#star" x="600" y="170"/>
+  <use href="#star" x="760" y="110"/>
+  <use href="#star" x="920" y="200"/>
+  <use href="#star" x="1080" y="150"/>
+  <use href="#star" x="1240" y="240"/>
+  <use href="#star" x="180" y="220"/>
+  <use href="#star" x="340" y="300"/>
+  <use href="#star" x="500" y="260"/>
+  <use href="#star" x="660" y="340"/>
+  <use href="#star" x="820" y="380"/>
+  <use href="#star" x="980" y="420"/>
+  <use href="#star" x="1140" y="460"/>
 
-  <!-- Campo (parte de cima - grama noturna) -->
-  <rect y="200" width="400" height="100" fill="url(#grass-dark)"/>
+  <!-- Estrelas médias -->
+  <use href="#star-small" x="80" y="100"/>
+  <use href="#star-small" x="200" y="160"/>
+  <use href="#star-small" x="320" y="120"/>
+  <use href="#star-small" x="440" y="200"/>
+  <use href="#star-small" x="560" y="140"/>
+  <use href="#star-small" x="680" y="240"/>
+  <use href="#star-small" x="800" y="180"/>
+  <use href="#star-small" x="920" y="300"/>
+  <use href="#star-small" x="1040" y="220"/>
+  <use href="#star-small" x="1160" y="340"/>
+  <use href="#star-small" x="1280" y="280"/>
+  <use href="#star-small" x="150" y="280"/>
+  <use href="#star-small" x="270" y="360"/>
+  <use href="#star-small" x="390" y="400"/>
+  <use href="#star-small" x="510" y="440"/>
+  <use href="#star-small" x="630" y="480"/>
+  <use href="#star-small" x="750" y="520"/>
+  <use href="#star-small" x="870" y="500"/>
+  <use href="#star-small" x="990" y="540"/>
 
-  <!-- Terra cultivada noturna (parte de baixo) -->
-  <rect y="300" width="400" height="100" fill="url(#soil-dark)"/>
+  <!-- Via Láctea sutil -->
+  <ellipse cx="400" cy="300" rx="300" ry="500" fill="white" opacity="0.03" transform="rotate(-25 400 300)"/>
 
-  <!-- Linha de separação suave -->
-  <rect y="298" width="400" height="4" fill="#3d5043" opacity="0.4"/>
+  <!-- Montanhas distantes sob luar -->
+  <path d="M 0 400 Q 200 300 400 350 Q 600 280 800 330 Q 1000 260 1200 320 Q 1400 290 1600 350 L 1600 600 L 0 600 Z" fill="#1a2328" opacity="0.4"/>
+  <path d="M 0 450 Q 250 370 500 420 Q 750 350 1000 400 Q 1250 340 1600 410 L 1600 600 L 0 600 Z" fill="#243338" opacity="0.5"/>
 
-  <!-- Brilho suave da lua no campo -->
-  <rect y="200" width="400" height="200" fill="white" opacity="0.015"/>
+  <!-- Brilho da lua nas montanhas -->
+  <ellipse cx="1400" cy="400" rx="350" ry="80" fill="#fff8dc" opacity="0.04"/>
 
-  <!-- Textura sutil -->
-  <rect width="400" height="400" fill="black" opacity="0.05"/>
+  <!-- Nuvens noturnas translúcidas -->
+  <g opacity="0.25">
+    <ellipse cx="250" cy="180" rx="75" ry="40" fill="#2c3e50"/>
+    <ellipse cx="200" cy="190" rx="60" ry="35" fill="#2c3e50"/>
+    <ellipse cx="300" cy="185" rx="65" ry="38" fill="#2c3e50"/>
+    <ellipse cx="240" cy="160" rx="50" ry="28" fill="#34495e"/>
+
+    <ellipse cx="900" cy="250" rx="80" ry="45" fill="#2c3e50"/>
+    <ellipse cx="850" cy="265" rx="60" ry="38" fill="#2c3e50"/>
+    <ellipse cx="950" cy="260" rx="65" ry="40" fill="#2c3e50"/>
+  </g>
+
+  <!-- Morcegos voando -->
+  <g opacity="0.6" fill="#1a1a2e">
+    <path d="M 600 320 Q 595 315 590 320 Q 585 315 580 320">
+      <animateTransform attributeName="transform" type="translate" from="0 0" to="-400 -80" dur="30s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 650 340 Q 645 335 640 340 Q 635 335 630 340">
+      <animateTransform attributeName="transform" type="translate" from="0 0" to="-380 -70" dur="28s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 620 360 Q 615 355 610 360 Q 605 355 600 360">
+      <animateTransform attributeName="transform" type="translate" from="0 0" to="-390 -75" dur="32s" repeatCount="indefinite"/>
+    </path>
+  </g>
+
+  <!-- Campo de grama noturna -->
+  <rect y="600" width="1600" height="200" fill="url(#grass-night)"/>
+
+  <!-- Brilho sutil da lua no campo -->
+  <ellipse cx="1400" cy="600" rx="550" ry="60" fill="#fff8dc" opacity="0.08"/>
+
+  <!-- ÁRVORES GRANDES - Esquerda (silhuetas escuras) -->
+  <g opacity="0.85">
+    <!-- Árvore 1 -->
+    <rect x="60" y="480" width="35" height="150" fill="#1a1a1a" rx="8"/>
+    <ellipse cx="77" cy="460" rx="85" ry="90" fill="url(#tree-leaves-night)"/>
+    <ellipse cx="55" cy="475" rx="70" ry="75" fill="#1e3a2a" opacity="0.9"/>
+    <ellipse cx="100" cy="470" rx="65" ry="70" fill="#2d4435" opacity="0.8"/>
+    <circle cx="60" cy="440" r="25" fill="#2e5c3f" opacity="0.7"/>
+
+    <!-- Árvore 2 -->
+    <rect x="180" y="500" width="30" height="130" fill="#1a1a1a" rx="7"/>
+    <ellipse cx="195" cy="485" rx="75" ry="80" fill="url(#tree-leaves-night)"/>
+    <ellipse cx="175" cy="495" rx="60" ry="65" fill="#1e3a2a" opacity="0.9"/>
+    <ellipse cx="215" cy="490" rx="58" ry="62" fill="#2d4435" opacity="0.8"/>
+  </g>
+
+  <!-- ÁRVORES GRANDES - Direita (silhuetas escuras) -->
+  <g opacity="0.85">
+    <!-- Árvore 3 -->
+    <rect x="1420" y="490" width="32" height="140" fill="#1a1a1a" rx="7"/>
+    <ellipse cx="1436" cy="470" rx="80" ry="85" fill="url(#tree-leaves-night)"/>
+    <ellipse cx="1415" cy="485" rx="65" ry="70" fill="#1e3a2a" opacity="0.9"/>
+    <ellipse cx="1458" cy="480" rx="62" ry="68" fill="#2d4435" opacity="0.8"/>
+
+    <!-- Árvore 4 -->
+    <rect x="1520" y="510" width="28" height="120" fill="#1a1a1a" rx="6"/>
+    <ellipse cx="1534" cy="495" rx="70" ry="75" fill="url(#tree-leaves-night)"/>
+    <ellipse cx="1515" cy="505" rx="55" ry="60" fill="#1e3a2a" opacity="0.9"/>
+  </g>
+
+  <!-- MOINHO Medieval (silhueta escura) -->
+  <g opacity="0.75">
+    <path d="M 1200 520 L 1180 630 L 1280 630 L 1260 520 Z" fill="#2c1810"/>
+    <path d="M 1200 520 L 1180 630 L 1230 630 L 1220 520 Z" fill="#3e2723" opacity="0.6"/>
+    <path d="M 1170 520 L 1230 450 L 1290 520 Z" fill="#5d4037"/>
+    <path d="M 1170 520 L 1230 450 L 1230 520 Z" fill="#4e342e" opacity="0.7"/>
+    <rect x="1210" y="560" width="20" height="25" fill="#1a1a1a" rx="2"/>
+    <rect x="1210" y="595" width="20" height="25" fill="#1a1a1a" rx="2"/>
+    <!-- Luz da janela -->
+    <rect x="1212" y="562" width="16" height="21" fill="#ff9800" opacity="0.6" rx="1">
+      <animate attributeName="opacity" values="0.6;0.4;0.6" dur="4s" repeatCount="indefinite"/>
+    </rect>
+    <!-- Pás do moinho -->
+    <g transform="translate(1230, 470)">
+      <rect x="-8" y="-60" width="16" height="120" fill="#3e2723" rx="4">
+        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="12s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="-60" y="-8" width="120" height="16" fill="#4e342e" rx="4">
+        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="12s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+    <circle cx="1230" cy="470" r="12" fill="#2c1810"/>
+  </g>
+
+  <!-- CERCA Medieval (silhueta) -->
+  <g fill="#3e2723" opacity="0.65">
+    <rect y="615" width="1600" height="8" fill="#2c1810"/>
+    <rect y="640" width="1600" height="8" fill="#2c1810"/>
+    <rect x="0" y="605" width="12" height="50" rx="2"/>
+    <rect x="80" y="605" width="12" height="50" rx="2"/>
+    <rect x="160" y="605" width="12" height="50" rx="2"/>
+    <rect x="240" y="605" width="12" height="50" rx="2"/>
+    <rect x="320" y="605" width="12" height="50" rx="2"/>
+    <rect x="400" y="605" width="12" height="50" rx="2"/>
+    <rect x="480" y="605" width="12" height="50" rx="2"/>
+    <rect x="560" y="605" width="12" height="50" rx="2"/>
+    <rect x="640" y="605" width="12" height="50" rx="2"/>
+    <rect x="720" y="605" width="12" height="50" rx="2"/>
+    <rect x="800" y="605" width="12" height="50" rx="2"/>
+    <rect x="880" y="605" width="12" height="50" rx="2"/>
+    <rect x="960" y="605" width="12" height="50" rx="2"/>
+    <rect x="1040" y="605" width="12" height="50" rx="2"/>
+    <rect x="1120" y="605" width="12" height="50" rx="2"/>
+    <rect x="1200" y="605" width="12" height="50" rx="2"/>
+    <rect x="1280" y="605" width="12" height="50" rx="2"/>
+    <rect x="1360" y="605" width="12" height="50" rx="2"/>
+    <rect x="1440" y="605" width="12" height="50" rx="2"/>
+    <rect x="1520" y="605" width="12" height="50" rx="2"/>
+  </g>
+
+  <!-- Textura de grama noturna -->
+  <g opacity="0.2">
+    <rect x="0" y="600" width="200" height="200" fill="#1a2920"/>
+    <rect x="400" y="600" width="200" height="200" fill="#1a2920"/>
+    <rect x="800" y="600" width="200" height="200" fill="#1a2920"/>
+    <rect x="1200" y="600" width="200" height="200" fill="#1a2920"/>
+  </g>
+
+  <!-- VAGA-LUMES MÁGICOS (muitos!) -->
+  <g opacity="0.8">
+    <circle cx="120" cy="650" r="4" fill="#9acd32">
+      <animate attributeName="opacity" values="0.9;0.2;0.9" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="280" cy="680" r="4" fill="#adff2f">
+      <animate attributeName="opacity" values="0.2;0.9;0.2" dur="2.4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="440" cy="665" r="4" fill="#9acd32">
+      <animate attributeName="opacity" values="0.6;0.9;0.6" dur="1.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="600" cy="690" r="4" fill="#adff2f">
+      <animate attributeName="opacity" values="0.3;0.8;0.3" dur="2.6s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="760" cy="675" r="4" fill="#9acd32">
+      <animate attributeName="opacity" values="0.8;0.3;0.8" dur="2.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="920" cy="700" r="4" fill="#adff2f">
+      <animate attributeName="opacity" values="0.4;0.9;0.4" dur="2.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1080" cy="685" r="4" fill="#9acd32">
+      <animate attributeName="opacity" values="0.7;0.2;0.7" dur="2.3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1240" cy="695" r="4" fill="#adff2f">
+      <animate attributeName="opacity" values="0.5;0.9;0.5" dur="1.9s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1400" cy="670" r="4" fill="#9acd32">
+      <animate attributeName="opacity" values="0.9;0.4;0.9" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1520" cy="710" r="4" fill="#adff2f">
+      <animate attributeName="opacity" values="0.3;0.8;0.3" dur="2.1s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- Mais vaga-lumes -->
+    <circle cx="200" cy="720" r="4" fill="#adff2f">
+      <animate attributeName="opacity" values="0.7;0.3;0.7" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="360" cy="705" r="4" fill="#9acd32">
+      <animate attributeName="opacity" values="0.4;0.9;0.4" dur="2.7s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="520" cy="735" r="4" fill="#adff2f">
+      <animate attributeName="opacity" values="0.9;0.3;0.9" dur="2.9s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="680" cy="715" r="4" fill="#9acd32">
+      <animate attributeName="opacity" values="0.5;0.8;0.5" dur="3.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="840" cy="730" r="4" fill="#adff2f">
+      <animate attributeName="opacity" values="0.8;0.2;0.8" dur="2.4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1000" cy="725" r="4" fill="#9acd32">
+      <animate attributeName="opacity" values="0.6;0.9;0.6" dur="2.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1160" cy="740" r="4" fill="#adff2f">
+      <animate attributeName="opacity" values="0.3;0.8;0.3" dur="2.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1320" cy="720" r="4" fill="#9acd32">
+      <animate attributeName="opacity" values="0.7;0.4;0.7" dur="2.6s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- Vaga-lumes mais altos -->
+    <circle cx="90" cy="680" r="4" fill="#adff2f">
+      <animate attributeName="opacity" values="0.5;0.9;0.5" dur="3.1s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="250" cy="695" r="4" fill="#9acd32">
+      <animate attributeName="opacity" values="0.8;0.3;0.8" dur="2.3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="410" cy="710" r="4" fill="#adff2f">
+      <animate attributeName="opacity" values="0.4;0.9;0.4" dur="2.7s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="570" cy="700" r="4" fill="#9acd32">
+      <animate attributeName="opacity" values="0.9;0.4;0.9" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="730" cy="725" r="4" fill="#adff2f">
+      <animate attributeName="opacity" values="0.6;0.8;0.6" dur="2.9s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="890" cy="715" r="4" fill="#9acd32">
+      <animate attributeName="opacity" values="0.3;0.9;0.3" dur="3.3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1050" cy="735" r="4" fill="#adff2f">
+      <animate attributeName="opacity" values="0.7;0.2;0.7" dur="2.1s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1210" cy="708" r="4" fill="#9acd32">
+      <animate attributeName="opacity" values="0.5;0.8;0.5" dur="2.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1370" cy="730" r="4" fill="#adff2f">
+      <animate attributeName="opacity" values="0.9;0.3;0.9" dur="2.4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1490" cy="690" r="4" fill="#9acd32">
+      <animate attributeName="opacity" values="0.4;0.9;0.4" dur="2.6s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Tufos de grama (menos visíveis à noite) -->
+  <g opacity="0.3" stroke="#1e3a2a" stroke-width="3" fill="none" stroke-linecap="round">
+    <path d="M 50 780 L 54 765 L 58 780"/>
+    <path d="M 120 775 L 124 760 L 128 775"/>
+    <path d="M 190 785 L 194 770 L 198 785"/>
+    <path d="M 260 778 L 264 763 L 268 778"/>
+    <path d="M 330 782 L 334 767 L 338 782"/>
+    <path d="M 400 776 L 404 761 L 408 776"/>
+    <path d="M 470 788 L 474 773 L 478 788"/>
+    <path d="M 540 780 L 544 765 L 548 780"/>
+    <path d="M 610 784 L 614 769 L 618 784"/>
+    <path d="M 680 777 L 684 762 L 688 777"/>
+    <path d="M 750 786 L 754 771 L 758 786"/>
+    <path d="M 820 779 L 824 764 L 828 779"/>
+    <path d="M 890 783 L 894 768 L 898 783"/>
+    <path d="M 960 781 L 964 766 L 968 781"/>
+    <path d="M 1030 787 L 1034 772 L 1038 787"/>
+    <path d="M 1100 775 L 1104 760 L 1108 775"/>
+    <path d="M 1170 782 L 1174 767 L 1178 782"/>
+    <path d="M 1240 778 L 1244 763 L 1248 778"/>
+    <path d="M 1310 785 L 1314 770 L 1318 785"/>
+    <path d="M 1380 780 L 1384 765 L 1388 780"/>
+    <path d="M 1450 776 L 1454 761 L 1458 776"/>
+    <path d="M 1520 784 L 1524 769 L 1528 784"/>
+  </g>
+
+  <!-- Orvalho noturno brilhante -->
+  <g opacity="0.35">
+    <circle cx="150" cy="690" r="2.5" fill="#fff8dc">
+      <animate attributeName="opacity" values="0.35;0.1;0.35" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="320" cy="710" r="2.5" fill="#e8f5e0">
+      <animate attributeName="opacity" values="0.1;0.35;0.1" dur="4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="490" cy="695" r="2.5" fill="#fff8dc">
+      <animate attributeName="opacity" values="0.25;0.35;0.25" dur="3.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="660" cy="720" r="2.5" fill="#e8f5e0">
+      <animate attributeName="opacity" values="0.35;0.15;0.35" dur="2.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="830" cy="705" r="2.5" fill="#fff8dc">
+      <animate attributeName="opacity" values="0.2;0.35;0.2" dur="3.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1000" cy="730" r="2.5" fill="#e8f5e0">
+      <animate attributeName="opacity" values="0.35;0.1;0.35" dur="3.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1170" cy="715" r="2.5" fill="#fff8dc">
+      <animate attributeName="opacity" values="0.15;0.35;0.15" dur="3.3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1340" cy="735" r="2.5" fill="#e8f5e0">
+      <animate attributeName="opacity" values="0.35;0.2;0.35" dur="2.9s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1480" cy="700" r="2.5" fill="#fff8dc">
+      <animate attributeName="opacity" values="0.25;0.35;0.25" dur="3.6s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Terra cultivada noturna -->
+  <rect y="800" width="1600" height="100" fill="url(#soil-night)"/>
+
+  <!-- Sulcos da terra -->
+  <g opacity="0.6">
+    <rect y="805" width="1600" height="18" fill="#2c1810" rx="2"/>
+    <rect y="830" width="1600" height="18" fill="#2c1810" rx="2"/>
+    <rect y="855" width="1600" height="18" fill="#2c1810" rx="2"/>
+    <rect y="880" width="1600" height="18" fill="#2c1810" rx="2"/>
+  </g>
+
+  <!-- Névoa mágica noturna -->
+  <ellipse cx="400" cy="750" rx="200" ry="40" fill="#9acd32" opacity="0.02">
+    <animate attributeName="opacity" values="0.02;0.05;0.02" dur="6s" repeatCount="indefinite"/>
+  </ellipse>
+  <ellipse cx="900" cy="760" rx="220" ry="45" fill="#adff2f" opacity="0.03">
+    <animate attributeName="opacity" values="0.03;0.06;0.03" dur="7s" repeatCount="indefinite"/>
+  </ellipse>
+  <ellipse cx="1300" cy="755" rx="180" ry="38" fill="#9acd32" opacity="0.025">
+    <animate attributeName="opacity" values="0.025;0.055;0.025" dur="6.5s" repeatCount="indefinite"/>
+  </ellipse>
+
+  <!-- Textura noturna geral -->
+  <rect width="1600" height="900" fill="black" opacity="0.12"/>
 </svg>

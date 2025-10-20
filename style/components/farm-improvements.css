@@ -207,7 +207,7 @@
         rgba(255, 248, 220, 0.15),
         rgba(139, 105, 20, 0.2)
     );
-    border: 2px solid rgba(255, 248, 220, 0.3);
+    border: 2px solid var(--brand-primary);
     box-shadow:
         0 2px 6px rgba(0, 0, 0, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -253,25 +253,17 @@
    =================================== */
 
 /* Light Theme - Campo de Dia */
-.light-theme {
-    background:
-        url("../assets/backgrounds/farm-light.svg") repeat,
-        linear-gradient(to bottom, #f0f8ec 0%, #e6f4e0 100%);
-    background-size:
-        400px 400px,
-        cover;
-    background-attachment: fixed;
+body.light-theme {
+    background: url("../../assets/backgrounds/farm-light.svg") no-repeat center
+        center fixed !important;
+    background-size: cover !important;
 }
 
 /* Dark Theme - Campo de Noite */
-.dark-theme {
-    background:
-        url("../assets/backgrounds/farm-dark.svg") repeat,
-        linear-gradient(to bottom, #0f1813 0%, #1a2520 100%);
-    background-size:
-        400px 400px,
-        cover;
-    background-attachment: fixed;
+body.dark-theme {
+    background: url("../../assets/backgrounds/farm-dark.svg") no-repeat center
+        center fixed !important;
+    background-size: cover !important;
 }
 
 /* ===================================
