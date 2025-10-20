@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Game Engine
  * Main game engine that integrates all systems and manages game flow
- * @version 0.0.4
+ * @version 0.0.5
  */
 
 import Player from "./Player.js";
@@ -54,7 +54,7 @@ export default class GameEngine {
     }
 
     try {
-      console.log("🎮 Initializing FazendaRPG v0.0.4...");
+      console.log("🎮 Initializing FazendaRPG v0.0.5...");
 
       // Show loading overlay
       this.showLoading(true);

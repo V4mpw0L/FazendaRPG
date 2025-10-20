@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - NPCs UI
  * Manages NPC display and interactions
- * @version 0.0.4
+ * @version 0.0.5
  */
 
 export default class NPCSUI {

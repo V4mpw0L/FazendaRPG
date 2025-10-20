@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Main Application Entry Point
  * Initializes and starts the game engine
- * @version 0.0.4
+ * @version 0.0.5
  */
 
 import GameEngine from "./core/GameEngine.js";
@@ -17,7 +17,7 @@ window.FazendaRPG = {
  * Initialize application
  */
 async function init() {
-  console.log("🌾 FazendaRPG v0.0.4");
+  console.log("🌾 FazendaRPG v0.0.5");
   console.log("📅 Loading game...");
 
   try {

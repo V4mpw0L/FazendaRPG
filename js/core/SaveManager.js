@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Save Manager
  * Handles saving and loading game data with automatic backups and fallbacks
- * @version 0.0.4
+ * @version 0.0.5
  */
 
 import { safeJSONParse, safeJSONStringify, downloadFile, loadFile } from '../utils/helpers.js';
