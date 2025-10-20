@@ -20,6 +20,7 @@ import NPCSUI from "../ui/NPCSUI.js";
 import CityUI from "../ui/CityUI.js";
 import AvatarSelector from "../ui/AvatarSelector.js";
 import FertilizerAnimation from "../animations/FertilizerAnimation.js";
+import HarvestAnimation from "../animations/HarvestAnimation.js";
 import i18n from "../utils/i18n.js";
 import notifications from "../utils/notifications.js";
 
@@ -146,6 +147,9 @@ export default class GameEngine {
 
       // Initialize Fertilizer Animation
       this.fertilizerAnimation = new FertilizerAnimation();
+
+      // Initialize Harvest Animation
+      this.harvestAnimation = new HarvestAnimation();
 
       // Attach global event listeners
       this.attachEventListeners();
@@ -869,6 +873,14 @@ export default class GameEngine {
     const result = this.farmSystem.harvest(index);
 
     if (result.success) {
+      // Play harvest animation
+      const plotElement = document.querySelector(
+        `.farm-plot[data-index="${index}"]`,
+      );
+      if (plotElement && this.harvestAnimation) {
+        this.harvestAnimation.animate(plotElement);
+      }
+
       let message = `${i18n.t("farm.harvested")} +${result.amount}x ${result.crop}`;
 
       if (result.levelUp) {
@@ -1284,17 +1296,58 @@ export default class GameEngine {
    * Harvest all ready crops
    */
   harvestAll() {
+    // Collect all ready plot indices before harvesting
+    const readyPlots = [];
+    const plots = this.farmSystem.getPlots();
+    for (let i = 0; i < plots.length; i++) {
+      if (this.farmSystem.isPlotReady(i)) {
+        readyPlots.push(i);
+      }
+    }
+
+    // Check if there are plots to harvest
+    if (readyPlots.length === 0) {
+      notifications.info(i18n.t("farm.noCropsReady"));
+      return;
+    }
+
+    // DO HARVEST IMMEDIATELY (to prevent double-clicking)
     const result = this.farmSystem.harvestAll();
 
-    if (result.success) {
-      notifications.success(
-        i18n.t("notifications.harvestedMultiple", { count: result.harvested }),
-      );
+    if (!result.success) {
+      return;
+    }
+
+    // Show notification
+    notifications.success(
+      i18n.t("notifications.harvestedMultiple", {
+        count: result.harvested,
+      }),
+    );
+
+    // Play animations on the DOM elements (they still exist)
+    if (this.harvestAnimation) {
+      readyPlots.forEach((index, i) => {
+        const plotElement = document.querySelector(
+          `.farm-plot[data-index="${index}"]`,
+        );
+        if (plotElement) {
+          // Stagger animations slightly for visual effect
+          setTimeout(() => {
+            this.harvestAnimation.animate(plotElement);
+          }, i * 100);
+        }
+      });
+    }
+
+    // Calculate delay: last animation start time + animation duration
+    const animationDelay = readyPlots.length * 100 + 1300;
+
+    // RENDER UI AFTER animations complete
+    setTimeout(() => {
       this.renderFarm();
       this.topBar.update();
-    } else {
-      notifications.info(i18n.t("farm.noCropsReady"));
-    }
+    }, animationDelay);
   }
 
   /**

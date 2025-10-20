@@ -6,8 +6,7 @@
 
 export default class FertilizerAnimation {
   constructor() {
-    this.particles = [];
-    this.animationFrameId = null;
+    this.activeAnimations = new Set();
   }
 
   /**
@@ -28,15 +27,32 @@ export default class FertilizerAnimation {
 
     // Create particles
     const particleCount = 25;
-    this.particles = [];
+    const particles = [];
 
     for (let i = 0; i < particleCount; i++) {
-      const particle = this.createParticle(svg, centerX, centerY, i, particleCount);
-      this.particles.push(particle);
+      const particle = this.createParticle(
+        svg,
+        centerX,
+        centerY,
+        i,
+        particleCount,
+      );
+      particles.push(particle);
     }
 
+    // Create animation context
+    const animationContext = {
+      svg,
+      particles,
+      animationFrameId: null,
+      isComplete: false,
+    };
+
+    // Add to active animations
+    this.activeAnimations.add(animationContext);
+
     // Animate particles
-    this.animateParticles(svg);
+    this.animateParticles(animationContext);
   }
 
   /**
@@ -91,26 +107,40 @@ export default class FertilizerAnimation {
     const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
 
     // Create particle circle (fertilizer pellet)
-    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    const circle = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "circle",
+    );
     circle.setAttribute("cx", startX);
     circle.setAttribute("cy", startY);
     circle.setAttribute("r", size);
 
     // Brown color with slight variation
     const brownShade = 40 + Math.random() * 30;
-    circle.setAttribute("fill", `rgb(${brownShade + 40}, ${brownShade + 20}, ${brownShade})`);
+    circle.setAttribute(
+      "fill",
+      `rgb(${brownShade + 40}, ${brownShade + 20}, ${brownShade})`,
+    );
     circle.setAttribute("opacity", "0");
 
     // Add glow effect for depth
     const filterId = `glow-${index}-${Date.now()}`;
-    const defs = svg.querySelector("defs") || svg.appendChild(
-      document.createElementNS("http://www.w3.org/2000/svg", "defs")
-    );
+    const defs =
+      svg.querySelector("defs") ||
+      svg.appendChild(
+        document.createElementNS("http://www.w3.org/2000/svg", "defs"),
+      );
 
-    const filter = document.createElementNS("http://www.w3.org/2000/svg", "filter");
+    const filter = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "filter",
+    );
     filter.setAttribute("id", filterId);
 
-    const blur = document.createElementNS("http://www.w3.org/2000/svg", "feGaussianBlur");
+    const blur = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "feGaussianBlur",
+    );
     blur.setAttribute("in", "SourceGraphic");
     blur.setAttribute("stdDeviation", depth * 2);
 
@@ -144,18 +174,23 @@ export default class FertilizerAnimation {
 
   /**
    * Animate all particles
-   * @param {SVGElement} svg - SVG container
+   * @param {Object} animationContext - Animation context object
    */
-  animateParticles(svg) {
+  animateParticles(animationContext) {
     const startTime = Date.now();
 
     const animate = () => {
+      // Check if animation was cancelled
+      if (animationContext.isComplete) {
+        return;
+      }
+
       const currentTime = Date.now();
       const elapsed = currentTime - startTime;
 
       let allComplete = true;
 
-      this.particles.forEach((particle) => {
+      animationContext.particles.forEach((particle) => {
         const particleElapsed = elapsed - particle.delay;
 
         if (particleElapsed < 0) {
@@ -182,7 +217,7 @@ export default class FertilizerAnimation {
         if (progress < 0.1) {
           opacity = progress / 0.1;
         } else if (progress > 0.8) {
-          opacity = 1 - ((progress - 0.8) / 0.2);
+          opacity = 1 - (progress - 0.8) / 0.2;
         }
 
         // Calculate position with arc (parabolic trajectory)
@@ -196,7 +231,7 @@ export default class FertilizerAnimation {
         const rotation = particle.rotation + particle.rotationSpeed * eased;
 
         // Scale effect - particles get slightly larger as they get closer
-        const scale = 0.8 + (particle.depth * 0.4 * eased);
+        const scale = 0.8 + particle.depth * 0.4 * eased;
 
         // Apply transformations
         particle.element.setAttribute("cx", x);
@@ -207,15 +242,15 @@ export default class FertilizerAnimation {
         // 3D perspective transform
         particle.group.setAttribute(
           "transform",
-          `rotate(${rotation} ${x} ${y})`
+          `rotate(${rotation} ${x} ${y})`,
         );
       });
 
       if (!allComplete) {
-        this.animationFrameId = requestAnimationFrame(animate);
+        animationContext.animationFrameId = requestAnimationFrame(animate);
       } else {
         // Animation complete - cleanup
-        this.cleanup(svg);
+        this.cleanup(animationContext);
       }
     };
 
@@ -224,30 +259,36 @@ export default class FertilizerAnimation {
 
   /**
    * Clean up animation
-   * @param {SVGElement} svg - SVG container to remove
+   * @param {Object} animationContext - Animation context to remove
    */
-  cleanup(svg) {
-    if (this.animationFrameId) {
-      cancelAnimationFrame(this.animationFrameId);
-      this.animationFrameId = null;
+  cleanup(animationContext) {
+    // Mark as complete
+    animationContext.isComplete = true;
+
+    // Cancel animation frame
+    if (animationContext.animationFrameId) {
+      cancelAnimationFrame(animationContext.animationFrameId);
+      animationContext.animationFrameId = null;
     }
 
+    // Remove from active animations
+    this.activeAnimations.delete(animationContext);
+
+    // Remove SVG from DOM
     setTimeout(() => {
-      if (svg && svg.parentNode) {
-        svg.parentNode.removeChild(svg);
+      if (animationContext.svg && animationContext.svg.parentNode) {
+        animationContext.svg.parentNode.removeChild(animationContext.svg);
       }
     }, 100);
-
-    this.particles = [];
   }
 
   /**
-   * Cancel ongoing animation
+   * Cancel all ongoing animations
    */
-  cancel() {
-    if (this.animationFrameId) {
-      cancelAnimationFrame(this.animationFrameId);
-      this.animationFrameId = null;
-    }
+  cancelAll() {
+    this.activeAnimations.forEach((animationContext) => {
+      this.cleanup(animationContext);
+    });
+    this.activeAnimations.clear();
   }
 }
