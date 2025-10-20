@@ -38,7 +38,8 @@
     "harvested": "Colhido!",
     "timeRemaining": "Tempo restante",
     "noSeeds": "Sem sementes disponíveis",
-    "noCropsReady": "Nenhum cultivo pronto para colher"
+    "noCropsReady": "Nenhum cultivo pronto para colher",
+    "noEmptyPlots": "Não há espaços vazios para plantar"
   },
   "skills": {
     "title": "Suas Habilidades",

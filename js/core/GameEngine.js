@@ -1215,7 +1215,7 @@ export default class GameEngine {
               amount: result.planted,
             });
           } else {
-            notifications.error(result.errors || "Cannot plant");
+            notifications.error(result.errors || i18n.t("farm.noEmptyPlots"));
           }
         });
       });
