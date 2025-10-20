@@ -26,7 +26,7 @@
 }
 
 .skill-card::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -57,7 +57,11 @@
 .skill-icon {
     width: 60px;
     height: 60px;
-    background: linear-gradient(135deg, var(--bg-accent) 0%, var(--bg-primary) 100%);
+    background: linear-gradient(
+        135deg,
+        var(--bg-accent) 0%,
+        var(--bg-primary) 100%
+    );
     border: 3px solid var(--skill-color, var(--brand-primary));
     border-radius: 50%;
     display: flex;
@@ -134,7 +138,7 @@
 }
 
 .skill-progress-fill::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -232,6 +236,29 @@
     transform: none !important;
 }
 
+/* Disabled Skills */
+.skill-card.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    filter: grayscale(0.7);
+}
+
+.skill-card.disabled:hover {
+    transform: none;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    border-color: var(--border-color);
+}
+
+.skill-card.disabled .skill-icon {
+    transform: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.skill-card.disabled:hover .skill-icon {
+    transform: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
 /* Skill Colors - RuneScape inspired */
 .skill-card[data-skill="farming"] {
     --skill-color: #5caa1f;
@@ -292,7 +319,8 @@
 }
 
 @keyframes milestonePulse {
-    0%, 100% {
+    0%,
+    100% {
         transform: scale(1);
         box-shadow: 0 4px 12px rgba(255, 215, 0, 0.5);
     }
@@ -325,7 +353,8 @@
 }
 
 @keyframes maxLevelShine {
-    0%, 100% {
+    0%,
+    100% {
         opacity: 0.5;
     }
     50% {

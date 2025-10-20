@@ -1166,6 +1166,12 @@ export default class GameEngine {
   createSkillCard(skill) {
     const card = document.createElement("div");
     card.className = "skill-card";
+
+    // Add disabled class for skills other than farming
+    if (skill.id !== "farming") {
+      card.classList.add("disabled");
+    }
+
     card.dataset.skill = skill.id;
     card.style.setProperty("--skill-color", skill.color);
     card.style.setProperty("--skill-color-light", skill.colorLight);
