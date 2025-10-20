@@ -27,7 +27,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    flex: 0 0 auto;
+    flex: 1 1 auto;
     min-width: 0;
 }
 
@@ -65,10 +65,10 @@
     border: 1px solid rgba(92, 170, 31, 0.4);
     box-shadow: 0 1px 3px var(--shadow-color);
     min-width: 110px;
-    max-width: 140px;
+    flex: 1 1 auto;
+    max-width: 180px;
     max-height: 50px;
     transition: all 0.3s ease;
-    flex: 0 0 auto;
 }
 
 .topbar-player:hover {
@@ -215,12 +215,11 @@
 /* Stats (Gold & Energy) */
 .topbar-stats {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     align-items: center;
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     justify-content: flex-end;
     overflow: hidden;
-    min-width: 0;
 }
 
 .topbar-stat {
@@ -589,14 +588,14 @@
 
     .topbar-player {
         min-width: 90px;
-        max-width: 110px;
+        flex: 1 1 auto;
+        max-width: 130px;
         padding: 4px 7px;
     }
 
     .topbar-stats {
         gap: 5px;
-        flex: 1 1 auto;
-        min-width: 0;
+        flex: 0 0 auto;
     }
 
     .topbar-stat {
