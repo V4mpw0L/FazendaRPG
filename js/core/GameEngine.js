@@ -564,7 +564,135 @@ export default class GameEngine {
       this.harvestPlot(index);
     } else if (this.farmSystem.isPlotEmpty(index)) {
       this.plantPlot(index);
+    } else if (this.farmSystem.isPlotGrowing(index)) {
+      this.showGrowingPlotOptions(index);
     }
+  }
+
+  /**
+   * Show options for growing plot (fertilize, etc)
+   * @param {number} index - Plot index
+   */
+  showGrowingPlotOptions(index) {
+    const plot = this.farmSystem.getPlot(index);
+    if (!plot || !plot.crop) return;
+
+    const cropData = this.farmSystem.getCropData(plot.crop);
+    const cropName = cropData?.namePtBR || cropData?.name || "Cultivo";
+    const icon = this.farmSystem.getCropStageIcon(index);
+    const timeRemaining = this.farmSystem.getTimeRemaining(index);
+    const progress = this.farmSystem.getGrowthProgress(index);
+    const isFertilized = plot.fertilized || false;
+
+    // Check for fertilizer in inventory
+    const fertilizers = this.inventorySystem
+      .getInventoryArray()
+      .filter((item) => item.id === "fertilizer");
+    const hasFertilizer = fertilizers.length > 0 && fertilizers[0].count > 0;
+
+    let optionsHTML = "";
+
+    if (hasFertilizer && !isFertilized) {
+      optionsHTML = `
+        <div class="growing-option" data-action="fertilize" style="
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          padding: 1rem;
+          border: 2px solid var(--border-color);
+          border-radius: 8px;
+          cursor: pointer;
+          transition: all 0.2s;
+          margin-bottom: 0.5rem;
+        ">
+          <div style="font-size: 2rem;">🌿</div>
+          <div style="flex: 1;">
+            <div style="font-weight: 600; color: var(--text-primary);">Usar Fertilizante</div>
+            <div style="font-size: 0.875rem; color: var(--text-secondary);">
+              Reduz o tempo de crescimento | Você tem: ${fertilizers[0].count}
+            </div>
+          </div>
+        </div>
+      `;
+    } else if (isFertilized) {
+      optionsHTML = `
+        <div style="
+          padding: 1rem;
+          border: 2px solid #5caa1f;
+          border-radius: 8px;
+          margin-bottom: 0.5rem;
+          background: rgba(92, 170, 31, 0.1);
+        ">
+          <div style="font-weight: 600; color: #5caa1f;">✓ Já fertilizado</div>
+          <div style="font-size: 0.875rem; color: var(--text-secondary);">
+            Este cultivo já está crescendo mais rápido!
+          </div>
+        </div>
+      `;
+    } else {
+      optionsHTML = `
+        <div style="
+          padding: 1rem;
+          border: 2px solid var(--border-color);
+          border-radius: 8px;
+          margin-bottom: 0.5rem;
+          opacity: 0.6;
+        ">
+          <div style="font-weight: 600; color: var(--text-secondary);">Sem fertilizante</div>
+          <div style="font-size: 0.875rem; color: var(--text-secondary);">
+            Compre fertilizante no mercado para acelerar o crescimento!
+          </div>
+        </div>
+      `;
+    }
+
+    const content = `
+      <div style="text-align: center; margin-bottom: 1.5rem;">
+        <div style="font-size: 4rem; margin-bottom: 0.5rem;">${icon}</div>
+        <h3 style="margin: 0.5rem 0; color: var(--text-primary);">${cropName}</h3>
+        <div style="font-size: 0.875rem; color: var(--text-secondary);">
+          ⏱️ ${this.formatTime(timeRemaining)} restante | 📊 ${Math.floor(progress)}% crescido
+        </div>
+      </div>
+      ${optionsHTML}
+      <style>
+        .growing-option:hover {
+          background: var(--bg-accent);
+          border-color: var(--brand-primary);
+          transform: translateX(4px);
+        }
+      </style>
+    `;
+
+    this.modal.show({
+      title: "🌱 Cultivo Crescendo",
+      content: content,
+      closable: true,
+      size: "small",
+    });
+
+    // Add click handler for fertilize option
+    setTimeout(() => {
+      const fertilizeOption = document.querySelector(
+        '.growing-option[data-action="fertilize"]',
+      );
+      if (fertilizeOption) {
+        fertilizeOption.addEventListener("click", () => {
+          this.modal.close();
+
+          const result = this.farmSystem.fertilize(index);
+          if (result.success) {
+            notifications.success(
+              "🌿 Fertilizante aplicado! Crescimento acelerado.",
+            );
+            this.renderFarm();
+            this.topBar.update();
+          } else {
+            notifications.error(result.error || "Não foi possível fertilizar");
+          }
+        });
+      }
+    }, 100);
   }
 
   /**

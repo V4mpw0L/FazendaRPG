@@ -668,7 +668,7 @@ export default class MarketUI {
       if (cropData && cropData.requiredLevel) {
         const playerLevel = this.skillSystem?.getLevel("farming") || 1;
         const canUse = playerLevel >= cropData.requiredLevel;
-        requiredLevelInfo = `<div class="market-item-level" style="font-size: 0.7rem; color: ${canUse ? "#4caf50" : "#ff6b6b"}; font-weight: 600; margin-top: 0.25rem;">${canUse ? "✓" : "🔒"} Nível ${cropData.requiredLevel}</div>`;
+        requiredLevelInfo = `<div class="market-item-level" style="font-size: 0.65rem; color: ${canUse ? "#4caf50" : "#ff6b6b"}; font-weight: 600; margin: 0.25rem 0; text-align: center;">${canUse ? "✓" : "🔒"} Nível ${cropData.requiredLevel}</div>`;
       }
     }
 
@@ -693,9 +693,9 @@ export default class MarketUI {
         <div class="market-item-name" title="${itemName}">${itemName}</div>
         <div class="market-item-price" style="color: #b8860b;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g</div>
         ${type === "sell" ? `<div class="market-item-stock">${i18n.t("market.youHave")}: ${stock}</div>` : ""}
-        ${requiredLevelInfo}
       </div>
       <div class="market-item-category" style="background: ${categoryColor};">${categoryName}</div>
+      ${requiredLevelInfo}
       <button class="market-item-action">${buttonIcon} ${buttonText}</button>
     `;
 

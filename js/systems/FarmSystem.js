@@ -114,6 +114,17 @@ export default class FarmSystem {
   }
 
   /**
+   * Check if plot is growing (has crop but not ready)
+   * @param {number} index - Plot index
+   * @returns {boolean} True if growing
+   */
+  isPlotGrowing(index) {
+    const plot = this.getPlot(index);
+    if (!plot || !plot.crop || !plot.plantedAt) return false;
+    return !this.isPlotReady(index);
+  }
+
+  /**
    * Check if plot is ready to harvest
    * @param {number} index - Plot index
    * @returns {boolean} True if ready
