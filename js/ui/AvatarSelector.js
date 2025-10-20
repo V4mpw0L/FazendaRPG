@@ -133,6 +133,12 @@ export default class AvatarSelector {
       topbarAvatarImg.src = avatarPath;
     }
 
+    // Update farm screen avatar
+    const farmAvatarImg = document.getElementById("farm-avatar-img");
+    if (farmAvatarImg) {
+      farmAvatarImg.src = avatarPath;
+    }
+
     // Save game
     this.gameEngine.saveGame();
 
@@ -182,12 +188,21 @@ export default class AvatarSelector {
     const avatarPath =
       this.gameEngine.player.data.avatar || "assets/sprites/avatars/11.png";
     console.log("🎨 Updating topbar avatar to:", avatarPath);
+
+    // Update topbar avatar
     const topbarAvatarImg = document.getElementById("topbar-avatar-img");
     if (topbarAvatarImg) {
       topbarAvatarImg.src = avatarPath;
       console.log("✅ Topbar avatar updated successfully");
     } else {
       console.error("❌ Topbar avatar img element not found!");
+    }
+
+    // Update farm screen avatar
+    const farmAvatarImg = document.getElementById("farm-avatar-img");
+    if (farmAvatarImg) {
+      farmAvatarImg.src = avatarPath;
+      console.log("✅ Farm avatar updated successfully");
     }
   }
 }

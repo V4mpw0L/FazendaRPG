@@ -752,6 +752,30 @@ button:focus-visible {
     position: relative;
 }
 
+#avatar-modal .modal-close-btn {
+    background: #e74c3c;
+    color: white;
+    border: 2px solid #c0392b;
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-weight: bold;
+    line-height: 1;
+    padding: 0;
+}
+
+#avatar-modal .modal-close-btn:hover {
+    background: #c0392b;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+}
+
 #avatar-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));

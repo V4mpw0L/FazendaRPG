@@ -1082,7 +1082,9 @@ export default class CityUI {
 
                 <div class="player-showcase">
                     <div style="text-align: center; margin-bottom: 1rem;">
-                        <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">👨‍🌾</div>
+                        <div style="width: 100px; height: 100px; margin: 0 auto 0.5rem; border-radius: 50%; overflow: hidden; border: 4px solid var(--brand-primary); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                            <img src="${this.player.data.avatar || "assets/sprites/avatars/11.png"}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
                         <h3 style="margin: 0 0 0.25rem 0; font-size: 1.5rem; color: var(--text-primary);">${playerName}</h3>
                         <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;">
                             ⭐ Fazendeiro Nível ${level}
