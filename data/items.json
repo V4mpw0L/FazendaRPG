@@ -218,8 +218,8 @@
       "category": "crops",
       "description": "Sweet strawberries bursting with flavor.",
       "descriptionPtBR": "Morangos doces repletos de sabor.",
-      "buyPrice": 70,
-      "sellPrice": 50,
+      "buyPrice": 100,
+      "sellPrice": 70,
       "stackable": true,
       "maxStack": 999
     },
@@ -245,7 +245,7 @@
       "category": "crops",
       "description": "Fresh eggplant with a mild flavor.",
       "descriptionPtBR": "Berinjela fresca com sabor suave.",
-      "buyPrice": 90,
+      "buyPrice": 110,
       "sellPrice": 65,
       "stackable": true,
       "maxStack": 999
@@ -299,8 +299,8 @@
       "category": "crops",
       "description": "Spicy pepper with vibrant color.",
       "descriptionPtBR": "Pimentão picante com cor vibrante.",
-      "buyPrice": 100,
-      "sellPrice": 75,
+      "buyPrice": 140,
+      "sellPrice": 110,
       "stackable": true,
       "maxStack": 999
     },

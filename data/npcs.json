@@ -26,6 +26,11 @@
           { "id": "tomato_seed", "stock": 999, "priceMultiplier": 1.0 },
           { "id": "potato_seed", "stock": 999, "priceMultiplier": 1.0 },
           { "id": "carrot_seed", "stock": 999, "priceMultiplier": 1.0 },
+          { "id": "pumpkin_seed", "stock": 999, "priceMultiplier": 1.0 },
+          { "id": "strawberry_seed", "stock": 999, "priceMultiplier": 1.0 },
+          { "id": "eggplant_seed", "stock": 999, "priceMultiplier": 1.0 },
+          { "id": "watermelon_seed", "stock": 999, "priceMultiplier": 1.0 },
+          { "id": "pepper_seed", "stock": 999, "priceMultiplier": 1.0 },
           { "id": "fertilizer", "stock": 50, "priceMultiplier": 1.0 }
         ]
       },

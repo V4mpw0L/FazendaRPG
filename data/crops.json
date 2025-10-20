@@ -97,7 +97,7 @@
       "energyCost": 8,
       "harvestAmount": 6,
       "stages": ["🌱", "🌿", "🍓"],
-      "sellPrice": 50
+      "sellPrice": 70
     },
     "watermelon": {
       "id": "watermelon",
@@ -139,7 +139,7 @@
       "energyCost": 11,
       "harvestAmount": 5,
       "stages": ["🌱", "🌿", "🌶️"],
-      "sellPrice": 75
+      "sellPrice": 110
     }
   }
 }
