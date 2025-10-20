@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Game Engine
  * Main game engine that integrates all systems and manages game flow
- * @version 0.0.5
+ * @version 0.0.6
  */
 
 import Player from "./Player.js";
@@ -18,6 +18,7 @@ import InventoryUI from "../ui/InventoryUI.js";
 import MarketUI from "../ui/MarketUI.js";
 import NPCSUI from "../ui/NPCSUI.js";
 import CityUI from "../ui/CityUI.js";
+import AvatarSelector from "../ui/AvatarSelector.js";
 import i18n from "../utils/i18n.js";
 import notifications from "../utils/notifications.js";
 
@@ -37,6 +38,7 @@ export default class GameEngine {
     this.marketUI = null;
     this.npcsUI = null;
     this.cityUI = null;
+    this.avatarSelector = null;
     this.initialized = false;
     this.running = false;
     this.lastUpdate = Date.now();
@@ -54,7 +56,7 @@ export default class GameEngine {
     }
 
     try {
-      console.log("🎮 Initializing FazendaRPG v0.0.5...");
+      console.log("🎮 Initializing FazendaRPG v0.0.6...");
 
       // Show loading overlay
       this.showLoading(true);
@@ -135,6 +137,10 @@ export default class GameEngine {
       );
       this.cityUI.init();
       this.cityUI.setMarketUI(this.marketUI);
+
+      // Initialize Avatar Selector
+      this.avatarSelector = new AvatarSelector(this);
+      this.avatarSelector.init();
 
       // Attach global event listeners
       this.attachEventListeners();
@@ -315,6 +321,11 @@ export default class GameEngine {
 
     // Render initial farm
     this.renderFarm();
+
+    // Update avatar in topbar
+    if (this.avatarSelector) {
+      this.avatarSelector.updateTopbarAvatar();
+    }
   }
 
   /**
@@ -361,6 +372,11 @@ export default class GameEngine {
     this.topBar.update();
     this.updateXPBar();
 
+    // Update avatar in topbar
+    if (this.avatarSelector) {
+      this.avatarSelector.updateTopbarAvatar();
+    }
+
     // Debug: Check player name
     console.log("🔍 Player name:", this.player.data.name);
   }
@@ -390,7 +406,7 @@ export default class GameEngine {
     const saveData = {
       player: this.player.getData(),
       savedAt: Date.now(),
-      version: "0.0.4",
+      version: "0.0.6",
     };
 
     const success = this.saveManager.save(saveData);
@@ -445,7 +461,7 @@ export default class GameEngine {
     const saveData = {
       player: this.player.getData(),
       exportedAt: Date.now(),
-      version: "0.0.4",
+      version: "0.0.6",
     };
 
     const success = this.saveManager.exportSave(saveData);

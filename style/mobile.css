@@ -732,3 +732,91 @@ button:focus-visible {
 .dark-theme .footer {
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.6);
 }
+
+/* ===================================
+   Avatar Selection Modal
+   =================================== */
+
+#avatar-modal {
+    z-index: 9999 !important;
+}
+
+#avatar-modal .modal-content {
+    max-width: 600px;
+    max-height: 80vh;
+    background: var(--bg-secondary);
+    border: 3px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-xl);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.8);
+    position: relative;
+}
+
+#avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.avatar-item {
+    cursor: pointer;
+    border: 3px solid transparent;
+    border-radius: 50%;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    aspect-ratio: 1/1;
+    background: var(--bg-accent);
+}
+
+.avatar-item:hover {
+    border-color: var(--border-color);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.avatar-item.selected {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 10px var(--brand-primary);
+}
+
+.avatar-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Scrollbar para o grid de avatares */
+#avatar-grid::-webkit-scrollbar {
+    width: 8px;
+}
+
+#avatar-grid::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+    border-radius: 4px;
+}
+
+#avatar-grid::-webkit-scrollbar-thumb {
+    background: var(--brand-primary);
+    border-radius: 4px;
+}
+
+#avatar-grid::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-tertiary);
+}
+
+/* Mobile adjustments for avatar modal */
+@media (max-width: 768px) {
+    #avatar-modal .modal-content {
+        max-width: 95%;
+    }
+
+    #avatar-grid {
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+        gap: 8px;
+        max-height: 300px;
+    }
+}

@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Player Class
  * Manages player data, stats, skills, inventory, and progression
- * @version 0.0.5
+ * @version 0.0.6
  */
 
 import {
@@ -23,6 +23,7 @@ export default class Player {
     return {
       // Basic Info
       name: "",
+      avatar: "assets/sprites/avatars/11.png", // Default avatar
       createdAt: Date.now(),
       lastSaved: Date.now(),
       playTime: 0, // in seconds
