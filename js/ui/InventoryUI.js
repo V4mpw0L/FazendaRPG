@@ -600,7 +600,8 @@ export default class InventoryUI {
         <p style="color: var(--text-secondary); font-size: 0.875rem;">${i18n.t("market.youHave")}: ${maxSellable}</p>
       </div>
 
-      <div style="margin: 1rem 0;">
+      <!-- SEÇÃO DE VENDA OCULTA - Jogador deve vender na cidade -->
+      <div style="display: none; margin: 1rem 0;">
         <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">
           ${i18n.t("market.quantity")}:
         </label>
@@ -614,14 +615,14 @@ export default class InventoryUI {
         >
       </div>
 
-      <div style="margin-top: 1rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;">
+      <div style="display: none;">
         <button class="quick-buy-btn" id="quick-1">1</button>
         <button class="quick-buy-btn" id="quick-25">25%</button>
         <button class="quick-buy-btn" id="quick-50">50%</button>
         <button class="quick-buy-btn" id="quick-max">${i18n.t("market.all")}</button>
       </div>
 
-      <div style="background: var(--bg-accent); padding: var(--spacing-md); border-radius: 8px; margin-top: var(--spacing-md); border: 2px solid var(--border-color);">
+      <div style="display: none; background: var(--bg-accent); padding: var(--spacing-md); border-radius: 8px; margin-top: var(--spacing-md); border: 2px solid var(--border-color);">
         <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.875rem;">
           <span>${i18n.t("market.willReceive")}:</span>
           <span id="preview-receive" style="font-weight: 700; color: #b8860b;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${sellPrice}g</span>
@@ -676,7 +677,8 @@ export default class InventoryUI {
       });
     }
 
-    // Add sell button
+    // BOTÃO VENDER OCULTO - Jogador deve vender na cidade
+    /*
     buttons.push({
       text: `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${i18n.t("market.sell")}`,
       class: "btn-success",
@@ -693,6 +695,7 @@ export default class InventoryUI {
         }
       },
     });
+    */
 
     this.modal.show({
       title: `📦 ${itemName}`,
