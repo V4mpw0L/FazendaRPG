@@ -19,6 +19,7 @@ import MarketUI from "../ui/MarketUI.js";
 import NPCSUI from "../ui/NPCSUI.js";
 import CityUI from "../ui/CityUI.js";
 import AvatarSelector from "../ui/AvatarSelector.js";
+import FertilizerAnimation from "../animations/FertilizerAnimation.js";
 import i18n from "../utils/i18n.js";
 import notifications from "../utils/notifications.js";
 
@@ -39,6 +40,7 @@ export default class GameEngine {
     this.npcsUI = null;
     this.cityUI = null;
     this.avatarSelector = null;
+    this.fertilizerAnimation = null;
     this.initialized = false;
     this.running = false;
     this.lastUpdate = Date.now();
@@ -141,6 +143,9 @@ export default class GameEngine {
       // Initialize Avatar Selector
       this.avatarSelector = new AvatarSelector(this);
       this.avatarSelector.init();
+
+      // Initialize Fertilizer Animation
+      this.fertilizerAnimation = new FertilizerAnimation();
 
       // Attach global event listeners
       this.attachEventListeners();
@@ -528,7 +533,7 @@ export default class GameEngine {
    */
   createFarmTile(index) {
     const tile = document.createElement("div");
-    tile.className = "farm-tile";
+    tile.className = "farm-tile farm-plot";
     tile.dataset.index = index;
 
     // Update tile appearance
@@ -978,7 +983,24 @@ export default class GameEngine {
       this.renderFarm();
     });
 
-    window.addEventListener("farm:fertilized", () => {
+    window.addEventListener("farm:fertilized", (event) => {
+      const plotIndex = event.detail?.index;
+
+      // Trigger animation if on farm screen
+      const farmScreen = document.getElementById("farm-screen");
+      if (
+        farmScreen &&
+        farmScreen.classList.contains("active") &&
+        plotIndex !== undefined
+      ) {
+        const plotElement = document.querySelector(
+          `.farm-plot[data-index="${plotIndex}"]`,
+        );
+        if (plotElement && this.fertilizerAnimation) {
+          this.fertilizerAnimation.animate(plotElement);
+        }
+      }
+
       this.renderFarm();
     });
 
