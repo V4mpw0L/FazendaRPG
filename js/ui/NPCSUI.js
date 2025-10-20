@@ -127,7 +127,7 @@ export default class NPCSUI {
     const description = npc.descriptionPtBR || npc.description;
 
     card.innerHTML = `
-            <div class="npc-avatar">${npc.avatar}</div>
+            <div class="npc-avatar" style="text-align: center;">${npc.avatar}</div>
             <div class="npc-info">
                 <h3 class="npc-name">${name}</h3>
                 <p class="npc-role">${role}</p>
