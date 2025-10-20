@@ -385,12 +385,77 @@ export default class CityUI {
         {
           text: "Fechar",
           class: "btn-secondary",
-          onClick: () => true,
+          onClick: () => {
+            this.stopBankTimerUpdate();
+            return true;
+          },
         },
       ],
       closable: true,
       size: "medium",
     });
+
+    // Start real-time timer update
+    this.startBankTimerUpdate();
+  }
+
+  /**
+   * Start bank timer real-time update
+   */
+  startBankTimerUpdate() {
+    // Clear any existing timer
+    this.stopBankTimerUpdate();
+
+    // Update immediately
+    this.updateBankTimer();
+
+    // Update every second
+    this.bankTimerInterval = setInterval(() => {
+      this.updateBankTimer();
+    }, 1000);
+  }
+
+  /**
+   * Stop bank timer update
+   */
+  stopBankTimerUpdate() {
+    if (this.bankTimerInterval) {
+      clearInterval(this.bankTimerInterval);
+      this.bankTimerInterval = null;
+    }
+  }
+
+  /**
+   * Update bank timer display
+   */
+  updateBankTimer() {
+    const timerValue = document.querySelector(".timer-value");
+    const interestPreview = document.querySelector(
+      ".interest-preview div:last-child",
+    );
+
+    if (!timerValue) return;
+
+    // Get fresh stats
+    const stats = this.bankSystem.getStats();
+    const balance = this.bankSystem.getBalance();
+
+    // Format time
+    const hoursLeft = stats.hoursUntilNextInterest || 0;
+    const minutesLeft = stats.minutesUntilNextInterest || 0;
+    const nextInterestIn =
+      hoursLeft > 0 ? `${hoursLeft}h ${minutesLeft}m` : `${minutesLeft}m`;
+
+    // Update timer
+    timerValue.textContent = nextInterestIn;
+
+    // Update interest preview
+    if (interestPreview && balance > 0) {
+      const nextInterest = Math.floor(
+        (balance * (stats.interestRate || 1)) / 100,
+      );
+      interestPreview.textContent = `+${nextInterest}g`;
+    }
   }
 
   /**
@@ -414,6 +479,7 @@ export default class CityUI {
         );
       }
       this.modal.close();
+      this.stopBankTimerUpdate();
 
       // Dispatch event to update UI
       window.dispatchEvent(new CustomEvent("player:goldChanged"));
@@ -443,6 +509,7 @@ export default class CityUI {
         );
       }
       this.modal.close();
+      this.stopBankTimerUpdate();
 
       // Dispatch event to update UI
       window.dispatchEvent(new CustomEvent("player:goldChanged"));
