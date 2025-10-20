@@ -5,6 +5,7 @@
  */
 
 import i18n from "../utils/i18n.js";
+import { renderItemIcon } from "../utils/iconRenderer.js";
 
 export default class MarketUI {
   constructor(
@@ -689,7 +690,7 @@ export default class MarketUI {
 
     card.innerHTML = `
       <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; flex: 1;">
-        <div class="market-item-icon">${item.icon || "📦"}</div>
+        <div class="market-item-icon">${renderItemIcon(item, { size: "2.5rem" })}</div>
         <div class="market-item-name" title="${itemName}">${itemName}</div>
         <div class="market-item-price" style="color: #b8860b;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g</div>
         ${type === "sell" ? `<div class="market-item-stock">${i18n.t("market.youHave")}: ${stock}</div>` : ""}
@@ -745,7 +746,7 @@ export default class MarketUI {
 
     const content = `
       <div style="text-align: center; margin-bottom: 1rem;">
-        <div style="font-size: 4rem; margin-bottom: 0.5rem;">${item.icon || "📦"}</div>
+        <div style="margin-bottom: 0.5rem;">${renderItemIcon(item, { size: "4rem" })}</div>
         <h3 style="margin: 0.5rem 0; color: var(--text-primary);">${itemName}</h3>
         <div style="display: inline-block; background: ${categoryColor}; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.625rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">${categoryName}</div>
         <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0.5rem 0;">${itemDesc}</p>
@@ -949,7 +950,7 @@ export default class MarketUI {
 
     const content = `
       <div style="text-align: center; margin-bottom: 1rem;">
-        <div style="font-size: 4rem; margin-bottom: 0.5rem;">${item.icon || "📦"}</div>
+        <div style="margin-bottom: 0.5rem;">${renderItemIcon(item, { size: "4rem" })}</div>
         <h3 style="margin: 0.5rem 0; color: var(--text-primary);">${itemName}</h3>
         <div style="display: inline-block; background: ${categoryColor}; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.625rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">${categoryName}</div>
         <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0.5rem 0;">${itemDesc}</p>

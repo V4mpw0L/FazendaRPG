@@ -6,6 +6,7 @@
 
 import i18n from "../utils/i18n.js";
 import notifications from "../utils/notifications.js";
+import { renderItemIcon } from "../utils/iconRenderer.js";
 
 export default class InventoryUI {
   constructor(inventorySystem, modal, notifications, farmSystem = null) {
@@ -501,7 +502,7 @@ export default class InventoryUI {
 
     slot.innerHTML = `
       ${item.count > 1 ? `<div class="inventory-slot-count">${item.count}</div>` : ""}
-      <div class="inventory-slot-icon">${item.icon || "📦"}</div>
+      <div class="inventory-slot-icon">${renderItemIcon(item, { size: "2em" })}</div>
       <div class="inventory-slot-name" title="${itemName}">${itemName}</div>
       <div class="inventory-slot-value" style="color: #b8860b;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 0.75em; height: 0.75em; vertical-align: middle;"> ${item.sellPrice || 0}g</div>
       <div class="inventory-slot-category" style="background: ${categoryColor};">
@@ -597,7 +598,7 @@ export default class InventoryUI {
 
     const content = `
       <div style="text-align: center; margin-bottom: 1rem;">
-        <div style="font-size: 4rem; margin-bottom: 0.5rem;">${item.icon || "📦"}</div>
+        <div style="margin-bottom: 0.5rem;">${renderItemIcon(item, { size: "4rem" })}</div>
         <h3 style="margin: 0.5rem 0; color: var(--text-primary);">${itemName}</h3>
         <div style="display: inline-block; background: ${categoryColor}; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.625rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">${categoryName}</div>
         <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0.5rem 0;">${itemDesc}</p>
