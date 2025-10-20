@@ -395,8 +395,10 @@ export default class CityUI {
       size: "medium",
     });
 
-    // Start real-time timer update
-    this.startBankTimerUpdate();
+    // Start real-time timer update after modal renders
+    setTimeout(() => {
+      this.startBankTimerUpdate();
+    }, 100);
   }
 
   /**
@@ -434,7 +436,10 @@ export default class CityUI {
       ".interest-preview div:last-child",
     );
 
-    if (!timerValue) return;
+    if (!timerValue) {
+      console.log("⚠️ Timer element not found yet");
+      return;
+    }
 
     // Get fresh stats
     const stats = this.bankSystem.getStats();
@@ -443,8 +448,17 @@ export default class CityUI {
     // Format time
     const hoursLeft = stats.hoursUntilNextInterest || 0;
     const minutesLeft = stats.minutesUntilNextInterest || 0;
+
+    // Calculate seconds too for more precision
+    const timeRemaining = stats.timeUntilNextInterest || 0;
+    const secondsLeft = Math.floor((timeRemaining % 60000) / 1000);
+
     const nextInterestIn =
-      hoursLeft > 0 ? `${hoursLeft}h ${minutesLeft}m` : `${minutesLeft}m`;
+      hoursLeft > 0
+        ? `${hoursLeft}h ${minutesLeft}m`
+        : minutesLeft > 0
+          ? `${minutesLeft}m ${secondsLeft}s`
+          : `${secondsLeft}s`;
 
     // Update timer
     timerValue.textContent = nextInterestIn;

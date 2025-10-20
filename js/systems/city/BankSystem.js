@@ -137,12 +137,14 @@ export default class BankSystem {
     const minutes = Math.floor(
       (timeRemaining % (60 * 60 * 1000)) / (60 * 1000),
     );
+    const seconds = Math.floor((timeRemaining % (60 * 1000)) / 1000);
 
     return {
       nextTime,
       timeRemaining,
       hoursRemaining: hours,
       minutesRemaining: minutes,
+      secondsRemaining: seconds,
     };
   }
 
