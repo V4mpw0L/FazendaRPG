@@ -246,6 +246,7 @@
 .topbar-stat-header {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
 }
 
@@ -260,6 +261,7 @@
     white-space: nowrap;
     display: inline;
     line-height: 1.2;
+    text-align: center;
 }
 
 /* Gold */
