@@ -773,20 +773,18 @@ export default class GameEngine {
       );
       if (destroyOption) {
         destroyOption.addEventListener("click", () => {
-          this.modal.close();
-
           // Confirm destruction
           const confirmContent = `
             <div style="text-align: center;">
               <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
-              <p style="margin-bottom: 1rem; color: var(--text-primary);">
+              <p style="margin-bottom: 1rem; color: var(--text-primary); font-weight: 500;">
                 Tem certeza que deseja <strong style="color: #dc3545;">destruir</strong> este cultivo?
               </p>
               <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
                 Esta ação não pode ser desfeita e você não receberá nada de volta.
               </p>
               <div style="display: flex; gap: 1rem; justify-content: center;">
-                <button id="confirm-destroy" style="
+                <button id="confirm-destroy" class="btn" style="
                   padding: 0.75rem 1.5rem;
                   background: #dc3545;
                   color: white;
@@ -795,8 +793,9 @@ export default class GameEngine {
                   font-weight: 600;
                   cursor: pointer;
                   transition: all 0.2s;
+                  font-size: 0.95rem;
                 ">Sim, Destruir</button>
-                <button id="cancel-destroy" style="
+                <button id="cancel-destroy" class="btn" style="
                   padding: 0.75rem 1.5rem;
                   background: var(--bg-secondary);
                   color: var(--text-primary);
@@ -805,57 +804,65 @@ export default class GameEngine {
                   font-weight: 600;
                   cursor: pointer;
                   transition: all 0.2s;
+                  font-size: 0.95rem;
                 ">Cancelar</button>
               </div>
             </div>
             <style>
               #confirm-destroy:hover {
-                background: #c82333;
+                background: #c82333 !important;
                 transform: scale(1.05);
+                box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
               }
               #cancel-destroy:hover {
-                background: var(--bg-accent);
-                border-color: var(--brand-primary);
+                background: var(--bg-accent) !important;
+                border-color: var(--brand-primary) !important;
+                transform: scale(1.02);
               }
             </style>
           `;
 
-          this.modal.show({
-            title: "⚠️ Confirmar Destruição",
-            content: confirmContent,
-            closable: true,
-            size: "small",
-          });
+          // Close current modal and open confirmation after a small delay
+          this.modal.close();
 
           setTimeout(() => {
-            const confirmBtn = document.getElementById("confirm-destroy");
-            const cancelBtn = document.getElementById("cancel-destroy");
+            this.modal.show({
+              title: "⚠️ Confirmar Destruição",
+              content: confirmContent,
+              closable: true,
+              size: "small",
+            });
 
-            if (confirmBtn) {
-              confirmBtn.addEventListener("click", () => {
-                this.modal.close();
+            setTimeout(() => {
+              const confirmBtn = document.getElementById("confirm-destroy");
+              const cancelBtn = document.getElementById("cancel-destroy");
 
-                // Clear the plot
-                const plot = this.farmSystem.getPlot(index);
-                if (plot) {
-                  plot.cropId = null;
-                  plot.crop = null;
-                  plot.plantedAt = null;
-                  plot.fertilized = false;
+              if (confirmBtn) {
+                confirmBtn.addEventListener("click", () => {
+                  this.modal.close();
 
-                  notifications.success("🗑️ Cultivo destruído!");
-                  this.renderFarm();
-                  this.topBar.update();
-                }
-              });
-            }
+                  // Clear the plot
+                  const plot = this.farmSystem.getPlot(index);
+                  if (plot) {
+                    plot.cropId = null;
+                    plot.crop = null;
+                    plot.plantedAt = null;
+                    plot.fertilized = false;
 
-            if (cancelBtn) {
-              cancelBtn.addEventListener("click", () => {
-                this.modal.close();
-              });
-            }
-          }, 100);
+                    notifications.success("🗑️ Cultivo destruído!");
+                    this.renderFarm();
+                    this.topBar.update();
+                  }
+                });
+              }
+
+              if (cancelBtn) {
+                cancelBtn.addEventListener("click", () => {
+                  this.modal.close();
+                });
+              }
+            }, 100);
+          }, 350);
         });
       }
     }, 100);
@@ -1419,9 +1426,12 @@ export default class GameEngine {
             }),
           );
 
+          // Get only the plots that were actually planted (not all empty plots)
+          const plantedPlotIndices = emptyPlotIndices.slice(0, result.planted);
+
           // Play animations on the DOM elements (they still exist)
-          if (this.plantAnimation && emptyPlotIndices.length > 0) {
-            emptyPlotIndices.forEach((index, i) => {
+          if (this.plantAnimation && plantedPlotIndices.length > 0) {
+            plantedPlotIndices.forEach((index, i) => {
               const plotElement = document.querySelector(
                 `.farm-plot[data-index="${index}"]`,
               );
@@ -1435,7 +1445,7 @@ export default class GameEngine {
           }
 
           // Calculate delay: last animation start time + animation duration
-          const animationDelay = emptyPlotIndices.length * 80 + 1000;
+          const animationDelay = plantedPlotIndices.length * 80 + 1000;
 
           // RENDER UI AFTER animations complete
           setTimeout(() => {
