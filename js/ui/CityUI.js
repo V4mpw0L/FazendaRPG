@@ -383,30 +383,97 @@ export default class CityUI {
     const stats = this.tavernSystem.getStats();
     const meals = this.tavernSystem.getAvailableMeals();
     const restPrice = this.tavernSystem.getRestPrice();
+    const playerEnergy = this.player.data.energy || 0;
+    const maxEnergy = this.player.data.maxEnergy || 100;
+    const playerGold = this.player.data.gold || 0;
+
+    // Calculate reputation progress
+    const reputation = stats.reputation;
+    const nextMilestone =
+      reputation < 10
+        ? 10
+        : reputation < 25
+          ? 25
+          : reputation < 50
+            ? 50
+            : reputation < 100
+              ? 100
+              : 100;
+    const prevMilestone =
+      reputation < 10
+        ? 0
+        : reputation < 25
+          ? 10
+          : reputation < 50
+            ? 25
+            : reputation < 100
+              ? 50
+              : 100;
+    const repProgress =
+      reputation >= 100
+        ? 100
+        : ((reputation - prevMilestone) / (nextMilestone - prevMilestone)) *
+          100;
 
     const content = `
             <div class="tavern-ui">
                 <div class="tavern-header">
-                    <div style="font-size: 4rem; margin-bottom: 1rem;">🍺</div>
-                    <h2 style="margin: 0 0 0.5rem 0;">Taverna do Dragão Verde</h2>
-                    <p style="color: var(--text-secondary); margin: 0;">Descanse, coma e ouça histórias!</p>
+                    <div style="font-size: 5rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));">🍺</div>
+                    <h2 style="margin: 0 0 0.5rem 0; font-size: 1.75rem; color: var(--brand-primary);">Taverna do Viajante</h2>
+                    <p style="color: var(--text-secondary); margin: 0; font-size: 0.875rem;">Descanse, coma bem e ouça as melhores histórias da região!</p>
                 </div>
 
-                <div class="tavern-stats">
-                    <div class="stat-box">
-                        <div class="stat-icon">🎖️</div>
-                        <div class="stat-info">
-                            <div class="stat-label">Reputação</div>
-                            <div class="stat-value">${stats.reputationLevel}</div>
-                            <div class="stat-detail">${stats.discount} de desconto</div>
+                <div class="player-status">
+                    <div class="status-item">
+                        <span class="status-label">💰 Seu Ouro:</span>
+                        <span class="status-value" style="color: #b8860b; font-weight: 700;">${playerGold}g</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">⚡ Energia:</span>
+                        <span class="status-value" style="color: ${playerEnergy > maxEnergy * 0.5 ? "#5caa1f" : "#ff6b6b"}; font-weight: 700;">${playerEnergy}/${maxEnergy}</span>
+                    </div>
+                </div>
+
+                <div class="reputation-section">
+                    <div class="reputation-header">
+                        <div class="reputation-icon">⭐</div>
+                        <div class="reputation-details">
+                            <div class="reputation-level">${stats.reputationLevel}</div>
+                            <div class="reputation-points">${reputation} pontos de reputação</div>
+                        </div>
+                        <div class="reputation-discount">
+                            <div style="font-size: 1.25rem; font-weight: 700; color: #5caa1f;">${stats.discount}</div>
+                            <div style="font-size: 0.625rem; color: var(--text-secondary);">desconto</div>
                         </div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-icon">📊</div>
-                        <div class="stat-info">
-                            <div class="stat-label">Visitas</div>
-                            <div class="stat-value">${stats.totalVisits}</div>
-                            <div class="stat-detail">${stats.totalMeals} refeições</div>
+                    <div class="reputation-bar">
+                        <div class="reputation-fill" style="width: ${repProgress}%"></div>
+                        <div class="reputation-text">${reputation >= 100 ? "MAX" : `${nextMilestone - reputation} pts para próximo nível`}</div>
+                    </div>
+                </div>
+
+                <div class="tavern-achievements">
+                    <h3 style="margin: 0 0 0.75rem 0; color: var(--text-primary); font-size: 0.875rem; font-weight: 700;">🏆 Conquistas da Taverna</h3>
+                    <div class="achievements-grid">
+                        <div class="achievement-badge ${stats.totalVisits >= 10 ? "unlocked" : "locked"}">
+                            <div class="achievement-icon">${stats.totalVisits >= 10 ? "🎖️" : "🔒"}</div>
+                            <div class="achievement-name">Frequentador</div>
+                            <div class="achievement-desc">${stats.totalVisits}/10 visitas</div>
+                        </div>
+                        <div class="achievement-badge ${stats.totalMeals >= 20 ? "unlocked" : "locked"}">
+                            <div class="achievement-icon">${stats.totalMeals >= 20 ? "🍽️" : "🔒"}</div>
+                            <div class="achievement-name">Gastronomo</div>
+                            <div class="achievement-desc">${stats.totalMeals}/20 refeições</div>
+                        </div>
+                        <div class="achievement-badge ${stats.totalStories >= 15 ? "unlocked" : "locked"}">
+                            <div class="achievement-icon">${stats.totalStories >= 15 ? "📚" : "🔒"}</div>
+                            <div class="achievement-name">Contador</div>
+                            <div class="achievement-desc">${stats.totalStories}/15 histórias</div>
+                        </div>
+                        <div class="achievement-badge ${stats.reputation >= 100 ? "unlocked" : "locked"}">
+                            <div class="achievement-icon">${stats.reputation >= 100 ? "👑" : "🔒"}</div>
+                            <div class="achievement-name">Lenda</div>
+                            <div class="achievement-desc">${stats.reputation}/100 rep</div>
                         </div>
                     </div>
                 </div>
@@ -453,42 +520,146 @@ export default class CityUI {
                     .tavern-header {
                         text-align: center;
                         margin-bottom: 1.5rem;
+                        padding-bottom: 1.5rem;
+                        border-bottom: 2px solid var(--border-color);
                     }
-                    .tavern-stats {
-                        display: grid;
-                        grid-template-columns: repeat(2, 1fr);
+                    .player-status {
+                        display: flex;
+                        justify-content: space-around;
                         gap: 1rem;
-                        margin-bottom: 1.5rem;
-                    }
-                    .stat-box {
+                        padding: 1rem;
                         background: var(--bg-accent);
                         border: 2px solid var(--border-color);
                         border-radius: 12px;
-                        padding: 1rem;
+                        margin-bottom: 1.5rem;
+                    }
+                    .status-item {
                         display: flex;
-                        gap: 1rem;
+                        flex-direction: column;
                         align-items: center;
+                        gap: 0.25rem;
                     }
-                    .stat-icon {
-                        font-size: 2.5rem;
-                    }
-                    .stat-info {
-                        flex: 1;
-                    }
-                    .stat-label {
+                    .status-label {
                         font-size: 0.75rem;
                         color: var(--text-secondary);
                         font-weight: 600;
                     }
-                    .stat-value {
+                    .status-value {
+                        font-size: 1.125rem;
+                        font-weight: 700;
+                    }
+                    .reputation-section {
+                        background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.05));
+                        border: 3px solid #ffd700;
+                        border-radius: 16px;
+                        padding: 1.25rem;
+                        margin-bottom: 1.5rem;
+                        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+                    }
+                    .reputation-header {
+                        display: flex;
+                        align-items: center;
+                        gap: 1rem;
+                        margin-bottom: 1rem;
+                    }
+                    .reputation-icon {
+                        font-size: 2.5rem;
+                        filter: drop-shadow(0 2px 4px rgba(255, 215, 0, 0.5));
+                    }
+                    .reputation-details {
+                        flex: 1;
+                    }
+                    .reputation-level {
                         font-size: 1.125rem;
                         font-weight: 700;
                         color: var(--brand-primary);
-                        margin: 0.25rem 0;
+                        margin-bottom: 0.125rem;
                     }
-                    .stat-detail {
+                    .reputation-points {
                         font-size: 0.75rem;
                         color: var(--text-secondary);
+                        font-weight: 600;
+                    }
+                    .reputation-discount {
+                        text-align: center;
+                        padding: 0.5rem;
+                        background: var(--bg-secondary);
+                        border: 2px solid var(--border-color);
+                        border-radius: 8px;
+                    }
+                    .reputation-bar {
+                        position: relative;
+                        width: 100%;
+                        height: 32px;
+                        background: var(--bg-accent);
+                        border: 2px solid var(--border-color);
+                        border-radius: 16px;
+                        overflow: hidden;
+                        box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+                    }
+                    .reputation-fill {
+                        height: 100%;
+                        background: linear-gradient(90deg, #ffd700 0%, #ffed4e 100%);
+                        transition: width 0.5s ease;
+                        box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+                    }
+                    .reputation-text {
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        font-size: 0.75rem;
+                        font-weight: 700;
+                        color: var(--text-primary);
+                        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+                        white-space: nowrap;
+                    }
+                    .tavern-achievements {
+                        background: var(--bg-accent);
+                        border: 2px solid var(--border-color);
+                        border-radius: 12px;
+                        padding: 1rem;
+                        margin-bottom: 1.5rem;
+                    }
+                    .achievements-grid {
+                        display: grid;
+                        grid-template-columns: repeat(4, 1fr);
+                        gap: 0.75rem;
+                    }
+                    .achievement-badge {
+                        background: var(--bg-secondary);
+                        border: 2px solid var(--border-color);
+                        border-radius: 10px;
+                        padding: 0.75rem 0.5rem;
+                        text-align: center;
+                        transition: all 0.2s;
+                    }
+                    .achievement-badge.unlocked {
+                        border-color: #5caa1f;
+                        background: linear-gradient(135deg, rgba(92, 170, 31, 0.1), var(--bg-secondary));
+                    }
+                    .achievement-badge.locked {
+                        opacity: 0.5;
+                        filter: grayscale(0.7);
+                    }
+                    .achievement-badge:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                    }
+                    .achievement-icon {
+                        font-size: 1.75rem;
+                        margin-bottom: 0.25rem;
+                    }
+                    .achievement-name {
+                        font-size: 0.625rem;
+                        font-weight: 700;
+                        color: var(--text-primary);
+                        margin-bottom: 0.125rem;
+                    }
+                    .achievement-desc {
+                        font-size: 0.5625rem;
+                        color: var(--text-secondary);
+                        font-weight: 600;
                     }
                     .tavern-services {
                         display: grid;
@@ -552,12 +723,24 @@ export default class CityUI {
                         font-size: 0.75rem;
                         font-weight: 600;
                     }
+                    @media (max-width: 768px) {
+                        .achievements-grid {
+                            grid-template-columns: repeat(2, 1fr);
+                        }
+                    }
                     @media (max-width: 480px) {
-                        .tavern-stats {
-                            grid-template-columns: 1fr;
+                        .player-status {
+                            flex-direction: column;
                         }
                         .tavern-services {
                             grid-template-columns: repeat(2, 1fr);
+                        }
+                        .achievements-grid {
+                            grid-template-columns: repeat(2, 1fr);
+                        }
+                        .reputation-header {
+                            flex-direction: column;
+                            text-align: center;
                         }
                     }
                 </style>
