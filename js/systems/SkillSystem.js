@@ -261,7 +261,7 @@ export default class SkillSystem {
 
     return {
       id: skillId,
-      name: skillData?.name || skillId,
+      name: i18n.t(`skills.${skillId}.name`) || skillData?.name || skillId,
       icon: skillData?.icon || "❓",
       level,
       xp,
