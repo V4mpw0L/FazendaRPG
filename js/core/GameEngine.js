@@ -1403,19 +1403,11 @@ export default class GameEngine {
           // Close modal
           this.modal.close();
 
-          // Collect empty plot indices before planting
-          const emptyPlotIndices = [];
-          const plots = this.farmSystem.getPlots();
-          for (let i = 0; i < plots.length; i++) {
-            if (!plots[i].cropId) {
-              emptyPlotIndices.push(i);
-            }
-          }
-
-          // Plant all empty plots with selected seed (DATA IMMEDIATELY)
+          // DO PLANT IMMEDIATELY (to prevent double-clicking)
           const result = this.farmSystem.plantAll(cropId);
 
           if (!result.success) {
+            notifications.error(result.errors || "Não foi possível plantar");
             return;
           }
 
@@ -1426,12 +1418,9 @@ export default class GameEngine {
             }),
           );
 
-          // Get only the plots that were actually planted (not all empty plots)
-          const plantedPlotIndices = emptyPlotIndices.slice(0, result.planted);
-
           // Play animations on the DOM elements (they still exist)
-          if (this.plantAnimation && plantedPlotIndices.length > 0) {
-            plantedPlotIndices.forEach((index, i) => {
+          if (this.plantAnimation && result.plantedIndices.length > 0) {
+            result.plantedIndices.forEach((index, i) => {
               const plotElement = document.querySelector(
                 `.farm-plot[data-index="${index}"]`,
               );
@@ -1445,7 +1434,7 @@ export default class GameEngine {
           }
 
           // Calculate delay: last animation start time + animation duration
-          const animationDelay = plantedPlotIndices.length * 80 + 1000;
+          const animationDelay = result.plantedIndices.length * 80 + 1000;
 
           // RENDER UI AFTER animations complete
           setTimeout(() => {

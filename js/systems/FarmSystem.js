@@ -433,6 +433,7 @@ export default class FarmSystem {
   plantAll(cropId) {
     let planted = 0;
     const errors = [];
+    const plantedIndices = [];
     let emptyPlots = 0;
 
     for (let i = 0; i < this.plotCount; i++) {
@@ -441,6 +442,7 @@ export default class FarmSystem {
         const result = this.plant(i, cropId);
         if (result.success) {
           planted++;
+          plantedIndices.push(i);
         } else {
           errors.push(result.error);
           break; // Stop if we run out of resources
@@ -453,6 +455,7 @@ export default class FarmSystem {
       return {
         success: false,
         planted: 0,
+        plantedIndices: [],
         errors: "Não há espaços vazios para plantar",
       };
     }
@@ -460,6 +463,7 @@ export default class FarmSystem {
     return {
       success: planted > 0,
       planted,
+      plantedIndices,
       errors: errors.length > 0 ? errors[0] : null,
     };
   }
