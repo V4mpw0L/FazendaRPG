@@ -81,9 +81,6 @@ export default class InventoryUI {
             <option value="tools">${i18n.t("market.categories.tools")}</option>
             <option value="materials">${i18n.t("market.categories.materials")}</option>
           </select>
-          <button id="inv-sell-all" class="btn btn-sm btn-success">
-            <img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${i18n.t("market.sellAll")}
-          </button>
         </div>
       </div>
     `;
@@ -101,10 +98,6 @@ export default class InventoryUI {
       this.filterCategory = e.target.value;
       this.currentPage = 0;
       this.render();
-    });
-
-    document.getElementById("inv-sell-all")?.addEventListener("click", () => {
-      this.sellAllItems();
     });
   }
 
