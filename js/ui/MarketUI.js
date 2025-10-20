@@ -221,6 +221,8 @@ export default class MarketUI {
         aspect-ratio: 0.85;
         max-width: 140px;
         width: 100%;
+        min-height: 180px;
+        position: relative;
       }
 
       .market-item:hover {
@@ -258,9 +260,24 @@ export default class MarketUI {
         color: var(--text-secondary);
       }
 
+      .market-item-category {
+        position: absolute;
+        bottom: 3.5rem;
+        left: 0;
+        right: 0;
+        padding: 0.125rem;
+        font-size: 0.5rem;
+        font-weight: 700;
+        text-align: center;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        color: white;
+        opacity: 0.9;
+      }
+
       .market-item-action {
         width: 100%;
-        padding: 0.4rem 0.5rem;
+        padding: 0.5rem 0.5rem;
         font-size: 0.6875rem;
         font-weight: 700;
         background: var(--brand-primary);
@@ -271,6 +288,7 @@ export default class MarketUI {
         transition: all var(--transition-fast);
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        margin-top: auto;
       }
 
       .market-item-action:hover {
@@ -654,6 +672,21 @@ export default class MarketUI {
       }
     }
 
+    // Get category color and name
+    const categoryColors = {
+      seeds: "#5caa1f",
+      crops: "#ffa500",
+      fish: "#4682b4",
+      minerals: "#696969",
+      wood: "#8b4513",
+      food: "#ff6347",
+      tools: "#9370db",
+      materials: "#228b22",
+    };
+    const categoryColor = categoryColors[item.category] || "#5caa1f";
+    const categoryName =
+      i18n.t(`market.categories.${item.category}`) || item.category;
+
     card.innerHTML = `
       <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; flex: 1;">
         <div class="market-item-icon">${item.icon || "📦"}</div>
@@ -662,6 +695,7 @@ export default class MarketUI {
         ${type === "sell" ? `<div class="market-item-stock">${i18n.t("market.youHave")}: ${stock}</div>` : ""}
         ${requiredLevelInfo}
       </div>
+      <div class="market-item-category" style="background: ${categoryColor};">${categoryName}</div>
       <button class="market-item-action">${buttonIcon} ${buttonText}</button>
     `;
 
