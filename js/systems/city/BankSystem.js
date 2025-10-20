@@ -30,13 +30,20 @@ export default class BankSystem {
     }
 
     // Ensure lastInterestTime exists for old saves
+    // IMPORTANTE: Só define se for realmente inválido, NUNCA reseta!
     if (
       !this.player.data.bank.lastInterestTime ||
       typeof this.player.data.bank.lastInterestTime !== "number" ||
-      isNaN(this.player.data.bank.lastInterestTime)
+      isNaN(this.player.data.bank.lastInterestTime) ||
+      this.player.data.bank.lastInterestTime === 0
     ) {
       this.player.data.bank.lastInterestTime = Date.now();
       console.log("🏦 Initialized lastInterestTime for old save");
+    } else {
+      console.log(
+        "🏦 Using existing lastInterestTime:",
+        new Date(this.player.data.bank.lastInterestTime).toLocaleString(),
+      );
     }
 
     // Ensure totalInterestEarned exists
@@ -118,6 +125,9 @@ export default class BankSystem {
           detail: { interest: totalInterest, cycles },
         }),
       );
+
+      // Trigger save to persist interest
+      window.dispatchEvent(new CustomEvent("save:auto"));
     }
 
     return { interestEarned: totalInterest, cycles };
@@ -154,7 +164,7 @@ export default class BankSystem {
    * @returns {Object} Result
    */
   deposit(amount) {
-    // Calculate pending interest first
+    // Calculate pending interest first (this may update lastInterestTime if cycles completed)
     const pendingInterest = this.calculatePendingInterest();
 
     // Validate amount
@@ -187,6 +197,15 @@ export default class BankSystem {
     // Add to bank (no instant interest)
     this.player.data.bank.balance += amount;
     this.player.data.bank.totalDeposited += amount;
+
+    // Se não tem lastInterestTime válido (primeiro depósito), define agora
+    if (
+      !this.player.data.bank.lastInterestTime ||
+      this.player.data.bank.lastInterestTime === 0
+    ) {
+      this.player.data.bank.lastInterestTime = Date.now();
+      console.log("🏦 Started interest timer on first deposit");
+    }
 
     // Add transaction
     this.addTransaction({

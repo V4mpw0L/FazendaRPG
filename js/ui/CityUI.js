@@ -500,6 +500,9 @@ export default class CityUI {
 
       // Dispatch event to update UI
       window.dispatchEvent(new CustomEvent("player:goldChanged"));
+
+      // Trigger save to persist bank data
+      window.dispatchEvent(new CustomEvent("save:auto"));
     } else {
       this.notifications.show(result.error, "error");
     }
@@ -530,6 +533,9 @@ export default class CityUI {
 
       // Dispatch event to update UI
       window.dispatchEvent(new CustomEvent("player:goldChanged"));
+
+      // Trigger save to persist bank data
+      window.dispatchEvent(new CustomEvent("save:auto"));
     } else {
       this.notifications.show(result.error, "error");
     }
