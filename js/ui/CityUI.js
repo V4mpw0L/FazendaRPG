@@ -711,17 +711,66 @@ export default class CityUI {
   showPlazaUI() {
     const playerName = this.player.data.name || "Fazendeiro";
     const level = this.player.data.level || 1;
+    const xp = this.player.data.xp || 0;
+    const gold = this.player.data.gold || 0;
+    const energy = this.player.data.energy || 0;
+    const maxEnergy = this.player.data.maxEnergy || 100;
+
     const totalSkillLevel = Object.values(this.player.data.skills || {}).reduce(
       (sum, skill) => sum + (skill.level || 1),
       0,
     );
 
+    const farmingLevel = this.player.data.skills?.farming?.level || 1;
+    const farmingXP = this.player.data.skills?.farming?.xp || 0;
+
     const content = `
             <div class="plaza-ui">
                 <div class="plaza-header">
-                    <div style="font-size: 4rem; margin-bottom: 1rem;">⛲</div>
-                    <h2 style="margin: 0 0 0.5rem 0;">Praça da Cidade</h2>
-                    <p style="color: var(--text-secondary); margin: 0;">Centro de convivência e informações</p>
+                    <div style="font-size: 5rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));">⛲</div>
+                    <h2 style="margin: 0 0 0.5rem 0; font-size: 1.75rem; color: var(--brand-primary);">Praça da Cidade</h2>
+                    <p style="color: var(--text-secondary); margin: 0; font-size: 0.875rem;">Centro de convivência e informações</p>
+                </div>
+
+                <div class="player-showcase">
+                    <div style="text-align: center; margin-bottom: 1rem;">
+                        <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">👨‍🌾</div>
+                        <h3 style="margin: 0 0 0.25rem 0; font-size: 1.5rem; color: var(--text-primary);">${playerName}</h3>
+                        <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                            ⭐ Fazendeiro Nível ${level}
+                        </div>
+                    </div>
+
+                    <div class="player-stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">⚡</div>
+                            <div class="stat-info">
+                                <div class="stat-label">Energia</div>
+                                <div class="stat-value">${energy}/${maxEnergy}</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1.5rem; height: 1.5rem;"></div>
+                            <div class="stat-info">
+                                <div class="stat-label">Ouro</div>
+                                <div class="stat-value" style="color: #b8860b;">${gold}g</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🌾</div>
+                            <div class="stat-info">
+                                <div class="stat-label">Agricultura</div>
+                                <div class="stat-value" style="color: #5caa1f;">Nv ${farmingLevel}</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🏆</div>
+                            <div class="stat-info">
+                                <div class="stat-label">Total Skills</div>
+                                <div class="stat-value">${totalSkillLevel}</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="plaza-board">
@@ -742,43 +791,49 @@ export default class CityUI {
                             </div>
                         </div>
                         <div class="notice">
-                            <div class="notice-icon">⚠️</div>
+                            <div class="notice-icon">💡</div>
                             <div class="notice-content">
-                                <strong>Cuidado nas Minas</strong>
-                                <p>Mineiros reportaram movimentos estranhos...</p>
+                                <strong>Dica do Dia</strong>
+                                <p>Use fertilizante para acelerar o crescimento!</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="board-section">
-                        <h3>🏆 Ranking Local</h3>
+                        <h3>🏆 Ranking da Cidade</h3>
                         <div class="ranking-entry highlight">
-                            <div class="ranking-position">1º</div>
+                            <div class="ranking-position">
+                                <div style="font-size: 1.5rem;">🥇</div>
+                            </div>
                             <div class="ranking-info">
                                 <div class="ranking-name">👑 ${playerName}</div>
-                                <div class="ranking-detail">Nível ${level} • ${totalSkillLevel} skills totais</div>
+                                <div class="ranking-detail">Nível ${level} • ${totalSkillLevel} Skills • ${gold}g</div>
                             </div>
                         </div>
                         <div class="ranking-entry">
-                            <div class="ranking-position">2º</div>
+                            <div class="ranking-position">
+                                <div style="font-size: 1.5rem;">🥈</div>
+                            </div>
                             <div class="ranking-info">
                                 <div class="ranking-name">Old Farmer Joe</div>
                                 <div class="ranking-detail">Nível 45 • Mestre Fazendeiro</div>
                             </div>
                         </div>
                         <div class="ranking-entry">
-                            <div class="ranking-position">3º</div>
+                            <div class="ranking-position">
+                                <div style="font-size: 1.5rem;">🥉</div>
+                            </div>
                             <div class="ranking-info">
                                 <div class="ranking-name">Marcus the Merchant</div>
-                                <div class="ranking-detail">Nível 38 • Comerciante</div>
+                                <div class="ranking-detail">Nível 38 • Comerciante Rico</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="plaza-info">
-                    <p style="text-align: center; color: var(--text-secondary); font-style: italic; margin: 1rem 0;">
-                        "A praça é o coração da nossa comunidade. Aqui você sempre encontrará informações e amigos!"
+                    <p style="text-align: center; color: var(--text-secondary); font-style: italic; margin: 1rem 0; font-size: 0.875rem;">
+                        💬 "A praça é o coração da nossa comunidade. Aqui você sempre encontrará informações e amigos!"
                     </p>
                 </div>
 
@@ -789,10 +844,63 @@ export default class CityUI {
                     .plaza-header {
                         text-align: center;
                         margin-bottom: 1.5rem;
+                        padding-bottom: 1.5rem;
+                        border-bottom: 2px solid var(--border-color);
+                    }
+                    .player-showcase {
+                        background: linear-gradient(135deg, rgba(92, 170, 31, 0.1), rgba(126, 200, 80, 0.05));
+                        border: 3px solid var(--brand-primary);
+                        border-radius: 16px;
+                        padding: 1.5rem;
+                        margin-bottom: 1.5rem;
+                        box-shadow: 0 4px 12px rgba(92, 170, 31, 0.2);
+                    }
+                    .player-stats-grid {
+                        display: grid;
+                        grid-template-columns: repeat(2, 1fr);
+                        gap: 0.75rem;
+                    }
+                    .stat-card {
+                        background: var(--bg-secondary);
+                        border: 2px solid var(--border-color);
+                        border-radius: 12px;
+                        padding: 0.875rem;
+                        display: flex;
+                        align-items: center;
+                        gap: 0.75rem;
+                        transition: all 0.2s;
+                    }
+                    .stat-card:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                        border-color: var(--brand-primary);
+                    }
+                    .stat-icon {
+                        font-size: 1.75rem;
+                        line-height: 1;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                    .stat-info {
+                        flex: 1;
+                    }
+                    .stat-label {
+                        font-size: 0.625rem;
+                        color: var(--text-secondary);
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                        margin-bottom: 0.125rem;
+                        font-weight: 600;
+                    }
+                    .stat-value {
+                        font-size: 1rem;
+                        font-weight: 700;
+                        color: var(--text-primary);
                     }
                     .plaza-board {
                         display: grid;
-                        gap: 1.5rem;
+                        gap: 1rem;
                     }
                     .board-section {
                         background: var(--bg-accent);
@@ -803,22 +911,28 @@ export default class CityUI {
                     .board-section h3 {
                         margin: 0 0 1rem 0;
                         color: var(--brand-primary);
-                        font-size: 1.125rem;
+                        font-size: 1rem;
+                        font-weight: 700;
                     }
                     .notice {
                         display: flex;
-                        gap: 1rem;
+                        gap: 0.875rem;
                         padding: 0.75rem;
                         background: var(--bg-secondary);
                         border: 2px solid var(--border-color);
                         border-radius: 8px;
-                        margin-bottom: 0.75rem;
+                        margin-bottom: 0.625rem;
+                        transition: all 0.2s;
+                    }
+                    .notice:hover {
+                        border-color: var(--brand-primary);
+                        transform: translateX(4px);
                     }
                     .notice:last-child {
                         margin-bottom: 0;
                     }
                     .notice-icon {
-                        font-size: 2rem;
+                        font-size: 1.75rem;
                         line-height: 1;
                     }
                     .notice-content {
@@ -828,35 +942,43 @@ export default class CityUI {
                         display: block;
                         color: var(--text-primary);
                         margin-bottom: 0.25rem;
-                        font-size: 0.875rem;
+                        font-size: 0.8125rem;
+                        font-weight: 700;
                     }
                     .notice-content p {
                         margin: 0;
                         color: var(--text-secondary);
-                        font-size: 0.8125rem;
+                        font-size: 0.75rem;
+                        line-height: 1.4;
                     }
                     .ranking-entry {
                         display: flex;
                         align-items: center;
-                        gap: 1rem;
-                        padding: 0.75rem;
+                        gap: 0.875rem;
+                        padding: 0.875rem;
                         background: var(--bg-secondary);
                         border: 2px solid var(--border-color);
                         border-radius: 8px;
-                        margin-bottom: 0.75rem;
+                        margin-bottom: 0.625rem;
+                        transition: all 0.2s;
+                    }
+                    .ranking-entry:hover {
+                        transform: translateX(4px);
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
                     }
                     .ranking-entry:last-child {
                         margin-bottom: 0;
                     }
                     .ranking-entry.highlight {
-                        background: linear-gradient(135deg, rgba(92, 170, 31, 0.15), var(--bg-secondary));
-                        border-color: var(--brand-primary);
+                        background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(92, 170, 31, 0.1));
+                        border-color: #ffd700;
+                        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+                    }
+                    .ranking-entry.highlight:hover {
+                        box-shadow: 0 6px 16px rgba(255, 215, 0, 0.4);
                     }
                     .ranking-position {
-                        font-size: 1.25rem;
-                        font-weight: 700;
-                        color: var(--brand-primary);
-                        min-width: 40px;
+                        min-width: 45px;
                         text-align: center;
                     }
                     .ranking-info {
@@ -868,14 +990,22 @@ export default class CityUI {
                         margin-bottom: 0.25rem;
                         font-size: 0.875rem;
                     }
+                    .ranking-entry.highlight .ranking-name {
+                        color: var(--brand-primary);
+                    }
                     .ranking-detail {
-                        font-size: 0.75rem;
+                        font-size: 0.6875rem;
                         color: var(--text-secondary);
                     }
                     .plaza-info {
                         margin-top: 1.5rem;
                         padding-top: 1.5rem;
                         border-top: 2px solid var(--border-color);
+                    }
+                    @media (max-width: 480px) {
+                        .player-stats-grid {
+                            grid-template-columns: 1fr;
+                        }
                     }
                 </style>
             </div>
