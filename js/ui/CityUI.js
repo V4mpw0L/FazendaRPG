@@ -282,7 +282,7 @@ export default class CityUI {
                         gap: 0.25rem;
                         margin-bottom: 0.75rem;
                     }
-                    @media (max-width: 480px) {
+                    @media (max-width: 768px) {
                         .bank-balances,
                         .bank-actions {
                             grid-template-columns: 1fr;
