@@ -82,40 +82,100 @@
   <!-- Side Menu -->
   <div id="side-menu" class="side-menu">
     <div class="menu-header">
-      <h2 id="menu-title">Menu</h2>
+      <div class="menu-header-content">
+        <div class="menu-logo">🌾</div>
+        <div class="menu-title-section">
+          <h2 id="menu-title">FazendaRPG</h2>
+          <p class="menu-subtitle">Menu Principal</p>
+        </div>
+      </div>
       <button id="menu-close" class="menu-close">&times;</button>
     </div>
 
     <nav class="menu-nav">
-      <button class="menu-item" data-page="farm">
-        <span class="menu-icon"><img src="assets/sprites/home.png" alt="Fazenda" style="width: 32px; height: 32px;"></span>
-        <span class="menu-text" data-i18n="menu.farm">Fazenda</span>
-      </button>
-      <button class="menu-item" data-page="skills">
-        <span class="menu-icon"><img src="assets/sprites/skills.png" alt="Skills" style="width: 32px; height: 32px;"></span>
-        <span class="menu-text" data-i18n="menu.skills">Skills</span>
-      </button>
-      <button class="menu-item" data-page="inventory">
-        <span class="menu-icon"><img src="assets/sprites/bolsa.png" alt="Inventário" style="width: 32px; height: 32px;"></span>
-        <span class="menu-text" data-i18n="menu.inventory">Inventário</span>
-      </button>
-      <button class="menu-item" data-page="city">
-        <span class="menu-icon">🏘️</span>
-        <span class="menu-text" data-i18n="menu.city">Cidade</span>
-      </button>
+      <!-- Navegação Principal -->
+      <div class="menu-section">
+        <h3 class="menu-section-title">🎮 Navegação</h3>
 
-      <button class="menu-item" data-page="quests">
-        <span class="menu-icon"><img src="assets/sprites/quests.png" alt="Missões" style="width: 32px; height: 32px;"></span>
-        <span class="menu-text" data-i18n="menu.quests">Missões</span>
-      </button>
-      <button class="menu-item" data-page="npcs">
-        <span class="menu-icon"><img src="assets/sprites/npcs.png" alt="NPCs" style="width: 32px; height: 32px;"></span>
-        <span class="menu-text" data-i18n="menu.npcs">NPCs</span>
-      </button>
-      <button class="menu-item" data-page="settings">
-        <span class="menu-icon"><img src="assets/sprites/settings.png" alt="Configurações" style="width: 32px; height: 32px;"></span>
-        <span class="menu-text" data-i18n="menu.settings">Configurações</span>
-      </button>
+        <button class="menu-item" data-page="farm">
+          <span class="menu-item-icon">
+            <img src="assets/sprites/home.png" alt="Fazenda" style="width: 28px; height: 28px;">
+          </span>
+          <div class="menu-item-content">
+            <span class="menu-item-title" data-i18n="menu.farm">Fazenda</span>
+            <span class="menu-item-desc">Sua plantação</span>
+          </div>
+        </button>
+
+        <button class="menu-item" data-page="skills">
+          <span class="menu-item-icon">
+            <img src="assets/sprites/skills.png" alt="Skills" style="width: 28px; height: 28px;">
+          </span>
+          <div class="menu-item-content">
+            <span class="menu-item-title" data-i18n="menu.skills">Skills</span>
+            <span class="menu-item-desc">Suas habilidades</span>
+          </div>
+        </button>
+
+        <button class="menu-item" data-page="inventory">
+          <span class="menu-item-icon">
+            <img src="assets/sprites/bolsa.png" alt="Inventário" style="width: 28px; height: 28px;">
+          </span>
+          <div class="menu-item-content">
+            <span class="menu-item-title" data-i18n="menu.inventory">Inventário</span>
+            <span class="menu-item-desc">Seus itens</span>
+          </div>
+        </button>
+      </div>
+
+      <!-- Mundo e Interações -->
+      <div class="menu-section">
+        <h3 class="menu-section-title">🌍 Mundo</h3>
+
+        <button class="menu-item" data-page="city">
+          <span class="menu-item-icon city-icon">🏘️</span>
+          <div class="menu-item-content">
+            <span class="menu-item-title" data-i18n="menu.city">Cidade</span>
+            <span class="menu-item-desc">Mercado e mais</span>
+          </div>
+        </button>
+
+        <button class="menu-item" data-page="quests">
+          <span class="menu-item-icon">
+            <img src="assets/sprites/quests.png" alt="Missões" style="width: 28px; height: 28px;">
+          </span>
+          <div class="menu-item-content">
+            <span class="menu-item-title" data-i18n="menu.quests">Missões</span>
+            <span class="menu-item-desc">Objetivos</span>
+          </div>
+        </button>
+
+        <button class="menu-item" data-page="npcs">
+          <span class="menu-item-icon">
+            <img src="assets/sprites/npcs.png" alt="NPCs" style="width: 28px; height: 28px;">
+          </span>
+          <div class="menu-item-content">
+            <span class="menu-item-title" data-i18n="menu.npcs">NPCs</span>
+            <span class="menu-item-desc">Personagens</span>
+          </div>
+        </button>
+      </div>
+
+      <!-- Configurações -->
+      <div class="menu-section">
+        <h3 class="menu-section-title">⚙️ Sistema</h3>
+
+        <button class="menu-item" data-page="settings">
+          <span class="menu-item-icon">
+            <img src="assets/sprites/settings.png" alt="Configurações" style="width: 28px; height: 28px;">
+          </span>
+          <div class="menu-item-content">
+            <span class="menu-item-title" data-i18n="menu.settings">Configurações</span>
+            <span class="menu-item-desc">Ajustes</span>
+          </div>
+        </button>
+      </div>
+
     </nav>
   </div>
 
@@ -175,10 +235,10 @@
 
       <div class="farm-actions">
         <button id="plant-all-btn" class="btn btn-success" data-i18n="farm.plantAll">
-          🌱 Plantar Tudo
+          <span>🌱</span> Plantar<br>Tudo
         </button>
         <button id="harvest-all-btn" class="btn btn-primary" data-i18n="farm.harvestAll">
-          🧺 Colher Tudo
+          <span>🧺</span> Colher<br>Tudo
         </button>
       </div>
     </div>
