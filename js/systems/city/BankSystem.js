@@ -30,12 +30,20 @@ export default class BankSystem {
     }
 
     // Ensure lastInterestTime exists for old saves
-    if (!this.player.data.bank.lastInterestTime) {
+    if (
+      !this.player.data.bank.lastInterestTime ||
+      typeof this.player.data.bank.lastInterestTime !== "number" ||
+      isNaN(this.player.data.bank.lastInterestTime)
+    ) {
       this.player.data.bank.lastInterestTime = Date.now();
+      console.log("🏦 Initialized lastInterestTime for old save");
     }
 
     // Ensure totalInterestEarned exists
-    if (!this.player.data.bank.totalInterestEarned) {
+    if (
+      !this.player.data.bank.totalInterestEarned ||
+      typeof this.player.data.bank.totalInterestEarned !== "number"
+    ) {
       this.player.data.bank.totalInterestEarned = 0;
     }
 
@@ -65,7 +73,7 @@ export default class BankSystem {
     }
 
     const now = Date.now();
-    const lastTime = this.player.data.bank.lastInterestTime;
+    const lastTime = this.player.data.bank?.lastInterestTime || now;
     const timePassed = now - lastTime;
 
     // Calculate how many 4-hour cycles have passed
@@ -121,17 +129,20 @@ export default class BankSystem {
    */
   getNextInterestTime() {
     const now = Date.now();
-    const lastTime = this.player.data.bank.lastInterestTime;
+    const lastTime = this.player.data.bank?.lastInterestTime || now;
     const nextTime = lastTime + this.interestInterval;
     const timeRemaining = Math.max(0, nextTime - now);
+
+    const hours = Math.floor(timeRemaining / (60 * 60 * 1000));
+    const minutes = Math.floor(
+      (timeRemaining % (60 * 60 * 1000)) / (60 * 1000),
+    );
 
     return {
       nextTime,
       timeRemaining,
-      hoursRemaining: Math.floor(timeRemaining / (60 * 60 * 1000)),
-      minutesRemaining: Math.floor(
-        (timeRemaining % (60 * 60 * 1000)) / (60 * 1000),
-      ),
+      hoursRemaining: hours,
+      minutesRemaining: minutes,
     };
   }
 

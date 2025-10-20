@@ -107,8 +107,8 @@ export default class CityUI {
     const playerGold = this.player.data.gold;
 
     // Format time until next interest
-    const hoursLeft = stats.hoursUntilNextInterest;
-    const minutesLeft = stats.minutesUntilNextInterest;
+    const hoursLeft = stats.hoursUntilNextInterest || 0;
+    const minutesLeft = stats.minutesUntilNextInterest || 0;
     const nextInterestIn =
       hoursLeft > 0 ? `${hoursLeft}h ${minutesLeft}m` : `${minutesLeft}m`;
 
@@ -142,7 +142,7 @@ export default class CityUI {
                     </div>
                     <div class="interest-preview">
                         <div style="font-size: 0.625rem; color: var(--text-secondary); margin-bottom: 0.125rem;">Você receberá:</div>
-                        <div style="font-size: 1rem; font-weight: 700; color: #5caa1f;">+${Math.floor((balance * stats.interestRate) / 100)}g</div>
+                        <div style="font-size: 1rem; font-weight: 700; color: #5caa1f;">+${Math.floor((balance * (stats.interestRate || 1)) / 100)}g</div>
                     </div>
                 </div>
                 `
