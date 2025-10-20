@@ -127,14 +127,24 @@
         var(--skill-color-light, var(--brand-secondary)) 100%
     );
     transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 12px;
+}
+
+.skill-progress-bar::after {
+    content: attr(data-progress);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     color: white;
     font-weight: 700;
     font-size: 0.875rem;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+    z-index: 10;
+    pointer-events: none;
 }
 
 .skill-progress-fill::after {

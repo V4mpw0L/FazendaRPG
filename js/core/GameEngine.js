@@ -1190,14 +1190,13 @@ export default class GameEngine {
                 </div>
             </div>
             <div class="skill-progress-container">
-                <div class="skill-progress-bar">
+                <div class="skill-progress-bar" data-progress="${isMaxLevel ? "MAX" : Math.floor(skill.progress) + "%"}">
                     <div class="skill-progress-fill" style="width: ${skill.progress}%">
-                        ${isMaxLevel ? "MAX" : Math.floor(skill.progress) + "%"}
                     </div>
                 </div>
                 <div class="skill-progress-text">
-                    <span>${skill.xp.toLocaleString()} XP</span>
-                    <span>${isMaxLevel ? "MAX" : skill.xpForNext.toLocaleString() + " XP"}</span>
+                    <span>${skill.xp.toLocaleString()} ${i18n.t("skills.xp")}</span>
+                    <span>${isMaxLevel ? "MAX" : skill.xpForNext.toLocaleString() + " " + i18n.t("skills.xp")}</span>
                 </div>
             </div>
         `;
