@@ -502,7 +502,7 @@ export default class InventoryUI {
 
     slot.innerHTML = `
       ${item.count > 1 ? `<div class="inventory-slot-count">${item.count}</div>` : ""}
-      <div class="inventory-slot-icon">${renderItemIcon(item, { size: "2em" })}</div>
+      <div class="inventory-slot-icon">${renderItemIcon(item, { size: "1.5em" })}</div>
       <div class="inventory-slot-name" title="${itemName}">${itemName}</div>
       <div class="inventory-slot-value" style="color: #b8860b;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 0.75em; height: 0.75em; vertical-align: middle;"> ${item.sellPrice || 0}g</div>
       <div class="inventory-slot-category" style="background: ${categoryColor};">
