@@ -451,13 +451,17 @@
     top: 0;
     right: -300px;
     width: 300px;
-    height: 100vh;
-    background: var(--bg-secondary);
+    max-height: 100vh;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     box-shadow: -4px 0 20px var(--shadow-color);
+    border-radius: 0 0 0 12px;
     z-index: 9998;
     transition: right 0.3s ease;
     overflow-y: auto;
     border-left: 3px solid var(--border-color);
+    border-bottom: 3px solid var(--border-color);
 }
 
 .side-menu.active {
