@@ -5,296 +5,409 @@
  */
 
 export default class BankSystem {
-    constructor(player) {
-        this.player = player;
-        this.interestRate = 0.01; // 1% interest per deposit
-        this.minDeposit = 10;
-        this.maxBalance = 1000000;
+  constructor(player) {
+    this.player = player;
+    this.interestRate = 0.01; // 1% interest every 4 hours
+    this.interestInterval = 4 * 60 * 60 * 1000; // 4 hours in milliseconds
+    this.minDeposit = 10;
+    this.maxBalance = 1000000;
+  }
+
+  /**
+   * Initialize bank system
+   */
+  init() {
+    // Initialize bank data if not exists
+    if (!this.player.data.bank) {
+      this.player.data.bank = {
+        balance: 0,
+        totalDeposited: 0,
+        totalWithdrawn: 0,
+        transactionHistory: [],
+        lastInterestTime: Date.now(),
+        totalInterestEarned: 0,
+      };
     }
 
-    /**
-     * Initialize bank system
-     */
-    init() {
-        // Initialize bank data if not exists
-        if (!this.player.data.bank) {
-            this.player.data.bank = {
-                balance: 0,
-                totalDeposited: 0,
-                totalWithdrawn: 0,
-                transactionHistory: []
-            };
-        }
-
-        console.log('🏦 Bank system initialized');
-        return true;
+    // Ensure lastInterestTime exists for old saves
+    if (!this.player.data.bank.lastInterestTime) {
+      this.player.data.bank.lastInterestTime = Date.now();
     }
 
-    /**
-     * Get bank balance
-     * @returns {number}
-     */
-    getBalance() {
-        return this.player.data.bank?.balance || 0;
+    // Ensure totalInterestEarned exists
+    if (!this.player.data.bank.totalInterestEarned) {
+      this.player.data.bank.totalInterestEarned = 0;
     }
 
-    /**
-     * Deposit gold into bank
-     * @param {number} amount - Amount to deposit
-     * @returns {Object} Result
-     */
-    deposit(amount) {
-        // Validate amount
-        if (amount < this.minDeposit) {
-            return {
-                success: false,
-                error: `Depósito mínimo: ${this.minDeposit} ouro`
-            };
-        }
+    // Calculate pending interest
+    this.calculatePendingInterest();
 
-        if (amount > this.player.data.gold) {
-            return {
-                success: false,
-                error: 'Você não tem ouro suficiente!'
-            };
-        }
+    console.log("🏦 Bank system initialized");
+    return true;
+  }
 
-        // Calculate with interest
-        const interest = Math.floor(amount * this.interestRate);
-        const totalToAdd = amount + interest;
+  /**
+   * Get bank balance
+   * @returns {number}
+   */
+  getBalance() {
+    return this.player.data.bank?.balance || 0;
+  }
 
-        // Check max balance
-        const newBalance = this.getBalance() + totalToAdd;
-        if (newBalance > this.maxBalance) {
-            return {
-                success: false,
-                error: `Saldo máximo do banco: ${this.maxBalance} ouro`
-            };
-        }
-
-        // Remove gold from player
-        this.player.removeGold(amount);
-
-        // Add to bank with interest
-        this.player.data.bank.balance += totalToAdd;
-        this.player.data.bank.totalDeposited += amount;
-
-        // Add transaction
-        this.addTransaction({
-            type: 'deposit',
-            amount: amount,
-            interest: interest,
-            total: totalToAdd,
-            timestamp: Date.now()
-        });
-
-        console.log(`🏦 Deposited ${amount} gold + ${interest} interest (${this.interestRate * 100}%)`);
-
-        // Dispatch event
-        window.dispatchEvent(new CustomEvent('bank:deposit', {
-            detail: { amount, interest, total: totalToAdd }
-        }));
-
-        return {
-            success: true,
-            amount,
-            interest,
-            total: totalToAdd,
-            newBalance: this.getBalance()
-        };
+  /**
+   * Calculate and apply pending interest
+   * @returns {Object} Interest info
+   */
+  calculatePendingInterest() {
+    const balance = this.getBalance();
+    if (balance === 0) {
+      return { interestEarned: 0, cycles: 0 };
     }
 
-    /**
-     * Withdraw gold from bank
-     * @param {number} amount - Amount to withdraw
-     * @returns {Object} Result
-     */
-    withdraw(amount) {
-        // Validate amount
-        if (amount <= 0) {
-            return {
-                success: false,
-                error: 'Valor inválido!'
-            };
-        }
+    const now = Date.now();
+    const lastTime = this.player.data.bank.lastInterestTime;
+    const timePassed = now - lastTime;
 
-        if (amount > this.getBalance()) {
-            return {
-                success: false,
-                error: 'Saldo insuficiente no banco!'
-            };
-        }
+    // Calculate how many 4-hour cycles have passed
+    const cycles = Math.floor(timePassed / this.interestInterval);
 
-        // Remove from bank
-        this.player.data.bank.balance -= amount;
-        this.player.data.bank.totalWithdrawn += amount;
-
-        // Add to player
-        this.player.addGold(amount);
-
-        // Add transaction
-        this.addTransaction({
-            type: 'withdraw',
-            amount: amount,
-            timestamp: Date.now()
-        });
-
-        console.log(`🏦 Withdrew ${amount} gold`);
-
-        // Dispatch event
-        window.dispatchEvent(new CustomEvent('bank:withdraw', {
-            detail: { amount }
-        }));
-
-        return {
-            success: true,
-            amount,
-            newBalance: this.getBalance()
-        };
+    if (cycles === 0) {
+      return { interestEarned: 0, cycles: 0 };
     }
 
-    /**
-     * Deposit all gold
-     * @returns {Object} Result
-     */
-    depositAll() {
-        const amount = this.player.data.gold;
-        if (amount < this.minDeposit) {
-            return {
-                success: false,
-                error: `Você precisa de pelo menos ${this.minDeposit} ouro para depositar`
-            };
-        }
+    // Calculate compound interest for each cycle
+    let currentBalance = balance;
+    let totalInterest = 0;
 
-        return this.deposit(amount);
+    for (let i = 0; i < cycles; i++) {
+      const interest = Math.floor(currentBalance * this.interestRate);
+      totalInterest += interest;
+      currentBalance += interest;
     }
 
-    /**
-     * Withdraw all gold
-     * @returns {Object} Result
-     */
-    withdrawAll() {
-        const amount = this.getBalance();
-        if (amount === 0) {
-            return {
-                success: false,
-                error: 'Banco vazio!'
-            };
-        }
+    // Apply interest
+    if (totalInterest > 0) {
+      this.player.data.bank.balance = currentBalance;
+      this.player.data.bank.totalInterestEarned += totalInterest;
+      this.player.data.bank.lastInterestTime =
+        lastTime + cycles * this.interestInterval;
 
-        return this.withdraw(amount);
+      // Add transaction
+      this.addTransaction({
+        type: "interest",
+        amount: totalInterest,
+        cycles: cycles,
+        timestamp: Date.now(),
+      });
+
+      console.log(
+        `🏦 Applied ${cycles} cycles of interest: +${totalInterest}g`,
+      );
+
+      // Dispatch event
+      window.dispatchEvent(
+        new CustomEvent("bank:interest", {
+          detail: { interest: totalInterest, cycles },
+        }),
+      );
     }
 
-    /**
-     * Add transaction to history
-     * @param {Object} transaction - Transaction data
-     */
-    addTransaction(transaction) {
-        if (!this.player.data.bank.transactionHistory) {
-            this.player.data.bank.transactionHistory = [];
-        }
+    return { interestEarned: totalInterest, cycles };
+  }
 
-        this.player.data.bank.transactionHistory.unshift(transaction);
+  /**
+   * Get time until next interest payment
+   * @returns {Object} Time info
+   */
+  getNextInterestTime() {
+    const now = Date.now();
+    const lastTime = this.player.data.bank.lastInterestTime;
+    const nextTime = lastTime + this.interestInterval;
+    const timeRemaining = Math.max(0, nextTime - now);
 
-        // Keep only last 50 transactions
-        if (this.player.data.bank.transactionHistory.length > 50) {
-            this.player.data.bank.transactionHistory =
-                this.player.data.bank.transactionHistory.slice(0, 50);
-        }
+    return {
+      nextTime,
+      timeRemaining,
+      hoursRemaining: Math.floor(timeRemaining / (60 * 60 * 1000)),
+      minutesRemaining: Math.floor(
+        (timeRemaining % (60 * 60 * 1000)) / (60 * 1000),
+      ),
+    };
+  }
+
+  /**
+   * Deposit gold into bank
+   * @param {number} amount - Amount to deposit
+   * @returns {Object} Result
+   */
+  deposit(amount) {
+    // Calculate pending interest first
+    const pendingInterest = this.calculatePendingInterest();
+
+    // Validate amount
+    if (amount < this.minDeposit) {
+      return {
+        success: false,
+        error: `Depósito mínimo: ${this.minDeposit} ouro`,
+      };
     }
 
-    /**
-     * Get transaction history
-     * @param {number} limit - Number of transactions to return
-     * @returns {Array}
-     */
-    getTransactionHistory(limit = 10) {
-        return (this.player.data.bank.transactionHistory || []).slice(0, limit);
+    if (amount > this.player.data.gold) {
+      return {
+        success: false,
+        error: "Você não tem ouro suficiente!",
+      };
     }
 
-    /**
-     * Get bank statistics
-     * @returns {Object}
-     */
-    getStats() {
-        return {
-            balance: this.getBalance(),
-            totalDeposited: this.player.data.bank?.totalDeposited || 0,
-            totalWithdrawn: this.player.data.bank?.totalWithdrawn || 0,
-            transactionCount: this.player.data.bank?.transactionHistory?.length || 0,
-            interestRate: this.interestRate * 100,
-            minDeposit: this.minDeposit,
-            maxBalance: this.maxBalance
-        };
+    // Check max balance
+    const newBalance = this.getBalance() + amount;
+    if (newBalance > this.maxBalance) {
+      return {
+        success: false,
+        error: `Saldo máximo do banco: ${this.maxBalance} ouro`,
+      };
     }
 
-    /**
-     * Calculate interest on amount
-     * @param {number} amount - Amount to calculate interest on
-     * @returns {number}
-     */
-    calculateInterest(amount) {
-        return Math.floor(amount * this.interestRate);
+    // Remove gold from player
+    this.player.removeGold(amount);
+
+    // Add to bank (no instant interest)
+    this.player.data.bank.balance += amount;
+    this.player.data.bank.totalDeposited += amount;
+
+    // Add transaction
+    this.addTransaction({
+      type: "deposit",
+      amount: amount,
+      timestamp: Date.now(),
+    });
+
+    console.log(`🏦 Deposited ${amount} gold`);
+
+    // Dispatch event
+    window.dispatchEvent(
+      new CustomEvent("bank:deposit", {
+        detail: { amount, newBalance: this.getBalance(), pendingInterest },
+      }),
+    );
+
+    return {
+      success: true,
+      amount,
+      newBalance: this.getBalance(),
+      pendingInterest,
+    };
+  }
+
+  /**
+   * Withdraw gold from bank
+   * @param {number} amount - Amount to withdraw
+   * @returns {Object} Result
+   */
+  withdraw(amount) {
+    // Calculate pending interest first
+    const pendingInterest = this.calculatePendingInterest();
+
+    // Validate amount
+    if (amount <= 0) {
+      return {
+        success: false,
+        error: "Valor inválido!",
+      };
     }
 
-    /**
-     * Check if player can deposit
-     * @param {number} amount - Amount to check
-     * @returns {boolean}
-     */
-    canDeposit(amount) {
-        if (amount < this.minDeposit) return false;
-        if (amount > this.player.data.gold) return false;
-
-        const interest = this.calculateInterest(amount);
-        const newBalance = this.getBalance() + amount + interest;
-
-        return newBalance <= this.maxBalance;
+    if (amount > this.getBalance()) {
+      return {
+        success: false,
+        error: "Saldo insuficiente no banco!",
+      };
     }
 
-    /**
-     * Check if player can withdraw
-     * @param {number} amount - Amount to check
-     * @returns {boolean}
-     */
-    canWithdraw(amount) {
-        return amount > 0 && amount <= this.getBalance();
+    // Remove from bank
+    this.player.data.bank.balance -= amount;
+    this.player.data.bank.totalWithdrawn += amount;
+
+    // Add to player
+    this.player.addGold(amount);
+
+    // Add transaction
+    this.addTransaction({
+      type: "withdraw",
+      amount: amount,
+      timestamp: Date.now(),
+    });
+
+    console.log(`🏦 Withdrew ${amount} gold`);
+
+    // Dispatch event
+    window.dispatchEvent(
+      new CustomEvent("bank:withdraw", {
+        detail: { amount, pendingInterest },
+      }),
+    );
+
+    return {
+      success: true,
+      amount,
+      newBalance: this.getBalance(),
+      pendingInterest,
+    };
+  }
+
+  /**
+   * Deposit all gold
+   * @returns {Object} Result
+   */
+  depositAll() {
+    const amount = this.player.data.gold;
+    if (amount < this.minDeposit) {
+      return {
+        success: false,
+        error: `Você precisa de pelo menos ${this.minDeposit} ouro para depositar`,
+      };
     }
 
-    /**
-     * Get formatted transaction
-     * @param {Object} transaction - Transaction data
-     * @returns {string}
-     */
-    formatTransaction(transaction) {
-        const date = new Date(transaction.timestamp);
-        const timeStr = date.toLocaleString('pt-BR');
+    return this.deposit(amount);
+  }
 
-        if (transaction.type === 'deposit') {
-            return `${timeStr} - Depósito: ${transaction.amount}g + ${transaction.interest}g juros = ${transaction.total}g`;
-        } else {
-            return `${timeStr} - Saque: ${transaction.amount}g`;
-        }
+  /**
+   * Withdraw all gold
+   * @returns {Object} Result
+   */
+  withdrawAll() {
+    const amount = this.getBalance();
+    if (amount === 0) {
+      return {
+        success: false,
+        error: "Banco vazio!",
+      };
     }
 
-    /**
-     * Clear transaction history
-     */
-    clearHistory() {
-        this.player.data.bank.transactionHistory = [];
-        console.log('🏦 Transaction history cleared');
+    return this.withdraw(amount);
+  }
+
+  /**
+   * Add transaction to history
+   * @param {Object} transaction - Transaction data
+   */
+  addTransaction(transaction) {
+    if (!this.player.data.bank.transactionHistory) {
+      this.player.data.bank.transactionHistory = [];
     }
 
-    /**
-     * Reset bank (for testing/debugging)
-     */
-    reset() {
-        this.player.data.bank = {
-            balance: 0,
-            totalDeposited: 0,
-            totalWithdrawn: 0,
-            transactionHistory: []
-        };
-        console.log('🏦 Bank reset');
+    this.player.data.bank.transactionHistory.unshift(transaction);
+
+    // Keep only last 50 transactions
+    if (this.player.data.bank.transactionHistory.length > 50) {
+      this.player.data.bank.transactionHistory =
+        this.player.data.bank.transactionHistory.slice(0, 50);
     }
+  }
+
+  /**
+   * Get transaction history
+   * @param {number} limit - Number of transactions to return
+   * @returns {Array}
+   */
+  getTransactionHistory(limit = 10) {
+    return (this.player.data.bank.transactionHistory || []).slice(0, limit);
+  }
+
+  /**
+   * Get bank statistics
+   * @returns {Object}
+   */
+  getStats() {
+    const nextInterest = this.getNextInterestTime();
+
+    return {
+      balance: this.getBalance(),
+      totalDeposited: this.player.data.bank?.totalDeposited || 0,
+      totalWithdrawn: this.player.data.bank?.totalWithdrawn || 0,
+      totalInterestEarned: this.player.data.bank?.totalInterestEarned || 0,
+      transactionCount: this.player.data.bank?.transactionHistory?.length || 0,
+      interestRate: this.interestRate * 100,
+      interestInterval: this.interestInterval,
+      minDeposit: this.minDeposit,
+      maxBalance: this.maxBalance,
+      nextInterestTime: nextInterest.nextTime,
+      timeUntilNextInterest: nextInterest.timeRemaining,
+      hoursUntilNextInterest: nextInterest.hoursRemaining,
+      minutesUntilNextInterest: nextInterest.minutesRemaining,
+    };
+  }
+
+  /**
+   * Calculate interest on amount
+   * @param {number} amount - Amount to calculate interest on
+   * @returns {number}
+   */
+  calculateInterest(amount) {
+    return Math.floor(amount * this.interestRate);
+  }
+
+  /**
+   * Check if player can deposit
+   * @param {number} amount - Amount to check
+   * @returns {boolean}
+   */
+  canDeposit(amount) {
+    if (amount < this.minDeposit) return false;
+    if (amount > this.player.data.gold) return false;
+
+    const interest = this.calculateInterest(amount);
+    const newBalance = this.getBalance() + amount + interest;
+
+    return newBalance <= this.maxBalance;
+  }
+
+  /**
+   * Check if player can withdraw
+   * @param {number} amount - Amount to check
+   * @returns {boolean}
+   */
+  canWithdraw(amount) {
+    return amount > 0 && amount <= this.getBalance();
+  }
+
+  /**
+   * Get formatted transaction
+   * @param {Object} transaction - Transaction data
+   * @returns {string}
+   */
+  formatTransaction(transaction) {
+    const date = new Date(transaction.timestamp);
+    const timeStr = date.toLocaleString("pt-BR");
+
+    if (transaction.type === "deposit") {
+      return `${timeStr} - Depósito: ${transaction.amount}g`;
+    } else if (transaction.type === "interest") {
+      return `${timeStr} - Juros (${transaction.cycles}x): +${transaction.amount}g`;
+    } else {
+      return `${timeStr} - Saque: ${transaction.amount}g`;
+    }
+  }
+
+  /**
+   * Clear transaction history
+   */
+  clearHistory() {
+    this.player.data.bank.transactionHistory = [];
+    console.log("🏦 Transaction history cleared");
+  }
+
+  /**
+   * Reset bank (for testing/debugging)
+   */
+  reset() {
+    this.player.data.bank = {
+      balance: 0,
+      totalDeposited: 0,
+      totalWithdrawn: 0,
+      transactionHistory: [],
+      lastInterestTime: Date.now(),
+      totalInterestEarned: 0,
+    };
+    console.log("🏦 Bank reset");
+  }
 }

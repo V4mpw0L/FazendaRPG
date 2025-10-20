@@ -348,6 +348,9 @@ export default class GameEngine {
       return;
     }
 
+    // Check for pending bank interest
+    this.checkBankInterest();
+
     // Show farm screen
     this.screenManager.showScreen("farm-screen");
 
@@ -360,6 +363,23 @@ export default class GameEngine {
 
     // Debug: Check player name
     console.log("🔍 Player name:", this.player.data.name);
+  }
+
+  /**
+   * Check and notify about pending bank interest
+   */
+  checkBankInterest() {
+    if (!this.bankSystem) return;
+
+    const pendingInterest = this.bankSystem.calculatePendingInterest();
+
+    if (pendingInterest.interestEarned > 0) {
+      setTimeout(() => {
+        notifications.success(
+          `💰 Banco: Você recebeu +${pendingInterest.interestEarned}g de juros! (${pendingInterest.cycles} ciclos de 4h)`,
+        );
+      }, 1500);
+    }
   }
 
   /**

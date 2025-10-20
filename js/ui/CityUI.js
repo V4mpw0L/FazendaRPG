@@ -106,12 +106,18 @@ export default class CityUI {
     const balance = this.bankSystem.getBalance();
     const playerGold = this.player.data.gold;
 
+    // Format time until next interest
+    const hoursLeft = stats.hoursUntilNextInterest;
+    const minutesLeft = stats.minutesUntilNextInterest;
+    const nextInterestIn =
+      hoursLeft > 0 ? `${hoursLeft}h ${minutesLeft}m` : `${minutesLeft}m`;
+
     const content = `
             <div class="bank-ui">
                 <div class="bank-header">
                     <div style="font-size: 4rem; margin-bottom: 1rem;">🏦</div>
                     <h2 style="margin: 0 0 0.5rem 0;">Banco da Cidade</h2>
-                    <p style="color: var(--text-secondary); margin: 0;">Guarde seu ouro com segurança e ganhe juros!</p>
+                    <p style="color: var(--text-secondary); margin: 0;">Guarde seu ouro com segurança e ganhe juros a cada 4 horas!</p>
                 </div>
 
                 <div class="bank-balances">
@@ -125,10 +131,32 @@ export default class CityUI {
                     </div>
                 </div>
 
+                ${
+                  balance > 0
+                    ? `
+                <div class="interest-timer">
+                    <div class="timer-icon">⏰</div>
+                    <div class="timer-info">
+                        <div class="timer-label">Próximos Juros em:</div>
+                        <div class="timer-value">${nextInterestIn}</div>
+                    </div>
+                    <div class="interest-preview">
+                        <div style="font-size: 0.625rem; color: var(--text-secondary); margin-bottom: 0.125rem;">Você receberá:</div>
+                        <div style="font-size: 1rem; font-weight: 700; color: #5caa1f;">+${Math.floor((balance * stats.interestRate) / 100)}g</div>
+                    </div>
+                </div>
+                `
+                    : ""
+                }
+
                 <div class="bank-info">
                     <div class="info-item">
                         <span>📈 Taxa de Juros:</span>
-                        <strong>${stats.interestRate}% por depósito</strong>
+                        <strong>${stats.interestRate}% a cada 4 horas</strong>
+                    </div>
+                    <div class="info-item">
+                        <span>💰 Juros Ganhos:</span>
+                        <strong style="color: #5caa1f;">+${stats.totalInterestEarned}g</strong>
                     </div>
                     <div class="info-item">
                         <span>💵 Depósito Mínimo:</span>
@@ -153,7 +181,7 @@ export default class CityUI {
                             value="${Math.min(100, playerGold)}"
                         />
                         <div id="deposit-preview" class="preview-text">
-                            Com ${stats.interestRate}% de juros
+                            Juros: ${stats.interestRate}% a cada 4h
                         </div>
                         <div class="button-row">
                             <button class="btn btn-sm btn-secondary" onclick="document.getElementById('deposit-amount').value = Math.floor(${playerGold} * 0.25)">25%</button>
@@ -195,7 +223,41 @@ export default class CityUI {
                         display: grid;
                         grid-template-columns: repeat(2, 1fr);
                         gap: 1rem;
+                        margin-bottom: 1rem;
+                    }
+                    .interest-timer {
+                        background: linear-gradient(135deg, rgba(92, 170, 31, 0.1), rgba(126, 200, 80, 0.05));
+                        border: 2px solid var(--brand-primary);
+                        border-radius: 12px;
+                        padding: 1rem;
                         margin-bottom: 1.5rem;
+                        display: flex;
+                        align-items: center;
+                        gap: 1rem;
+                    }
+                    .timer-icon {
+                        font-size: 2rem;
+                    }
+                    .timer-info {
+                        flex: 1;
+                    }
+                    .timer-label {
+                        font-size: 0.75rem;
+                        color: var(--text-secondary);
+                        font-weight: 600;
+                        margin-bottom: 0.25rem;
+                    }
+                    .timer-value {
+                        font-size: 1.25rem;
+                        font-weight: 700;
+                        color: var(--brand-primary);
+                    }
+                    .interest-preview {
+                        text-align: center;
+                        padding: 0.5rem;
+                        background: var(--bg-secondary);
+                        border: 2px solid var(--border-color);
+                        border-radius: 8px;
                     }
                     .balance-card {
                         background: var(--bg-accent);
@@ -287,6 +349,10 @@ export default class CityUI {
                         .bank-actions {
                             grid-template-columns: 1fr;
                         }
+                        .interest-timer {
+                            flex-direction: column;
+                            text-align: center;
+                        }
                     }
                 </style>
             </div>
@@ -335,14 +401,18 @@ export default class CityUI {
     const result = this.bankSystem.deposit(amount);
 
     if (result.success) {
-      this.notifications.show(
-        i18n.t("bank.deposited", {
-          amount: result.amount,
-          interest: result.interest,
-          newBalance: result.newBalance,
-        }),
-        "success",
-      );
+      // Check if there was pending interest
+      if (result.pendingInterest && result.pendingInterest.interestEarned > 0) {
+        this.notifications.show(
+          `Depositou ${result.amount}g! +${result.pendingInterest.interestEarned}g de juros recebidos! Total no banco: ${result.newBalance}g`,
+          "success",
+        );
+      } else {
+        this.notifications.show(
+          `Depositou ${result.amount}g! Total no banco: ${result.newBalance}g`,
+          "success",
+        );
+      }
       this.modal.close();
 
       // Dispatch event to update UI
@@ -360,13 +430,18 @@ export default class CityUI {
     const result = this.bankSystem.withdraw(amount);
 
     if (result.success) {
-      this.notifications.show(
-        i18n.t("bank.withdrawn", {
-          amount: result.amount,
-          newBalance: result.newBalance,
-        }),
-        "success",
-      );
+      // Check if there was pending interest
+      if (result.pendingInterest && result.pendingInterest.interestEarned > 0) {
+        this.notifications.show(
+          `Sacou ${result.amount}g! +${result.pendingInterest.interestEarned}g de juros recebidos! Saldo no banco: ${result.newBalance}g`,
+          "success",
+        );
+      } else {
+        this.notifications.show(
+          `Sacou ${result.amount}g! Saldo no banco: ${result.newBalance}g`,
+          "success",
+        );
+      }
       this.modal.close();
 
       // Dispatch event to update UI
