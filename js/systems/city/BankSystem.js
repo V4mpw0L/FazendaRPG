@@ -133,11 +133,11 @@ export default class BankSystem {
     const nextTime = lastTime + this.interestInterval;
     const timeRemaining = Math.max(0, nextTime - now);
 
-    const hours = Math.floor(timeRemaining / (60 * 60 * 1000));
-    const minutes = Math.floor(
-      (timeRemaining % (60 * 60 * 1000)) / (60 * 1000),
-    );
-    const seconds = Math.floor((timeRemaining % (60 * 1000)) / 1000);
+    // Convert to seconds first for accuracy
+    const totalSeconds = Math.floor(timeRemaining / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
 
     return {
       nextTime,
@@ -343,10 +343,11 @@ export default class BankSystem {
       interestInterval: this.interestInterval,
       minDeposit: this.minDeposit,
       maxBalance: this.maxBalance,
-      nextInterestTime: nextInterest.nextTime,
-      timeUntilNextInterest: nextInterest.timeRemaining,
-      hoursUntilNextInterest: nextInterest.hoursRemaining,
-      minutesUntilNextInterest: nextInterest.minutesRemaining,
+      nextInterestTime: nextInterest?.nextTime,
+      timeUntilNextInterest: nextInterest?.timeRemaining,
+      hoursUntilNextInterest: nextInterest?.hoursRemaining || 0,
+      minutesUntilNextInterest: nextInterest?.minutesRemaining || 0,
+      secondsRemaining: nextInterest?.secondsRemaining || 0,
     };
   }
 

@@ -408,6 +408,10 @@ export default class CityUI {
     // Clear any existing timer
     this.stopBankTimerUpdate();
 
+    // Cache the target time ONCE
+    const lastTime = this.player.data.bank?.lastInterestTime || Date.now();
+    this.bankTargetTime = lastTime + 4 * 60 * 60 * 1000; // 4 hours in ms
+
     // Update immediately
     this.updateBankTimer();
 
@@ -425,6 +429,7 @@ export default class CityUI {
       clearInterval(this.bankTimerInterval);
       this.bankTimerInterval = null;
     }
+    this.bankTargetTime = null;
   }
 
   /**
@@ -437,37 +442,35 @@ export default class CityUI {
     );
 
     if (!timerValue) {
-      console.log("⚠️ Timer element not found yet");
+      this.stopBankTimerUpdate();
       return;
     }
 
-    // Get fresh stats
-    const stats = this.bankSystem.getStats();
-    const balance = this.bankSystem.getBalance();
+    // Calculate time remaining from cached target
+    const now = Date.now();
+    const timeRemaining = Math.max(0, this.bankTargetTime - now);
 
-    // Format time
-    const hoursLeft = stats.hoursUntilNextInterest || 0;
-    const minutesLeft = stats.minutesUntilNextInterest || 0;
+    // Convert to time units
+    const totalSeconds = Math.floor(timeRemaining / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
 
-    // Calculate seconds too for more precision
-    const timeRemaining = stats.timeUntilNextInterest || 0;
-    const secondsLeft = Math.floor((timeRemaining % 60000) / 1000);
-
+    // Format display
     const nextInterestIn =
-      hoursLeft > 0
-        ? `${hoursLeft}h ${minutesLeft}m`
-        : minutesLeft > 0
-          ? `${minutesLeft}m ${secondsLeft}s`
-          : `${secondsLeft}s`;
+      hours > 0
+        ? `${hours}h ${minutes}m ${seconds}s`
+        : minutes > 0
+          ? `${minutes}m ${seconds}s`
+          : `${seconds}s`;
 
     // Update timer
     timerValue.textContent = nextInterestIn;
 
     // Update interest preview
+    const balance = this.bankSystem.getBalance();
     if (interestPreview && balance > 0) {
-      const nextInterest = Math.floor(
-        (balance * (stats.interestRate || 1)) / 100,
-      );
+      const nextInterest = Math.floor(balance * 0.01);
       interestPreview.textContent = `+${nextInterest}g`;
     }
   }
