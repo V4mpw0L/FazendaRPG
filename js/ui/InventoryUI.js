@@ -191,8 +191,8 @@ export default class InventoryUI {
       }
 
       .inventory-slot {
-        background: var(--bg-secondary);
-        border: 2px solid var(--border-color);
+        background: linear-gradient(135deg, #8b6914 0%, #a0522d 40%, #654321 100%);
+        border: 2px solid rgba(139, 105, 20, 0.6);
         border-radius: 8px;
         padding: 0.5rem;
         aspect-ratio: 1;
@@ -204,6 +204,34 @@ export default class InventoryUI {
         position: relative;
         transition: all var(--transition-fast);
         cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+      }
+
+      .inventory-slot::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+          radial-gradient(circle at 20% 30%, rgba(0, 0, 0, 0.1) 0%, transparent 3%),
+          radial-gradient(circle at 60% 70%, rgba(0, 0, 0, 0.08) 0%, transparent 2%),
+          radial-gradient(circle at 80% 20%, rgba(0, 0, 0, 0.06) 0%, transparent 2.5%);
+        pointer-events: none;
+        opacity: 0.5;
+      }
+
+      .inventory-slot::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #5caa1f, #7ec850, #5caa1f, transparent);
+        box-shadow: 0 0 6px rgba(92, 170, 31, 0.6);
       }
 
       .inventory-slot.empty {
@@ -222,45 +250,65 @@ export default class InventoryUI {
 
       .inventory-slot:not(.empty):hover {
         transform: translateY(-3px);
-        box-shadow: 0 6px 12px var(--shadow-color);
-        border-color: var(--brand-primary);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        border-color: rgba(139, 105, 20, 0.8);
       }
 
       .inventory-slot-icon {
         font-size: 2rem;
         line-height: 1;
+        position: relative;
+        z-index: 1;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
       }
 
       .inventory-slot-name {
-        font-weight: 600;
+        font-weight: 700;
         font-size: 0.625rem;
         text-align: center;
-        color: var(--text-primary);
+        color: white;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         width: 100%;
+        position: relative;
+        z-index: 1;
       }
 
       .inventory-slot-value {
         font-size: 0.625rem;
         font-weight: 700;
-        color: #b8860b;
+        color: white;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2));
+        padding: 0.125rem 0.375rem;
+        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        position: relative;
+        z-index: 1;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.125rem;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
       }
 
       .inventory-slot-count {
         position: absolute;
         top: 0.25rem;
         right: 0.25rem;
-        background: var(--brand-primary);
+        background: linear-gradient(135deg, #5caa1f, #4a8e19);
         color: white;
         padding: 0.125rem 0.375rem;
         border-radius: 10px;
         font-size: 0.625rem;
         font-weight: 700;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
         min-width: 1.25rem;
         text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        z-index: 2;
       }
 
       .inventory-slot-category {
@@ -472,6 +520,28 @@ export default class InventoryUI {
           min-width: 120px;
           font-size: 0.75rem;
         }
+      }
+
+      /* Tema Claro */
+      .light-theme .inventory-slot:not(.empty) {
+        background: linear-gradient(135deg, #a0522d 0%, #8b6914 40%, #654321 100%);
+        border-color: rgba(139, 105, 20, 0.7);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      }
+
+      .light-theme .inventory-slot:not(.empty):hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      }
+
+      /* Tema Escuro */
+      .dark-theme .inventory-slot:not(.empty) {
+        background: linear-gradient(135deg, #654321 0%, #5a3d1f 40%, #4a3218 100%);
+        border-color: rgba(92, 170, 31, 0.4);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      }
+
+      .dark-theme .inventory-slot:not(.empty):hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12);
       }
     `;
 
