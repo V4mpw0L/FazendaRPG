@@ -754,6 +754,12 @@ a:hover {
     white-space: nowrap;
 }
 
+.farm-tile-timer.fertilized {
+    background: rgba(92, 170, 31, 0.6);
+    color: white;
+    box-shadow: 0 0 8px rgba(92, 170, 31, 0.5);
+}
+
 .farm-tile-progress {
     position: absolute;
     bottom: 0;

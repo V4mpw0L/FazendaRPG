@@ -602,6 +602,8 @@ export default class GameEngine {
     const isReady = this.farmSystem.isPlotReady(index);
     const timeRemaining = this.farmSystem.getTimeRemaining(index);
     const progress = this.farmSystem.getGrowthProgress(index);
+    const plot = this.farmSystem.getPlot(index);
+    const isFertilized = plot && plot.fertilized;
 
     // Set icon
     tile.innerHTML = `<div class="farm-tile-icon">${icon}</div>`;
@@ -616,7 +618,9 @@ export default class GameEngine {
     // Add timer if growing
     if (timeRemaining > 0) {
       const timerEl = document.createElement("div");
-      timerEl.className = "farm-tile-timer";
+      timerEl.className = isFertilized
+        ? "farm-tile-timer fertilized"
+        : "farm-tile-timer";
       timerEl.textContent = this.formatTime(timeRemaining);
       tile.appendChild(timerEl);
     }
