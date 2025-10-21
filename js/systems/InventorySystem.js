@@ -162,6 +162,14 @@ export default class InventorySystem {
       return { success: false, error: "Item not in inventory" };
     }
 
+    // Check if energy is already full before using
+    if (
+      itemData.energyRestore &&
+      this.player.data.energy >= this.player.data.maxEnergy
+    ) {
+      return { success: false, error: "Sua energia já está cheia!" };
+    }
+
     // Apply effects
     const effects = {};
 
