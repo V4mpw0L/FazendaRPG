@@ -92,6 +92,7 @@
 
 .skill-info {
     flex: 1;
+    text-align: center;
 }
 
 .skill-name {
