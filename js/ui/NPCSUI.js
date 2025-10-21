@@ -253,7 +253,7 @@ export default class NPCSUI {
         <h3 style="margin: 0.5rem 0;">Loja de ${name}</h3>
         <p style="color: var(--text-secondary); font-size: 0.875rem;">Seu ouro: <span style="color: #b8860b; font-weight: 700;">${this.player.data.gold}g</span></p>
       </div>
-      <div style="display: grid; gap: 0.75rem; max-height: 400px; overflow-y: auto; padding: 0.5rem;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem; max-height: 400px; overflow-y: auto; padding: 0.5rem;">
     `;
 
     shopItems.forEach((shopItem) => {
@@ -269,21 +269,18 @@ export default class NPCSUI {
       const canAfford = this.player.data.gold >= price;
 
       content += `
-        <div class="shop-item" style="background: var(--bg-accent); padding: 1rem; border-radius: 8px; border: 2px solid var(--border-color); display: flex; align-items: center; gap: 1rem;">
-          <div style="font-size: 3rem;">${itemData.icon || "📦"}</div>
-          <div style="flex: 1;">
-            <h4 style="margin: 0 0 0.25rem 0; color: var(--text-primary);">${itemName}</h4>
-            <p style="margin: 0; color: var(--text-secondary); font-size: 0.875rem;">${itemDesc}</p>
-            <div style="margin-top: 0.5rem; display: flex; gap: 1rem; align-items: center;">
-              <span style="color: #b8860b; font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g</span>
-              <span style="color: var(--text-secondary); font-size: 0.875rem;">Estoque: ${stock}</span>
-            </div>
+        <div class="shop-item" style="background: var(--bg-accent); padding: 0.75rem; border-radius: 8px; border: 2px solid var(--border-color); display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; min-height: 180px;">
+          <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">${itemData.icon || "📦"}</div>
+          <div style="font-weight: 600; font-size: 0.875rem; color: var(--text-primary); margin-bottom: 0.25rem; line-height: 1.2;">${itemName}</div>
+          <div style="color: #b8860b; font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem;">
+            <img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g
           </div>
+          <div style="color: var(--text-secondary); font-size: 0.75rem; margin-bottom: 0.5rem;">Estoque: ${stock}</div>
           <button class="btn ${canAfford ? "btn-success" : "btn-secondary"}"
                   data-item-id="${shopItem.id}"
                   data-price="${price}"
                   ${!canAfford ? "disabled" : ""}
-                  style="min-width: 100px;">
+                  style="width: 100%; padding: 0.5rem; font-size: 0.75rem; margin-top: auto;">
             <img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> Comprar
           </button>
         </div>
