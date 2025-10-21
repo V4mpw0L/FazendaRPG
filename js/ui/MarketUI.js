@@ -308,6 +308,14 @@ export default class MarketUI {
         transform: scale(0.98);
       }
 
+      .market-item-action.sell-action {
+        background: #e74c3c;
+      }
+
+      .market-item-action.sell-action:hover {
+        background: #c0392b;
+      }
+
       .market-pagination {
         display: flex;
         justify-content: center;
@@ -703,7 +711,7 @@ export default class MarketUI {
       </div>
       <div class="market-item-category" style="background: ${categoryColor};">${categoryName}</div>
       ${requiredLevelInfo}
-      <button class="market-item-action">${buttonIcon} ${buttonText}</button>
+      <button class="market-item-action${type === "sell" ? " sell-action" : ""}">${buttonIcon} ${buttonText}</button>
     `;
 
     const button = card.querySelector(".market-item-action");
