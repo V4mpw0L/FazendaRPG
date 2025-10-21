@@ -14,12 +14,14 @@
 
 /* Skill Card */
 .skill-card {
-    background: var(--bg-secondary);
-    border: 3px solid var(--border-color);
-    border-radius: var(--border-radius);
+    background: linear-gradient(135deg, #8b6914 0%, #a0522d 40%, #654321 100%);
+    border: 3px solid rgba(139, 105, 20, 0.6);
+    border-radius: 16px;
     padding: var(--spacing-lg);
-    box-shadow: 0 4px 12px var(--shadow-color);
-    transition: all var(--transition-fast);
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     position: relative;
     overflow: hidden;
@@ -38,11 +40,26 @@
         var(--skill-color, var(--brand-primary)),
         transparent
     );
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        opacity: 0.3;
+    }
+    50% {
+        opacity: 0.8;
+    }
+    100% {
+        opacity: 0.3;
+    }
 }
 
 .skill-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px var(--shadow-color);
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
     border-color: var(--skill-color, var(--brand-primary));
 }
 
@@ -57,19 +74,15 @@
 .skill-icon {
     width: 60px;
     height: 60px;
-    background: linear-gradient(
-        135deg,
-        var(--bg-accent) 0%,
-        var(--bg-primary) 100%
-    );
+    background: rgba(0, 0, 0, 0.3);
     border: 3px solid var(--skill-color, var(--brand-primary));
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 2rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    transition: all var(--transition-fast);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .skill-card:hover .skill-icon {
@@ -83,24 +96,27 @@
 
 .skill-name {
     font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--text-primary);
+    font-weight: 800;
+    color: white;
     margin-bottom: var(--spacing-xs);
     text-transform: capitalize;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .skill-level {
     font-size: 1.5rem;
-    font-weight: 800;
+    font-weight: 900;
     color: var(--skill-color, var(--brand-primary));
-    text-shadow: 0 2px 4px var(--shadow-color);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    filter: drop-shadow(0 0 8px var(--skill-color));
 }
 
 .skill-level-label {
     font-size: 0.75rem;
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.8);
     text-transform: uppercase;
     letter-spacing: 1px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* Skill Progress Bar */
@@ -111,12 +127,12 @@
 .skill-progress-bar {
     width: 100%;
     height: 28px;
-    background: var(--bg-accent);
-    border: 2px solid var(--border-color);
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(139, 105, 20, 0.5);
     border-radius: 14px;
     overflow: hidden;
     position: relative;
-    box-shadow: inset 0 2px 6px var(--shadow-color);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 .skill-progress-fill {
@@ -177,8 +193,9 @@
     justify-content: space-between;
     margin-top: var(--spacing-xs);
     font-size: 0.8125rem;
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.8);
     font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* Skill Stats */
@@ -190,19 +207,21 @@
 }
 
 .skill-stat {
-    background: var(--bg-accent);
-    border: 2px solid var(--border-color);
-    border-radius: var(--border-radius-sm);
+    background: rgba(0, 0, 0, 0.2);
+    border: 2px solid rgba(139, 105, 20, 0.4);
+    border-radius: 8px;
     padding: var(--spacing-sm);
     text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .skill-stat-label {
     font-size: 0.75rem;
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.7);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 2px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .skill-stat-value {
@@ -345,8 +364,9 @@
     border-color: #ffd700;
     background: linear-gradient(
         135deg,
-        var(--bg-secondary) 0%,
-        rgba(255, 215, 0, 0.1) 100%
+        #8b6914 0%,
+        #a0522d 40%,
+        rgba(255, 215, 0, 0.15) 100%
     );
 }
 
@@ -380,10 +400,11 @@
 /* Skill Description */
 .skill-description {
     font-size: 0.875rem;
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.8);
     margin-bottom: var(--spacing-md);
     line-height: 1.5;
     font-style: italic;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* Level Up Animation */
@@ -420,29 +441,33 @@
 
 /* Total Level Display */
 .skills-summary {
-    background: var(--bg-secondary);
-    border: 3px solid var(--border-color);
-    border-radius: var(--border-radius);
+    background: linear-gradient(135deg, #8b6914 0%, #a0522d 40%, #654321 100%);
+    border: 3px solid rgba(139, 105, 20, 0.6);
+    border-radius: 16px;
     padding: var(--spacing-lg);
     margin-bottom: var(--spacing-lg);
     text-align: center;
-    box-shadow: 0 4px 12px var(--shadow-color);
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .total-level {
     font-size: 3rem;
-    font-weight: 800;
+    font-weight: 900;
     color: var(--brand-primary);
     margin-bottom: var(--spacing-xs);
-    text-shadow: 0 2px 4px var(--shadow-color);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    filter: drop-shadow(0 0 10px var(--brand-primary));
 }
 
 .total-level-label {
     font-size: 1rem;
-    color: var(--text-secondary);
+    color: white;
     text-transform: uppercase;
     letter-spacing: 2px;
-    font-weight: 600;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* Responsive Design */
