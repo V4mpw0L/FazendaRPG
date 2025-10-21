@@ -604,6 +604,66 @@ export default class GameEngine {
     const progress = this.farmSystem.getGrowthProgress(index);
     const plot = this.farmSystem.getPlot(index);
     const isFertilized = plot && plot.fertilized;
+    const hasWeeds = this.farmSystem.hasWeeds(index);
+
+    // Check if plot has weeds
+    if (hasWeeds) {
+      // Show weeds SVG with 3D effect
+      tile.innerHTML = `
+        <div class="farm-tile-icon" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
+          <svg viewBox="0 0 100 100" style="width: 70%; height: 70%;">
+            <defs>
+              <linearGradient id="weed1" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#6b8e23;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#556b2f;stop-opacity:1" />
+              </linearGradient>
+              <linearGradient id="weed2" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#8fbc8f;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#6b8e23;stop-opacity:1" />
+              </linearGradient>
+              <filter id="shadow">
+                <feDropShadow dx="1" dy="2" stdDeviation="1" flood-opacity="0.4"/>
+              </filter>
+            </defs>
+            <!-- Weed 1 - Left -->
+            <g filter="url(#shadow)">
+              <path d="M 25 70 Q 20 60 22 50 Q 24 40 20 35" stroke="url(#weed1)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+              <ellipse cx="20" cy="35" rx="4" ry="6" fill="url(#weed2)"/>
+              <ellipse cx="18" cy="42" rx="3" ry="5" fill="url(#weed2)"/>
+              <ellipse cx="23" cy="48" rx="3.5" ry="5" fill="url(#weed2)"/>
+            </g>
+            <!-- Weed 2 - Center -->
+            <g filter="url(#shadow)">
+              <path d="M 50 75 Q 48 60 50 45 Q 52 35 50 28" stroke="url(#weed1)" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <ellipse cx="50" cy="28" rx="5" ry="7" fill="url(#weed2)"/>
+              <ellipse cx="47" cy="38" rx="4" ry="6" fill="url(#weed2)"/>
+              <ellipse cx="54" cy="45" rx="4" ry="6" fill="url(#weed2)"/>
+              <ellipse cx="48" cy="52" rx="3.5" ry="5" fill="url(#weed2)"/>
+            </g>
+            <!-- Weed 3 - Right -->
+            <g filter="url(#shadow)">
+              <path d="M 75 72 Q 78 58 75 48 Q 72 38 76 32" stroke="url(#weed1)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+              <ellipse cx="76" cy="32" rx="4" ry="6" fill="url(#weed2)"/>
+              <ellipse cx="78" cy="40" rx="3" ry="5" fill="url(#weed2)"/>
+              <ellipse cx="73" cy="50" rx="3.5" ry="5" fill="url(#weed2)"/>
+            </g>
+            <!-- Small weeds -->
+            <ellipse cx="35" cy="65" rx="2.5" ry="4" fill="url(#weed2)" opacity="0.8"/>
+            <ellipse cx="65" cy="68" rx="2.5" ry="4" fill="url(#weed2)" opacity="0.8"/>
+            <ellipse cx="40" cy="72" rx="2" ry="3" fill="url(#weed2)" opacity="0.7"/>
+          </svg>
+        </div>
+        <div style="position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); background: rgba(107, 142, 35, 0.9); color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+          Limpar
+        </div>
+      `;
+      tile.classList.remove("ready");
+      tile.classList.add("has-weeds");
+      return;
+    }
+
+    // Remove weeds class if no weeds
+    tile.classList.remove("has-weeds");
 
     // Set icon
     tile.innerHTML = `<div class="farm-tile-icon">${icon}</div>`;
@@ -655,7 +715,12 @@ export default class GameEngine {
     if (this.farmSystem.isPlotReady(index)) {
       this.harvestPlot(index);
     } else if (this.farmSystem.isPlotEmpty(index)) {
-      this.plantPlot(index);
+      // Check if plot has weeds
+      if (this.farmSystem.hasWeeds(index)) {
+        this.clearWeedsFromPlot(index);
+      } else {
+        this.plantPlot(index);
+      }
     } else if (this.farmSystem.isPlotGrowing(index)) {
       this.showGrowingPlotOptions(index);
     }
@@ -912,10 +977,41 @@ export default class GameEngine {
   }
 
   /**
+   * Clear weeds from a plot
+   * @param {number} index - Plot index
+   */
+  clearWeedsFromPlot(index) {
+    // Check if player has hoe or rake
+    const hasHoe = this.inventorySystem.hasItem("hoe");
+    const hasRake = this.inventorySystem.hasItem("rake");
+
+    if (!hasHoe && !hasRake) {
+      notifications.error(i18n.t("farm.needWeedTool"));
+      return;
+    }
+
+    // Clear the weeds
+    const result = this.farmSystem.clearWeeds(index);
+
+    if (result.success) {
+      notifications.success(i18n.t("farm.weedsCleared"));
+      this.renderFarm();
+    } else {
+      notifications.error(result.error || "Não foi possível limpar as ervas");
+    }
+  }
+
+  /**
    * Plant on a plot
    * @param {number} index - Plot index
    */
   plantPlot(index) {
+    // Check if player has trowel
+    if (!this.inventorySystem.hasItem("trowel")) {
+      notifications.error(i18n.t("farm.needTrowel"));
+      return;
+    }
+
     // Get available seeds from inventory
     const seeds = this.inventorySystem.getItemsByCategory("seeds");
 
@@ -1342,6 +1438,12 @@ export default class GameEngine {
    * Plant all empty plots
    */
   plantAll() {
+    // Check if player has trowel
+    if (!this.inventorySystem.hasItem("trowel")) {
+      notifications.error(i18n.t("farm.needTrowel"));
+      return;
+    }
+
     // Get available seeds from inventory
     const seeds = this.inventorySystem.getItemsByCategory("seeds");
 

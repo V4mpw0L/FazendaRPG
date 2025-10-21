@@ -15,6 +15,7 @@ export default class FarmSystem {
     this.cropsData = null;
     this.plotCount = 9;
     this.updateInterval = null;
+    this.weedGrowthTime = 60000; // 60 seconds for weeds to appear
   }
 
   /**
@@ -49,6 +50,7 @@ export default class FarmSystem {
 
     this.updateInterval = setInterval(() => {
       this.checkCrops();
+      this.checkWeeds();
 
       // Dispatch update event for UI to refresh
       window.dispatchEvent(new CustomEvent("farm:update"));
@@ -111,6 +113,80 @@ export default class FarmSystem {
   isPlotEmpty(index) {
     const plot = this.getPlot(index);
     return plot && !plot.crop;
+  }
+
+  /**
+   * Check if plot has weeds
+   * @param {number} index - Plot index
+   * @returns {boolean} True if has weeds
+   */
+  hasWeeds(index) {
+    const plot = this.getPlot(index);
+    return plot && plot.hasWeeds === true;
+  }
+
+  /**
+   * Check weeds growth on empty plots
+   */
+  checkWeeds() {
+    const plots = this.getPlots();
+    const now = Date.now();
+
+    plots.forEach((plot, index) => {
+      // Only check empty plots
+      if (!plot.crop) {
+        // Initialize lastHarvestedAt if not exists
+        if (!plot.lastHarvestedAt) {
+          plot.lastHarvestedAt = now;
+        }
+
+        // Check if weeds should appear
+        const timeSinceLastAction = now - plot.lastHarvestedAt;
+        if (timeSinceLastAction >= this.weedGrowthTime && !plot.hasWeeds) {
+          plot.hasWeeds = true;
+          console.log(`🌿 Weeds grew on plot ${index}`);
+
+          // Dispatch event for UI update
+          window.dispatchEvent(
+            new CustomEvent("farm:weeds-grown", {
+              detail: { index },
+            }),
+          );
+        }
+      }
+    });
+  }
+
+  /**
+   * Clear weeds from plot
+   * @param {number} index - Plot index
+   * @returns {Object} Result
+   */
+  clearWeeds(index) {
+    const plot = this.getPlot(index);
+
+    if (!plot) {
+      return { success: false, error: "Invalid plot" };
+    }
+
+    if (!plot.hasWeeds) {
+      return { success: false, error: "Plot has no weeds" };
+    }
+
+    // Clear weeds
+    plot.hasWeeds = false;
+    plot.lastHarvestedAt = Date.now();
+
+    console.log(`✅ Cleared weeds from plot ${index}`);
+
+    // Dispatch event
+    window.dispatchEvent(
+      new CustomEvent("farm:weeds-cleared", {
+        detail: { index },
+      }),
+    );
+
+    return { success: true };
   }
 
   /**
@@ -329,6 +405,7 @@ export default class FarmSystem {
     plot.crop = null;
     plot.plantedAt = null;
     plot.fertilized = false;
+    plot.lastHarvestedAt = Date.now(); // Track when plot became empty
 
     console.log(`🧺 Harvested ${amount}x ${cropData.name} from plot ${index}`);
 

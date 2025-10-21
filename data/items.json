@@ -639,6 +639,45 @@
       "stackable": true,
       "maxStack": 999
     },
+    "trowel": {
+      "id": "trowel",
+      "name": "Hand Trowel",
+      "namePtBR": "Pá de Mão",
+      "icon": "🪓",
+      "category": "tools",
+      "description": "A small hand trowel for planting seeds.",
+      "descriptionPtBR": "Uma pequena pá de mão para plantar sementes.",
+      "buyPrice": 50,
+      "sellPrice": 25,
+      "stackable": false,
+      "maxStack": 1
+    },
+    "hoe": {
+      "id": "hoe",
+      "name": "Hoe",
+      "namePtBR": "Enxada",
+      "icon": "🪝",
+      "category": "tools",
+      "description": "Essential tool for removing weeds from plots.",
+      "descriptionPtBR": "Ferramenta essencial para remover ervas daninhas dos canteiros.",
+      "buyPrice": 75,
+      "sellPrice": 40,
+      "stackable": false,
+      "maxStack": 1
+    },
+    "rake": {
+      "id": "rake",
+      "name": "Rake",
+      "namePtBR": "Rastelo",
+      "icon": "🧹",
+      "category": "tools",
+      "description": "Useful tool for clearing weeds from empty plots.",
+      "descriptionPtBR": "Ferramenta útil para limpar ervas daninhas de canteiros vazios.",
+      "buyPrice": 60,
+      "sellPrice": 35,
+      "stackable": false,
+      "maxStack": 1
+    },
     "iron_tool": {
       "id": "iron_tool",
       "name": "Iron Tool",

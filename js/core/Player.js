@@ -124,6 +124,9 @@ export default class Player {
     // Give starting items
     this.addItem("wheat_seed", 10);
     this.addItem("fertilizer", 3);
+    this.addItem("trowel", 1);
+    this.addItem("hoe", 1);
+    this.addItem("rake", 1);
   }
 
   /**
@@ -147,11 +150,39 @@ export default class Player {
         return false;
       }
 
+      // Give tools to existing players (one-time migration)
+      this.migrateToolsForExistingPlayers();
+
       console.log("✅ Player data loaded:", this.data.name);
       return true;
     } catch (error) {
-      console.error("❌ Failed to load player data:", error);
+      console.error("❌ Error loading player data:", error);
       return false;
+    }
+  }
+
+  /**
+   * Migrate tools for existing players (one-time)
+   * Gives trowel, hoe, and rake if they don't have them
+   */
+  migrateToolsForExistingPlayers() {
+    // Check if player already has the tools
+    const hasTrowel = this.hasItem("trowel");
+    const hasHoe = this.hasItem("hoe");
+    const hasRake = this.hasItem("rake");
+
+    // Add missing tools
+    if (!hasTrowel) {
+      this.addItem("trowel", 1);
+      console.log("✅ Migrated: Added trowel to existing player");
+    }
+    if (!hasHoe) {
+      this.addItem("hoe", 1);
+      console.log("✅ Migrated: Added hoe to existing player");
+    }
+    if (!hasRake) {
+      this.addItem("rake", 1);
+      console.log("✅ Migrated: Added rake to existing player");
     }
   }
 

@@ -709,6 +709,23 @@ a:hover {
         );
 }
 
+.farm-tile.has-weeds {
+    border-color: #6b8e23;
+    background: linear-gradient(135deg, #7a5c3a 0%, #9b7653 50%, #7a5c3a 100%);
+    cursor: pointer;
+    position: relative;
+}
+
+.farm-tile.has-weeds:hover {
+    transform: translateY(-3px) scale(1.02);
+    border-color: #8fbc8f;
+    box-shadow:
+        0 8px 16px rgba(107, 142, 35, 0.4),
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        inset 0 -6px 12px rgba(0, 0, 0, 0.4),
+        inset 0 2px 4px rgba(143, 188, 143, 0.3);
+}
+
 .farm-tile.ready {
     border-color: #ffd700;
     background: linear-gradient(135deg, #5caa1f 0%, #7ec850 50%, #5caa1f 100%);

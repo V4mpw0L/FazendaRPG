@@ -36,7 +36,14 @@
     "needEnergy": "Not enough energy!",
     "planted": "Planted!",
     "harvested": "Harvested!",
-    "timeRemaining": "Time remaining"
+    "timeRemaining": "Time remaining",
+    "noSeeds": "No seeds available",
+    "noCropsReady": "No crops ready to harvest",
+    "noEmptyPlots": "No empty plots to plant",
+    "needTrowel": "You need a Hand Trowel to plant seeds!",
+    "needWeedTool": "You need a Hoe or Rake to clear weeds!",
+    "weedsCleared": "Weeds cleared!",
+    "weedsGrown": "Weeds have grown on the plot"
   },
   "skills": {
     "title": "Your Skills",

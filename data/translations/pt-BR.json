@@ -39,7 +39,11 @@
     "timeRemaining": "Tempo restante",
     "noSeeds": "Sem sementes disponíveis",
     "noCropsReady": "Nenhum cultivo pronto para colher",
-    "noEmptyPlots": "Não há espaços vazios para plantar"
+    "noEmptyPlots": "Não há espaços vazios para plantar",
+    "needTrowel": "Você precisa de uma Pá de Mão para plantar sementes!",
+    "needWeedTool": "Você precisa de uma Enxada ou Rastelo para limpar as ervas daninhas!",
+    "weedsCleared": "Ervas daninhas removidas!",
+    "weedsGrown": "Ervas daninhas cresceram no canteiro"
   },
   "skills": {
     "title": "Suas Habilidades",
