@@ -438,8 +438,13 @@ export default class GameEngine {
 
     if (pendingInterest.interestEarned > 0) {
       setTimeout(() => {
-        notifications.success(
+        notifications.show(
           `💰 Banco: Você recebeu +${pendingInterest.interestEarned}g de juros! (${pendingInterest.cycles} ciclos de 4h)`,
+          "gold",
+          {
+            icon: '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">',
+            duration: 4000,
+          },
         );
       }, 1500);
     }

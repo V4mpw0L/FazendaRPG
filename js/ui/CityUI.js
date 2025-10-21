@@ -487,12 +487,20 @@ export default class CityUI {
       if (result.pendingInterest && result.pendingInterest.interestEarned > 0) {
         this.notifications.show(
           `Depositou ${result.amount}g! +${result.pendingInterest.interestEarned}g de juros recebidos! Total no banco: ${result.newBalance}g`,
-          "success",
+          "gold",
+          {
+            icon: '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">',
+            duration: 3000,
+          },
         );
       } else {
         this.notifications.show(
           `Depositou ${result.amount}g! Total no banco: ${result.newBalance}g`,
-          "success",
+          "gold",
+          {
+            icon: '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">',
+            duration: 3000,
+          },
         );
       }
       this.modal.close();
@@ -520,12 +528,20 @@ export default class CityUI {
       if (result.pendingInterest && result.pendingInterest.interestEarned > 0) {
         this.notifications.show(
           `Sacou ${result.amount}g! +${result.pendingInterest.interestEarned}g de juros recebidos! Saldo no banco: ${result.newBalance}g`,
-          "success",
+          "gold",
+          {
+            icon: '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">',
+            duration: 3000,
+          },
         );
       } else {
         this.notifications.show(
           `Sacou ${result.amount}g! Saldo no banco: ${result.newBalance}g`,
-          "success",
+          "gold",
+          {
+            icon: '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">',
+            duration: 3000,
+          },
         );
       }
       this.modal.close();

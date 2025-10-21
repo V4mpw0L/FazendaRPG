@@ -300,24 +300,30 @@ class NotificationManager {
 
             /* Gold/Money */
             .notification.gold {
-                border-color: rgba(241, 196, 15, 0.3);
+                border-color: rgba(255, 215, 0, 0.6);
                 background: linear-gradient(135deg,
-                    rgba(241, 196, 15, 0.05) 0%,
+                    rgba(255, 215, 0, 0.1) 0%,
                     var(--bg-secondary) 100%);
+                box-shadow:
+                    0 10px 40px rgba(0, 0, 0, 0.2),
+                    0 0 0 1px rgba(255, 215, 0, 0.3),
+                    0 0 20px rgba(255, 215, 0, 0.2);
             }
 
             .notification.gold .notification-icon {
-                background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
+                background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
                 color: white;
+                box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
             }
 
             .notification.gold .notification-value {
-                color: #b8860b;
-                background: rgba(184, 134, 11, 0.15);
+                color: #FFD700;
+                background: rgba(255, 215, 0, 0.15);
+                text-shadow: 0 0 3px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.5);
             }
 
             .notification.gold .notification-progress {
-                color: #b8860b;
+                color: #FFD700;
             }
 
             /* Animations */

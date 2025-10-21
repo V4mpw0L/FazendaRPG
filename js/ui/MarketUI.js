@@ -1057,12 +1057,17 @@ export default class MarketUI {
     this.player.data.gold -= totalCost;
     this.inventorySystem.addItem(item.id, amount);
 
-    this.notifications.success(
+    this.notifications.show(
       i18n.t("market.buySuccess", {
         amount,
         item: item.namePtBR || item.name,
         cost: totalCost,
       }),
+      "gold",
+      {
+        icon: '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">',
+        duration: 3000,
+      },
     );
 
     window.dispatchEvent(new CustomEvent("player:dataChanged"));
@@ -1245,12 +1250,17 @@ export default class MarketUI {
     this.inventorySystem.removeItem(item.id, amount);
     this.player.data.gold += totalValue;
 
-    this.notifications.success(
+    this.notifications.show(
       i18n.t("market.sellSuccess", {
         amount,
         item: item.namePtBR || item.name,
         value: totalValue,
       }),
+      "gold",
+      {
+        icon: '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">',
+        duration: 3000,
+      },
     );
 
     window.dispatchEvent(new CustomEvent("player:dataChanged"));
