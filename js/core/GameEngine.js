@@ -1110,6 +1110,14 @@ export default class GameEngine {
       });
     }
 
+    // Farm inventory button
+    const farmInventoryBtn = document.getElementById("farm-inventory-btn");
+    if (farmInventoryBtn) {
+      farmInventoryBtn.addEventListener("click", () => {
+        this.screenManager.showScreen("inventory-screen");
+      });
+    }
+
     // Auto-save event
     window.addEventListener("save:auto", () => {
       this.saveGame();

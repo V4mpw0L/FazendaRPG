@@ -25,6 +25,49 @@
     overflow: hidden;
 }
 
+/* Botão de Inventário no Banner */
+.farm-inventory-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 50px;
+    height: 50px;
+    background: var(--brand-primary);
+    border: 3px solid var(--brand-secondary);
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    padding: 0;
+    z-index: 10;
+}
+
+.farm-inventory-btn:hover {
+    background: var(--brand-secondary);
+    border-color: var(--brand-tertiary);
+    box-shadow: 0 6px 16px rgba(92, 170, 31, 0.5);
+    transform: translateY(-3px) scale(1.08);
+}
+
+.farm-inventory-btn:active {
+    transform: translateY(-1px) scale(1.03);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+.farm-inventory-btn img {
+    width: 28px;
+    height: 28px;
+    filter: brightness(0) invert(1);
+    transition: transform 0.3s ease;
+}
+
+.farm-inventory-btn:hover img {
+    transform: scale(1.15) rotate(5deg);
+}
+
 /* Efeito de textura de terra */
 .farm-welcome-message::before {
     content: "";
@@ -348,7 +391,20 @@ body.dark-theme {
         font-size: 0.8125rem;
     }
 
-    .welcome-subtitle {
-        font-size: 0.875rem;
+    .level-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .farm-inventory-btn {
+        width: 42px;
+        height: 42px;
+        top: 10px;
+        right: 10px;
+    }
+
+    .farm-inventory-btn img {
+        width: 24px;
+        height: 24px;
     }
 }
