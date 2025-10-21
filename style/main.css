@@ -1329,17 +1329,57 @@ a:hover {
 }
 
 .quest-item {
-    background: var(--bg-secondary);
-    border-left: 4px solid var(--brand-primary);
-    border-radius: var(--border-radius-sm);
-    padding: var(--spacing-md);
+    background: linear-gradient(135deg, #8b6914 0%, #a0522d 40%, #654321 100%);
+    border-left: 6px solid var(--brand-primary);
+    border-radius: 12px;
+    padding: var(--spacing-md) var(--spacing-lg);
     margin-bottom: var(--spacing-md);
-    box-shadow: 0 2px 8px var(--shadow-color);
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    border: 3px solid rgba(139, 105, 20, 0.6);
+    border-left: 6px solid var(--brand-primary);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.quest-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--brand-primary),
+        transparent
+    );
+    animation: shimmer 3s infinite;
+}
+
+.quest-item:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .quest-item.completed {
     border-left-color: var(--success);
-    opacity: 0.7;
+    opacity: 0.8;
+    background: linear-gradient(135deg, #654321 0%, #5a3d1f 40%, #4a3218 100%);
+}
+
+.quest-item.completed::before {
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--success),
+        transparent
+    );
 }
 
 .quest-header {
@@ -1350,38 +1390,70 @@ a:hover {
 }
 
 .quest-title {
-    font-weight: 600;
-    color: var(--text-primary);
+    font-weight: 800;
+    color: white;
     font-size: 1.125rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    position: relative;
+    z-index: 1;
 }
 
 .quest-reward {
-    background: var(--brand-primary);
+    background: linear-gradient(
+        135deg,
+        var(--brand-primary) 0%,
+        var(--brand-secondary) 100%
+    );
     color: white;
-    padding: 4px 12px;
+    padding: 6px 14px;
     border-radius: 16px;
     font-size: 0.875rem;
-    font-weight: 600;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(92, 170, 31, 0.4);
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .quest-description {
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.85);
     margin-bottom: var(--spacing-sm);
     font-size: 0.875rem;
+    line-height: 1.5;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
 }
 
 .quest-progress {
-    background: var(--bg-accent);
-    border-radius: 8px;
-    height: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(139, 105, 20, 0.4);
+    border-radius: 10px;
+    height: 12px;
     overflow: hidden;
     margin-top: var(--spacing-sm);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
 }
 
 .quest-progress-bar {
-    background: var(--success);
+    background: linear-gradient(90deg, #27ae60 0%, #2ecc71 50%, #58d68d 100%);
     height: 100%;
-    transition: width var(--transition-normal);
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+    position: relative;
+}
+
+.quest-progress-bar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.3), transparent);
 }
 
 /* ===================================
