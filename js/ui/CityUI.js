@@ -160,11 +160,11 @@ export default class CityUI {
                     </div>
                     <div class="info-item">
                         <span>💵 Depósito Mínimo:</span>
-                        <strong style="color: #b8860b;">${stats.minDeposit}g</strong>
+                        <strong style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);">${stats.minDeposit}g</strong>
                     </div>
                     <div class="info-item">
                         <span>💎 Total Depositado:</span>
-                        <strong style="color: #b8860b;">${stats.totalDeposited}g</strong>
+                        <strong style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);">${stats.totalDeposited}g</strong>
                     </div>
                 </div>
 
@@ -279,7 +279,7 @@ export default class CityUI {
                     .balance-value {
                         font-size: 1.5rem;
                         font-weight: 700;
-                        color: #b8860b;
+                        color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);
                     }
                     .bank-info {
                         background: var(--bg-accent);
@@ -299,7 +299,7 @@ export default class CityUI {
                         border-bottom: none;
                     }
                     .info-item strong {
-                        color: #b8860b;
+                        color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);
                     }
                     .bank-actions {
                         display: grid;
@@ -591,7 +591,7 @@ export default class CityUI {
                 <div class="player-status">
                     <div class="status-item">
                         <span class="status-label">💰 Seu Ouro:</span>
-                        <span class="status-value" style="color: #b8860b; font-weight: 700;">${playerGold}g</span>
+                        <span class="status-value" style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5); font-weight: 700;">${playerGold}g</span>
                     </div>
                     <div class="status-item">
                         <span class="status-label">⚡ Energia:</span>
@@ -860,7 +860,7 @@ export default class CityUI {
                         margin: 0 0 0.75rem 0;
                     }
                     .service-price {
-                        background: #b8860b;
+                        background: #FFD700;
                         color: white;
                         padding: 0.5rem;
                         border-radius: 8px;
@@ -1103,7 +1103,7 @@ export default class CityUI {
                             <div class="stat-icon"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1.5rem; height: 1.5rem;"></div>
                             <div class="stat-info">
                                 <div class="stat-label">Ouro</div>
-                                <div class="stat-value" style="color: #b8860b;">${gold}g</div>
+                                <div class="stat-value" style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);">${gold}g</div>
                             </div>
                         </div>
                         <div class="stat-card">

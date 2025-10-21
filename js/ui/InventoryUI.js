@@ -747,7 +747,7 @@ export default class InventoryUI {
         <div style="display: inline-block; background: ${categoryColor}; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.625rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">${categoryName}</div>
         <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0.5rem 0;">${itemDesc}</p>
         ${isConsumable && item.energyRestore ? `<p style="color: #5caa1f; font-weight: 600; font-size: 0.875rem;">⚡ Restaura ${item.energyRestore >= 9999 ? "energia ao máximo" : item.energyRestore + " de energia"}</p>` : ""}
-        <p style="color: #b8860b; font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${sellPrice}g ${i18n.t("market.perUnit")}</p>
+        <p style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5); font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${sellPrice}g ${i18n.t("market.perUnit")}</p>
         <p style="color: var(--text-secondary); font-size: 0.875rem;">${i18n.t("market.youHave")}: ${maxSellable}</p>
       </div>
 
@@ -776,7 +776,7 @@ export default class InventoryUI {
       <div style="display: none; background: var(--bg-accent); padding: var(--spacing-md); border-radius: 8px; margin-top: var(--spacing-md); border: 2px solid var(--border-color);">
         <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.875rem;">
           <span>${i18n.t("market.willReceive")}:</span>
-          <span id="preview-receive" style="font-weight: 700; color: #b8860b;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${sellPrice}g</span>
+          <span id="preview-receive" style="font-weight: 700; color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${sellPrice}g</span>
         </div>
       </div>
     `;
@@ -1013,6 +1013,8 @@ export default class InventoryUI {
     if (valueEl) {
       valueEl.innerHTML = `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${totalValue}g`;
       valueEl.style.color = "#FFD700";
+      valueEl.style.textShadow =
+        "0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5)";
       valueEl.style.fontWeight = "700";
     }
   }

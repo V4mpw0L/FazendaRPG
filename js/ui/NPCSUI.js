@@ -377,7 +377,7 @@ export default class NPCSUI {
       <div style="text-align: center; margin-bottom: 1rem;">
         <div style="font-size: 3rem;">${npc.avatar}</div>
         <h3 style="margin: 0.5rem 0;">Loja de ${name}</h3>
-        <p style="color: var(--text-secondary); font-size: 0.875rem;">Seu ouro: <span style="color: #b8860b; font-weight: 700;">${this.player.data.gold}g</span></p>
+        <p style="color: var(--text-secondary); font-size: 0.875rem;">Seu ouro: <span style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5); font-weight: 700;">${this.player.data.gold}g</span></p>
         ${friendshipBadge}
       </div>
       <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem; max-height: 400px; overflow-y: auto; padding: 0.5rem;">
@@ -424,7 +424,7 @@ export default class NPCSUI {
             ? "btn-success"
             : "btn-secondary";
 
-      let priceDisplay = `<div style="color: #b8860b; font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem;">
+      let priceDisplay = `<div style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5); font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem;">
         <img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g
       </div>`;
 
@@ -545,7 +545,7 @@ export default class NPCSUI {
       <div style="text-align: center; margin-bottom: 1rem;">
         <div style="font-size: 4rem; margin-bottom: 0.5rem;">${renderItemIcon(itemData, { size: "4rem" })}</div>
         <h3 style="margin: 0.5rem 0; color: var(--text-primary);">${itemName}</h3>
-        <p style="color: #b8860b; font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g por unidade</p>
+        <p style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5); font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g por unidade</p>
         <p style="color: var(--text-secondary); font-size: 0.875rem;">Você tem: <img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${this.player.data.gold}g</p>
       </div>
 
