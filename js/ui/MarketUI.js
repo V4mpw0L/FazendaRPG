@@ -132,16 +132,81 @@ export default class MarketUI {
     style.id = "market-styles";
     style.textContent = `
       .market-controls {
-        padding: var(--spacing-md);
-        background: var(--bg-secondary);
-        border-bottom: 2px solid var(--border-color);
-        margin-bottom: var(--spacing-md);
+        padding: var(--spacing-lg) var(--spacing-md);
+        background: linear-gradient(135deg, #8b6914 0%, #a0522d 40%, #654321 100%);
+        backdrop-filter: blur(10px);
+        border: 3px solid rgba(139, 105, 20, 0.6);
+        border-radius: 16px;
+        box-shadow:
+          0 6px 20px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15),
+          inset 0 -2px 0 rgba(0, 0, 0, 0.3);
+        margin: 0 auto var(--spacing-lg);
+        max-width: 550px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .market-controls::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+          radial-gradient(
+            circle at 20% 30%,
+            rgba(0, 0, 0, 0.1) 0%,
+            transparent 3%
+          ),
+          radial-gradient(
+            circle at 60% 70%,
+            rgba(0, 0, 0, 0.08) 0%,
+            transparent 2%
+          ),
+          radial-gradient(
+            circle at 80% 20%,
+            rgba(0, 0, 0, 0.06) 0%,
+            transparent 2.5%
+          );
+        pointer-events: none;
+        opacity: 0.5;
+      }
+
+      .market-controls::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          #5caa1f,
+          #7ec850,
+          #5caa1f,
+          transparent
+        );
+        box-shadow: 0 0 10px rgba(92, 170, 31, 0.6);
+      }
+
+      .market-controls:hover {
+        box-shadow:
+          0 8px 24px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2),
+          inset 0 -2px 0 rgba(0, 0, 0, 0.3);
+        transform: translateY(-2px);
       }
 
       .market-tabs {
         display: flex;
         gap: var(--spacing-sm);
         margin-bottom: var(--spacing-md);
+        position: relative;
+        z-index: 1;
       }
 
       .market-tab {
@@ -178,6 +243,8 @@ export default class MarketUI {
         display: flex;
         gap: 0.375rem;
         flex-wrap: wrap;
+        position: relative;
+        z-index: 1;
       }
 
       .category-btn {
