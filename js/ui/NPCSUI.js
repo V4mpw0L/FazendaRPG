@@ -119,7 +119,7 @@ export default class NPCSUI {
    */
   createNPCCard(npc) {
     const card = document.createElement("div");
-    card.className = "npc-card";
+    card.className = "city-card";
 
     const friendshipPercent = (npc.friendship / npc.maxFriendship) * 100;
     const name = npc.namePtBR || npc.name;
@@ -134,12 +134,12 @@ export default class NPCSUI {
                 <p class="npc-description">${description}</p>
             </div>
             <div class="npc-friendship">
-                <div class="friendship-label">Amizade: ${Math.floor(friendshipPercent)}%</div>
+                <div class="friendship-label" style="color: #f1c40f; font-weight: 700; font-size: 0.875rem;">Amizade: ${Math.floor(friendshipPercent)}%</div>
                 <div class="friendship-bar">
                     <div class="friendship-fill" style="width: ${friendshipPercent}%"></div>
                 </div>
             </div>
-            <button class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">💬 Conversar</button>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; padding: 0.5rem; font-size: 0.875rem; font-weight: 600;">💬 Conversar</button>
         `;
 
     const conversarBtn = card.querySelector(".btn");
