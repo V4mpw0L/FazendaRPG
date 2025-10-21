@@ -207,8 +207,8 @@ export default class InventoryUI {
       }
 
       .inventory-slot.empty {
-        background: rgba(92, 170, 31, 0.05);
-        border: 3px dashed var(--brand-primary);
+        background: rgba(139, 105, 20, 0.05);
+        border: 3px dashed rgba(139, 105, 20, 0.6);
         opacity: 0.6;
         cursor: default;
       }
