@@ -58,9 +58,8 @@
 }
 
 .farm-inventory-btn img {
-    width: 28px;
-    height: 28px;
-    filter: brightness(0) invert(1);
+    width: 34px;
+    height: 34px;
     transition: transform 0.3s ease;
 }
 
@@ -404,7 +403,7 @@ body.dark-theme {
     }
 
     .farm-inventory-btn img {
-        width: 24px;
-        height: 24px;
+        width: 28px;
+        height: 28px;
     }
 }
