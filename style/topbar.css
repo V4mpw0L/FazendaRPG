@@ -312,12 +312,12 @@
 
 /* Energy */
 .topbar-energy {
-    border-color: #2980b9;
+    border-color: #5caa1f;
     border-width: 1px;
 }
 
 .topbar-energy .topbar-stat-value {
-    color: #2980b9;
+    color: #5caa1f;
     font-weight: 900;
 }
 
@@ -328,19 +328,19 @@
     background: var(--bg-accent);
     border-radius: 3px;
     overflow: hidden;
-    border: 0.5px solid #2980b9;
+    border: 0.5px solid #5caa1f;
     box-shadow: inset 0 1px 2px var(--shadow-color);
     margin-top: 1px;
 }
 
 .topbar-energy-fill {
     height: 100%;
-    background: linear-gradient(90deg, #27ae60 0%, #2ecc71 50%, #58d68d 100%);
+    background: linear-gradient(90deg, #5caa1f 0%, #7ec850 50%, #9ed97f 100%);
     border-radius: 4px;
     transition:
         width 0.3s ease,
         background 0.3s ease;
-    box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+    box-shadow: 0 0 10px rgba(92, 170, 31, 0.6);
     position: relative;
 }
 
