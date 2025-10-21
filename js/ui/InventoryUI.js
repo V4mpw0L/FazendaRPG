@@ -281,7 +281,7 @@ export default class InventoryUI {
         font-weight: 700;
         color: white;
         background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2));
-        padding: 0.125rem 0.375rem;
+        padding: 0.1rem 0.3rem;
         border-radius: 6px;
         border: 1px solid rgba(255, 255, 255, 0.2);
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
@@ -646,7 +646,7 @@ export default class InventoryUI {
 
     slot.innerHTML = `
       ${item.count > 1 ? `<div class="inventory-slot-count">${item.count}</div>` : ""}
-      <div class="inventory-slot-icon">${renderItemIcon(item, { size: "1.5em" })}</div>
+      <div class="inventory-slot-icon">${renderItemIcon(item, { size: "2rem" })}</div>
       <div class="inventory-slot-name" title="${itemName}">${itemName}</div>
       <div class="inventory-slot-value" style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 0.75em; height: 0.75em; vertical-align: middle;"> ${item.sellPrice || 0}g</div>
       <div class="inventory-slot-category" style="background: ${categoryColor};">
