@@ -82,7 +82,7 @@ export default class MarketUI {
     controlsDiv.innerHTML = `
       <div class="market-tabs">
         <button class="market-tab active" data-tab="buy">🛒 ${i18n.t("market.buy")}</button>
-        <button class="market-tab" data-tab="sell"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${i18n.t("market.sell")}</button>
+        <button class="market-tab sell-tab" data-tab="sell"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${i18n.t("market.sell")}</button>
       </div>
       <div class="market-categories">
         <button class="category-btn active" data-category="all">📦 ${i18n.t("market.categories.all")}</button>
@@ -165,6 +165,12 @@ export default class MarketUI {
       .market-tab.active {
         background: var(--brand-primary);
         border-color: var(--brand-tertiary);
+        color: white;
+      }
+
+      .market-tab.sell-tab.active {
+        background: #e74c3c;
+        border-color: #c0392b;
         color: white;
       }
 
@@ -1007,7 +1013,7 @@ export default class MarketUI {
         },
         {
           text: `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${i18n.t("market.sell")}`,
-          class: "btn-success",
+          class: "btn-danger",
           onClick: () => {
             const amount = parseInt(
               document.getElementById("sell-amount")?.value || "1",
