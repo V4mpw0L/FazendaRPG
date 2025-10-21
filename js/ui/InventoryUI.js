@@ -112,9 +112,76 @@ export default class InventoryUI {
     style.textContent = `
       .inventory-controls {
         margin-top: var(--spacing-md);
+        padding: var(--spacing-lg) var(--spacing-md);
+        background: linear-gradient(135deg, #8b6914 0%, #a0522d 40%, #654321 100%);
+        backdrop-filter: blur(10px);
+        border: 3px solid rgba(139, 105, 20, 0.6);
+        border-radius: 16px;
+        box-shadow:
+          0 6px 20px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15),
+          inset 0 -2px 0 rgba(0, 0, 0, 0.3);
+        margin: var(--spacing-md) auto;
+        max-width: 550px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
         display: flex;
         flex-direction: column;
         gap: var(--spacing-md);
+      }
+
+      .inventory-controls::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+          radial-gradient(
+            circle at 20% 30%,
+            rgba(0, 0, 0, 0.1) 0%,
+            transparent 3%
+          ),
+          radial-gradient(
+            circle at 60% 70%,
+            rgba(0, 0, 0, 0.08) 0%,
+            transparent 2%
+          ),
+          radial-gradient(
+            circle at 80% 20%,
+            rgba(0, 0, 0, 0.06) 0%,
+            transparent 2.5%
+          );
+        pointer-events: none;
+        opacity: 0.5;
+      }
+
+      .inventory-controls::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          #5caa1f,
+          #7ec850,
+          #5caa1f,
+          transparent
+        );
+        box-shadow: 0 0 10px rgba(92, 170, 31, 0.6);
+      }
+
+      .inventory-controls:hover {
+        box-shadow:
+          0 8px 24px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2),
+          inset 0 -2px 0 rgba(0, 0, 0, 0.3);
+        transform: translateY(-2px);
       }
 
       .inventory-stats {
@@ -123,6 +190,8 @@ export default class InventoryUI {
         justify-content: center;
         align-items: center;
         flex-wrap: wrap;
+        position: relative;
+        z-index: 1;
       }
 
       .stat-badge {
@@ -141,6 +210,8 @@ export default class InventoryUI {
         gap: var(--spacing-sm);
         flex-wrap: wrap;
         align-items: center;
+        position: relative;
+        z-index: 1;
       }
 
       .control-select {
@@ -273,9 +344,73 @@ export default class InventoryUI {
         justify-content: center;
         align-items: center;
         gap: var(--spacing-sm);
-        padding: var(--spacing-md);
-        background: var(--bg-secondary);
-        border-top: 2px solid var(--border-color);
+        padding: var(--spacing-lg) var(--spacing-md);
+        background: linear-gradient(135deg, #8b6914 0%, #a0522d 40%, #654321 100%);
+        backdrop-filter: blur(10px);
+        border: 3px solid rgba(139, 105, 20, 0.6);
+        border-radius: 16px;
+        box-shadow:
+          0 6px 20px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15),
+          inset 0 -2px 0 rgba(0, 0, 0, 0.3);
+        margin: var(--spacing-lg) auto 0;
+        max-width: 550px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .inventory-pagination::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+          radial-gradient(
+            circle at 20% 30%,
+            rgba(0, 0, 0, 0.1) 0%,
+            transparent 3%
+          ),
+          radial-gradient(
+            circle at 60% 70%,
+            rgba(0, 0, 0, 0.08) 0%,
+            transparent 2%
+          ),
+          radial-gradient(
+            circle at 80% 20%,
+            rgba(0, 0, 0, 0.06) 0%,
+            transparent 2.5%
+          );
+        pointer-events: none;
+        opacity: 0.5;
+      }
+
+      .inventory-pagination::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          #5caa1f,
+          #7ec850,
+          #5caa1f,
+          transparent
+        );
+        box-shadow: 0 0 10px rgba(92, 170, 31, 0.6);
+      }
+
+      .inventory-pagination:hover {
+        box-shadow:
+          0 8px 24px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2),
+          inset 0 -2px 0 rgba(0, 0, 0, 0.3);
+        transform: translateY(-2px);
       }
 
       .pagination-btn {
@@ -288,6 +423,8 @@ export default class InventoryUI {
         cursor: pointer;
         transition: all var(--transition-fast);
         color: var(--text-primary);
+        position: relative;
+        z-index: 1;
       }
 
       .pagination-btn:disabled {
@@ -305,7 +442,10 @@ export default class InventoryUI {
       .pagination-info {
         font-size: 0.875rem;
         font-weight: 600;
-        color: var(--text-primary);
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        position: relative;
+        z-index: 1;
       }
 
       .inventory-empty {
