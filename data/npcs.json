@@ -21,17 +21,72 @@
       ],
       "shop": {
         "items": [
-          { "id": "wheat_seed", "stock": 999, "priceMultiplier": 1.0 },
-          { "id": "corn_seed", "stock": 999, "priceMultiplier": 1.0 },
-          { "id": "tomato_seed", "stock": 999, "priceMultiplier": 1.0 },
-          { "id": "potato_seed", "stock": 999, "priceMultiplier": 1.0 },
-          { "id": "carrot_seed", "stock": 999, "priceMultiplier": 1.0 },
-          { "id": "pumpkin_seed", "stock": 999, "priceMultiplier": 1.0 },
-          { "id": "strawberry_seed", "stock": 999, "priceMultiplier": 1.0 },
-          { "id": "eggplant_seed", "stock": 999, "priceMultiplier": 1.0 },
-          { "id": "watermelon_seed", "stock": 999, "priceMultiplier": 1.0 },
-          { "id": "pepper_seed", "stock": 999, "priceMultiplier": 1.0 },
-          { "id": "fertilizer", "stock": 50, "priceMultiplier": 1.0 }
+          {
+            "id": "wheat_seed",
+            "stock": 100,
+            "maxStock": 100,
+            "priceMultiplier": 1.0
+          },
+          {
+            "id": "corn_seed",
+            "stock": 100,
+            "maxStock": 100,
+            "priceMultiplier": 1.0
+          },
+          {
+            "id": "tomato_seed",
+            "stock": 100,
+            "maxStock": 100,
+            "priceMultiplier": 1.0
+          },
+          {
+            "id": "potato_seed",
+            "stock": 100,
+            "maxStock": 100,
+            "priceMultiplier": 1.0
+          },
+          {
+            "id": "carrot_seed",
+            "stock": 100,
+            "maxStock": 100,
+            "priceMultiplier": 1.0
+          },
+          {
+            "id": "pumpkin_seed",
+            "stock": 100,
+            "maxStock": 100,
+            "priceMultiplier": 1.0
+          },
+          {
+            "id": "strawberry_seed",
+            "stock": 100,
+            "maxStock": 100,
+            "priceMultiplier": 1.0
+          },
+          {
+            "id": "eggplant_seed",
+            "stock": 100,
+            "maxStock": 100,
+            "priceMultiplier": 1.0
+          },
+          {
+            "id": "watermelon_seed",
+            "stock": 100,
+            "maxStock": 100,
+            "priceMultiplier": 1.0
+          },
+          {
+            "id": "pepper_seed",
+            "stock": 100,
+            "maxStock": 100,
+            "priceMultiplier": 1.0
+          },
+          {
+            "id": "fertilizer",
+            "stock": 50,
+            "maxStock": 50,
+            "priceMultiplier": 1.0
+          }
         ]
       },
       "dialogue": {
@@ -62,9 +117,19 @@
       "quests": ["diverse_crops", "wealthy_trader"],
       "shop": {
         "items": [
-          { "id": "fertilizer", "stock": 100, "priceMultiplier": 0.9 },
-          { "id": "basket", "stock": 5, "priceMultiplier": 1.0 },
-          { "id": "iron_tool", "stock": 3, "priceMultiplier": 1.0 }
+          {
+            "id": "fertilizer",
+            "stock": 100,
+            "maxStock": 100,
+            "priceMultiplier": 0.9
+          },
+          { "id": "basket", "stock": 5, "maxStock": 5, "priceMultiplier": 1.0 },
+          {
+            "id": "iron_tool",
+            "stock": 3,
+            "maxStock": 3,
+            "priceMultiplier": 1.0
+          }
         ]
       },
       "dialogue": {
@@ -121,10 +186,30 @@
       "quests": ["cooking_intro"],
       "shop": {
         "items": [
-          { "id": "cooked_shrimp", "stock": 20, "priceMultiplier": 1.2 },
-          { "id": "cooked_fish", "stock": 15, "priceMultiplier": 1.2 },
-          { "id": "bread", "stock": 30, "priceMultiplier": 1.1 },
-          { "id": "energy_potion", "stock": 50, "priceMultiplier": 1.0 }
+          {
+            "id": "cooked_shrimp",
+            "stock": 20,
+            "maxStock": 20,
+            "priceMultiplier": 1.2
+          },
+          {
+            "id": "cooked_fish",
+            "stock": 15,
+            "maxStock": 15,
+            "priceMultiplier": 1.2
+          },
+          {
+            "id": "bread",
+            "stock": 30,
+            "maxStock": 30,
+            "priceMultiplier": 1.1
+          },
+          {
+            "id": "energy_potion",
+            "stock": 50,
+            "maxStock": 50,
+            "priceMultiplier": 1.0
+          }
         ]
       },
       "dialogue": {
@@ -155,9 +240,19 @@
       "quests": ["mining_basics"],
       "shop": {
         "items": [
-          { "id": "stone", "stock": 100, "priceMultiplier": 0.8 },
-          { "id": "coal", "stock": 50, "priceMultiplier": 0.9 },
-          { "id": "iron_ore", "stock": 30, "priceMultiplier": 1.0 }
+          {
+            "id": "stone",
+            "stock": 100,
+            "maxStock": 100,
+            "priceMultiplier": 0.8
+          },
+          { "id": "coal", "stock": 50, "maxStock": 50, "priceMultiplier": 0.9 },
+          {
+            "id": "iron_ore",
+            "stock": 30,
+            "maxStock": 30,
+            "priceMultiplier": 1.0
+          }
         ]
       },
       "dialogue": {
@@ -188,9 +283,24 @@
       "quests": ["woodcutter_apprentice"],
       "shop": {
         "items": [
-          { "id": "logs", "stock": 100, "priceMultiplier": 0.9 },
-          { "id": "oak_logs", "stock": 50, "priceMultiplier": 0.9 },
-          { "id": "basket", "stock": 10, "priceMultiplier": 0.95 }
+          {
+            "id": "logs",
+            "stock": 100,
+            "maxStock": 100,
+            "priceMultiplier": 0.9
+          },
+          {
+            "id": "oak_logs",
+            "stock": 50,
+            "maxStock": 50,
+            "priceMultiplier": 0.9
+          },
+          {
+            "id": "basket",
+            "stock": 10,
+            "maxStock": 10,
+            "priceMultiplier": 0.95
+          }
         ]
       },
       "dialogue": {
@@ -221,9 +331,24 @@
       "quests": [],
       "shop": {
         "items": [
-          { "id": "iron_tool", "stock": 5, "priceMultiplier": 0.9 },
-          { "id": "bronze_bar", "stock": 20, "priceMultiplier": 1.0 },
-          { "id": "iron_bar", "stock": 10, "priceMultiplier": 1.0 }
+          {
+            "id": "iron_tool",
+            "stock": 5,
+            "maxStock": 5,
+            "priceMultiplier": 0.9
+          },
+          {
+            "id": "bronze_bar",
+            "stock": 20,
+            "maxStock": 20,
+            "priceMultiplier": 1.0
+          },
+          {
+            "id": "iron_bar",
+            "stock": 10,
+            "maxStock": 10,
+            "priceMultiplier": 1.0
+          }
         ]
       },
       "dialogue": {
@@ -254,10 +379,30 @@
       "quests": ["herbalist_helper"],
       "shop": {
         "items": [
-          { "id": "herbs", "stock": 50, "priceMultiplier": 0.8 },
-          { "id": "berries", "stock": 40, "priceMultiplier": 0.9 },
-          { "id": "mushrooms", "stock": 20, "priceMultiplier": 1.0 },
-          { "id": "flowers", "stock": 30, "priceMultiplier": 1.0 }
+          {
+            "id": "herbs",
+            "stock": 50,
+            "maxStock": 50,
+            "priceMultiplier": 0.8
+          },
+          {
+            "id": "berries",
+            "stock": 40,
+            "maxStock": 40,
+            "priceMultiplier": 0.9
+          },
+          {
+            "id": "mushrooms",
+            "stock": 20,
+            "maxStock": 20,
+            "priceMultiplier": 1.0
+          },
+          {
+            "id": "flowers",
+            "stock": 30,
+            "maxStock": 30,
+            "priceMultiplier": 1.0
+          }
         ]
       },
       "dialogue": {

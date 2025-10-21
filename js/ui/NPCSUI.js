@@ -16,6 +16,7 @@ export default class NPCSUI {
     this.container = null;
     this.npcsData = null;
     this.initialized = false;
+    this.stockRestoreInterval = null;
   }
 
   /**
@@ -24,6 +25,50 @@ export default class NPCSUI {
   setSystems(farmSystem, skillSystem) {
     this.farmSystem = farmSystem;
     this.skillSystem = skillSystem;
+  }
+
+  /**
+   * Start stock restoration timer (1 item per minute for each NPC)
+   */
+  startStockRestoration() {
+    // Restore 1 stock every 60 seconds
+    this.stockRestoreInterval = setInterval(() => {
+      this.restoreStock();
+    }, 60000); // 60 seconds
+  }
+
+  /**
+   * Restore 1 stock for all items in all NPC shops
+   */
+  restoreStock() {
+    if (!this.npcsData) return;
+
+    Object.values(this.npcsData).forEach((npc) => {
+      if (npc.shop && npc.shop.items) {
+        npc.shop.items.forEach((item) => {
+          if (item.stock < (item.maxStock || 100)) {
+            item.stock += 1;
+          }
+        });
+      }
+    });
+
+    console.log("🔄 NPCs stock restored +1");
+  }
+
+  /**
+   * Get friendship discount (0% to 20% based on friendship)
+   */
+  getFriendshipDiscount(npcId) {
+    if (!this.npcsData[npcId]) return 0;
+
+    const friendship = this.npcsData[npcId].friendship || 0;
+    const maxFriendship = this.npcsData[npcId].maxFriendship || 100;
+
+    // 20% discount at max friendship
+    const discountPercent = (friendship / maxFriendship) * 0.2;
+
+    return discountPercent;
   }
 
   /**
@@ -48,6 +93,12 @@ export default class NPCSUI {
 
       // Initialize NPC friendship from player data
       this.loadNPCFriendship();
+
+      // Load stock from player data or initialize
+      this.loadNPCStock();
+
+      // Start stock restoration
+      this.startStockRestoration();
 
       this.initialized = true;
       console.log("✅ NPCs UI initialized");
@@ -75,6 +126,58 @@ export default class NPCSUI {
         this.player.data.npcs[npcId] = this.npcsData[npcId].friendship || 0;
       }
     });
+  }
+
+  /**
+   * Load NPC stock from player data
+   */
+  loadNPCStock() {
+    if (!this.player.data.npcStock) {
+      this.player.data.npcStock = {};
+    }
+
+    Object.keys(this.npcsData).forEach((npcId) => {
+      const npc = this.npcsData[npcId];
+      if (npc.shop && npc.shop.items) {
+        if (!this.player.data.npcStock[npcId]) {
+          this.player.data.npcStock[npcId] = {};
+        }
+
+        npc.shop.items.forEach((item) => {
+          if (this.player.data.npcStock[npcId][item.id] !== undefined) {
+            item.stock = this.player.data.npcStock[npcId][item.id];
+          } else {
+            // Initialize stock
+            this.player.data.npcStock[npcId][item.id] = item.stock;
+          }
+        });
+      }
+    });
+  }
+
+  /**
+   * Save NPC stock to player data
+   */
+  saveNPCStock() {
+    if (!this.player.data.npcStock) {
+      this.player.data.npcStock = {};
+    }
+
+    Object.keys(this.npcsData).forEach((npcId) => {
+      const npc = this.npcsData[npcId];
+      if (npc.shop && npc.shop.items) {
+        if (!this.player.data.npcStock[npcId]) {
+          this.player.data.npcStock[npcId] = {};
+        }
+
+        npc.shop.items.forEach((item) => {
+          this.player.data.npcStock[npcId][item.id] = item.stock;
+        });
+      }
+    });
+
+    // Dispatch event to trigger save
+    window.dispatchEvent(new CustomEvent("player:dataChanged"));
   }
 
   /**
@@ -257,12 +360,25 @@ export default class NPCSUI {
 
     const name = npc.namePtBR || npc.name;
     const shopItems = npc.shop.items;
+    const friendship = npc.friendship || 0;
+    const maxFriendship = npc.maxFriendship || 100;
+    const friendshipPercent = Math.floor((friendship / maxFriendship) * 100);
+    const discount = this.getFriendshipDiscount(npc.id);
+    const discountPercent = Math.floor(discount * 100);
+
+    let friendshipBadge = "";
+    if (discountPercent > 0) {
+      friendshipBadge = `<div style="display: inline-block; background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 700; margin-top: 0.5rem;">💝 Amizade ${friendshipPercent}% • Desconto ${discountPercent}%!</div>`;
+    } else if (friendshipPercent > 0) {
+      friendshipBadge = `<div style="display: inline-block; background: var(--bg-accent); border: 2px solid var(--border-color); color: var(--text-primary); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-top: 0.5rem;">💚 Amizade ${friendshipPercent}%</div>`;
+    }
 
     let content = `
       <div style="text-align: center; margin-bottom: 1rem;">
         <div style="font-size: 3rem;">${npc.avatar}</div>
         <h3 style="margin: 0.5rem 0;">Loja de ${name}</h3>
         <p style="color: var(--text-secondary); font-size: 0.875rem;">Seu ouro: <span style="color: #b8860b; font-weight: 700;">${this.player.data.gold}g</span></p>
+        ${friendshipBadge}
       </div>
       <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem; max-height: 400px; overflow-y: auto; padding: 0.5rem;">
     `;
@@ -273,11 +389,18 @@ export default class NPCSUI {
 
       const itemName = itemData.namePtBR || itemData.name;
       const itemDesc = itemData.descriptionPtBR || itemData.description || "";
-      const price = Math.floor(
+      const basePrice = Math.floor(
         itemData.buyPrice * (shopItem.priceMultiplier || 1.0),
       );
+
+      // Apply friendship discount
+      const discount = this.getFriendshipDiscount(npc.id);
+      const price = Math.floor(basePrice * (1 - discount));
+      const discountAmount = basePrice - price;
+
       const stock = shopItem.stock;
       const canAfford = this.player.data.gold >= price;
+      const outOfStock = stock <= 0;
 
       // Check if it's a seed and get required level
       let requiredLevelInfo = "";
@@ -293,28 +416,49 @@ export default class NPCSUI {
       }
 
       const isLocked = !canUse;
-      const buttonDisabled = !canAfford || isLocked;
-      const buttonClass = isLocked
-        ? "btn-secondary"
-        : canAfford
-          ? "btn-success"
-          : "btn-secondary";
+      const buttonDisabled = !canAfford || isLocked || outOfStock;
+      const buttonClass =
+        isLocked || outOfStock
+          ? "btn-secondary"
+          : canAfford
+            ? "btn-success"
+            : "btn-secondary";
+
+      let priceDisplay = `<div style="color: #b8860b; font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem;">
+        <img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g
+      </div>`;
+
+      if (discountAmount > 0) {
+        priceDisplay = `
+          <div style="color: var(--text-secondary); font-size: 0.75rem; text-decoration: line-through; margin-bottom: 0.125rem;">${basePrice}g</div>
+          <div style="color: #e74c3c; font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem;">
+            <img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g 💝
+          </div>
+        `;
+      }
+
+      let buttonText =
+        '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> Comprar';
+      if (isLocked) {
+        buttonText = "🔒 Bloqueado";
+      } else if (outOfStock) {
+        buttonText = "❌ Sem Estoque";
+      }
 
       content += `
-        <div class="shop-item" style="background: var(--bg-accent); padding: 0.75rem; border-radius: 8px; border: 2px solid var(--border-color); display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; min-height: 180px; ${isLocked ? "opacity: 0.6;" : ""}">
+        <div class="shop-item" style="background: var(--bg-accent); padding: 0.75rem; border-radius: 8px; border: 2px solid var(--border-color); display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; min-height: 180px; ${isLocked || outOfStock ? "opacity: 0.6;" : ""}">
           <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">${renderItemIcon(itemData, { size: "2.5rem" })}</div>
           <div style="font-weight: 600; font-size: 0.875rem; color: var(--text-primary); margin-bottom: 0.25rem; line-height: 1.2;">${itemName}</div>
           ${requiredLevelInfo}
-          <div style="color: #b8860b; font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem;">
-            <img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g
-          </div>
-          <div style="color: var(--text-secondary); font-size: 0.75rem; margin-bottom: 0.5rem;">Estoque: ${stock}</div>
+          ${priceDisplay}
+          <div style="color: ${outOfStock ? "#e74c3c" : "var(--text-secondary)"}; font-size: 0.75rem; margin-bottom: 0.5rem; font-weight: ${outOfStock ? "700" : "400"};">Estoque: ${stock}</div>
           <button class="btn ${buttonClass}"
                   data-item-id="${shopItem.id}"
                   data-price="${price}"
+                  data-npc-id="${npc.id}"
                   ${buttonDisabled ? "disabled" : ""}
                   style="width: 100%; padding: 0.5rem; font-size: 0.75rem; margin-top: auto;">
-            ${isLocked ? "🔒 Bloqueado" : '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> Comprar'}
+            ${buttonText}
           </button>
         </div>
       `;
@@ -343,7 +487,8 @@ export default class NPCSUI {
         button.addEventListener("click", (e) => {
           const itemId = button.getAttribute("data-item-id");
           const price = parseInt(button.getAttribute("data-price"));
-          this.buyItem(npc, itemId, price);
+          const npcId = button.getAttribute("data-npc-id");
+          this.buyItem(this.npcsData[npcId], itemId, price);
         });
       });
     }, 50);
@@ -377,7 +522,23 @@ export default class NPCSUI {
       }
     }
 
+    // Find shop item for stock checking
+    const shopItem = npc.shop.items.find((item) => item.id === itemId);
+    if (!shopItem) {
+      this.notifications.error("Item não encontrado na loja!");
+      return;
+    }
+
+    if (shopItem.stock <= 0) {
+      this.notifications.error("Este item está fora de estoque!");
+      return;
+    }
+
     const itemName = itemData.namePtBR || itemData.name;
+    const maxBuyable = Math.min(
+      shopItem.stock,
+      Math.floor(this.player.data.gold / price),
+    );
 
     // Show quantity dialog
     const content = `
@@ -390,13 +551,13 @@ export default class NPCSUI {
 
       <div style="margin: 1rem 0;">
         <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">
-          Quantidade:
+          Quantidade: <span style="color: var(--text-secondary); font-weight: 400; font-size: 0.875rem;">(Máx: ${maxBuyable})</span>
         </label>
         <input
           type="number"
           id="buy-amount"
           min="1"
-          max="${Math.floor(this.player.data.gold / price)}"
+          max="${maxBuyable}"
           value="1"
           style="width: 100%; padding: 0.75rem; font-size: 1rem; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-accent); color: var(--text-primary);"
         >
@@ -450,9 +611,19 @@ export default class NPCSUI {
               return false;
             }
 
+            // Check stock again
+            if (shopItem.stock < amount) {
+              this.notifications.error("Estoque insuficiente!");
+              return false;
+            }
+
             // Execute purchase
             this.player.removeGold(totalCost);
             this.inventorySystem.addItem(itemId, amount);
+
+            // Decrease stock
+            shopItem.stock -= amount;
+            this.saveNPCStock();
 
             this.notifications.success(
               `Comprou ${amount}x ${itemName} por ${totalCost}g!`,
@@ -475,7 +646,6 @@ export default class NPCSUI {
     // Setup quick buttons
     setTimeout(() => {
       const amountInput = document.getElementById("buy-amount");
-      const maxAmount = Math.floor(this.player.data.gold / price);
 
       const updatePreview = () => {
         const amount = parseInt(amountInput?.value || "1");
@@ -498,21 +668,21 @@ export default class NPCSUI {
 
       document.getElementById("quick-5")?.addEventListener("click", () => {
         if (amountInput) {
-          amountInput.value = Math.min(5, maxAmount).toString();
+          amountInput.value = Math.min(5, maxBuyable).toString();
           updatePreview();
         }
       });
 
       document.getElementById("quick-10")?.addEventListener("click", () => {
         if (amountInput) {
-          amountInput.value = Math.min(10, maxAmount).toString();
+          amountInput.value = Math.min(10, maxBuyable).toString();
           updatePreview();
         }
       });
 
       document.getElementById("quick-max")?.addEventListener("click", () => {
         if (amountInput) {
-          amountInput.value = maxAmount.toString();
+          amountInput.value = maxBuyable.toString();
           updatePreview();
         }
       });
@@ -545,12 +715,34 @@ export default class NPCSUI {
     console.log(
       `💚 ${npcId} friendship: ${oldFriendship} → ${this.npcsData[npcId].friendship}`,
     );
+
+    // Check if reached max friendship
+    if (
+      this.npcsData[npcId].friendship >= this.npcsData[npcId].maxFriendship &&
+      oldFriendship < this.npcsData[npcId].maxFriendship
+    ) {
+      const npcName =
+        this.npcsData[npcId].namePtBR || this.npcsData[npcId].name;
+      this.notifications.success(
+        `🎉 Amizade máxima com ${npcName}! Você ganhou 20% de desconto!`,
+      );
+    }
   }
 
   /**
-   * Refresh render
+   * Refresh NPCs
    */
   refresh() {
     this.render();
+  }
+
+  /**
+   * Cleanup when UI is destroyed
+   */
+  destroy() {
+    if (this.stockRestoreInterval) {
+      clearInterval(this.stockRestoreInterval);
+      this.stockRestoreInterval = null;
+    }
   }
 }
