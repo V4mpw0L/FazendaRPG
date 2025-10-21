@@ -270,13 +270,14 @@ export default class MarketUI {
       .market-item-category {
         position: absolute;
         bottom: 3.5rem;
-        left: 0;
-        right: 0;
-        padding: 0.125rem;
-        font-size: 0.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 0.125rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.625rem;
         font-weight: 700;
         text-align: center;
-        letter-spacing: 0.3px;
+        letter-spacing: 0.5px;
         text-transform: uppercase;
         color: white;
         opacity: 0.9;
