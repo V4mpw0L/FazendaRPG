@@ -281,6 +281,7 @@ export default class MarketUI {
         text-transform: uppercase;
         color: white;
         opacity: 0.9;
+        line-height: 1;
       }
 
       .market-item-action {
