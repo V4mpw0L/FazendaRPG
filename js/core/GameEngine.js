@@ -130,6 +130,7 @@ export default class GameEngine {
         notifications,
         this.inventorySystem,
       );
+      this.npcsUI.setSystems(this.farmSystem, this.skillSystem);
       await this.npcsUI.init();
 
       this.cityUI = new CityUI(

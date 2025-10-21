@@ -4,6 +4,9 @@
  * @version 0.0.6
  */
 
+import i18n from "../utils/i18n.js";
+import { renderItemIcon } from "../utils/iconRenderer.js";
+
 export default class NPCSUI {
   constructor(player, modal, notifications, inventorySystem) {
     this.player = player;
@@ -13,6 +16,14 @@ export default class NPCSUI {
     this.container = null;
     this.npcsData = null;
     this.initialized = false;
+  }
+
+  /**
+   * Set systems after construction
+   */
+  setSystems(farmSystem, skillSystem) {
+    this.farmSystem = farmSystem;
+    this.skillSystem = skillSystem;
   }
 
   /**
@@ -268,20 +279,42 @@ export default class NPCSUI {
       const stock = shopItem.stock;
       const canAfford = this.player.data.gold >= price;
 
+      // Check if it's a seed and get required level
+      let requiredLevelInfo = "";
+      let canUse = true;
+      if (itemData.category === "seeds") {
+        const cropId = itemData.id.replace("_seed", "");
+        const cropData = this.farmSystem?.getCropData(cropId);
+        if (cropData && cropData.requiredLevel) {
+          const playerLevel = this.skillSystem?.getLevel("farming") || 1;
+          canUse = playerLevel >= cropData.requiredLevel;
+          requiredLevelInfo = `<div style="font-size: 0.65rem; color: ${canUse ? "#4caf50" : "#ff6b6b"}; font-weight: 600; margin: 0.25rem 0;">${canUse ? "✓" : "🔒"} Nível ${cropData.requiredLevel}</div>`;
+        }
+      }
+
+      const isLocked = !canUse;
+      const buttonDisabled = !canAfford || isLocked;
+      const buttonClass = isLocked
+        ? "btn-secondary"
+        : canAfford
+          ? "btn-success"
+          : "btn-secondary";
+
       content += `
-        <div class="shop-item" style="background: var(--bg-accent); padding: 0.75rem; border-radius: 8px; border: 2px solid var(--border-color); display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; min-height: 180px;">
-          <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">${itemData.icon || "📦"}</div>
+        <div class="shop-item" style="background: var(--bg-accent); padding: 0.75rem; border-radius: 8px; border: 2px solid var(--border-color); display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; min-height: 180px; ${isLocked ? "opacity: 0.6;" : ""}">
+          <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">${renderItemIcon(itemData, { size: "2.5rem" })}</div>
           <div style="font-weight: 600; font-size: 0.875rem; color: var(--text-primary); margin-bottom: 0.25rem; line-height: 1.2;">${itemName}</div>
+          ${requiredLevelInfo}
           <div style="color: #b8860b; font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem;">
             <img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g
           </div>
           <div style="color: var(--text-secondary); font-size: 0.75rem; margin-bottom: 0.5rem;">Estoque: ${stock}</div>
-          <button class="btn ${canAfford ? "btn-success" : "btn-secondary"}"
+          <button class="btn ${buttonClass}"
                   data-item-id="${shopItem.id}"
                   data-price="${price}"
-                  ${!canAfford ? "disabled" : ""}
+                  ${buttonDisabled ? "disabled" : ""}
                   style="width: 100%; padding: 0.5rem; font-size: 0.75rem; margin-top: auto;">
-            <img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> Comprar
+            ${isLocked ? "🔒 Bloqueado" : '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> Comprar'}
           </button>
         </div>
       `;
@@ -329,12 +362,27 @@ export default class NPCSUI {
       return;
     }
 
+    // Check level requirement for seeds
+    if (itemData.category === "seeds") {
+      const cropId = itemId.replace("_seed", "");
+      const cropData = this.farmSystem?.getCropData(cropId);
+      if (cropData && cropData.requiredLevel) {
+        const playerLevel = this.skillSystem?.getLevel("farming") || 1;
+        if (playerLevel < cropData.requiredLevel) {
+          this.notifications.error(
+            `Você precisa do nível ${cropData.requiredLevel} de Farming!`,
+          );
+          return;
+        }
+      }
+    }
+
     const itemName = itemData.namePtBR || itemData.name;
 
     // Show quantity dialog
     const content = `
       <div style="text-align: center; margin-bottom: 1rem;">
-        <div style="font-size: 4rem; margin-bottom: 0.5rem;">${itemData.icon || "📦"}</div>
+        <div style="font-size: 4rem; margin-bottom: 0.5rem;">${renderItemIcon(itemData, { size: "4rem" })}</div>
         <h3 style="margin: 0.5rem 0; color: var(--text-primary);">${itemName}</h3>
         <p style="color: #b8860b; font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g por unidade</p>
         <p style="color: var(--text-secondary); font-size: 0.875rem;">Você tem: <img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${this.player.data.gold}g</p>
