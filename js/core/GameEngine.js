@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Game Engine
  * Main game engine that integrates all systems and manages game flow
- * @version 0.0.6
+ * @version 0.0.7
  */
 
 import Player from "./Player.js";
@@ -60,7 +60,7 @@ export default class GameEngine {
     }
 
     try {
-      console.log("🎮 Initializing FazendaRPG v0.0.6...");
+      console.log("🎮 Initializing FazendaRPG v0.0.7...");
 
       // Show loading overlay
       this.showLoading(true);
@@ -307,6 +307,33 @@ export default class GameEngine {
    */
   showWelcomeScreen() {
     this.screenManager.showScreen("welcome-screen");
+    this.hideTopBarAndMenu();
+  }
+
+  /**
+   * Hide topbar and menu (for welcome screen)
+   */
+  hideTopBarAndMenu() {
+    const topbar = document.getElementById("topbar");
+    const sideMenu = document.getElementById("side-menu");
+    const menuOverlay = document.getElementById("menu-overlay");
+
+    if (topbar) topbar.style.display = "none";
+    if (sideMenu) sideMenu.style.display = "none";
+    if (menuOverlay) menuOverlay.style.display = "none";
+  }
+
+  /**
+   * Show topbar and menu (after game starts)
+   */
+  showTopBarAndMenu() {
+    const topbar = document.getElementById("topbar");
+    const sideMenu = document.getElementById("side-menu");
+    const menuOverlay = document.getElementById("menu-overlay");
+
+    if (topbar) topbar.style.display = "flex";
+    if (sideMenu) sideMenu.style.display = "flex";
+    if (menuOverlay) menuOverlay.style.display = "block";
   }
 
   /**
@@ -326,6 +353,9 @@ export default class GameEngine {
 
     // Save initial state
     this.saveGame();
+
+    // Show topbar and menu
+    this.showTopBarAndMenu();
 
     // Show farm screen
     this.screenManager.showScreen("farm-screen");
@@ -376,6 +406,9 @@ export default class GameEngine {
     // Check for pending bank interest
     this.checkBankInterest();
 
+    // Show topbar and menu
+    this.showTopBarAndMenu();
+
     // Show farm screen
     this.screenManager.showScreen("farm-screen");
 
@@ -420,7 +453,7 @@ export default class GameEngine {
     const saveData = {
       player: this.player.getData(),
       savedAt: Date.now(),
-      version: "0.0.6",
+      version: "0.0.7",
     };
 
     const success = this.saveManager.save(saveData);
@@ -475,7 +508,7 @@ export default class GameEngine {
     const saveData = {
       player: this.player.getData(),
       exportedAt: Date.now(),
-      version: "0.0.6",
+      version: "0.0.7",
     };
 
     const success = this.saveManager.exportSave(saveData);

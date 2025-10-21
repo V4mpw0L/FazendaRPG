@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Side Menu UI Component
  * Manages the navigation side menu with screen switching
- * @version 0.0.6
+ * @version 0.0.7
  */
 
 export default class SideMenu {
