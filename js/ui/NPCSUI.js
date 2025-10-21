@@ -377,7 +377,9 @@ export default class NPCSUI {
           text: "Cancelar",
           class: "btn-secondary",
           onClick: () => {
-            this.showNPCShop(npc);
+            setTimeout(() => {
+              this.showNPCShop(npc);
+            }, 350);
             return true;
           },
         },
@@ -411,8 +413,10 @@ export default class NPCSUI {
             // Increase friendship
             this.increaseFriendship(npc.id, amount);
 
-            // Reopen shop
-            this.showNPCShop(npc);
+            // Reopen shop after purchase with delay
+            setTimeout(() => {
+              this.showNPCShop(npc);
+            }, 350);
             return true;
           },
         },
