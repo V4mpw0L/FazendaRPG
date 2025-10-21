@@ -332,8 +332,8 @@ export default class GameEngine {
     const menuOverlay = document.getElementById("menu-overlay");
 
     if (topbar) topbar.style.display = "flex";
-    if (sideMenu) sideMenu.style.display = "flex";
-    if (menuOverlay) menuOverlay.style.display = "block";
+    if (sideMenu) sideMenu.style.display = "";
+    if (menuOverlay) menuOverlay.style.display = "";
   }
 
   /**
