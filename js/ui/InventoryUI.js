@@ -404,13 +404,13 @@ export default class InventoryUI {
   getCategoryColor(category) {
     const colors = {
       seeds: "#5caa1f",
-      crops: "#f39c12",
-      fish: "#3498db",
-      minerals: "#9b59b6",
+      crops: "#ffa500",
+      fish: "#4682b4",
+      minerals: "#696969",
       wood: "#8b4513",
-      food: "#e74c3c",
-      tools: "#34495e",
-      materials: "#95a5a6",
+      food: "#ff6347",
+      tools: "#9370db",
+      materials: "#228b22",
     };
     return colors[category] || "#95a5a6";
   }
