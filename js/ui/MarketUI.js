@@ -543,14 +543,14 @@ export default class MarketUI {
       }
 
       .market-preview-row span:last-child {
-        color: #b8860b;
+        color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);
         font-weight: 700;
       }
 
       .market-preview-total {
         font-weight: 700;
         font-size: 1.125rem;
-        color: #b8860b;
+        color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);
       }
 
       @media (max-width: 768px) {
@@ -844,7 +844,7 @@ export default class MarketUI {
       <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; flex: 1;">
         <div class="market-item-icon">${renderItemIcon(item, { size: "2rem" })}</div>
         <div class="market-item-name" title="${itemName}">${itemName}</div>
-        <div class="market-item-price" style="color: #b8860b;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g</div>
+        <div class="market-item-price" style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g</div>
         ${type === "sell" ? `<div class="market-item-stock">${i18n.t("market.youHave")}: ${stock}</div>` : ""}
       </div>
       <div class="market-item-category" style="background: ${categoryColor};">${categoryName}</div>
@@ -902,7 +902,7 @@ export default class MarketUI {
         <h3 style="margin: 0.5rem 0; color: var(--text-primary);">${itemName}</h3>
         <div style="display: inline-block; background: ${categoryColor}; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.625rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">${categoryName}</div>
         <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0.5rem 0;">${itemDesc}</p>
-        <p style="color: #b8860b; font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g ${i18n.t("market.perUnit")}</p>
+        <p style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5); font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g ${i18n.t("market.perUnit")}</p>
       </div>
 
       <div style="margin: 1rem 0;">
@@ -929,7 +929,7 @@ export default class MarketUI {
       <div class="market-preview" id="buy-preview">
         <div class="market-preview-row">
           <span>${i18n.t("market.yourGold")}:</span>
-          <span style="color: #b8860b; font-weight: 700;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${playerGold}g</span>
+          <span style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5); font-weight: 700;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${playerGold}g</span>
         </div>
         <div class="market-preview-row">
           <span>${i18n.t("market.cost")}:</span>
@@ -995,7 +995,7 @@ export default class MarketUI {
         }
         if (remainingEl) {
           remainingEl.innerHTML = `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${remaining}g`;
-          remainingEl.style.color = remaining >= 0 ? "#b8860b" : "#e74c3c";
+          remainingEl.style.color = remaining >= 0 ? "#FFD700" : "#e74c3c";
         }
 
         // Disable/enable buy button based on gold
@@ -1107,7 +1107,7 @@ export default class MarketUI {
         <h3 style="margin: 0.5rem 0; color: var(--text-primary);">${itemName}</h3>
         <div style="display: inline-block; background: ${categoryColor}; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.625rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">${categoryName}</div>
         <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0.5rem 0;">${itemDesc}</p>
-        <p style="color: #b8860b; font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g ${i18n.t("market.perUnit")}</p>
+        <p style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5); font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g ${i18n.t("market.perUnit")}</p>
         <p style="color: var(--text-secondary); font-size: 0.875rem;">${i18n.t("market.youHave")}: ${maxSellable}</p>
       </div>
 
@@ -1135,11 +1135,11 @@ export default class MarketUI {
       <div class="market-preview" id="sell-preview">
         <div class="market-preview-row">
           <span>${i18n.t("market.yourGold")}:</span>
-          <span style="color: #b8860b; font-weight: 700;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${playerGold}g</span>
+          <span style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5); font-weight: 700;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${playerGold}g</span>
         </div>
         <div class="market-preview-row">
           <span>${i18n.t("market.willReceive")}:</span>
-          <span id="preview-receive" style="color: #b8860b; font-weight: 700;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g</span>
+          <span id="preview-receive" style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5); font-weight: 700;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g</span>
         </div>
         <div class="market-preview-row">
           <span>${i18n.t("market.newTotal")}:</span>
