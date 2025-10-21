@@ -83,11 +83,12 @@
 .welcome-greeting {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: var(--spacing-sm);
+    justify-content: flex-start;
+    gap: var(--spacing-md);
     margin-bottom: var(--spacing-xs);
     position: relative;
     z-index: 1;
+    padding-left: 1.5rem;
 }
 
 .welcome-icon {
@@ -95,6 +96,9 @@
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
     position: relative;
     z-index: 1;
+    width: 72px !important;
+    height: 72px !important;
+    top: 1rem;
 }
 
 .welcome-text {
