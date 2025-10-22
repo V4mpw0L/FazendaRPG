@@ -963,7 +963,7 @@ export default class MarketUI {
         </div>
         <div class="market-preview-row">
           <span>${i18n.t("market.cost")}:</span>
-          <span id="preview-cost" style="color: #8B0000; font-weight: 700;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g</span>
+          <span id="preview-cost" style="color: #ff4444; font-weight: 700; font-size: 1.1rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g</span>
         </div>
         <div class="market-preview-row">
           <span>${i18n.t("market.remaining")}:</span>
@@ -1021,7 +1021,8 @@ export default class MarketUI {
 
         if (costEl) {
           costEl.innerHTML = `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${cost}g`;
-          costEl.style.color = "#8B0000";
+          costEl.style.color = "#ff4444";
+          costEl.style.fontSize = "1.1rem";
         }
         if (remainingEl) {
           remainingEl.innerHTML = `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${remaining}g`;
@@ -1182,7 +1183,7 @@ export default class MarketUI {
         </div>
         <div class="market-preview-row">
           <span>${i18n.t("market.willReceive")}:</span>
-          <span id="preview-receive" style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5); font-weight: 700;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g</span>
+          <span id="preview-receive" style="color: #2ecc71; font-weight: 700; font-size: 1.1rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${unitPrice}g</span>
         </div>
         <div class="market-preview-row">
           <span>${i18n.t("market.newTotal")}:</span>
