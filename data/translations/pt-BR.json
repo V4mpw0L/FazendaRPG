@@ -15,11 +15,15 @@
     "farm": "Fazenda",
     "skills": "Habilidades",
     "inventory": "Inventário",
+    "wiki": "Wiki",
     "city": "Cidade",
     "market": "Mercado",
     "quests": "Missões",
     "npcs": "NPCs",
     "settings": "Configurações"
+  },
+  "wiki": {
+    "title": "📚 Wiki - Guia Completo"
   },
   "farm": {
     "title": "Sua Fazenda",
@@ -43,7 +47,10 @@
     "needTrowel": "Você precisa de uma Pá de Mão para plantar sementes!",
     "needWeedTool": "Você precisa de uma Enxada ou Rastelo para limpar as ervas daninhas!",
     "weedsCleared": "Ervas daninhas removidas!",
-    "weedsGrown": "Ervas daninhas cresceram no canteiro"
+    "weedsGrown": "Ervas daninhas cresceram no canteiro",
+    "allPlotsHaveWeeds": "Todos os plots vazios têm ervas daninhas! Limpe-os antes de plantar.",
+    "someHaveWeeds": "plot(s) com ervas daninhas serão ignorados.",
+    "noEmptyPlotsAvailable": "Nenhum plot vazio disponível para plantar"
   },
   "skills": {
     "title": "Suas Habilidades",

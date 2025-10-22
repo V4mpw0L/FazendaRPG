@@ -58,6 +58,8 @@ export default class Player {
             crop: null,
             plantedAt: null,
             fertilized: false,
+            hasWeeds: false,
+            lastHarvestedAt: Date.now(),
           })),
       },
 
@@ -229,6 +231,19 @@ export default class Player {
         merged.skills[skill] = { level: 1, xp: 0 };
       }
     });
+
+    // Migrate old saves: Ensure farm plots have weed properties
+    if (merged.farm && merged.farm.plots) {
+      merged.farm.plots = merged.farm.plots.map((plot) => {
+        return {
+          crop: plot.crop || null,
+          plantedAt: plot.plantedAt || null,
+          fertilized: plot.fertilized || false,
+          hasWeeds: plot.hasWeeds !== undefined ? plot.hasWeeds : false,
+          lastHarvestedAt: plot.lastHarvestedAt || Date.now(),
+        };
+      });
+    }
 
     // Migrate old saves: Calculate correct maxEnergy based on levels
     merged.maxEnergy = this.calculateMaxEnergy(merged.level, merged.skills);

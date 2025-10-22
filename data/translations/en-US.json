@@ -15,11 +15,15 @@
     "farm": "Farm",
     "skills": "Skills",
     "inventory": "Inventory",
+    "wiki": "Wiki",
     "city": "City",
     "market": "Market",
     "quests": "Quests",
     "npcs": "NPCs",
     "settings": "Settings"
+  },
+  "wiki": {
+    "title": "📚 Wiki - Complete Guide"
   },
   "farm": {
     "title": "Your Farm",
@@ -43,7 +47,10 @@
     "needTrowel": "You need a Hand Trowel to plant seeds!",
     "needWeedTool": "You need a Hoe or Rake to clear weeds!",
     "weedsCleared": "Weeds cleared!",
-    "weedsGrown": "Weeds have grown on the plot"
+    "weedsGrown": "Weeds have grown on the plot",
+    "allPlotsHaveWeeds": "All empty plots have weeds! Clear them before planting.",
+    "someHaveWeeds": "plot(s) with weeds will be ignored.",
+    "noEmptyPlotsAvailable": "No empty plots available to plant"
   },
   "skills": {
     "title": "Your Skills",

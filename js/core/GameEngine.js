@@ -18,6 +18,7 @@ import InventoryUI from "../ui/InventoryUI.js";
 import MarketUI from "../ui/MarketUI.js";
 import NPCSUI from "../ui/NPCSUI.js";
 import CityUI from "../ui/CityUI.js";
+import WikiManager from "../ui/WikiManager.js";
 import AvatarSelector from "../ui/AvatarSelector.js";
 import FertilizerAnimation from "../animations/FertilizerAnimation.js";
 import HarvestAnimation from "../animations/HarvestAnimation.js";
@@ -142,6 +143,10 @@ export default class GameEngine {
       );
       this.cityUI.init();
       this.cityUI.setMarketUI(this.marketUI);
+
+      // Initialize Wiki Manager
+      this.wikiManager = new WikiManager();
+      this.wikiManager.init();
 
       // Initialize Avatar Selector
       this.avatarSelector = new AvatarSelector(this);
@@ -995,6 +1000,15 @@ export default class GameEngine {
 
     if (result.success) {
       notifications.success(i18n.t("farm.weedsCleared"));
+
+      // Debug: Log plot state after clearing
+      const plot = this.farmSystem.getPlot(index);
+      console.log(`🔍 Debug - Plot ${index} after clearing:`, {
+        hasWeeds: plot.hasWeeds,
+        crop: plot.crop,
+        lastHarvestedAt: plot.lastHarvestedAt,
+      });
+
       this.renderFarm();
     } else {
       notifications.error(result.error || "Não foi possível limpar as ervas");
@@ -1452,12 +1466,45 @@ export default class GameEngine {
       return;
     }
 
-    // Count empty plots
+    // Count empty plots without weeds
     const plots = this.farmSystem.getPlots();
-    const emptyPlots = plots.filter((plot) => !plot.cropId).length;
+    let emptyPlotsCount = 0;
+    let plotsWithWeeds = 0;
 
-    if (emptyPlots === 0) {
-      notifications.info("Nenhum plot vazio para plantar");
+    // Debug: Log all plots state
+    console.log("🔍 Debug - Checking plots for Plant All:");
+
+    plots.forEach((plot, index) => {
+      const hasWeeds = this.farmSystem.hasWeeds(index);
+      console.log(`Plot ${index}:`, {
+        cropId: plot.cropId || plot.crop,
+        hasWeeds: hasWeeds,
+        isEmpty: !plot.cropId && !plot.crop,
+      });
+
+      if (!plot.crop) {
+        if (hasWeeds) {
+          plotsWithWeeds++;
+        } else {
+          emptyPlotsCount++;
+        }
+      }
+    });
+
+    // Check if there are plots with weeds
+    if (plotsWithWeeds > 0 && emptyPlotsCount === 0) {
+      notifications.error(`🌿 ${i18n.t("farm.allPlotsHaveWeeds")}`);
+      return;
+    }
+
+    if (plotsWithWeeds > 0) {
+      notifications.warning(
+        `⚠️ ${plotsWithWeeds} ${i18n.t("farm.someHaveWeeds")}`,
+      );
+    }
+
+    if (emptyPlotsCount === 0) {
+      notifications.info(i18n.t("farm.noEmptyPlotsAvailable"));
       return;
     }
 
@@ -1515,7 +1562,7 @@ export default class GameEngine {
       <div style="max-height: 400px; overflow-y: auto;">
         <div style="background: var(--bg-accent); padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid var(--brand-primary);">
           <p style="margin: 0; color: var(--text-primary); font-weight: 600;">
-            🌾 ${emptyPlots} plot(s) vazio(s) será(ão) plantado(s)
+            🌾 ${emptyPlotsCount} plot(s) vazio(s) será(ão) plantado(s)
           </p>
         </div>
         <p style="margin-bottom: 1rem; color: var(--text-secondary);">Escolha qual semente plantar:</p>

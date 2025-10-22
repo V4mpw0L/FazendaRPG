@@ -514,7 +514,8 @@ export default class FarmSystem {
     let emptyPlots = 0;
 
     for (let i = 0; i < this.plotCount; i++) {
-      if (this.isPlotEmpty(i)) {
+      // Only plant if plot is empty AND has no weeds
+      if (this.isPlotEmpty(i) && !this.hasWeeds(i)) {
         emptyPlots++;
         const result = this.plant(i, cropId);
         if (result.success) {
