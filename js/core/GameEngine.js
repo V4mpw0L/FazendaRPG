@@ -692,7 +692,7 @@ export default class GameEngine {
       // Stage 3: Almost ready (66-99%)
       const matureFactor = (progress - 66) / 34;
       return `
-        <svg viewBox="0 0 100 100" style="width: 80%; height: 80%;">
+        <svg viewBox="0 0 100 100" style="width: 90%; height: 90%;">
           <defs>
             <linearGradient id="stem3" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" style="stop-color:#9ccc65;stop-opacity:1" />
@@ -709,24 +709,24 @@ export default class GameEngine {
           </defs>
           <!-- Full grown plant -->
           <g filter="url(#shadow3)">
-            <path d="M 50 80 Q 48 50 50 25"
-                  stroke="url(#stem3)" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <path d="M 50 82 Q 48 50 50 20"
+                  stroke="url(#stem3)" stroke-width="5" fill="none" stroke-linecap="round"/>
             <!-- Multiple branches -->
-            <path d="M 50 55 Q 42 52 35 50"
-                  stroke="url(#stem3)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-            <path d="M 50 58 Q 58 55 65 53"
-                  stroke="url(#stem3)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-            <path d="M 50 45 Q 44 43 38 42"
-                  stroke="url(#stem3)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-            <path d="M 50 48 Q 56 46 62 45"
-                  stroke="url(#stem3)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M 50 55 Q 40 52 30 50"
+                  stroke="url(#stem3)" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M 50 58 Q 60 55 70 53"
+                  stroke="url(#stem3)" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M 50 42 Q 42 40 32 38"
+                  stroke="url(#stem3)" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M 50 45 Q 58 43 68 41"
+                  stroke="url(#stem3)" stroke-width="3" fill="none" stroke-linecap="round"/>
             <!-- Large leaves -->
-            <ellipse cx="35" cy="50" rx="8" ry="12" fill="url(#leaf3)" transform="rotate(-45 35 50)"/>
-            <ellipse cx="65" cy="53" rx="8" ry="12" fill="url(#leaf3)" transform="rotate(45 65 53)"/>
-            <ellipse cx="38" cy="42" rx="7" ry="11" fill="url(#leaf3)" transform="rotate(-35 38 42)"/>
-            <ellipse cx="62" cy="45" rx="7" ry="11" fill="url(#leaf3)" transform="rotate(35 62 45)"/>
-            <ellipse cx="45" cy="35" rx="7" ry="10" fill="url(#leaf3)" transform="rotate(-20 45 35)"/>
-            <ellipse cx="55" cy="33" rx="7" ry="10" fill="url(#leaf3)" transform="rotate(20 55 33)"/>
+            <ellipse cx="30" cy="50" rx="10" ry="15" fill="url(#leaf3)" transform="rotate(-45 30 50)"/>
+            <ellipse cx="70" cy="53" rx="10" ry="15" fill="url(#leaf3)" transform="rotate(45 70 53)"/>
+            <ellipse cx="32" cy="38" rx="9" ry="14" fill="url(#leaf3)" transform="rotate(-35 32 38)"/>
+            <ellipse cx="68" cy="41" rx="9" ry="14" fill="url(#leaf3)" transform="rotate(35 68 41)"/>
+            <ellipse cx="42" cy="30" rx="9" ry="13" fill="url(#leaf3)" transform="rotate(-20 42 30)"/>
+            <ellipse cx="58" cy="28" rx="9" ry="13" fill="url(#leaf3)" transform="rotate(20 58 28)"/>
           </g>
         </svg>
       `;
