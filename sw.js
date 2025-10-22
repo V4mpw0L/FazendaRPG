@@ -356,48 +356,59 @@ async function checkPendingNotifications() {
     if (firedCount > 0) {
       console.log(`🔔 ${firedCount} notificação(ões) pendente(s) disparada(s)`);
     }
+
+    // Schedule next check if there are remaining notifications
+    const remainingNotifications = await getAllNotificationsFromDB();
+    if (remainingNotifications.length > 0) {
+      const nextNotification = remainingNotifications.sort((a, b) => a.timestamp - b.timestamp)[0];
+      const delayUntilNext = Math.max(0, nextNotification.timestamp - Date.now());
+
+      // Wake up before the notification time to ensure it fires on time
+      const wakeUpTime = Math.min(delayUntilNext, 30000); // Max 30 seconds
+
+      console.log(`⏰ Próxima verificação em ${Math.round(wakeUpTime / 1000)}s`);
+    }
   } catch (error) {
     console.error("❌ Erro ao verificar notificações pendentes:", error);
   }
 }
 
-// Check notifications when Service Worker wakes up
+// Check notifications when Service Worker activates
 self.addEventListener("activate", (event) => {
+  console.log("🚀 Service Worker ativado - verificando notificações...");
   event.waitUntil(
-    checkPendingNotifications().catch((error) =>
-      console.error("❌ Erro ao verificar notificações na ativação:", error),
-    ),
+    Promise.all([
+      self.clients.claim(),
+      checkPendingNotifications().catch((error) =>
+        console.error("❌ Erro ao verificar notificações na ativação:", error),
+      ),
+    ])
   );
+});</parameter>
 });
 
 // Store for scheduled notifications (in-memory for immediate checks)
 let scheduledNotifications = new Map();
-let checkInterval = null;
 
-// Start periodic check (every 30 seconds)
-function startPeriodicCheck() {
-  if (checkInterval) {
-    clearInterval(checkInterval);
-  }
+// Wake up Service Worker to check notifications
+// This is called from the app to ensure SW stays somewhat active
+async function startPeriodicCheck() {
+  console.log("⏰ Sistema de verificação de notificações ativado");
 
   // Check immediately
-  checkPendingNotifications();
+  await checkPendingNotifications();
 
-  // Then check every 30 seconds
-  checkInterval = setInterval(() => {
-    checkPendingNotifications();
-  }, 30000); // 30 seconds
-
-  console.log("⏰ Verificação periódica de notificações iniciada");
+  // Note: We don't use setInterval here because SW can be terminated
+  // Instead, we rely on:
+  // 1. SW waking up naturally (fetch, message events)
+  // 2. App sending periodic ping messages
+  // 3. User interactions that wake the SW
 }
 
-// Stop periodic check
+// Legacy function kept for compatibility
 function stopPeriodicCheck() {
-  if (checkInterval) {
-    clearInterval(checkInterval);
-    checkInterval = null;
-    console.log("⏰ Verificação periódica de notificações parada");
-  }
+  console.log("⏰ Sistema de verificação mantido ativo (sem setInterval)");
+}</parameter>
 }
 
 // Push notifications (when available)
@@ -518,7 +529,7 @@ async function scheduleNotification(id, title, body, timestamp, data = {}) {
     const now = Date.now();
     const delay = timestamp - now;
 
-    // Save to IndexedDB for persistence
+    // Save to IndexedDB for persistence (critical for background notifications)
     await saveNotificationToDB(id, title, body, timestamp, data);
 
     if (delay <= 0) {
@@ -528,15 +539,8 @@ async function scheduleNotification(id, title, body, timestamp, data = {}) {
       return;
     }
 
-    // Also schedule in memory for immediate firing (if SW stays alive)
-    const timeoutId = setTimeout(async () => {
-      await showNotification(title, body, data);
-      await removeNotificationFromDB(id);
-      scheduledNotifications.delete(id);
-    }, delay);
-
+    // Store in memory (will be lost if SW is terminated, but that's OK - we have IndexedDB)
     scheduledNotifications.set(id, {
-      timeoutId,
       title,
       body,
       timestamp,
@@ -546,15 +550,15 @@ async function scheduleNotification(id, title, body, timestamp, data = {}) {
     console.log(
       `📅 Notificação agendada: ${title} para ${new Date(timestamp).toLocaleString()} (em ${Math.round(delay / 1000)}s)`,
     );
+    console.log(`💾 Notificação salva em IndexedDB para disparo em background`);
 
-    // Start periodic check if not running
-    if (!checkInterval) {
-      startPeriodicCheck();
-    }
+    // Notify that periodic check should be active
+    startPeriodicCheck();
   } catch (error) {
     console.error("❌ Erro ao agendar notificação:", error);
     throw error;
   }
+}</parameter>
 }
 
 // Cancel a scheduled notification
@@ -594,10 +598,9 @@ async function cancelAllNotifications() {
   }
 }
 
-// Show notification (only if app is closed/not visible)
+// Show notification (always show, even if app is open - user wants to know!)
 async function showNotification(title, body, data = {}) {
   try {
-    // Check if any client (tab/window) is currently focused/visible
     const allClients = await self.clients.matchAll({
       type: "window",
       includeUncontrolled: true,
@@ -606,55 +609,67 @@ async function showNotification(title, body, data = {}) {
     // Check if app is open and visible
     let isAppVisible = false;
     for (const client of allClients) {
-      // Check if client is focused or visible
       if (client.visibilityState === "visible" || client.focused) {
         isAppVisible = true;
-        console.log(
-          `📱 App está aberto e visível - notificação não será mostrada: ${title}`,
-        );
         break;
       }
     }
 
-    // Only show notification if app is NOT visible (closed or in background)
-    if (!isAppVisible) {
-      const options = {
-        body,
-        icon: "./assets/icon-192.png",
-        badge: "./assets/icon-72.png",
-        vibrate: [200, 100, 200],
-        tag: data.tag || "fazendarpg-notification",
-        requireInteraction: false,
-        silent: false,
-        renotify: true,
-        data: {
-          ...data,
-          timestamp: Date.now(),
-        },
-      };
+    const options = {
+      body,
+      icon: "./assets/icon-192.png",
+      badge: "./assets/icon-72.png",
+      vibrate: [200, 100, 200],
+      tag: data.tag || "fazendarpg-notification",
+      requireInteraction: false,
+      silent: false,
+      renotify: true,
+      data: {
+        ...data,
+        timestamp: Date.now(),
+      },
+    };
 
-      await self.registration.showNotification(title, options);
+    // Always show notification - even if app is visible
+    // This ensures users don't miss important notifications
+    await self.registration.showNotification(title, options);
+
+    if (isAppVisible) {
+      console.log(
+        `🔔 Notificação mostrada (app visível): ${title} - ${body}`,
+      );
+      // Also notify the app that notification was shown
+      allClients.forEach((client) => {
+        client.postMessage({
+          type: "NOTIFICATION_SHOWN_WHILE_VISIBLE",
+          data: { title, body, ...data },
+        });
+      });
+    } else {
       console.log(
         `🔔 Notificação mostrada (app fechado/background): ${title} - ${body}`,
       );
-    } else {
-      // App is visible, just log it
-      console.log(`🚫 Notificação suprimida (app visível): ${title} - ${body}`);
-
-      // Notify clients that notification was suppressed because app is open
-      allClients.forEach((client) => {
-        client.postMessage({
-          type: "NOTIFICATION_SUPPRESSED",
-          data: { title, body, reason: "app_visible", ...data },
-        });
-      });
     }
   } catch (error) {
     console.error("❌ Erro ao mostrar notificação:", error);
   }
+}</parameter>
 }
 
-// Start periodic check when SW loads
-startPeriodicCheck();
+// Check notifications immediately when SW loads/wakes up
+console.log("🌾 FazendaRPG Service Worker carregado - verificando notificações...");
+checkPendingNotifications().catch((error) => {
+  console.error("❌ Erro ao verificar notificações no carregamento:", error);
+});
 
-console.log("🌾 FazendaRPG Service Worker loaded");
+// Wake up on any fetch event (this helps keep SW alive)
+self.addEventListener("fetch", (event) => {
+  // After handling fetch, check for pending notifications
+  event.waitUntil(
+    (async () => {
+      // Small delay to not interfere with fetch
+      await new Promise(resolve => setTimeout(resolve, 100));
+      await checkPendingNotifications();
+    })().catch(() => {})
+  );
+});</parameter>

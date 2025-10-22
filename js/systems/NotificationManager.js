@@ -11,7 +11,8 @@ export default class NotificationManager {
     this.scheduledNotifications = new Map();
     this.serviceWorkerReady = false;
     this.storageKey = "fazendarpg_notifications_enabled";
-    this.syncInterval = null;
+    this.permissionAskedKey = "fazendarpg_notification_permission_asked";
+    this.pingInterval = null;
   }
 
   /**
@@ -55,7 +56,12 @@ export default class NotificationManager {
       await this.startPeriodicCheck();
       // Check for pending notifications immediately
       await this.checkPendingNotifications();
+      // Start ping system to keep SW alive
+      this.startPingSystem();
     }
+
+    // Auto-request permission if never asked before
+    await this.autoRequestPermissionIfNeeded();
 
     console.log(
       `🔔 Notification Manager initialized (Permission: ${this.permission})`,
@@ -71,6 +77,9 @@ export default class NotificationManager {
       return false;
     }
 
+    // Mark that we asked for permission
+    localStorage.setItem(this.permissionAskedKey, "true");
+
     try {
       const permission = await Notification.requestPermission();
       this.permission = permission;
@@ -82,6 +91,9 @@ export default class NotificationManager {
 
         // Show welcome notification
         this.showWelcomeNotification();
+
+        // Start ping system
+        this.startPingSystem();
 
         return true;
       } else if (permission === "denied") {
@@ -96,6 +108,40 @@ export default class NotificationManager {
     }
 
     return false;
+  }
+
+  /**
+   * Auto-request permission if user never been asked
+   * This provides better UX - ask on first app open
+   */
+  async autoRequestPermissionIfNeeded() {
+    // Check if we already asked
+    const alreadyAsked = localStorage.getItem(this.permissionAskedKey);
+
+    // If never asked and permission is default (not granted/denied)
+    if (!alreadyAsked && this.permission === "default") {
+      console.log(
+        "🔔 Primeira vez abrindo o app - solicitando permissão de notificações...",
+      );
+
+      // Wait a bit so user sees the app first
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // Show a friendly message before asking
+      const shouldAsk = confirm(
+        "🌾 FazendaRPG\n\n" +
+          "Quer receber notificações quando seus crops estiverem prontos?\n\n" +
+          "Você pode mudar isso depois nas Configurações.",
+      );
+
+      if (shouldAsk) {
+        await this.requestPermission();
+      } else {
+        // Mark as asked even if user said no
+        localStorage.setItem(this.permissionAskedKey, "true");
+        console.log("ℹ️ Usuário optou por não ativar notificações agora");
+      }
+    }
   }
 
   /**
@@ -126,6 +172,9 @@ export default class NotificationManager {
     // Check for pending notifications immediately
     await this.checkPendingNotifications();
 
+    // Start ping system to keep SW alive
+    this.startPingSystem();
+
     console.log("✅ Notifications enabled");
     return true;
   }
@@ -137,6 +186,10 @@ export default class NotificationManager {
     this.enabled = false;
     localStorage.setItem(this.storageKey, "false");
     await this.cancelAllNotifications();
+
+    // Stop ping system
+    this.stopPingSystem();
+
     console.log("❌ Notifications disabled");
   }
 
@@ -521,5 +574,54 @@ export default class NotificationManager {
     await this.updateCropNotifications(plots, cropsData);
 
     console.log("✅ Notificações sincronizadas");
+  }
+
+  /**
+   * Start ping system to keep Service Worker alive
+   * Sends periodic messages to SW to trigger notification checks
+   */
+  startPingSystem() {
+    // Clear any existing interval
+    this.stopPingSystem();
+
+    if (!this.serviceWorkerReady || !this.enabled) {
+      return;
+    }
+
+    console.log("📡 Sistema de ping iniciado - mantendo SW ativo");
+
+    // Ping every 25 seconds (before 30s timeout)
+    this.pingInterval = setInterval(() => {
+      this.checkPendingNotifications().catch((error) => {
+        console.error("❌ Erro no ping de notificações:", error);
+      });
+    }, 25000); // 25 seconds
+
+    // Also ping when tab becomes visible
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden && this.enabled) {
+        console.log("👁️ App visível - verificando notificações");
+        this.checkPendingNotifications().catch(() => {});
+      }
+    });
+
+    // Ping when window gets focus
+    window.addEventListener("focus", () => {
+      if (this.enabled) {
+        console.log("🎯 Janela em foco - verificando notificações");
+        this.checkPendingNotifications().catch(() => {});
+      }
+    });
+  }
+
+  /**
+   * Stop ping system
+   */
+  stopPingSystem() {
+    if (this.pingInterval) {
+      clearInterval(this.pingInterval);
+      this.pingInterval = null;
+      console.log("📡 Sistema de ping parado");
+    }
   }
 }
