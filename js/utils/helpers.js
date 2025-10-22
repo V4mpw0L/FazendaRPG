@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Helper Utilities
  * Common utility functions used throughout the game
- * @version 0.0.7
+ * @version 0.0.8
  */
 
 /**
@@ -10,17 +10,17 @@
  * @returns {string} Formatted time string
  */
 export function formatTime(seconds) {
-    if (seconds < 0) return '00:00';
+  if (seconds < 0) return "00:00";
 
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = Math.floor(seconds % 60);
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = Math.floor(seconds % 60);
 
-    if (hours > 0) {
-        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
+  if (hours > 0) {
+    return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  }
 
-    return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  return `${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
 }
 
 /**
@@ -29,7 +29,7 @@ export function formatTime(seconds) {
  * @returns {string} Formatted number
  */
 export function formatNumber(num) {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 /**
@@ -40,7 +40,7 @@ export function formatNumber(num) {
  * @returns {number} Clamped value
  */
 export function clamp(value, min, max) {
-    return Math.min(Math.max(value, min), max);
+  return Math.min(Math.max(value, min), max);
 }
 
 /**
@@ -48,7 +48,7 @@ export function clamp(value, min, max) {
  * @returns {string} Unique ID
  */
 export function generateId() {
-    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 }
 
 /**
@@ -57,25 +57,25 @@ export function generateId() {
  * @returns {Object} Cloned object
  */
 export function deepClone(obj) {
-    if (obj === null || typeof obj !== 'object') return obj;
+  if (obj === null || typeof obj !== "object") return obj;
 
-    if (obj instanceof Date) {
-        return new Date(obj.getTime());
-    }
+  if (obj instanceof Date) {
+    return new Date(obj.getTime());
+  }
 
-    if (obj instanceof Array) {
-        return obj.map(item => deepClone(item));
-    }
+  if (obj instanceof Array) {
+    return obj.map((item) => deepClone(item));
+  }
 
-    if (obj instanceof Object) {
-        const clonedObj = {};
-        for (const key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                clonedObj[key] = deepClone(obj[key]);
-            }
-        }
-        return clonedObj;
+  if (obj instanceof Object) {
+    const clonedObj = {};
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        clonedObj[key] = deepClone(obj[key]);
+      }
     }
+    return clonedObj;
+  }
 }
 
 /**
@@ -85,8 +85,8 @@ export function deepClone(obj) {
  * @returns {number} Percentage (0-100)
  */
 export function calculatePercentage(current, max) {
-    if (max <= 0) return 0;
-    return clamp((current / max) * 100, 0, 100);
+  if (max <= 0) return 0;
+  return clamp((current / max) * 100, 0, 100);
 }
 
 /**
@@ -95,9 +95,9 @@ export function calculatePercentage(current, max) {
  * @returns {number} Seconds remaining (0 if past)
  */
 export function getTimeRemaining(targetTimestamp) {
-    const now = Date.now();
-    const remaining = Math.max(0, targetTimestamp - now);
-    return Math.floor(remaining / 1000);
+  const now = Date.now();
+  const remaining = Math.max(0, targetTimestamp - now);
+  return Math.floor(remaining / 1000);
 }
 
 /**
@@ -106,7 +106,7 @@ export function getTimeRemaining(targetTimestamp) {
  * @returns {boolean} True if in the past
  */
 export function isPast(timestamp) {
-    return Date.now() >= timestamp;
+  return Date.now() >= timestamp;
 }
 
 /**
@@ -116,15 +116,15 @@ export function isPast(timestamp) {
  * @returns {Function} Debounced function
  */
 export function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
     };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
 }
 
 /**
@@ -134,14 +134,14 @@ export function debounce(func, wait) {
  * @returns {Function} Throttled function
  */
 export function throttle(func, limit) {
-    let inThrottle;
-    return function executedFunction(...args) {
-        if (!inThrottle) {
-            func(...args);
-            inThrottle = true;
-            setTimeout(() => inThrottle = false, limit);
-        }
-    };
+  let inThrottle;
+  return function executedFunction(...args) {
+    if (!inThrottle) {
+      func(...args);
+      inThrottle = true;
+      setTimeout(() => (inThrottle = false), limit);
+    }
+  };
 }
 
 /**
@@ -151,7 +151,7 @@ export function throttle(func, limit) {
  * @returns {number} Random integer
  */
 export function randomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 /**
@@ -160,8 +160,8 @@ export function randomInt(min, max) {
  * @returns {*} Random element
  */
 export function randomElement(array) {
-    if (!array || array.length === 0) return null;
-    return array[Math.floor(Math.random() * array.length)];
+  if (!array || array.length === 0) return null;
+  return array[Math.floor(Math.random() * array.length)];
 }
 
 /**
@@ -170,12 +170,12 @@ export function randomElement(array) {
  * @returns {Array} Shuffled array
  */
 export function shuffleArray(array) {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
 }
 
 /**
@@ -184,11 +184,11 @@ export function shuffleArray(array) {
  * @returns {boolean} True if empty
  */
 export function isEmpty(value) {
-    if (value === null || value === undefined) return true;
-    if (typeof value === 'string') return value.trim().length === 0;
-    if (Array.isArray(value)) return value.length === 0;
-    if (typeof value === 'object') return Object.keys(value).length === 0;
-    return false;
+  if (value === null || value === undefined) return true;
+  if (typeof value === "string") return value.trim().length === 0;
+  if (Array.isArray(value)) return value.length === 0;
+  if (typeof value === "object") return Object.keys(value).length === 0;
+  return false;
 }
 
 /**
@@ -198,12 +198,12 @@ export function isEmpty(value) {
  * @returns {*} Parsed object or default value
  */
 export function safeJSONParse(str, defaultValue = null) {
-    try {
-        return JSON.parse(str);
-    } catch (e) {
-        console.warn('Failed to parse JSON:', e);
-        return defaultValue;
-    }
+  try {
+    return JSON.parse(str);
+  } catch (e) {
+    console.warn("Failed to parse JSON:", e);
+    return defaultValue;
+  }
 }
 
 /**
@@ -212,13 +212,13 @@ export function safeJSONParse(str, defaultValue = null) {
  * @param {string} defaultValue - Default value if stringify fails
  * @returns {string} JSON string or default value
  */
-export function safeJSONStringify(obj, defaultValue = '{}') {
-    try {
-        return JSON.stringify(obj);
-    } catch (e) {
-        console.warn('Failed to stringify object:', e);
-        return defaultValue;
-    }
+export function safeJSONStringify(obj, defaultValue = "{}") {
+  try {
+    return JSON.stringify(obj);
+  } catch (e) {
+    console.warn("Failed to stringify object:", e);
+    return defaultValue;
+  }
 }
 
 /**
@@ -227,13 +227,13 @@ export function safeJSONStringify(obj, defaultValue = '{}') {
  * @returns {number} Total XP needed for that level
  */
 export function calculateXPForLevel(level) {
-    if (level <= 1) return 0;
+  if (level <= 1) return 0;
 
-    let total = 0;
-    for (let l = 1; l < level; l++) {
-        total += Math.floor(l + 300 * Math.pow(2, l / 7));
-    }
-    return Math.floor(total / 4);
+  let total = 0;
+  for (let l = 1; l < level; l++) {
+    total += Math.floor(l + 300 * Math.pow(2, l / 7));
+  }
+  return Math.floor(total / 4);
 }
 
 /**
@@ -242,11 +242,11 @@ export function calculateXPForLevel(level) {
  * @returns {number} Level (1-99)
  */
 export function calculateLevelFromXP(xp) {
-    let level = 1;
-    while (level < 99 && calculateXPForLevel(level + 1) <= xp) {
-        level++;
-    }
-    return level;
+  let level = 1;
+  while (level < 99 && calculateXPForLevel(level + 1) <= xp) {
+    level++;
+  }
+  return level;
 }
 
 /**
@@ -255,16 +255,16 @@ export function calculateLevelFromXP(xp) {
  * @returns {string} Formatted string
  */
 export function formatLargeNumber(num) {
-    if (num >= 1000000000) {
-        return (num / 1000000000).toFixed(1) + 'B';
-    }
-    if (num >= 1000000) {
-        return (num / 1000000).toFixed(1) + 'M';
-    }
-    if (num >= 1000) {
-        return (num / 1000).toFixed(1) + 'K';
-    }
-    return num.toString();
+  if (num >= 1000000000) {
+    return (num / 1000000000).toFixed(1) + "B";
+  }
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(1) + "M";
+  }
+  if (num >= 1000) {
+    return (num / 1000).toFixed(1) + "K";
+  }
+  return num.toString();
 }
 
 /**
@@ -272,7 +272,9 @@ export function formatLargeNumber(num) {
  * @returns {boolean} True if mobile
  */
 export function isMobile() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent,
+  );
 }
 
 /**
@@ -280,7 +282,7 @@ export function isMobile() {
  * @returns {boolean} True if touch supported
  */
 export function isTouchDevice() {
-    return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  return "ontouchstart" in window || navigator.maxTouchPoints > 0;
 }
 
 /**
@@ -288,9 +290,9 @@ export function isTouchDevice() {
  * @param {number|number[]} pattern - Vibration pattern in milliseconds
  */
 export function vibrate(pattern = 50) {
-    if ('vibrate' in navigator) {
-        navigator.vibrate(pattern);
-    }
+  if ("vibrate" in navigator) {
+    navigator.vibrate(pattern);
+  }
 }
 
 /**
@@ -299,26 +301,26 @@ export function vibrate(pattern = 50) {
  * @returns {Promise<boolean>} True if successful
  */
 export async function copyToClipboard(text) {
-    try {
-        if (navigator.clipboard) {
-            await navigator.clipboard.writeText(text);
-            return true;
-        } else {
-            // Fallback for older browsers
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            textarea.select();
-            const success = document.execCommand('copy');
-            document.body.removeChild(textarea);
-            return success;
-        }
-    } catch (e) {
-        console.error('Failed to copy to clipboard:', e);
-        return false;
+  try {
+    if (navigator.clipboard) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } else {
+      // Fallback for older browsers
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      const success = document.execCommand("copy");
+      document.body.removeChild(textarea);
+      return success;
     }
+  } catch (e) {
+    console.error("Failed to copy to clipboard:", e);
+    return false;
+  }
 }
 
 /**
@@ -327,14 +329,14 @@ export async function copyToClipboard(text) {
  * @param {string} filename - File name
  * @param {string} type - MIME type
  */
-export function downloadFile(data, filename, type = 'application/json') {
-    const blob = new Blob([data], { type });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.click();
-    URL.revokeObjectURL(url);
+export function downloadFile(data, filename, type = "application/json") {
+  const blob = new Blob([data], { type });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
 }
 
 /**
@@ -342,27 +344,27 @@ export function downloadFile(data, filename, type = 'application/json') {
  * @param {string} accept - File types to accept
  * @returns {Promise<string>} File contents
  */
-export function loadFile(accept = '.json') {
-    return new Promise((resolve, reject) => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = accept;
+export function loadFile(accept = ".json") {
+  return new Promise((resolve, reject) => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = accept;
 
-        input.onchange = (e) => {
-            const file = e.target.files[0];
-            if (!file) {
-                reject(new Error('No file selected'));
-                return;
-            }
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) {
+        reject(new Error("No file selected"));
+        return;
+      }
 
-            const reader = new FileReader();
-            reader.onload = (event) => resolve(event.target.result);
-            reader.onerror = (error) => reject(error);
-            reader.readAsText(file);
-        };
+      const reader = new FileReader();
+      reader.onload = (event) => resolve(event.target.result);
+      reader.onerror = (error) => reject(error);
+      reader.readAsText(file);
+    };
 
-        input.click();
-    });
+    input.click();
+  });
 }
 
 /**
@@ -371,7 +373,7 @@ export function loadFile(accept = '.json') {
  * @returns {Promise<void>}
  */
 export function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**
@@ -379,7 +381,7 @@ export function sleep(ms) {
  * @returns {number} Current timestamp in seconds
  */
 export function getTimestamp() {
-    return Math.floor(Date.now() / 1000);
+  return Math.floor(Date.now() / 1000);
 }
 
 /**
@@ -389,8 +391,8 @@ export function getTimestamp() {
  * @returns {boolean} True if equal
  */
 export function arraysEqual(arr1, arr2) {
-    if (arr1.length !== arr2.length) return false;
-    return arr1.every((val, index) => val === arr2[index]);
+  if (arr1.length !== arr2.length) return false;
+  return arr1.every((val, index) => val === arr2[index]);
 }
 
 /**
@@ -400,23 +402,23 @@ export function arraysEqual(arr1, arr2) {
  * @returns {Object} Merged object
  */
 export function deepMerge(target, source) {
-    const output = { ...target };
+  const output = { ...target };
 
-    if (isObject(target) && isObject(source)) {
-        Object.keys(source).forEach(key => {
-            if (isObject(source[key])) {
-                if (!(key in target)) {
-                    Object.assign(output, { [key]: source[key] });
-                } else {
-                    output[key] = deepMerge(target[key], source[key]);
-                }
-            } else {
-                Object.assign(output, { [key]: source[key] });
-            }
-        });
-    }
+  if (isObject(target) && isObject(source)) {
+    Object.keys(source).forEach((key) => {
+      if (isObject(source[key])) {
+        if (!(key in target)) {
+          Object.assign(output, { [key]: source[key] });
+        } else {
+          output[key] = deepMerge(target[key], source[key]);
+        }
+      } else {
+        Object.assign(output, { [key]: source[key] });
+      }
+    });
+  }
 
-    return output;
+  return output;
 }
 
 /**
@@ -425,5 +427,5 @@ export function deepMerge(target, source) {
  * @returns {boolean} True if object
  */
 function isObject(item) {
-    return item && typeof item === 'object' && !Array.isArray(item);
+  return item && typeof item === "object" && !Array.isArray(item);
 }

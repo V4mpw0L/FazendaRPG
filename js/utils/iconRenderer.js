@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Icon Renderer Utility
  * Handles rendering of both emoji and PNG icons
- * @version 0.0.7
+ * @version 0.0.8
  */
 
 /**
@@ -11,12 +11,7 @@
  * @returns {string} HTML string with rendered icon
  */
 export function renderIcon(icon, options = {}) {
-  const {
-    size = "1em",
-    className = "",
-    alt = "Icon",
-    style = "",
-  } = options;
+  const { size = "1em", className = "", alt = "Icon", style = "" } = options;
 
   // Check if it's a PNG path
   if (icon && (icon.endsWith(".png") || icon.includes("assets/"))) {

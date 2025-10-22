@@ -2,7 +2,7 @@
   "name": "FazendaRPG - Farming Game",
   "short_name": "FazendaRPG",
   "description": "Um jogo de fazenda RPG completo inspirado em RuneScape e FarmRPG",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#5caa1f",

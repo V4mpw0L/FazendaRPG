@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Avatar Selector
  * Manages avatar selection UI and functionality
- * @version 0.0.7
+ * @version 0.0.8
  */
 
 export default class AvatarSelector {
