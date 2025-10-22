@@ -191,8 +191,204 @@ async function syncGameData() {
   }
 }
 
-// Store for scheduled notifications
+// ============================================
+// INDEXEDDB STORAGE FOR NOTIFICATIONS
+// ============================================
+
+const DB_NAME = "fazendarpg-notifications";
+const DB_VERSION = 1;
+const STORE_NAME = "scheduled";
+
+// Open IndexedDB
+function openNotificationsDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME, { keyPath: "id" });
+      }
+    };
+  });
+}
+
+// Save notification to IndexedDB
+async function saveNotificationToDB(id, title, body, timestamp, data) {
+  try {
+    const db = await openNotificationsDB();
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    const store = tx.objectStore(STORE_NAME);
+
+    store.put({
+      id,
+      title,
+      body,
+      timestamp,
+      data,
+      createdAt: Date.now(),
+    });
+
+    return new Promise((resolve, reject) => {
+      tx.oncomplete = () => {
+        db.close();
+        resolve();
+      };
+      tx.onerror = () => {
+        db.close();
+        reject(tx.error);
+      };
+    });
+  } catch (error) {
+    console.error("❌ Erro ao salvar notificação no DB:", error);
+    throw error;
+  }
+}
+
+// Remove notification from IndexedDB
+async function removeNotificationFromDB(id) {
+  try {
+    const db = await openNotificationsDB();
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    const store = tx.objectStore(STORE_NAME);
+
+    store.delete(id);
+
+    return new Promise((resolve, reject) => {
+      tx.oncomplete = () => {
+        db.close();
+        resolve();
+      };
+      tx.onerror = () => {
+        db.close();
+        reject(tx.error);
+      };
+    });
+  } catch (error) {
+    console.error("❌ Erro ao remover notificação do DB:", error);
+  }
+}
+
+// Get all notifications from IndexedDB
+async function getAllNotificationsFromDB() {
+  try {
+    const db = await openNotificationsDB();
+    const tx = db.transaction(STORE_NAME, "readonly");
+    const store = tx.objectStore(STORE_NAME);
+
+    return new Promise((resolve, reject) => {
+      const request = store.getAll();
+      request.onsuccess = () => {
+        db.close();
+        resolve(request.result || []);
+      };
+      request.onerror = () => {
+        db.close();
+        reject(request.error);
+      };
+    });
+  } catch (error) {
+    console.error("❌ Erro ao buscar notificações do DB:", error);
+    return [];
+  }
+}
+
+// Clear all notifications from IndexedDB
+async function clearAllNotificationsFromDB() {
+  try {
+    const db = await openNotificationsDB();
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    const store = tx.objectStore(STORE_NAME);
+
+    store.clear();
+
+    return new Promise((resolve, reject) => {
+      tx.oncomplete = () => {
+        db.close();
+        resolve();
+      };
+      tx.onerror = () => {
+        db.close();
+        reject(tx.error);
+      };
+    });
+  } catch (error) {
+    console.error("❌ Erro ao limpar notificações do DB:", error);
+  }
+}
+
+// ============================================
+// CHECK AND FIRE PENDING NOTIFICATIONS
+// ============================================
+
+async function checkPendingNotifications() {
+  try {
+    const notifications = await getAllNotificationsFromDB();
+    const now = Date.now();
+    let firedCount = 0;
+
+    for (const notification of notifications) {
+      // If notification time has passed, fire it
+      if (notification.timestamp <= now) {
+        await showNotification(
+          notification.title,
+          notification.body,
+          notification.data,
+        );
+        await removeNotificationFromDB(notification.id);
+        firedCount++;
+      }
+    }
+
+    if (firedCount > 0) {
+      console.log(`🔔 ${firedCount} notificação(ões) pendente(s) disparada(s)`);
+    }
+  } catch (error) {
+    console.error("❌ Erro ao verificar notificações pendentes:", error);
+  }
+}
+
+// Check notifications when Service Worker wakes up
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    checkPendingNotifications().catch((error) =>
+      console.error("❌ Erro ao verificar notificações na ativação:", error),
+    ),
+  );
+});
+
+// Store for scheduled notifications (in-memory for immediate checks)
 let scheduledNotifications = new Map();
+let checkInterval = null;
+
+// Start periodic check (every 30 seconds)
+function startPeriodicCheck() {
+  if (checkInterval) {
+    clearInterval(checkInterval);
+  }
+
+  // Check immediately
+  checkPendingNotifications();
+
+  // Then check every 30 seconds
+  checkInterval = setInterval(() => {
+    checkPendingNotifications();
+  }, 30000); // 30 seconds
+
+  console.log("⏰ Verificação periódica de notificações iniciada");
+}
+
+// Stop periodic check
+function stopPeriodicCheck() {
+  if (checkInterval) {
+    clearInterval(checkInterval);
+    checkInterval = null;
+    console.log("⏰ Verificação periódica de notificações parada");
+  }
+}
 
 // Push notifications (when available)
 self.addEventListener("push", (event) => {
@@ -207,7 +403,12 @@ self.addEventListener("push", (event) => {
     },
   };
 
-  event.waitUntil(self.registration.showNotification("🌾 FazendaRPG", options));
+  event.waitUntil(
+    Promise.all([
+      self.registration.showNotification("🌾 FazendaRPG", options),
+      checkPendingNotifications(),
+    ]),
+  );
 });
 
 // Notification click
@@ -239,82 +440,148 @@ self.addEventListener("notificationclick", (event) => {
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SCHEDULE_NOTIFICATION") {
     const { id, title, body, timestamp, data } = event.data;
-    scheduleNotification(id, title, body, timestamp, data);
-    event.ports[0]?.postMessage({ success: true });
+    scheduleNotification(id, title, body, timestamp, data)
+      .then(() => {
+        event.ports[0]?.postMessage({ success: true });
+      })
+      .catch((error) => {
+        event.ports[0]?.postMessage({ success: false, error: error.message });
+      });
   }
 
   if (event.data && event.data.type === "CANCEL_NOTIFICATION") {
     const { id } = event.data;
-    cancelNotification(id);
-    event.ports[0]?.postMessage({ success: true });
+    cancelNotification(id)
+      .then(() => {
+        event.ports[0]?.postMessage({ success: true });
+      })
+      .catch((error) => {
+        event.ports[0]?.postMessage({ success: false, error: error.message });
+      });
   }
 
   if (event.data && event.data.type === "CANCEL_ALL_NOTIFICATIONS") {
-    cancelAllNotifications();
-    event.ports[0]?.postMessage({ success: true });
+    cancelAllNotifications()
+      .then(() => {
+        event.ports[0]?.postMessage({ success: true });
+      })
+      .catch((error) => {
+        event.ports[0]?.postMessage({ success: false, error: error.message });
+      });
   }
 
   if (event.data && event.data.type === "GET_SCHEDULED_NOTIFICATIONS") {
-    const notifications = Array.from(scheduledNotifications.entries()).map(
-      ([id, data]) => ({
-        id,
-        ...data,
-      }),
-    );
-    event.ports[0]?.postMessage({ notifications });
+    getAllNotificationsFromDB()
+      .then((notifications) => {
+        event.ports[0]?.postMessage({ notifications });
+      })
+      .catch((error) => {
+        event.ports[0]?.postMessage({
+          notifications: [],
+          error: error.message,
+        });
+      });
+  }
+
+  if (event.data && event.data.type === "START_PERIODIC_CHECK") {
+    startPeriodicCheck();
+    event.ports[0]?.postMessage({ success: true });
+  }
+
+  if (event.data && event.data.type === "CHECK_NOTIFICATIONS_NOW") {
+    checkPendingNotifications()
+      .then(() => {
+        event.ports[0]?.postMessage({ success: true });
+      })
+      .catch((error) => {
+        event.ports[0]?.postMessage({ success: false, error: error.message });
+      });
   }
 });
 
 // Schedule a notification
-function scheduleNotification(id, title, body, timestamp, data = {}) {
-  // Cancel existing notification with same ID
-  cancelNotification(id);
+async function scheduleNotification(id, title, body, timestamp, data = {}) {
+  try {
+    // Cancel existing notification with same ID
+    await cancelNotification(id);
 
-  const now = Date.now();
-  const delay = timestamp - now;
+    const now = Date.now();
+    const delay = timestamp - now;
 
-  if (delay <= 0) {
-    // Should fire immediately
-    showNotification(title, body, data);
-    return;
+    // Save to IndexedDB for persistence
+    await saveNotificationToDB(id, title, body, timestamp, data);
+
+    if (delay <= 0) {
+      // Should fire immediately
+      await showNotification(title, body, data);
+      await removeNotificationFromDB(id);
+      return;
+    }
+
+    // Also schedule in memory for immediate firing (if SW stays alive)
+    const timeoutId = setTimeout(async () => {
+      await showNotification(title, body, data);
+      await removeNotificationFromDB(id);
+      scheduledNotifications.delete(id);
+    }, delay);
+
+    scheduledNotifications.set(id, {
+      timeoutId,
+      title,
+      body,
+      timestamp,
+      data,
+    });
+
+    console.log(
+      `📅 Notificação agendada: ${title} para ${new Date(timestamp).toLocaleString()} (em ${Math.round(delay / 1000)}s)`,
+    );
+
+    // Start periodic check if not running
+    if (!checkInterval) {
+      startPeriodicCheck();
+    }
+  } catch (error) {
+    console.error("❌ Erro ao agendar notificação:", error);
+    throw error;
   }
-
-  // Schedule notification
-  const timeoutId = setTimeout(() => {
-    showNotification(title, body, data);
-    scheduledNotifications.delete(id);
-  }, delay);
-
-  scheduledNotifications.set(id, {
-    timeoutId,
-    title,
-    body,
-    timestamp,
-    data,
-  });
-
-  console.log(
-    `📅 Notificação agendada: ${title} em ${Math.round(delay / 1000)}s`,
-  );
 }
 
 // Cancel a scheduled notification
-function cancelNotification(id) {
-  const notification = scheduledNotifications.get(id);
-  if (notification) {
-    clearTimeout(notification.timeoutId);
-    scheduledNotifications.delete(id);
+async function cancelNotification(id) {
+  try {
+    // Remove from memory
+    const notification = scheduledNotifications.get(id);
+    if (notification) {
+      clearTimeout(notification.timeoutId);
+      scheduledNotifications.delete(id);
+    }
+
+    // Remove from IndexedDB
+    await removeNotificationFromDB(id);
+
     console.log(`❌ Notificação cancelada: ${id}`);
+  } catch (error) {
+    console.error("❌ Erro ao cancelar notificação:", error);
   }
 }
 
 // Cancel all scheduled notifications
-function cancelAllNotifications() {
-  scheduledNotifications.forEach((notification) => {
-    clearTimeout(notification.timeoutId);
-  });
-  scheduledNotifications.clear();
-  console.log(`❌ Todas as notificações canceladas`);
+async function cancelAllNotifications() {
+  try {
+    // Clear memory
+    scheduledNotifications.forEach((notification) => {
+      clearTimeout(notification.timeoutId);
+    });
+    scheduledNotifications.clear();
+
+    // Clear IndexedDB
+    await clearAllNotificationsFromDB();
+
+    console.log(`❌ Todas as notificações canceladas`);
+  } catch (error) {
+    console.error("❌ Erro ao cancelar todas as notificações:", error);
+  }
 }
 
 // Show notification
@@ -328,6 +595,7 @@ async function showNotification(title, body, data = {}) {
       tag: data.tag || "fazendarpg-notification",
       requireInteraction: false,
       silent: false,
+      renotify: true,
       data: {
         ...data,
         timestamp: Date.now(),
@@ -335,11 +603,11 @@ async function showNotification(title, body, data = {}) {
     };
 
     await self.registration.showNotification(title, options);
-    console.log(`🔔 Notificação mostrada: ${title}`);
+    console.log(`🔔 Notificação mostrada: ${title} - ${body}`);
 
     // Notify all clients that notification was shown
-    const clients = await self.clients.matchAll();
-    clients.forEach((client) => {
+    const allClients = await self.clients.matchAll();
+    allClients.forEach((client) => {
       client.postMessage({
         type: "NOTIFICATION_SHOWN",
         data: { title, body, ...data },
@@ -349,5 +617,8 @@ async function showNotification(title, body, data = {}) {
     console.error("❌ Erro ao mostrar notificação:", error);
   }
 }
+
+// Start periodic check when SW loads
+startPeriodicCheck();
 
 console.log("🌾 FazendaRPG Service Worker loaded");

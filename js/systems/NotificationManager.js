@@ -11,6 +11,7 @@ export default class NotificationManager {
     this.scheduledNotifications = new Map();
     this.serviceWorkerReady = false;
     this.storageKey = "fazendarpg_notifications_enabled";
+    this.syncInterval = null;
   }
 
   /**
@@ -48,6 +49,13 @@ export default class NotificationManager {
 
     // Listen for messages from service worker
     this.listenToServiceWorker();
+
+    // Start periodic check in Service Worker
+    if (this.enabled) {
+      await this.startPeriodicCheck();
+      // Check for pending notifications immediately
+      await this.checkPendingNotifications();
+    }
 
     console.log(
       `🔔 Notification Manager initialized (Permission: ${this.permission})`,
@@ -111,6 +119,13 @@ export default class NotificationManager {
 
     this.enabled = true;
     localStorage.setItem(this.storageKey, "true");
+
+    // Start periodic check in Service Worker
+    await this.startPeriodicCheck();
+
+    // Check for pending notifications immediately
+    await this.checkPendingNotifications();
+
     console.log("✅ Notifications enabled");
     return true;
   }
@@ -118,10 +133,10 @@ export default class NotificationManager {
   /**
    * Disable notifications
    */
-  disable() {
+  async disable() {
     this.enabled = false;
     localStorage.setItem(this.storageKey, "false");
-    this.cancelAllNotifications();
+    await this.cancelAllNotifications();
     console.log("❌ Notifications disabled");
   }
 
@@ -231,7 +246,9 @@ export default class NotificationManager {
           timestamp,
           data,
         });
-        console.log(`📅 Notification scheduled: ${id}`);
+        console.log(
+          `📅 Notification scheduled: ${id} for ${new Date(timestamp).toLocaleString()}`,
+        );
       })
       .catch((error) => {
         console.error("❌ Failed to schedule notification:", error);
@@ -434,5 +451,61 @@ export default class NotificationManager {
       "Se você viu isso, as notificações estão funcionando!",
       { tag: "test" },
     );
+  }
+
+  /**
+   * Start periodic check in Service Worker
+   */
+  async startPeriodicCheck() {
+    if (!this.serviceWorkerReady) {
+      return;
+    }
+
+    try {
+      await this.sendMessageToServiceWorker({
+        type: "START_PERIODIC_CHECK",
+      });
+      console.log("✅ Verificação periódica iniciada no Service Worker");
+    } catch (error) {
+      console.error("❌ Erro ao iniciar verificação periódica:", error);
+    }
+  }
+
+  /**
+   * Check pending notifications immediately
+   */
+  async checkPendingNotifications() {
+    if (!this.serviceWorkerReady) {
+      return;
+    }
+
+    try {
+      await this.sendMessageToServiceWorker({
+        type: "CHECK_NOTIFICATIONS_NOW",
+      });
+      console.log("✅ Verificação de notificações pendentes executada");
+    } catch (error) {
+      console.error("❌ Erro ao verificar notificações pendentes:", error);
+    }
+  }
+
+  /**
+   * Sync notifications with Service Worker
+   * Call this when app reopens or loads saved game
+   */
+  async syncNotifications(plots, cropsData) {
+    if (!this.isEnabled()) {
+      return;
+    }
+
+    console.log("🔄 Sincronizando notificações com estado atual do jogo...");
+
+    // Check for any pending notifications that should have fired
+    await this.checkPendingNotifications();
+
+    // Update all crop notifications based on current state
+    await this.updateCropNotifications(plots, cropsData);
+
+    console.log("✅ Notificações sincronizadas");
   }
 }

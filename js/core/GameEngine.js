@@ -448,6 +448,33 @@ export default class GameEngine {
 
     // Debug: Check player name
     console.log("🔍 Player name:", this.player.data.name);
+
+    // Sync notifications with current game state
+    this.syncNotificationsAfterLoad();
+  }
+
+  /**
+   * Sync notifications after loading game
+   */
+  syncNotificationsAfterLoad() {
+    if (!this.notificationManager || !this.notificationManager.isEnabled()) {
+      return;
+    }
+
+    // Wait a bit for everything to load
+    setTimeout(() => {
+      const plots = this.farmSystem.getPlots();
+      const cropsData = this.farmSystem.getCropsData();
+
+      this.notificationManager
+        .syncNotifications(plots, cropsData)
+        .then(() => {
+          console.log("✅ Notificações sincronizadas após carregar jogo");
+        })
+        .catch((error) => {
+          console.error("❌ Erro ao sincronizar notificações:", error);
+        });
+    }, 1000);
   }
 
   /**
@@ -1146,6 +1173,29 @@ export default class GameEngine {
             );
             this.renderFarm();
             this.topBar.update();
+
+            // Reschedule notification with reduced growth time (50% reduction)
+            const plot = this.farmSystem.getPlot(index);
+            if (plot && plot.crop && plot.plantedAt) {
+              const cropData = this.farmSystem.getCropData(plot.crop);
+              if (cropData) {
+                // Calculate new ready time with fertilizer (50% reduction)
+                const growthTime = cropData.growthTime * 0.5 * 1000;
+                const readyAt = plot.plantedAt + growthTime;
+
+                // Cancel old notification and schedule new one with reduced time
+                this.notificationManager.cancelCropNotification(index);
+                this.notificationManager.scheduleCropNotification(
+                  index,
+                  cropData.name,
+                  readyAt,
+                );
+
+                console.log(
+                  `🔔 Notificação reagendada para ${cropData.name} com fertilizante`,
+                );
+              }
+            }
           } else {
             notifications.error(result.error || "Não foi possível fertilizar");
           }
@@ -1669,6 +1719,37 @@ export default class GameEngine {
     // Screen refresh events
     window.addEventListener("screen:changed", (e) => {
       this.handleScreenChange(e.detail.screenId);
+    });
+
+    // Page visibility - sync notifications when app comes back to foreground
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden && this.notificationManager?.isEnabled()) {
+        console.log("📱 App voltou ao foco - sincronizando notificações...");
+
+        // Check for pending notifications
+        this.notificationManager.checkPendingNotifications().catch((error) => {
+          console.error("❌ Erro ao verificar notificações:", error);
+        });
+
+        // Sync with current game state
+        const plots = this.farmSystem.getPlots();
+        const cropsData = this.farmSystem.getCropsData();
+        this.notificationManager
+          .syncNotifications(plots, cropsData)
+          .catch((error) => {
+            console.error("❌ Erro ao sincronizar notificações:", error);
+          });
+      }
+    });
+
+    // Focus event - additional check when window gets focus
+    window.addEventListener("focus", () => {
+      if (this.notificationManager?.isEnabled()) {
+        console.log("🔍 Janela em foco - verificando notificações...");
+        this.notificationManager.checkPendingNotifications().catch((error) => {
+          console.error("❌ Erro ao verificar notificações:", error);
+        });
+      }
     });
   }
 
