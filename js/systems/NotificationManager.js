@@ -376,6 +376,20 @@ export default class NotificationManager {
           }),
         );
       }
+
+      if (event.data.type === "NOTIFICATION_SUPPRESSED") {
+        console.log(
+          "🚫 Notification suppressed (app visible):",
+          event.data.data,
+        );
+
+        // Dispatch custom event
+        window.dispatchEvent(
+          new CustomEvent("notification:suppressed", {
+            detail: event.data.data,
+          }),
+        );
+      }
     });
   }
 

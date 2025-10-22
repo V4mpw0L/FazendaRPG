@@ -1,5 +1,5 @@
-// FazendaRPG Service Worker v0.0.11
-const CACHE_NAME = "fazendarpg-v0.0.11";
+// FazendaRPG Service Worker v0.0.12
+const CACHE_NAME = "fazendarpg-v0.0.12";
 const ASSETS_TO_CACHE = [
   "./index.html",
   "./manifest.json",
@@ -592,35 +592,61 @@ async function cancelAllNotifications() {
   }
 }
 
-// Show notification
+// Show notification (only if app is closed/not visible)
 async function showNotification(title, body, data = {}) {
   try {
-    const options = {
-      body,
-      icon: "./assets/icon-192.png",
-      badge: "./assets/icon-72.png",
-      vibrate: [200, 100, 200],
-      tag: data.tag || "fazendarpg-notification",
-      requireInteraction: false,
-      silent: false,
-      renotify: true,
-      data: {
-        ...data,
-        timestamp: Date.now(),
-      },
-    };
-
-    await self.registration.showNotification(title, options);
-    console.log(`🔔 Notificação mostrada: ${title} - ${body}`);
-
-    // Notify all clients that notification was shown
-    const allClients = await self.clients.matchAll();
-    allClients.forEach((client) => {
-      client.postMessage({
-        type: "NOTIFICATION_SHOWN",
-        data: { title, body, ...data },
-      });
+    // Check if any client (tab/window) is currently focused/visible
+    const allClients = await self.clients.matchAll({
+      type: "window",
+      includeUncontrolled: true,
     });
+
+    // Check if app is open and visible
+    let isAppVisible = false;
+    for (const client of allClients) {
+      // Check if client is focused or visible
+      if (client.visibilityState === "visible" || client.focused) {
+        isAppVisible = true;
+        console.log(
+          `📱 App está aberto e visível - notificação não será mostrada: ${title}`,
+        );
+        break;
+      }
+    }
+
+    // Only show notification if app is NOT visible (closed or in background)
+    if (!isAppVisible) {
+      const options = {
+        body,
+        icon: "./assets/icon-192.png",
+        badge: "./assets/icon-72.png",
+        vibrate: [200, 100, 200],
+        tag: data.tag || "fazendarpg-notification",
+        requireInteraction: false,
+        silent: false,
+        renotify: true,
+        data: {
+          ...data,
+          timestamp: Date.now(),
+        },
+      };
+
+      await self.registration.showNotification(title, options);
+      console.log(
+        `🔔 Notificação mostrada (app fechado/background): ${title} - ${body}`,
+      );
+    } else {
+      // App is visible, just log it
+      console.log(`🚫 Notificação suprimida (app visível): ${title} - ${body}`);
+
+      // Notify clients that notification was suppressed because app is open
+      allClients.forEach((client) => {
+        client.postMessage({
+          type: "NOTIFICATION_SUPPRESSED",
+          data: { title, body, reason: "app_visible", ...data },
+        });
+      });
+    }
   } catch (error) {
     console.error("❌ Erro ao mostrar notificação:", error);
   }
