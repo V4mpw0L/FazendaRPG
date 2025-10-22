@@ -18,7 +18,7 @@ import InventoryUI from "../ui/InventoryUI.js";
 import MarketUI from "../ui/MarketUI.js";
 import NPCSUI from "../ui/NPCSUI.js";
 import CityUI from "../ui/CityUI.js";
-import WikiManager from "../ui/WikiManager.js";
+import WikiManager from "../wiki/WikiManager.js";
 import AvatarSelector from "../ui/AvatarSelector.js";
 import FertilizerAnimation from "../animations/FertilizerAnimation.js";
 import HarvestAnimation from "../animations/HarvestAnimation.js";
@@ -145,8 +145,8 @@ export default class GameEngine {
       this.cityUI.setMarketUI(this.marketUI);
 
       // Initialize Wiki Manager
-      this.wikiManager = new WikiManager();
-      this.wikiManager.init();
+      this.wikiManager = new WikiManager(this);
+      await this.wikiManager.init();
 
       // Initialize Avatar Selector
       this.avatarSelector = new AvatarSelector(this);
