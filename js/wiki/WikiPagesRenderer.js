@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Wiki Pages Renderer
  * Renders additional wiki pages (NPCs, Skills, Items, Quests, Tips)
- * @version 0.0.8
+ * @version 0.0.9
  */
 
 export default class WikiPagesRenderer {

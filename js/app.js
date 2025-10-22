@@ -1,14 +1,14 @@
 /**
  * FazendaRPG - Main Application Entry Point
  * Initializes and starts the game engine
- * @version 0.0.8
+ * @version 0.0.9
  */
 
 import GameEngine from "./core/GameEngine.js";
 
 // Create global game instance
 window.FazendaRPG = {
-  version: "0.0.8",
+  version: "0.0.9",
   engine: null,
   initialized: false,
 };
@@ -17,7 +17,7 @@ window.FazendaRPG = {
  * Initialize application
  */
 async function init() {
-  console.log("🌾 FazendaRPG v0.0.8");
+  console.log("🌾 FazendaRPG v0.0.9");
   console.log("📅 Loading game...");
 
   try {

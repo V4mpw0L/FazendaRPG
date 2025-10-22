@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Player Class
  * Manages player data, stats, skills, inventory, and progression
- * @version 0.0.8
+ * @version 0.0.9
  */
 
 import {

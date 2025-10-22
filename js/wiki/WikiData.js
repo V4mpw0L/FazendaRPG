@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Wiki Data
  * Centralized data structure for all wiki content
- * @version 0.0.8
+ * @version 0.0.9
  */
 
 export default class WikiData {
@@ -642,7 +642,7 @@ export default class WikiData {
   getUpdates() {
     return [
       {
-        version: "0.0.8",
+        version: "0.0.9",
         date: "2024",
         title: "Sistema Completo de Wiki",
         titleEN: "Complete Wiki System",
