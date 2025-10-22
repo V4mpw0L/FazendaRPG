@@ -23,6 +23,7 @@ import AvatarSelector from "../ui/AvatarSelector.js";
 import FertilizerAnimation from "../animations/FertilizerAnimation.js";
 import HarvestAnimation from "../animations/HarvestAnimation.js";
 import PlantAnimation from "../animations/PlantAnimation.js";
+import WeedRemovalAnimation from "../animations/WeedRemovalAnimation.js";
 import i18n from "../utils/i18n.js";
 import notifications from "../utils/notifications.js";
 
@@ -44,6 +45,7 @@ export default class GameEngine {
     this.cityUI = null;
     this.avatarSelector = null;
     this.fertilizerAnimation = null;
+    this.weedRemovalAnimation = null;
     this.initialized = false;
     this.running = false;
     this.lastUpdate = Date.now();
@@ -1130,7 +1132,7 @@ export default class GameEngine {
   }
 
   /**
-   * Clear weeds from a plot
+   * Clear weeds from plot
    * @param {number} index - Plot index
    */
   clearWeedsFromPlot(index) {
@@ -1143,10 +1145,23 @@ export default class GameEngine {
       return;
     }
 
+    // Get plot element for animation
+    const plotElement = document.querySelector(
+      `.farm-tile[data-index="${index}"]`,
+    );
+
     // Clear the weeds
     const result = this.farmSystem.clearWeeds(index);
 
     if (result.success) {
+      // Play weed removal animation
+      if (!this.weedRemovalAnimation) {
+        this.weedRemovalAnimation = new WeedRemovalAnimation();
+      }
+      if (plotElement) {
+        this.weedRemovalAnimation.animate(plotElement);
+      }
+
       notifications.success("✅ Ervas daninhas removidas! +1 🌿 Ervas");
       this.renderFarm();
     } else {
