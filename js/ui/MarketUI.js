@@ -816,12 +816,7 @@ export default class MarketUI {
         : isLocked
           ? "🔒"
           : i18n.t("market.sell");
-    const buttonIcon =
-      type === "buy"
-        ? ""
-        : isLocked
-          ? ""
-          : '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">';
+    const buttonIcon = "";
 
     // Check if it's a seed and get required level
     let requiredLevelInfo = "";
