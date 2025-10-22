@@ -877,7 +877,7 @@ export default class CityUI {
                     }
                     .service-price {
                         background: #FFD700;
-                        color: white;
+                        color: #b8860b;
                         padding: 0.5rem;
                         border-radius: 8px;
                         font-weight: 700;
