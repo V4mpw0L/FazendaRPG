@@ -1370,7 +1370,7 @@ a:hover {
 .inventory-slot-lock {
     position: absolute;
     top: 4px;
-    right: 4px;
+    left: 4px;
     width: 24px;
     height: 24px;
     background: linear-gradient(135deg, #ef5350 0%, #e53935 100%);
