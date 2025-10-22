@@ -598,6 +598,142 @@ export default class GameEngine {
   }
 
   /**
+   * Generate SVG for crop growth stages
+   * @param {number} progress - Growth progress (0-100)
+   * @returns {string} SVG HTML
+   */
+  generateCropGrowthSVG(progress) {
+    if (progress < 33) {
+      // Stage 1: Seed sprouting (0-33%)
+      const sproutHeight = 20 + (progress / 33) * 15;
+      return `
+        <svg viewBox="0 0 100 100" style="width: 70%; height: 70%;">
+          <defs>
+            <linearGradient id="stem1" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:#7cb342;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#558b2f;stop-opacity:1" />
+            </linearGradient>
+            <radialGradient id="leaf1">
+              <stop offset="0%" style="stop-color:#9ccc65;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#689f38;stop-opacity:1" />
+            </radialGradient>
+            <filter id="shadow">
+              <feDropShadow dx="1" dy="2" stdDeviation="1.5" flood-opacity="0.3"/>
+            </filter>
+          </defs>
+          <!-- Soil bump -->
+          <ellipse cx="50" cy="75" rx="12" ry="4" fill="#8b6914" opacity="0.6"/>
+          <!-- Main stem -->
+          <g filter="url(#shadow)">
+            <path d="M 50 75 Q 48 ${75 - sproutHeight * 0.7} 50 ${75 - sproutHeight}"
+                  stroke="url(#stem1)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <!-- Small leaf left -->
+            <ellipse cx="${48 - (progress / 33) * 3}" cy="${70 - sproutHeight * 0.5}"
+                     rx="${3 + (progress / 33) * 2}" ry="${5 + (progress / 33) * 3}"
+                     fill="url(#leaf1)" transform="rotate(-30 ${48 - (progress / 33) * 3} ${70 - sproutHeight * 0.5})"/>
+            <!-- Small leaf right -->
+            <ellipse cx="${52 + (progress / 33) * 3}" cy="${68 - sproutHeight * 0.5}"
+                     rx="${3 + (progress / 33) * 2}" ry="${5 + (progress / 33) * 3}"
+                     fill="url(#leaf1)" transform="rotate(30 ${52 + (progress / 33) * 3} ${68 - sproutHeight * 0.5})"/>
+          </g>
+        </svg>
+      `;
+    } else if (progress < 66) {
+      // Stage 2: Growing plant (33-66%)
+      const growthFactor = (progress - 33) / 33;
+      const plantHeight = 35 + growthFactor * 15;
+      return `
+        <svg viewBox="0 0 100 100" style="width: 75%; height: 75%;">
+          <defs>
+            <linearGradient id="stem2" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:#8bc34a;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#558b2f;stop-opacity:1" />
+            </linearGradient>
+            <radialGradient id="leaf2">
+              <stop offset="0%" style="stop-color:#aed581;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#7cb342;stop-opacity:1" />
+            </radialGradient>
+            <filter id="shadow2">
+              <feDropShadow dx="1" dy="3" stdDeviation="2" flood-opacity="0.4"/>
+            </filter>
+          </defs>
+          <!-- Main stem -->
+          <g filter="url(#shadow2)">
+            <path d="M 50 78 Q 48 ${78 - plantHeight * 0.6} 50 ${78 - plantHeight}"
+                  stroke="url(#stem2)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+            <!-- Left branch -->
+            <path d="M 50 ${58 - growthFactor * 5} Q ${45 - growthFactor * 8} ${53 - growthFactor * 3} ${40 - growthFactor * 10} ${50 - growthFactor * 2}"
+                  stroke="url(#stem2)" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <!-- Right branch -->
+            <path d="M 50 ${60 - growthFactor * 5} Q ${55 + growthFactor * 8} ${55 - growthFactor * 3} ${60 + growthFactor * 10} ${52 - growthFactor * 2}"
+                  stroke="url(#stem2)" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <!-- Leaves -->
+            <ellipse cx="${40 - growthFactor * 10}" cy="${50 - growthFactor * 2}"
+                     rx="${6 + growthFactor * 3}" ry="${9 + growthFactor * 4}"
+                     fill="url(#leaf2)" transform="rotate(-40 ${40 - growthFactor * 10} ${50 - growthFactor * 2})"/>
+            <ellipse cx="${60 + growthFactor * 10}" cy="${52 - growthFactor * 2}"
+                     rx="${6 + growthFactor * 3}" ry="${9 + growthFactor * 4}"
+                     fill="url(#leaf2)" transform="rotate(40 ${60 + growthFactor * 10} ${52 - growthFactor * 2})"/>
+            <!-- Top leaves -->
+            <ellipse cx="${45 - growthFactor * 4}" cy="${40 - growthFactor * 8}"
+                     rx="${5 + growthFactor * 2}" ry="${8 + growthFactor * 3}"
+                     fill="url(#leaf2)" transform="rotate(-25 ${45 - growthFactor * 4} ${40 - growthFactor * 8})"/>
+            <ellipse cx="${55 + growthFactor * 4}" cy="${38 - growthFactor * 8}"
+                     rx="${5 + growthFactor * 2}" ry="${8 + growthFactor * 3}"
+                     fill="url(#leaf2)" transform="rotate(25 ${55 + growthFactor * 4} ${38 - growthFactor * 8})"/>
+            <!-- Center top leaf -->
+            <ellipse cx="50" cy="${32 - growthFactor * 10}"
+                     rx="${6 + growthFactor * 2}" ry="${10 + growthFactor * 4}"
+                     fill="url(#leaf2)"/>
+          </g>
+        </svg>
+      `;
+    } else {
+      // Stage 3: Almost ready (66-99%)
+      const matureFactor = (progress - 66) / 34;
+      return `
+        <svg viewBox="0 0 100 100" style="width: 80%; height: 80%;">
+          <defs>
+            <linearGradient id="stem3" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:#9ccc65;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#689f38;stop-opacity:1" />
+            </linearGradient>
+            <radialGradient id="leaf3">
+              <stop offset="0%" style="stop-color:#c5e1a5;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#8bc34a;stop-opacity:1" />
+            </radialGradient>
+
+            <filter id="shadow3">
+              <feDropShadow dx="1" dy="3" stdDeviation="2.5" flood-opacity="0.5"/>
+            </filter>
+          </defs>
+          <!-- Full grown plant -->
+          <g filter="url(#shadow3)">
+            <path d="M 50 80 Q 48 50 50 25"
+                  stroke="url(#stem3)" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <!-- Multiple branches -->
+            <path d="M 50 55 Q 42 52 35 50"
+                  stroke="url(#stem3)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M 50 58 Q 58 55 65 53"
+                  stroke="url(#stem3)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M 50 45 Q 44 43 38 42"
+                  stroke="url(#stem3)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M 50 48 Q 56 46 62 45"
+                  stroke="url(#stem3)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <!-- Large leaves -->
+            <ellipse cx="35" cy="50" rx="8" ry="12" fill="url(#leaf3)" transform="rotate(-45 35 50)"/>
+            <ellipse cx="65" cy="53" rx="8" ry="12" fill="url(#leaf3)" transform="rotate(45 65 53)"/>
+            <ellipse cx="38" cy="42" rx="7" ry="11" fill="url(#leaf3)" transform="rotate(-35 38 42)"/>
+            <ellipse cx="62" cy="45" rx="7" ry="11" fill="url(#leaf3)" transform="rotate(35 62 45)"/>
+            <ellipse cx="45" cy="35" rx="7" ry="10" fill="url(#leaf3)" transform="rotate(-20 45 35)"/>
+            <ellipse cx="55" cy="33" rx="7" ry="10" fill="url(#leaf3)" transform="rotate(20 55 33)"/>
+          </g>
+        </svg>
+      `;
+    }
+  }
+
+  /**
    * Update farm tile appearance
    * @param {HTMLElement} tile - Tile element
    * @param {number} index - Plot index
@@ -670,8 +806,18 @@ export default class GameEngine {
     // Remove weeds class if no weeds
     tile.classList.remove("has-weeds");
 
-    // Set icon
-    tile.innerHTML = `<div class="farm-tile-icon">${icon}</div>`;
+    // Check if plot is growing (show SVG animation)
+    if (plot && plot.crop && progress > 0 && progress < 100) {
+      const cropSVG = this.generateCropGrowthSVG(progress);
+      tile.innerHTML = `
+        <div class="farm-tile-icon" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
+          ${cropSVG}
+        </div>
+      `;
+    } else {
+      // Set icon (empty or ready)
+      tile.innerHTML = `<div class="farm-tile-icon">${icon}</div>`;
+    }
 
     // Add ready class
     if (isReady) {
