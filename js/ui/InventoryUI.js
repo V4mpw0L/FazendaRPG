@@ -790,7 +790,7 @@ export default class InventoryUI {
           </svg>
           <span id="lock-status-text">${isLocked ? "🔒 Bloqueado" : "🔓 Desbloqueado"}</span>
         </button>
-        ${isLocked ? '<p style="color: #ef5350; font-size: 0.75rem; margin-top: 0.5rem; font-weight: 600;">Este item não pode ser vendido enquanto estiver bloqueado</p>' : ""}
+        <p id="lock-warning-msg" style="color: #ef5350; font-size: 0.75rem; margin-top: 0.5rem; font-weight: 600; display: ${isLocked ? "block" : "none"};">Este item não pode ser vendido enquanto estiver bloqueado</p>
       </div>
 
       <!-- SEÇÃO DE VENDA OCULTA - Jogador deve vender na cidade -->
@@ -946,6 +946,12 @@ export default class InventoryUI {
             statusText.textContent = newLockStatus
               ? "🔒 Bloqueado"
               : "🔓 Desbloqueado";
+          }
+
+          // Update warning message
+          const warningMsg = document.getElementById("lock-warning-msg");
+          if (warningMsg) {
+            warningMsg.style.display = newLockStatus ? "block" : "none";
           }
 
           // Show notification
