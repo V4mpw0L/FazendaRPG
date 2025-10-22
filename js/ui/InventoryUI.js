@@ -644,8 +644,11 @@ export default class InventoryUI {
     const categoryColor = this.getCategoryColor(item.category);
     const categoryName = this.getCategoryName(item.category);
 
+    const isLocked = this.inventorySystem.isLocked(item.id);
+
     slot.innerHTML = `
       ${item.count > 1 ? `<div class="inventory-slot-count">${item.count}</div>` : ""}
+      ${isLocked ? `<div class="inventory-slot-lock">🔒</div>` : ""}
       <div class="inventory-slot-icon">${renderItemIcon(item, { size: "2rem" })}</div>
       <div class="inventory-slot-name" title="${itemName}">${itemName}</div>
       <div class="inventory-slot-value" style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 0.75em; height: 0.75em; vertical-align: middle;"> ${item.sellPrice || 0}g</div>
@@ -724,6 +727,7 @@ export default class InventoryUI {
     const sellPrice = item.sellPrice || 0;
     const maxSellable = item.count || 0;
     const isConsumable = item.consumable || false;
+    const isLocked = this.inventorySystem.isLocked(item.id);
 
     // Get category color and name
     const categoryColors = {
@@ -749,6 +753,44 @@ export default class InventoryUI {
         ${isConsumable && item.energyRestore ? `<p style="color: #5caa1f; font-weight: 600; font-size: 0.875rem;">⚡ Restaura ${item.energyRestore >= 9999 ? "energia ao máximo" : item.energyRestore + " de energia"}</p>` : ""}
         <p style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5); font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${sellPrice}g ${i18n.t("market.perUnit")}</p>
         <p style="color: var(--text-secondary); font-size: 0.875rem;">${i18n.t("market.youHave")}: ${maxSellable}</p>
+
+        <!-- Lock Button -->
+        <button id="toggle-lock-btn" style="
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.75rem 1.5rem;
+          margin-top: 1rem;
+          background: ${isLocked ? "linear-gradient(135deg, #ef5350 0%, #e53935 100%)" : "linear-gradient(135deg, #66bb6a 0%, #4caf50 100%)"};
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-weight: 600;
+          font-size: 0.9rem;
+          cursor: pointer;
+          transition: all 0.2s;
+          box-shadow: 0 2px 8px ${isLocked ? "rgba(239, 83, 80, 0.3)" : "rgba(76, 175, 80, 0.3)"};
+        ">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            ${
+              isLocked
+                ? `
+              <!-- Locked -->
+              <rect x="6" y="10" width="12" height="10" rx="2" stroke="white" stroke-width="2" fill="none"/>
+              <path d="M8 10V7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7V10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="12" cy="15" r="1.5" fill="white"/>
+            `
+                : `
+              <!-- Unlocked -->
+              <rect x="6" y="10" width="12" height="10" rx="2" stroke="white" stroke-width="2" fill="none"/>
+              <path d="M8 10V7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7V8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="12" cy="15" r="1.5" fill="white"/>
+            `
+            }
+          </svg>
+          <span id="lock-status-text">${isLocked ? "🔒 Bloqueado" : "🔓 Desbloqueado"}</span>
+        </button>
+        ${isLocked ? '<p style="color: #ef5350; font-size: 0.75rem; margin-top: 0.5rem; font-weight: 600;">Este item não pode ser vendido enquanto estiver bloqueado</p>' : ""}
       </div>
 
       <!-- SEÇÃO DE VENDA OCULTA - Jogador deve vender na cidade -->
@@ -867,6 +909,56 @@ export default class InventoryUI {
       };
 
       amountInput?.addEventListener("input", updatePreview);
+
+      // Lock button handler
+      const lockBtn = document.getElementById("toggle-lock-btn");
+      if (lockBtn) {
+        lockBtn.addEventListener("click", () => {
+          const newLockStatus = this.inventorySystem.toggleLock(item.id);
+
+          // Update button appearance
+          lockBtn.style.background = newLockStatus
+            ? "linear-gradient(135deg, #ef5350 0%, #e53935 100%)"
+            : "linear-gradient(135deg, #66bb6a 0%, #4caf50 100%)";
+          lockBtn.style.boxShadow = newLockStatus
+            ? "0 2px 8px rgba(239, 83, 80, 0.3)"
+            : "0 2px 8px rgba(76, 175, 80, 0.3)";
+
+          // Update SVG icon
+          const svg = lockBtn.querySelector("svg");
+          svg.innerHTML = newLockStatus
+            ? `
+            <!-- Locked -->
+            <rect x="6" y="10" width="12" height="10" rx="2" stroke="white" stroke-width="2" fill="none"/>
+            <path d="M8 10V7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7V10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="12" cy="15" r="1.5" fill="white"/>
+          `
+            : `
+            <!-- Unlocked -->
+            <rect x="6" y="10" width="12" height="10" rx="2" stroke="white" stroke-width="2" fill="none"/>
+            <path d="M8 10V7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7V8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="12" cy="15" r="1.5" fill="white"/>
+          `;
+
+          // Update text
+          const statusText = document.getElementById("lock-status-text");
+          if (statusText) {
+            statusText.textContent = newLockStatus
+              ? "🔒 Bloqueado"
+              : "🔓 Desbloqueado";
+          }
+
+          // Show notification
+          this.notifications.success(
+            newLockStatus
+              ? `🔒 ${itemName} bloqueado! Não pode ser vendido.`
+              : `🔓 ${itemName} desbloqueado! Pode ser vendido.`,
+          );
+
+          // Refresh inventory display
+          this.render();
+        });
+      }
 
       document.getElementById("quick-1")?.addEventListener("click", () => {
         if (amountInput) {

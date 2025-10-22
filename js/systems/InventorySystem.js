@@ -217,6 +217,14 @@ export default class InventorySystem {
       return { success: false, error: "Item not found" };
     }
 
+    // Check if item is locked
+    if (this.isLocked(itemId)) {
+      return {
+        success: false,
+        error: "🔒 Item está bloqueado! Desbloqueie para vender.",
+      };
+    }
+
     if (!this.hasItem(itemId, amount)) {
       return { success: false, error: i18n.t("errors.notEnoughItems") };
     }
@@ -286,12 +294,17 @@ export default class InventorySystem {
     const inventory = this.player.getInventory();
     const items = [];
 
-    for (const [itemId, count] of Object.entries(inventory)) {
+    for (const [itemId, value] of Object.entries(inventory)) {
       const itemData = this.getItemData(itemId);
       if (itemData) {
+        // Handle both old (number) and new (object) format
+        const count = typeof value === "number" ? value : value.count;
+        const locked = typeof value === "object" ? value.locked : false;
+
         items.push({
           id: itemId,
           count,
+          locked,
           ...itemData,
         });
       }
@@ -559,5 +572,60 @@ export default class InventorySystem {
     }
 
     return itemData.description || "";
+  }
+
+  /**
+   * Toggle lock status of an item
+   * @param {string} itemId - Item ID
+   * @returns {boolean} New lock status
+   */
+  toggleLock(itemId) {
+    const inventory = this.player.data.inventory;
+
+    if (!inventory[itemId]) {
+      return false;
+    }
+
+    // Handle old format (number) - migrate to object
+    if (typeof inventory[itemId] === "number") {
+      inventory[itemId] = {
+        count: inventory[itemId],
+        locked: false,
+      };
+    }
+
+    // Initialize locked property if it doesn't exist
+    if (inventory[itemId].locked === undefined) {
+      inventory[itemId].locked = false;
+    }
+
+    // Toggle lock status
+    inventory[itemId].locked = !inventory[itemId].locked;
+
+    console.log(
+      `${inventory[itemId].locked ? "🔒" : "🔓"} ${itemId} ${inventory[itemId].locked ? "locked" : "unlocked"}`,
+    );
+
+    // Dispatch event
+    window.dispatchEvent(
+      new CustomEvent("inventory:lockToggled", {
+        detail: { itemId, locked: inventory[itemId].locked },
+      }),
+    );
+
+    return inventory[itemId].locked;
+  }
+
+  /**
+   * Check if item is locked
+   * @param {string} itemId - Item ID
+   * @returns {boolean} True if locked
+   */
+  isLocked(itemId) {
+    const inventory = this.player.data.inventory;
+    const item = inventory[itemId];
+    if (!item) return false;
+    // Handle both old (number) and new (object) format
+    return typeof item === "object" ? item.locked === true : false;
   }
 }

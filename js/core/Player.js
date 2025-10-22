@@ -454,9 +454,16 @@ export default class Player {
    */
   addItem(itemId, amount = 1) {
     if (!this.data.inventory[itemId]) {
-      this.data.inventory[itemId] = 0;
+      this.data.inventory[itemId] = { count: 0, locked: false };
     }
-    this.data.inventory[itemId] += amount;
+    // Handle old format (number) - migrate to object
+    if (typeof this.data.inventory[itemId] === "number") {
+      this.data.inventory[itemId] = {
+        count: this.data.inventory[itemId],
+        locked: false,
+      };
+    }
+    this.data.inventory[itemId].count += amount;
   }
 
   /**
@@ -468,10 +475,17 @@ export default class Player {
   removeItem(itemId, amount = 1) {
     if (!this.hasItem(itemId, amount)) return false;
 
-    this.data.inventory[itemId] -= amount;
-
-    if (this.data.inventory[itemId] <= 0) {
-      delete this.data.inventory[itemId];
+    // Handle old format (number)
+    if (typeof this.data.inventory[itemId] === "number") {
+      this.data.inventory[itemId] -= amount;
+      if (this.data.inventory[itemId] <= 0) {
+        delete this.data.inventory[itemId];
+      }
+    } else {
+      this.data.inventory[itemId].count -= amount;
+      if (this.data.inventory[itemId].count <= 0) {
+        delete this.data.inventory[itemId];
+      }
     }
 
     return true;
@@ -484,7 +498,11 @@ export default class Player {
    * @returns {boolean} True if has enough
    */
   hasItem(itemId, amount = 1) {
-    return (this.data.inventory[itemId] || 0) >= amount;
+    const item = this.data.inventory[itemId];
+    if (!item) return false;
+    // Handle both old (number) and new (object) format
+    const count = typeof item === "number" ? item : item.count;
+    return count >= amount;
   }
 
   /**
@@ -493,7 +511,10 @@ export default class Player {
    * @returns {number} Item count
    */
   getItemCount(itemId) {
-    return this.data.inventory[itemId] || 0;
+    const item = this.data.inventory[itemId];
+    if (!item) return 0;
+    // Handle both old (number) and new (object) format
+    return typeof item === "number" ? item : item.count;
   }
 
   /**

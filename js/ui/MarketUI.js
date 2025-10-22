@@ -803,15 +803,25 @@ export default class MarketUI {
     const card = document.createElement("div");
     card.className = "market-item";
 
+    // Check if item is locked (only for sell)
+    const isLocked =
+      type === "sell" ? this.inventorySystem.isLocked(item.id) : false;
+
     const price = type === "buy" ? item.buyPrice : item.sellPrice;
     const stock = type === "buy" ? "∞" : item.count;
     const itemName = item.namePtBR || item.name;
     const buttonText =
-      type === "buy" ? i18n.t("market.buy") : i18n.t("market.sell");
+      type === "buy"
+        ? i18n.t("market.buy")
+        : isLocked
+          ? "🔒"
+          : i18n.t("market.sell");
     const buttonIcon =
       type === "buy"
         ? ""
-        : '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">';
+        : isLocked
+          ? ""
+          : '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">';
 
     // Check if it's a seed and get required level
     let requiredLevelInfo = "";
@@ -841,7 +851,8 @@ export default class MarketUI {
       i18n.t(`market.categories.${item.category}`) || item.category;
 
     card.innerHTML = `
-      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; flex: 1;">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; flex: 1; ${isLocked ? "opacity: 0.5; filter: grayscale(0.8);" : ""}">
+        ${isLocked ? '<div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; background: #ef5350; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 5;">🔒</div>' : ""}
         <div class="market-item-icon">${renderItemIcon(item, { size: "2rem" })}</div>
         <div class="market-item-name" title="${itemName}">${itemName}</div>
         <div class="market-item-price" style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g</div>
@@ -849,12 +860,21 @@ export default class MarketUI {
       </div>
       <div class="market-item-category" style="background: ${categoryColor};">${categoryName}</div>
       ${requiredLevelInfo}
-      <button class="market-item-action${type === "sell" ? " sell-action" : ""}">${buttonIcon} ${buttonText}</button>
+      <button class="market-item-action${type === "sell" ? " sell-action" : ""}" ${isLocked ? 'disabled style="opacity: 0.5; cursor: not-allowed; background: linear-gradient(135deg, #999 0%, #666 100%) !important; border-color: #555 !important;"' : ""}>${buttonIcon} ${buttonText}</button>
     `;
 
     const button = card.querySelector(".market-item-action");
     button.addEventListener("click", (e) => {
       e.stopPropagation();
+
+      // Block selling if item is locked
+      if (type === "sell" && isLocked) {
+        this.notifications.error(
+          "🔒 Este item está bloqueado! Desbloqueie no inventário para vender.",
+        );
+        return;
+      }
+
       if (type === "buy") {
         this.showBuyDialog(item);
       } else {
@@ -1079,6 +1099,14 @@ export default class MarketUI {
    * Show sell dialog
    */
   showSellDialog(item) {
+    // Check if item is locked
+    if (this.inventorySystem.isLocked(item.id)) {
+      this.notifications.error(
+        "🔒 Este item está bloqueado! Desbloqueie no inventário para vender.",
+      );
+      return;
+    }
+
     const unitPrice = item.sellPrice || 0;
     const maxSellable = item.count || 0;
 
