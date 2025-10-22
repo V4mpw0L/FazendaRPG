@@ -56,7 +56,7 @@ export default class Modal {
                 <div class="modal modal-${size} modal-${theme}">
                     <div class="modal-header">
                         <h3 class="modal-title">${title}</h3>
-                        ${closable ? '<button class="modal-close" data-action="close">&times;</button>' : ""}
+                        ${closable ? '<button class="modal-close" data-action="close" style="position: absolute; top: 1rem; right: 1rem; background: linear-gradient(135deg, #ef5350 0%, #e53935 100%); color: white; border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 1.5rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(239, 83, 80, 0.4); transition: all 0.2s; font-weight: 700;">&times;</button>' : ""}
                     </div>
                     <div class="modal-body">
                         ${content}
@@ -96,6 +96,15 @@ export default class Modal {
           btn.addEventListener("click", () => {
             this.close();
             resolve({ action: "close" });
+          });
+          // Add hover effect
+          btn.addEventListener("mouseenter", () => {
+            btn.style.transform = "scale(1.1)";
+            btn.style.boxShadow = "0 4px 12px rgba(239, 83, 80, 0.6)";
+          });
+          btn.addEventListener("mouseleave", () => {
+            btn.style.transform = "scale(1)";
+            btn.style.boxShadow = "0 2px 8px rgba(239, 83, 80, 0.4)";
           });
         });
 
