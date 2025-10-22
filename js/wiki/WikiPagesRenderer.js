@@ -21,7 +21,7 @@ export default class WikiPagesRenderer {
   generateSkillsSystem() {
     const skillsData = this.skills.skills || {};
 
-    let skillsHTML = '';
+    let skillsHTML = "";
     for (const [key, skill] of Object.entries(skillsData)) {
       skillsHTML += `
         <div class="wiki-skill-card" style="border-left: 4px solid ${skill.color}">
@@ -35,12 +35,16 @@ export default class WikiPagesRenderer {
           <div class="wiki-skill-actions">
             <h4>Ações Disponíveis:</h4>
             <ul style="margin-left: 1.5rem;">
-              ${skill.actions.map(action => `
+              ${skill.actions
+                .map(
+                  (action) => `
                 <li>
                   <strong>${action.name}</strong> (Lvl ${action.requiredLevel}+)
                   - ${action.xp} XP | ${action.energyCost} Energia | ${action.timeSeconds}s
                 </li>
-              `).join('')}
+              `,
+                )
+                .join("")}
             </ul>
           </div>
         </div>
@@ -48,7 +52,7 @@ export default class WikiPagesRenderer {
     }
 
     return `
-      <h1 class="wiki-page-title">📊 Sistema de Skills</h1>
+      <h1 class="wiki-page-title"><img src="assets/sprites/skills.png" alt="Skills" style="width: 32px; height: 32px; vertical-align: middle;"> Sistema de Skills</h1>
 
       <div class="wiki-card">
         <h2>⭐ 8 Skills Únicas</h2>
@@ -121,13 +125,17 @@ export default class WikiPagesRenderer {
         <p>Ao atingir certos níveis, você recebe recompensas especiais:</p>
 
         <div class="wiki-milestone-grid">
-          ${milestones.map(level => `
+          ${milestones
+            .map(
+              (level) => `
             <div class="wiki-milestone-card">
               <span class="wiki-milestone-level">${level}</span>
               <p class="wiki-milestone-desc">Nível ${level}</p>
               <span class="wiki-milestone-reward">🎁 Recompensa Especial</span>
             </div>
-          `).join('')}
+          `,
+            )
+            .join("")}
         </div>
       </div>
 
@@ -142,17 +150,20 @@ export default class WikiPagesRenderer {
             </tr>
           </thead>
           <tbody>
-            ${xpTable.slice(0, 20).map((xp, index) => {
-              const nextXP = xpTable[index + 1] || xp;
-              const diff = nextXP - xp;
-              return `
+            ${xpTable
+              .slice(0, 20)
+              .map((xp, index) => {
+                const nextXP = xpTable[index + 1] || xp;
+                const diff = nextXP - xp;
+                return `
                 <tr>
                   <td><strong>${index + 1}</strong></td>
                   <td>${xp.toLocaleString()}</td>
                   <td>${diff.toLocaleString()}</td>
                 </tr>
               `;
-            }).join('')}
+              })
+              .join("")}
           </tbody>
         </table>
         <p style="margin-top: 1rem; text-align: center; color: var(--text-secondary);">
@@ -185,7 +196,7 @@ export default class WikiPagesRenderer {
   generateNPCsGuide() {
     const npcsData = this.npcs.npcs || {};
 
-    let npcsHTML = '';
+    let npcsHTML = "";
     for (const [key, npc] of Object.entries(npcsData)) {
       const questCount = npc.quests?.length || 0;
       const hasShop = npc.shop && npc.shop.items ? npc.shop.items.length : 0;
@@ -205,28 +216,40 @@ export default class WikiPagesRenderer {
               <span class="wiki-npc-icon">📍</span>
               <strong>Localização:</strong> ${this.translateLocation(npc.location)}
             </div>
-            ${questCount > 0 ? `
+            ${
+              questCount > 0
+                ? `
               <div class="wiki-npc-detail">
                 <span class="wiki-npc-icon">📜</span>
                 <strong>Missões:</strong> ${questCount} disponíveis
               </div>
-            ` : ''}
-            ${hasShop > 0 ? `
+            `
+                : ""
+            }
+            ${
+              hasShop > 0
+                ? `
               <div class="wiki-npc-detail">
                 <span class="wiki-npc-icon">🏪</span>
                 <strong>Loja:</strong> ${hasShop} itens à venda
               </div>
-            ` : ''}
+            `
+                : ""
+            }
             <div class="wiki-npc-detail">
               <span class="wiki-npc-icon">❤️</span>
               <strong>Amizade:</strong> 0/${npc.maxFriendship}
             </div>
           </div>
-          ${npc.dialogue && npc.dialogue.greetingPtBR ? `
+          ${
+            npc.dialogue && npc.dialogue.greetingPtBR
+              ? `
             <div class="wiki-npc-dialogue">
               <p><em>"${npc.dialogue.greetingPtBR[0]}"</em></p>
             </div>
-          ` : ''}
+          `
+              : ""
+          }
         </div>
       `;
     }
@@ -316,7 +339,9 @@ export default class WikiPagesRenderer {
         <p>Completadas uma vez. Dão recompensas grandes e desbloqueiam conteúdo:</p>
 
         <div class="wiki-quests-list">
-          ${uniqueQuests.map(quest => `
+          ${uniqueQuests
+            .map(
+              (quest) => `
             <div class="wiki-quest-card">
               <div class="wiki-quest-header">
                 <h3>${quest.namePtBR || quest.name}</h3>
@@ -329,12 +354,21 @@ export default class WikiPagesRenderer {
               <div class="wiki-quest-rewards">
                 <span class="wiki-reward">💰 ${quest.rewards.gold}g</span>
                 <span class="wiki-reward">⭐ ${quest.rewards.xp} XP</span>
-                ${quest.rewards.items ? Object.keys(quest.rewards.items).map(item =>
-                  `<span class="wiki-reward">🎁 ${this.getItemName(item)}</span>`
-                ).join('') : ''}
+                ${
+                  quest.rewards.items
+                    ? Object.keys(quest.rewards.items)
+                        .map(
+                          (item) =>
+                            `<span class="wiki-reward">🎁 ${this.getItemName(item)}</span>`,
+                        )
+                        .join("")
+                    : ""
+                }
               </div>
             </div>
-          `).join('')}
+          `,
+            )
+            .join("")}
         </div>
       </div>
 
@@ -343,7 +377,9 @@ export default class WikiPagesRenderer {
         <p>Podem ser repetidas a cada 24 horas. Ótimas para farm de recursos:</p>
 
         <div class="wiki-quests-list">
-          ${dailyQuests.map(quest => `
+          ${dailyQuests
+            .map(
+              (quest) => `
             <div class="wiki-quest-card wiki-quest-daily">
               <div class="wiki-quest-header">
                 <h3>${quest.namePtBR || quest.name}</h3>
@@ -356,12 +392,21 @@ export default class WikiPagesRenderer {
               <div class="wiki-quest-rewards">
                 <span class="wiki-reward">💰 ${quest.rewards.gold}g</span>
                 <span class="wiki-reward">⭐ ${quest.rewards.xp} XP</span>
-                ${quest.rewards.items ? Object.keys(quest.rewards.items).map(item =>
-                  `<span class="wiki-reward">🎁 ${this.getItemName(item)}</span>`
-                ).join('') : ''}
+                ${
+                  quest.rewards.items
+                    ? Object.keys(quest.rewards.items)
+                        .map(
+                          (item) =>
+                            `<span class="wiki-reward">🎁 ${this.getItemName(item)}</span>`,
+                        )
+                        .join("")
+                    : ""
+                }
               </div>
             </div>
-          `).join('')}
+          `,
+            )
+            .join("")}
         </div>
       </div>
 
@@ -385,9 +430,11 @@ export default class WikiPagesRenderer {
     const itemsData = this.items.items || {};
     const categories = this.items.categories || {};
 
-    let categoriesHTML = '';
+    let categoriesHTML = "";
     for (const [catKey, catData] of Object.entries(categories)) {
-      const itemsInCategory = Object.values(itemsData).filter(item => item.category === catKey);
+      const itemsInCategory = Object.values(itemsData).filter(
+        (item) => item.category === catKey,
+      );
 
       if (itemsInCategory.length === 0) continue;
 
@@ -395,24 +442,29 @@ export default class WikiPagesRenderer {
         <div class="wiki-card">
           <h2>${catData.icon} ${catData.name}</h2>
           <div class="wiki-items-grid">
-            ${itemsInCategory.map(item => `
+            ${itemsInCategory
+              .map(
+                (item) => `
               <div class="wiki-item-card">
                 <div class="wiki-item-header">
-                  ${this.getItemSprite(item.id) ?
-                    `<img src="${this.getItemSprite(item.id)}" alt="${item.name}" class="wiki-item-icon">` :
-                    `<span class="wiki-item-icon">${item.icon}</span>`
+                  ${
+                    this.getItemSprite(item.id)
+                      ? `<img src="${this.getItemSprite(item.id)}" alt="${item.name}" class="wiki-item-icon">`
+                      : `<span class="wiki-item-icon">${item.icon}</span>`
                   }
                   <h4>${item.namePtBR || item.name}</h4>
                 </div>
                 <p class="wiki-item-desc">${item.descriptionPtBR || item.description}</p>
                 <div class="wiki-item-stats">
-                  ${item.buyPrice ? `<span>💰 Compra: ${item.buyPrice}g</span>` : ''}
-                  ${item.sellPrice ? `<span>💸 Venda: ${item.sellPrice}g</span>` : ''}
-                  ${item.stackable ? `<span>📦 Max: ${item.maxStack}</span>` : '<span>📦 Não empilha</span>'}
-                  ${item.energyRestore ? `<span>⚡ +${item.energyRestore} energia</span>` : ''}
+                  ${item.buyPrice ? `<span>💰 Compra: ${item.buyPrice}g</span>` : ""}
+                  ${item.sellPrice ? `<span>💸 Venda: ${item.sellPrice}g</span>` : ""}
+                  ${item.stackable ? `<span>📦 Max: ${item.maxStack}</span>` : "<span>📦 Não empilha</span>"}
+                  ${item.energyRestore ? `<span>⚡ +${item.energyRestore} energia</span>` : ""}
                 </div>
               </div>
-            `).join('')}
+            `,
+              )
+              .join("")}
           </div>
         </div>
       `;
@@ -443,26 +495,30 @@ export default class WikiPagesRenderer {
     const tips = this.wikiData.getTips();
 
     const categorizedTips = {};
-    tips.forEach(tip => {
+    tips.forEach((tip) => {
       if (!categorizedTips[tip.category]) {
         categorizedTips[tip.category] = [];
       }
       categorizedTips[tip.category].push(tip);
     });
 
-    let tipsHTML = '';
+    let tipsHTML = "";
     for (const [category, categoryTips] of Object.entries(categorizedTips)) {
       tipsHTML += `
         <div class="wiki-tips-category">
           <h3>${this.translateCategory(category)}</h3>
           <div class="wiki-tips-grid">
-            ${categoryTips.map(tip => `
+            ${categoryTips
+              .map(
+                (tip) => `
               <div class="wiki-tip-card">
                 <div class="wiki-tip-icon">${tip.icon}</div>
                 <h4>${tip.title}</h4>
                 <p>${tip.description}</p>
               </div>
-            `).join('')}
+            `,
+              )
+              .join("")}
           </div>
         </div>
       `;
@@ -500,14 +556,18 @@ export default class WikiPagesRenderer {
         <p>Estratégias detalhadas para cada fase do jogo:</p>
       </div>
 
-      ${strategies.map(strategy => `
+      ${strategies
+        .map(
+          (strategy) => `
         <div class="wiki-card">
           <div class="wiki-strategy-header">
             <span class="wiki-strategy-icon">${strategy.icon}</span>
             <h2>${strategy.title}</h2>
           </div>
           <div class="wiki-strategy-steps">
-            ${strategy.steps.map((step, index) => `
+            ${strategy.steps
+              .map(
+                (step, index) => `
               <div class="wiki-strategy-step">
                 <span class="wiki-strategy-number">${index + 1}</span>
                 <div class="wiki-strategy-content">
@@ -515,10 +575,14 @@ export default class WikiPagesRenderer {
                   <p>${step.description}</p>
                 </div>
               </div>
-            `).join('')}
+            `,
+              )
+              .join("")}
           </div>
         </div>
-      `).join('')}
+      `,
+        )
+        .join("")}
 
       <div class="wiki-card wiki-card-tip">
         <h2>💡 Lembre-se</h2>
@@ -543,7 +607,9 @@ export default class WikiPagesRenderer {
       </div>
 
       <div class="wiki-faq-list">
-        ${faq.map((item, index) => `
+        ${faq
+          .map(
+            (item, index) => `
           <div class="wiki-faq-item">
             <div class="wiki-faq-question">
               <span class="wiki-faq-number">${index + 1}</span>
@@ -553,7 +619,9 @@ export default class WikiPagesRenderer {
               <p>${item.answer}</p>
             </div>
           </div>
-        `).join('')}
+        `,
+          )
+          .join("")}
       </div>
 
       <div class="wiki-card wiki-card-tip">
@@ -579,7 +647,9 @@ export default class WikiPagesRenderer {
       </div>
 
       <div class="wiki-updates-timeline">
-        ${updates.map(update => `
+        ${updates
+          .map(
+            (update) => `
           <div class="wiki-update-card">
             <div class="wiki-update-header">
               <span class="wiki-update-version">v${update.version}</span>
@@ -587,10 +657,12 @@ export default class WikiPagesRenderer {
             </div>
             <h3>${update.title}</h3>
             <ul class="wiki-update-changes">
-              ${update.changes.map(change => `<li>${change}</li>`).join('')}
+              ${update.changes.map((change) => `<li>${change}</li>`).join("")}
             </ul>
           </div>
-        `).join('')}
+        `,
+          )
+          .join("")}
       </div>
 
       <div class="wiki-card wiki-card-success">
@@ -605,14 +677,14 @@ export default class WikiPagesRenderer {
    */
   translateLocation(location) {
     const translations = {
-      farm: 'Fazenda',
-      city: 'Cidade',
-      river: 'Rio',
-      tavern: 'Taverna',
-      mine: 'Mina',
-      workshop: 'Oficina',
-      smithy: 'Ferraria',
-      forest: 'Floresta'
+      farm: "Fazenda",
+      city: "Cidade",
+      river: "Rio",
+      tavern: "Taverna",
+      mine: "Mina",
+      workshop: "Oficina",
+      smithy: "Ferraria",
+      forest: "Floresta",
     };
     return translations[location] || location;
   }
@@ -622,7 +694,7 @@ export default class WikiPagesRenderer {
    */
   getNPCName(npcId) {
     const npc = this.npcs.npcs?.[npcId];
-    return npc ? (npc.namePtBR || npc.name) : npcId;
+    return npc ? npc.namePtBR || npc.name : npcId;
   }
 
   /**
@@ -630,7 +702,7 @@ export default class WikiPagesRenderer {
    */
   getItemName(itemId) {
     const item = this.items.items?.[itemId];
-    return item ? (item.namePtBR || item.name) : itemId;
+    return item ? item.namePtBR || item.name : itemId;
   }
 
   /**
@@ -638,16 +710,26 @@ export default class WikiPagesRenderer {
    */
   getItemSprite(itemId) {
     const spriteMap = {
-      wheat_seed: '1247', wheat: '1247',
-      corn_seed: '1249', corn: '1249',
-      tomato_seed: '1579', tomato: '1579',
-      potato_seed: '1250', potato: '1250',
-      carrot_seed: '1248', carrot: '1248',
-      pumpkin_seed: '1358', pumpkin: '1358',
-      strawberry_seed: '1773', strawberry: '1773',
-      fertilizer: '1299',
-      trowel: '1069', hoe: '1068', rake: '1070',
-      bread: '2967', energy_potion: '1302'
+      wheat_seed: "1247",
+      wheat: "1247",
+      corn_seed: "1249",
+      corn: "1249",
+      tomato_seed: "1579",
+      tomato: "1579",
+      potato_seed: "1250",
+      potato: "1250",
+      carrot_seed: "1248",
+      carrot: "1248",
+      pumpkin_seed: "1358",
+      pumpkin: "1358",
+      strawberry_seed: "1773",
+      strawberry: "1773",
+      fertilizer: "1299",
+      trowel: "1069",
+      hoe: "1068",
+      rake: "1070",
+      bread: "2967",
+      energy_potion: "1302",
     };
 
     const spriteNum = spriteMap[itemId];
@@ -659,14 +741,14 @@ export default class WikiPagesRenderer {
    */
   translateCategory(category) {
     const translations = {
-      farming: '🌾 Farming',
-      mechanics: '⚙️ Mecânicas',
-      skills: '⭐ Skills',
-      quests: '📜 Missões',
-      npcs: '👥 NPCs',
-      economy: '💰 Economia',
-      inventory: '🎒 Inventário',
-      strategy: '🎯 Estratégia'
+      farming: "🌾 Farming",
+      mechanics: "⚙️ Mecânicas",
+      skills: "⭐ Skills",
+      quests: "📜 Missões",
+      npcs: "👥 NPCs",
+      economy: "💰 Economia",
+      inventory: "🎒 Inventário",
+      strategy: "🎯 Estratégia",
     };
     return translations[category] || category;
   }
@@ -678,18 +760,18 @@ export default class WikiPagesRenderer {
    */
   generatePage(pageId) {
     const generators = {
-      'skills-system': () => this.generateSkillsSystem(),
-      'leveling': () => this.generateLeveling(),
-      'npcs-guide': () => this.generateNPCsGuide(),
-      'quests': () => this.generateQuests(),
-      'all-items': () => this.generateAllItems(),
-      'tips': () => this.generateTips(),
-      'strategies': () => this.generateStrategies(),
-      'faq': () => this.generateFAQ(),
-      'updates': () => this.generateUpdates()
+      "skills-system": () => this.generateSkillsSystem(),
+      leveling: () => this.generateLeveling(),
+      "npcs-guide": () => this.generateNPCsGuide(),
+      quests: () => this.generateQuests(),
+      "all-items": () => this.generateAllItems(),
+      tips: () => this.generateTips(),
+      strategies: () => this.generateStrategies(),
+      faq: () => this.generateFAQ(),
+      updates: () => this.generateUpdates(),
     };
 
     const generator = generators[pageId];
-    return generator ? generator() : '<p>Conteúdo não encontrado</p>';
+    return generator ? generator() : "<p>Conteúdo não encontrado</p>";
   }
 }

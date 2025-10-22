@@ -20,7 +20,7 @@ export default class WikiData {
         id: "getting-started",
         title: "🌱 Primeiros Passos",
         titleEN: "🌱 Getting Started",
-        icon: "🌱",
+        icon: '<img src="assets/sprites/home.png" alt="Home" style="width: 24px; height: 24px; vertical-align: middle;">',
         category: "inicio",
       },
 
@@ -36,9 +36,9 @@ export default class WikiData {
       // Crops
       crops: {
         id: "crops",
-        title: "🌽 Guia de Cultivos",
-        titleEN: "🌽 Crops Guide",
-        icon: "🌽",
+        title: "🌾 Guia de Cultivos",
+        titleEN: "🌾 Crops Guide",
+        icon: "🌾",
         category: "farming",
       },
 
@@ -65,7 +65,7 @@ export default class WikiData {
         id: "skills-system",
         title: "📊 Sistema de Skills",
         titleEN: "📊 Skills System",
-        icon: "📊",
+        icon: '<img src="assets/sprites/skills.png" alt="Skills" style="width: 24px; height: 24px; vertical-align: middle;">',
         category: "skills",
       },
 
@@ -83,7 +83,7 @@ export default class WikiData {
         id: "items-guide",
         title: "🎒 Guia de Itens",
         titleEN: "🎒 Items Guide",
-        icon: "🎒",
+        icon: '<img src="assets/sprites/bolsa.png" alt="Inventário" style="width: 24px; height: 24px; vertical-align: middle;">',
         category: "items",
       },
 
@@ -101,16 +101,16 @@ export default class WikiData {
         id: "inventory",
         title: "👜 Inventário",
         titleEN: "👜 Inventory",
-        icon: "👜",
+        icon: '<img src="assets/sprites/bolsa.png" alt="Inventário" style="width: 24px; height: 24px; vertical-align: middle;">',
         category: "items",
       },
 
       // Market
       market: {
         id: "market",
-        title: "🏪 Mercado",
-        titleEN: "🏪 Market",
-        icon: "🏪",
+        title: "🏘️ Mercado",
+        titleEN: "🏘️ Market",
+        icon: "🏘️",
         category: "city",
       },
 
@@ -119,7 +119,7 @@ export default class WikiData {
         id: "npcs-guide",
         title: "👥 Guia de NPCs",
         titleEN: "👥 NPCs Guide",
-        icon: "👥",
+        icon: '<img src="assets/sprites/npcs.png" alt="NPCs" style="width: 24px; height: 24px; vertical-align: middle;">',
         category: "city",
       },
 
@@ -128,7 +128,7 @@ export default class WikiData {
         id: "quests",
         title: "📜 Missões",
         titleEN: "📜 Quests",
-        icon: "📜",
+        icon: '<img src="assets/sprites/quests.png" alt="Missões" style="width: 24px; height: 24px; vertical-align: middle;">',
         category: "city",
       },
 
@@ -155,7 +155,7 @@ export default class WikiData {
         id: "energy-system",
         title: "⚡ Sistema de Energia",
         titleEN: "⚡ Energy System",
-        icon: "⚡",
+        icon: '<img src="assets/sprites/energia.png" alt="Energia" style="width: 24px; height: 24px; vertical-align: middle;">',
         category: "mechanics",
       },
 
@@ -445,8 +445,7 @@ export default class WikiData {
           },
           {
             title: "Complete Missões Diárias",
-            description:
-              "Faça as missões diárias para ganhar recursos extras.",
+            description: "Faça as missões diárias para ganhar recursos extras.",
           },
         ],
       },
@@ -463,8 +462,7 @@ export default class WikiData {
           },
           {
             title: "Crafting Avançado",
-            description:
-              "Use smithing e crafting para criar itens valiosos.",
+            description: "Use smithing e crafting para criar itens valiosos.",
           },
           {
             title: "Maximize Eficiência",
@@ -473,8 +471,7 @@ export default class WikiData {
           },
           {
             title: "Farm de Gold",
-            description:
-              "Venda produtos processados para maximizar lucros.",
+            description: "Venda produtos processados para maximizar lucros.",
           },
         ],
       },
@@ -491,13 +488,11 @@ export default class WikiData {
           },
           {
             title: "Estoque Poções",
-            description:
-              "Sempre tenha poções de energia para emergências.",
+            description: "Sempre tenha poções de energia para emergências.",
           },
           {
             title: "Planeje Ações",
-            description:
-              "Não desperdice energia em ações de baixo valor.",
+            description: "Não desperdice energia em ações de baixo valor.",
           },
           {
             title: "Timing é Tudo",
@@ -519,7 +514,8 @@ export default class WikiData {
           },
           {
             title: "Complete Quests",
-            description: "Quests dão muito gold. Priorize as de recompensa alta.",
+            description:
+              "Quests dão muito gold. Priorize as de recompensa alta.",
           },
           {
             title: "Negocie Esperto",
