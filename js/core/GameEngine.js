@@ -516,50 +516,146 @@ export default class GameEngine {
   }
 
   /**
-   * Export save
+   * Save game to file (download save file)
    */
-  exportSave() {
+  saveToFile() {
+    // Get complete game state
     const saveData = {
       player: this.player.getData(),
-      exportedAt: Date.now(),
+      savedAt: Date.now(),
       version: "0.0.9",
     };
 
-    const success = this.saveManager.exportSave(saveData);
+    // Verify integrity before saving
+    const verification = this.saveManager.verifySaveIntegrity(saveData);
+
+    if (!verification.valid) {
+      console.error("❌ Save verification failed:", verification.errors);
+      notifications.error(
+        i18n.t("settings.saveError") || "Erro ao salvar: dados inválidos",
+      );
+      return;
+    }
+
+    if (verification.warnings.length > 0) {
+      console.warn("⚠️ Save warnings:", verification.warnings);
+    }
+
+    // Save to file
+    const success = this.saveManager.saveToFile(saveData);
 
     if (success) {
-      notifications.success(i18n.t("settings.exportSuccess"));
+      notifications.success(
+        i18n.t("settings.saveSuccess") || "Save baixado com sucesso!",
+      );
     } else {
-      notifications.error(i18n.t("notifications.error"));
+      notifications.error(
+        i18n.t("settings.saveError") || "Erro ao salvar arquivo",
+      );
     }
   }
 
   /**
-   * Import save
+   * Load game from file (upload save file)
    */
-  async importSave() {
-    const saveData = await this.saveManager.importSave();
+  async loadFromFile() {
+    try {
+      // Show loading state
+      notifications.info(
+        i18n.t("settings.loadingFile") || "Carregando arquivo...",
+      );
 
-    if (!saveData) {
-      notifications.error(i18n.t("notifications.error"));
-      return;
+      // Load from file
+      const saveData = await this.saveManager.loadFromFile();
+
+      if (!saveData) {
+        notifications.error(
+          i18n.t("settings.loadError") || "Erro ao carregar: arquivo inválido",
+        );
+        return;
+      }
+
+      // Verify integrity
+      const verification = this.saveManager.verifySaveIntegrity(saveData);
+
+      if (!verification.valid) {
+        console.error("❌ Load verification failed:", verification.errors);
+        notifications.error(
+          i18n.t("settings.loadErrorInvalid") ||
+            "Erro ao carregar: save corrompido ou incompatível",
+        );
+        return;
+      }
+
+      if (verification.warnings.length > 0) {
+        console.warn("⚠️ Load warnings:", verification.warnings);
+      }
+
+      // Confirm with user before overwriting current save
+      const currentSave = this.saveManager.hasSave();
+      if (currentSave) {
+        const playerName = this.player.data.name;
+        const confirm = window.confirm(
+          i18n.t("settings.confirmLoadFile") ||
+            `Tem certeza que deseja carregar este save? Seu progresso atual (${playerName}) será substituído!\n\nDica: Exporte seu save atual antes para não perder o progresso.`,
+        );
+
+        if (!confirm) {
+          notifications.info(
+            i18n.t("settings.loadCancelled") || "Carregamento cancelado",
+          );
+          return;
+        }
+      }
+
+      // Stop game systems
+      this.stop();
+
+      // Load player data
+      if (saveData.player) {
+        const loadSuccess = this.player.load(saveData.player);
+
+        if (!loadSuccess) {
+          notifications.error(
+            i18n.t("settings.loadError") || "Erro ao carregar dados do jogador",
+          );
+          // Restart with current data
+          this.start();
+          return;
+        }
+      }
+
+      // Save to localStorage (now it becomes the active save)
+      const saveSuccess = this.saveGame();
+
+      if (!saveSuccess) {
+        notifications.error(
+          i18n.t("settings.loadError") || "Erro ao salvar dados carregados",
+        );
+        this.start();
+        return;
+      }
+
+      // Restart game with loaded data
+      this.start();
+
+      // Update all UI
+      this.renderFarm();
+      this.renderInventory();
+      this.updatePlayerStats();
+
+      notifications.success(
+        i18n.t("settings.loadSuccess") ||
+          `Save carregado com sucesso! Bem-vindo(a) de volta, ${saveData.player.name}!`,
+      );
+
+      console.log("✅ Save file loaded and applied successfully");
+    } catch (error) {
+      console.error("❌ Failed to load from file:", error);
+      notifications.error(
+        i18n.t("settings.loadError") || "Erro ao carregar arquivo",
+      );
     }
-
-    // Stop game
-    this.stop();
-
-    // Load imported data
-    if (saveData.player) {
-      this.player.load(saveData.player);
-    }
-
-    // Save to localStorage
-    this.saveGame();
-
-    // Restart game
-    this.start();
-
-    notifications.success(i18n.t("settings.importSuccess"));
   }
 
   /**
@@ -1555,16 +1651,16 @@ export default class GameEngine {
       resetBtn.addEventListener("click", () => this.resetGame());
     }
 
-    // Export button
-    const exportBtn = document.getElementById("export-save-btn");
-    if (exportBtn) {
-      exportBtn.addEventListener("click", () => this.exportSave());
+    // Save to file button
+    const saveFileBtn = document.getElementById("save-file-btn");
+    if (saveFileBtn) {
+      saveFileBtn.addEventListener("click", () => this.saveToFile());
     }
 
-    // Import button
-    const importBtn = document.getElementById("import-save-btn");
-    if (importBtn) {
-      importBtn.addEventListener("click", () => this.importSave());
+    // Load from file button
+    const loadFileBtn = document.getElementById("load-file-btn");
+    if (loadFileBtn) {
+      loadFileBtn.addEventListener("click", () => this.loadFromFile());
     }
   }
 

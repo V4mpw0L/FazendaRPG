@@ -18,6 +18,7 @@ export default class SaveManager {
     this.autoSaveInterval = 60000; // 60 seconds
     this.autoSaveTimer = null;
     this.lastSaveTime = 0;
+    this.currentVersion = "0.0.9";
   }
 
   /**
@@ -70,7 +71,7 @@ export default class SaveManager {
       const saveData = {
         ...data,
         savedAt: Date.now(),
-        version: "0.0.9",
+        version: this.currentVersion,
       };
 
       const jsonData = safeJSONStringify(saveData);
@@ -134,8 +135,11 @@ export default class SaveManager {
         return this.loadBackup();
       }
 
+      // Migrate old saves if needed
+      const migratedData = this.migrateSaveData(data);
+
       console.log("✅ Game loaded successfully");
-      return data;
+      return migratedData;
     } catch (error) {
       console.error("❌ Failed to load game:", error);
       return this.loadBackup();
@@ -167,7 +171,8 @@ export default class SaveManager {
       // Restore backup as main save
       localStorage.setItem(this.saveKey, jsonData);
 
-      return data;
+      // Migrate old saves if needed
+      return this.migrateSaveData(data);
     } catch (error) {
       console.error("❌ Failed to load backup:", error);
       return null;
@@ -180,10 +185,13 @@ export default class SaveManager {
    * @returns {boolean} True if valid
    */
   validateSaveData(data) {
-    if (!data || typeof data !== "object") return false;
+    if (!data || typeof data !== "object") {
+      console.warn("⚠️ Save data is not an object");
+      return false;
+    }
 
     // Check required properties
-    const requiredProps = ["player", "savedAt", "version"];
+    const requiredProps = ["player", "version"];
 
     for (const prop of requiredProps) {
       if (!(prop in data)) {
@@ -198,7 +206,56 @@ export default class SaveManager {
       return false;
     }
 
+    // Check if player has required properties
+    const requiredPlayerProps = [
+      "name",
+      "level",
+      "xp",
+      "gold",
+      "energy",
+      "skills",
+      "inventory",
+      "farm",
+    ];
+
+    for (const prop of requiredPlayerProps) {
+      if (!(prop in data.player)) {
+        console.warn(`⚠️ Missing required player property: ${prop}`);
+        return false;
+      }
+    }
+
     return true;
+  }
+
+  /**
+   * Migrate old save data to current version
+   * @param {Object} data - Data to migrate
+   * @returns {Object} Migrated data
+   */
+  migrateSaveData(data) {
+    const migratedData = { ...data };
+
+    // Add savedAt if it doesn't exist (for old exports with exportedAt)
+    if (!migratedData.savedAt && migratedData.exportedAt) {
+      migratedData.savedAt = migratedData.exportedAt;
+      console.log("🔄 Migrated: exportedAt -> savedAt");
+    }
+
+    // Ensure savedAt exists
+    if (!migratedData.savedAt) {
+      migratedData.savedAt = Date.now();
+    }
+
+    // Update version
+    if (migratedData.version !== this.currentVersion) {
+      console.log(
+        `🔄 Migrating save from v${migratedData.version} to v${this.currentVersion}`,
+      );
+      migratedData.version = this.currentVersion;
+    }
+
+    return migratedData;
   }
 
   /**
@@ -235,52 +292,82 @@ export default class SaveManager {
   }
 
   /**
-   * Export save data to file
-   * @param {Object} data - Data to export
+   * Save game to file (download)
+   * @param {Object} data - Data to save
    * @returns {boolean} Success
    */
-  exportSave(data) {
+  saveToFile(data) {
     try {
+      // Create complete save data
       const saveData = {
         ...data,
-        exportedAt: Date.now(),
-        version: "0.0.9",
+        savedAt: Date.now(),
+        version: this.currentVersion,
+        exportType: "file",
       };
 
+      // Validate before saving
+      if (!this.validateSaveData(saveData)) {
+        console.error("❌ Cannot save invalid data to file");
+        return false;
+      }
+
       const jsonData = JSON.stringify(saveData, null, 2);
-      const filename = `fazendarpg_save_${Date.now()}.json`;
+      const timestamp = new Date()
+        .toISOString()
+        .replace(/[:.]/g, "-")
+        .slice(0, -5);
+      const playerName = saveData.player?.name || "player";
+      const filename = `FazendaRPG_${playerName}_${timestamp}.json`;
 
       downloadFile(jsonData, filename, "application/json");
 
-      console.log("📦 Save exported successfully");
+      console.log("📦 Save file created successfully");
       return true;
     } catch (error) {
-      console.error("❌ Failed to export save:", error);
+      console.error("❌ Failed to save to file:", error);
       return false;
     }
   }
 
   /**
-   * Import save data from file
-   * @returns {Promise<Object|null>} Imported data or null
+   * Load game from file
+   * @returns {Promise<Object|null>} Loaded data or null
    */
-  async importSave() {
+  async loadFromFile() {
     try {
       const fileContent = await loadFile(".json");
+
+      if (!fileContent) {
+        throw new Error("Empty file");
+      }
+
       const data = safeJSONParse(fileContent);
 
       if (!data) {
         throw new Error("Invalid JSON file");
       }
 
+      // Validate save data
       if (!this.validateSaveData(data)) {
-        throw new Error("Invalid save file format");
+        throw new Error("Invalid save file format - missing required data");
       }
 
-      console.log("📥 Save imported successfully");
-      return data;
+      // Migrate if needed
+      const migratedData = this.migrateSaveData(data);
+
+      console.log("📥 Save file loaded successfully");
+      return migratedData;
     } catch (error) {
-      console.error("❌ Failed to import save:", error);
+      console.error("❌ Failed to load from file:", error);
+
+      // Provide more specific error message
+      if (error.message.includes("JSON")) {
+        console.error("   File is not valid JSON format");
+      } else if (error.message.includes("format")) {
+        console.error("   File is missing required game data");
+      }
+
       return null;
     }
   }
@@ -464,5 +551,85 @@ export default class SaveManager {
       console.error("❌ Failed to delete snapshot:", error);
       return false;
     }
+  }
+
+  /**
+   * Export complete game state for debugging
+   * @returns {Object} Complete state
+   */
+  exportCompleteState() {
+    return {
+      save: this.load(),
+      backup: safeJSONParse(localStorage.getItem(this.backupKey)),
+      info: this.getSaveInfo(),
+      storage: this.getStorageInfo(),
+      snapshots: this.listSnapshots(),
+    };
+  }
+
+  /**
+   * Verify save integrity
+   * @param {Object} data - Data to verify
+   * @returns {Object} Verification result
+   */
+  verifySaveIntegrity(data) {
+    const result = {
+      valid: true,
+      errors: [],
+      warnings: [],
+    };
+
+    // Basic validation
+    if (!this.validateSaveData(data)) {
+      result.valid = false;
+      result.errors.push("Basic validation failed");
+      return result;
+    }
+
+    // Check player data completeness
+    const player = data.player;
+
+    if (!player.name || player.name.trim() === "") {
+      result.errors.push("Player has no name");
+      result.valid = false;
+    }
+
+    if (typeof player.level !== "number" || player.level < 1) {
+      result.errors.push("Invalid player level");
+      result.valid = false;
+    }
+
+    if (typeof player.xp !== "number" || player.xp < 0) {
+      result.errors.push("Invalid player XP");
+      result.valid = false;
+    }
+
+    if (!player.skills || typeof player.skills !== "object") {
+      result.errors.push("Missing or invalid skills data");
+      result.valid = false;
+    }
+
+    if (!player.inventory || typeof player.inventory !== "object") {
+      result.errors.push("Missing or invalid inventory data");
+      result.valid = false;
+    }
+
+    if (!player.farm || !Array.isArray(player.farm.plots)) {
+      result.errors.push("Missing or invalid farm data");
+      result.valid = false;
+    }
+
+    // Warnings
+    if (!data.savedAt) {
+      result.warnings.push("Save has no timestamp");
+    }
+
+    if (data.version !== this.currentVersion) {
+      result.warnings.push(
+        `Save version mismatch: ${data.version} vs ${this.currentVersion}`,
+      );
+    }
+
+    return result;
   }
 }
