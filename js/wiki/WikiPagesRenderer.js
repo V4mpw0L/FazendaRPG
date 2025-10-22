@@ -448,8 +448,8 @@ export default class WikiPagesRenderer {
               <div class="wiki-item-card">
                 <div class="wiki-item-header">
                   ${
-                    this.getItemSprite(item.id)
-                      ? `<img src="${this.getItemSprite(item.id)}" alt="${item.name}" class="wiki-item-icon">`
+                    item.icon && item.icon.startsWith("assets/")
+                      ? `<img src="${item.icon}" alt="${item.name}" class="wiki-item-icon">`
                       : `<span class="wiki-item-icon">${item.icon}</span>`
                   }
                   <h4>${item.namePtBR || item.name}</h4>
@@ -703,37 +703,6 @@ export default class WikiPagesRenderer {
   getItemName(itemId) {
     const item = this.items.items?.[itemId];
     return item ? item.namePtBR || item.name : itemId;
-  }
-
-  /**
-   * Helper: Get item sprite
-   */
-  getItemSprite(itemId) {
-    const spriteMap = {
-      wheat_seed: "1247",
-      wheat: "1247",
-      corn_seed: "1249",
-      corn: "1249",
-      tomato_seed: "1579",
-      tomato: "1579",
-      potato_seed: "1250",
-      potato: "1250",
-      carrot_seed: "1248",
-      carrot: "1248",
-      pumpkin_seed: "1358",
-      pumpkin: "1358",
-      strawberry_seed: "1773",
-      strawberry: "1773",
-      fertilizer: "1299",
-      trowel: "1069",
-      hoe: "1068",
-      rake: "1070",
-      bread: "2967",
-      energy_potion: "1302",
-    };
-
-    const spriteNum = spriteMap[itemId];
-    return spriteNum ? `assets/sprites/${spriteNum}.png` : null;
   }
 
   /**

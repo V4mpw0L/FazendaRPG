@@ -417,11 +417,11 @@ export default class WikiContentGenerator {
 
     let cropsHTML = "";
     for (const [key, crop] of Object.entries(cropsData)) {
-      const sprite = this.getCropSprite(crop.id);
+      const emoji = this.getCropSprite(crop.id);
       cropsHTML += `
         <div class="wiki-crop-card">
           <div class="wiki-crop-header">
-            ${sprite ? `<img src="${sprite}" alt="${crop.namePtBR || crop.name}" class="wiki-crop-icon-img">` : `<span class="wiki-crop-icon">${crop.icon}</span>`}
+            <span class="wiki-crop-icon">${emoji}</span>
             <h3>${crop.namePtBR || crop.name}</h3>
           </div>
           <div class="wiki-crop-stats">
@@ -602,21 +602,21 @@ export default class WikiContentGenerator {
    * @returns {string|null} Sprite path or null
    */
   getCropSprite(cropId) {
-    const spriteMap = {
-      wheat: "1247",
-      corn: "1249",
-      tomato: "1579",
-      potato: "1250",
-      carrot: "1248",
-      pumpkin: "1358",
-      strawberry: "1773",
-      eggplant: "1775",
-      watermelon: "1774",
-      pepper: "1302",
+    // Use emojis from items.json instead of PNG sprites
+    const emojiMap = {
+      wheat: "🌾",
+      corn: "🌽",
+      tomato: "🍅",
+      potato: "🥔",
+      carrot: "🥕",
+      pumpkin: "🎃",
+      strawberry: "🍓",
+      eggplant: "🍆",
+      watermelon: "🍉",
+      pepper: "🌶️",
     };
 
-    const spriteNum = spriteMap[cropId];
-    return spriteNum ? `assets/sprites/${spriteNum}.png` : null;
+    return emojiMap[cropId] || "🌱";
   }
 
   /**
@@ -635,7 +635,7 @@ export default class WikiContentGenerator {
       <div class="wiki-tools-grid">
         <div class="wiki-tool-card">
           <div class="wiki-tool-header">
-            <img src="assets/sprites/1069.png" alt="Pá de Mão" class="wiki-tool-icon">
+            <img src="assets/sprites/mercado/ferramentas/pademao.png" alt="Pá de Mão" class="wiki-tool-icon">
             <h3>Pá de Mão (Trowel)</h3>
           </div>
           <div class="wiki-tool-required">
@@ -652,7 +652,7 @@ export default class WikiContentGenerator {
 
         <div class="wiki-tool-card">
           <div class="wiki-tool-header">
-            <img src="assets/sprites/1068.png" alt="Enxada" class="wiki-tool-icon">
+            <img src="assets/sprites/mercado/ferramentas/enxada.png" alt="Enxada" class="wiki-tool-icon">
             <h3>Enxada (Hoe)</h3>
           </div>
           <div class="wiki-tool-required">
@@ -669,7 +669,7 @@ export default class WikiContentGenerator {
 
         <div class="wiki-tool-card">
           <div class="wiki-tool-header">
-            <img src="assets/sprites/1070.png" alt="Ancinho" class="wiki-tool-icon">
+            <img src="assets/sprites/mercado/ferramentas/rastelo.png" alt="Ancinho" class="wiki-tool-icon">
             <h3>Ancinho (Rake)</h3>
           </div>
           <div class="wiki-tool-required">
@@ -699,7 +699,7 @@ export default class WikiContentGenerator {
       <div class="wiki-card">
         <h2>🌿 Fertilizante</h2>
         <div class="wiki-fertilizer-showcase">
-          <img src="assets/sprites/1299.png" alt="Fertilizante" class="wiki-fertilizer-icon">
+          <img src="assets/sprites/mercado/materiais/fertilizante.png" alt="Fertilizante" class="wiki-fertilizer-icon">
           <div class="wiki-fertilizer-info">
             <h3>Fertilizante Premium</h3>
             <div class="wiki-fertilizer-effect">
