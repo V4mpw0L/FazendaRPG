@@ -297,12 +297,14 @@ export default class GameEngine {
     );
     const now = Date.now();
 
-    // Regenerate 1 energy every 60 seconds
+    // Regenerate 5 energy every 60 seconds
     if (now - lastRegen >= 60000) {
       if (this.player.data.energy < this.player.data.maxEnergy) {
-        this.player.addEnergy(1);
+        const energyToAdd = 5;
+        this.player.addEnergy(energyToAdd);
         localStorage.setItem("fazenda_last_energy_regen", now.toString());
         this.topBar.update();
+        this.topBar.showEnergyGain(energyToAdd);
       }
     }
   }

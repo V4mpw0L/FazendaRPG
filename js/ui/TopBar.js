@@ -172,6 +172,74 @@ export default class TopBar {
   }
 
   /**
+   * Show energy gain animation
+   * @param {number} amount - Amount of energy gained
+   */
+  showEnergyGain(amount) {
+    if (!this.elements.energy) return;
+
+    // Get the energy display container
+    const energyContainer = this.elements.energy.parentElement.parentElement;
+    if (!energyContainer) return;
+
+    // Create floating notification element
+    const notification = document.createElement("div");
+    notification.className = "energy-gain-notification";
+    notification.textContent = `+${amount} ⚡`;
+    notification.style.cssText = `
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #FFD700;
+      font-weight: 700;
+      font-size: 1rem;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+      z-index: 1000;
+      animation: floatUpEnergy 2s ease-out forwards;
+      white-space: nowrap;
+    `;
+
+    // Add animation keyframes if not already added
+    if (!document.getElementById("energy-gain-animation")) {
+      const style = document.createElement("style");
+      style.id = "energy-gain-animation";
+      style.textContent = `
+        @keyframes floatUpEnergy {
+          0% {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+          }
+          50% {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-25px);
+          }
+          100% {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-50px);
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    // Add notification to container
+    energyContainer.style.position = "relative";
+    energyContainer.appendChild(notification);
+
+    // Remove notification after animation
+    setTimeout(() => {
+      if (notification.parentElement) {
+        notification.remove();
+      }
+    }, 2000);
+
+    // Add pulse animation to energy bar
+    this.animateUpdate(energyContainer);
+  }
+
+  /**
    * Animate status update
    * @param {HTMLElement} element - Element to animate
    */
