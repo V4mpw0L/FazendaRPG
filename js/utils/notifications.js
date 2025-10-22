@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Advanced Notification System
  * Modern toast notifications with icons, animations and rich styling
- * @version 0.0.9
+ * @version 0.0.10
  */
 
 import i18n from "./i18n.js";

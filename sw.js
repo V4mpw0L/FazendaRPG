@@ -1,5 +1,5 @@
-// FazendaRPG Service Worker v0.0.9
-const CACHE_NAME = "fazendarpg-v0.0.9";
+// FazendaRPG Service Worker v0.0.10
+const CACHE_NAME = "fazendarpg-v0.0.10";
 const ASSETS_TO_CACHE = [
   "./index.html",
   "./manifest.json",

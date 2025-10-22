@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Notification Manager
  * Manages push notifications for crops and game events
- * @version 0.0.9
+ * @version 0.0.10
  */
 
 export default class NotificationManager {
@@ -49,7 +49,9 @@ export default class NotificationManager {
     // Listen for messages from service worker
     this.listenToServiceWorker();
 
-    console.log(`🔔 Notification Manager initialized (Permission: ${this.permission})`);
+    console.log(
+      `🔔 Notification Manager initialized (Permission: ${this.permission})`,
+    );
     return true;
   }
 
@@ -95,7 +97,7 @@ export default class NotificationManager {
     await this.showNotification(
       "🌾 FazendaRPG",
       "Notificações ativadas! Você será avisado quando seus crops estiverem prontos.",
-      { tag: "welcome" }
+      { tag: "welcome" },
     );
   }
 
@@ -160,7 +162,9 @@ export default class NotificationManager {
       tag: `crop-${plotIndex}`,
     });
 
-    console.log(`📅 Notificação agendada para ${cropName} em ${Math.round(delay / 1000)}s`);
+    console.log(
+      `📅 Notificação agendada para ${cropName} em ${Math.round(delay / 1000)}s`,
+    );
   }
 
   /**
@@ -352,7 +356,7 @@ export default class NotificationManager {
         window.dispatchEvent(
           new CustomEvent("notification:shown", {
             detail: event.data.data,
-          })
+          }),
         );
       }
     });
@@ -373,8 +377,10 @@ export default class NotificationManager {
         const cropData = cropsData[plot.crop];
         if (!cropData) return;
 
-        // Calculate when crop will be ready
-        const growthTime = cropData.growthTime * 1000; // Convert to ms
+        // Calculate when crop will be ready (consider fertilizer effect)
+        const growthTime = plot.fertilized
+          ? cropData.growthTime * 0.5 * 1000
+          : cropData.growthTime * 1000;
         const readyAt = plot.plantedAt + growthTime;
         const now = Date.now();
 
@@ -407,7 +413,7 @@ export default class NotificationManager {
       ([id, data]) => ({
         id,
         ...data,
-      })
+      }),
     );
   }
 
@@ -426,7 +432,7 @@ export default class NotificationManager {
     await this.showNotification(
       "🌾 Teste de Notificação",
       "Se você viu isso, as notificações estão funcionando!",
-      { tag: "test" }
+      { tag: "test" },
     );
   }
 }

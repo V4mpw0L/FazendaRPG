@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Wiki Data
  * Centralized data structure for all wiki content
- * @version 0.0.9
+ * @version 0.0.10
  */
 
 export default class WikiData {
@@ -637,6 +637,18 @@ export default class WikiData {
    */
   getUpdates() {
     return [
+      {
+        version: "0.0.10",
+        date: "2024",
+        title: "Fix de Ícone e Notificações",
+        titleEN: "Icon and Notifications Fix",
+        changes: [
+          "✅ Ícone do fertilizante atualizado para PNG",
+          "✅ Corrigido bug de notificações com fertilizante",
+          "✅ Notificações agora consideram tempo reduzido pelo fertilizante",
+          "✅ Bump de versão para forçar atualização de cache",
+        ],
+      },
       {
         version: "0.0.9",
         date: "2024",

@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Inventory UI
  * Professional slot-based inventory with 5x5 grid and pagination
- * @version 0.0.9
+ * @version 0.0.10
  */
 
 import i18n from "../utils/i18n.js";

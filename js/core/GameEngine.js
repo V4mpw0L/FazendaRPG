@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Game Engine
  * Main game engine that integrates all systems and manages game flow
- * @version 0.0.9
+ * @version 0.0.10
  */
 
 import Player from "./Player.js";
@@ -65,7 +65,7 @@ export default class GameEngine {
     }
 
     try {
-      console.log("🎮 Initializing FazendaRPG v0.0.9...");
+      console.log("🎮 Initializing FazendaRPG v0.0.10...");
 
       // Show loading overlay
       this.showLoading(true);
@@ -480,7 +480,7 @@ export default class GameEngine {
     const saveData = {
       player: this.player.getData(),
       savedAt: Date.now(),
-      version: "0.0.9",
+      version: "0.0.10",
     };
 
     const success = this.saveManager.save(saveData);
@@ -536,7 +536,7 @@ export default class GameEngine {
     const saveData = {
       player: this.player.getData(),
       savedAt: Date.now(),
-      version: "0.0.9",
+      version: "0.0.10",
     };
 
     // Verify integrity before saving
@@ -1425,7 +1425,10 @@ export default class GameEngine {
             if (plot && plot.crop && plot.plantedAt) {
               const cropData = this.farmSystem.getCropData(cropId);
               if (cropData) {
-                const growthTime = cropData.growthTime * 1000;
+                // Consider fertilizer effect (50% reduction)
+                const growthTime = plot.fertilized
+                  ? cropData.growthTime * 0.5 * 1000
+                  : cropData.growthTime * 1000;
                 const readyAt = plot.plantedAt + growthTime;
                 this.notificationManager.scheduleCropNotification(
                   index,

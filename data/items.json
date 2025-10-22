@@ -1,5 +1,5 @@
 {
-  "version": "0.0.9",
+  "version": "0.0.10",
   "categories": {
     "seeds": {
       "name": "Seeds",
@@ -578,7 +578,7 @@
       "id": "fertilizer",
       "name": "Fertilizer",
       "namePtBR": "Fertilizante",
-      "icon": "💩",
+      "icon": "assets/sprites/mercado/materiais/fertilizante.png",
       "category": "materials",
       "description": "Quality fertilizer. Speeds up crop growth by 50%.",
       "descriptionPtBR": "Fertilizante de qualidade. Acelera o crescimento das plantas em 50%.",
