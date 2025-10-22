@@ -1000,15 +1000,6 @@ export default class GameEngine {
 
     if (result.success) {
       notifications.success(i18n.t("farm.weedsCleared"));
-
-      // Debug: Log plot state after clearing
-      const plot = this.farmSystem.getPlot(index);
-      console.log(`🔍 Debug - Plot ${index} after clearing:`, {
-        hasWeeds: plot.hasWeeds,
-        crop: plot.crop,
-        lastHarvestedAt: plot.lastHarvestedAt,
-      });
-
       this.renderFarm();
     } else {
       notifications.error(result.error || "Não foi possível limpar as ervas");
@@ -1471,16 +1462,8 @@ export default class GameEngine {
     let emptyPlotsCount = 0;
     let plotsWithWeeds = 0;
 
-    // Debug: Log all plots state
-    console.log("🔍 Debug - Checking plots for Plant All:");
-
     plots.forEach((plot, index) => {
       const hasWeeds = this.farmSystem.hasWeeds(index);
-      console.log(`Plot ${index}:`, {
-        cropId: plot.cropId || plot.crop,
-        hasWeeds: hasWeeds,
-        isEmpty: !plot.cropId && !plot.crop,
-      });
 
       if (!plot.crop) {
         if (hasWeeds) {
