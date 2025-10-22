@@ -1865,12 +1865,12 @@ export default class GameEngine {
 
     // Update button
     if (isEnabled) {
-      enableBtn.textContent = "🔕 " + i18n.t("settings.disableNotifications");
+      enableBtn.textContent = i18n.t("settings.disableNotifications");
       enableBtn.classList.remove("btn-primary");
       enableBtn.classList.add("btn-secondary");
       testBtn.style.display = "inline-block";
     } else {
-      enableBtn.textContent = "🔔 " + i18n.t("settings.enableNotifications");
+      enableBtn.textContent = i18n.t("settings.enableNotifications");
       enableBtn.classList.remove("btn-secondary");
       enableBtn.classList.add("btn-primary");
       testBtn.style.display = "none";
@@ -1878,9 +1878,16 @@ export default class GameEngine {
 
     // Update status
     if (permission === "granted" && isEnabled) {
-      const count = this.notificationManager.getScheduledCount();
-      statusDiv.textContent = `✅ Notificações ativas (${count} agendadas)`;
-      statusDiv.style.color = "var(--success)";
+      // Get scheduled notifications count from Service Worker
+      this.getScheduledNotificationsCount()
+        .then((count) => {
+          statusDiv.textContent = `✅ Notificações ativas (${count} agendadas)`;
+          statusDiv.style.color = "var(--success)";
+        })
+        .catch(() => {
+          statusDiv.textContent = `✅ Notificações ativas`;
+          statusDiv.style.color = "var(--success)";
+        });
     } else if (permission === "denied") {
       statusDiv.textContent = "❌ Bloqueadas pelo navegador";
       statusDiv.style.color = "var(--danger)";
@@ -1888,8 +1895,30 @@ export default class GameEngine {
       statusDiv.textContent = "⚠️ Clique para permitir notificações";
       statusDiv.style.color = "var(--text-secondary)";
     } else {
-      statusDiv.textContent = "🔕 Desativadas";
+      statusDiv.textContent = "";
       statusDiv.style.color = "var(--text-secondary)";
+    }
+  }
+
+  /**
+   * Get scheduled notifications count from Service Worker
+   */
+  async getScheduledNotificationsCount() {
+    if (
+      !this.notificationManager ||
+      !this.notificationManager.serviceWorkerReady
+    ) {
+      return 0;
+    }
+
+    try {
+      const result = await this.notificationManager.sendMessageToServiceWorker({
+        type: "GET_SCHEDULED_NOTIFICATIONS",
+      });
+      return result.notifications ? result.notifications.length : 0;
+    } catch (error) {
+      console.error("❌ Erro ao obter contador de notificações:", error);
+      return 0;
     }
   }
 

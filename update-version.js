@@ -361,6 +361,15 @@ const FILES_TO_UPDATE = [
 
   // CSS files
   {
+    path: "style/main.css",
+    patterns: [
+      {
+        regex: /FazendaRPG v[\d.]+/g,
+        replace: "FazendaRPG vVERSION_PLACEHOLDER",
+      },
+    ],
+  },
+  {
     path: "style/wiki.css",
     patterns: [
       { regex: /@version [\d.]+/g, replace: "@version VERSION_PLACEHOLDER" },
