@@ -5,9 +5,12 @@ const ASSETS_TO_CACHE = [
   "./manifest.json",
   "./style/main.css",
   "./style/topbar.css",
+  "./style/topbar-fix.css",
   "./style/skills.css",
+  "./style/wiki.css",
   "./style/themes.css",
   "./style/mobile.css",
+  "./style/components/farm-improvements.css",
   "./js/app.js",
   "./js/core/GameEngine.js",
   "./js/core/Player.js",
@@ -16,6 +19,7 @@ const ASSETS_TO_CACHE = [
   "./js/systems/FarmSystem.js",
   "./js/systems/InventorySystem.js",
   "./js/systems/QuestSystem.js",
+  "./js/systems/NotificationManager.js",
   "./js/utils/i18n.js",
   "./js/utils/notifications.js",
   "./js/utils/helpers.js",
@@ -29,6 +33,10 @@ const ASSETS_TO_CACHE = [
   "./data/npcs.json",
   "./data/translations/pt-BR.json",
   "./data/translations/en-US.json",
+  "./assets/icon.svg",
+  "./assets/icon-192.png",
+  "./assets/icon-512.png",
+  "./assets/icon-72.png",
 ];
 
 // Install event - cache assets
