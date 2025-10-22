@@ -528,8 +528,8 @@
       "category": "materials",
       "description": "Wild herbs. Used in potions and cooking.",
       "descriptionPtBR": "Ervas selvagens. Usadas em poções e culinária.",
-      "buyPrice": 12,
-      "sellPrice": 8,
+      "buyPrice": 5,
+      "sellPrice": 2,
       "stackable": true,
       "maxStack": 999
     },

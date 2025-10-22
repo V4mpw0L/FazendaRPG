@@ -177,7 +177,10 @@ export default class FarmSystem {
     plot.hasWeeds = false;
     plot.lastHarvestedAt = Date.now();
 
-    console.log(`✅ Cleared weeds from plot ${index}`);
+    // Add herbs item to inventory
+    this.inventorySystem.addItem("herbs", 1);
+
+    console.log(`✅ Cleared weeds from plot ${index} and gained 1x Herbs`);
 
     // Dispatch event
     window.dispatchEvent(

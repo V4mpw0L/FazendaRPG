@@ -1145,7 +1145,7 @@ export default class GameEngine {
     const result = this.farmSystem.clearWeeds(index);
 
     if (result.success) {
-      notifications.success(i18n.t("farm.weedsCleared"));
+      notifications.success("✅ Ervas daninhas removidas! +1 🌿 Ervas");
       this.renderFarm();
     } else {
       notifications.error(result.error || "Não foi possível limpar as ervas");
