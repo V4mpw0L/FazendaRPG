@@ -434,6 +434,10 @@
                 <span class="wiki-nav-icon">🎒</span>
                 <span>Guia de Itens</span>
               </button>
+              <button class="wiki-nav-item" data-wiki-page="all-items">
+                <span class="wiki-nav-icon">📋</span>
+                <span>Lista Completa</span>
+              </button>
               <button class="wiki-nav-item" data-wiki-page="inventory">
                 <span class="wiki-nav-icon">👜</span>
                 <span>Inventário</span>
@@ -445,6 +449,14 @@
               <button class="wiki-nav-item" data-wiki-page="market">
                 <span class="wiki-nav-icon">🏪</span>
                 <span>Mercado</span>
+              </button>
+              <button class="wiki-nav-item" data-wiki-page="bank">
+                <span class="wiki-nav-icon">🏦</span>
+                <span>Banco</span>
+              </button>
+              <button class="wiki-nav-item" data-wiki-page="tavern">
+                <span class="wiki-nav-icon">🍺</span>
+                <span>Taverna</span>
               </button>
               <button class="wiki-nav-item" data-wiki-page="npcs-guide">
                 <span class="wiki-nav-icon">👥</span>
@@ -458,9 +470,17 @@
                 <span class="wiki-nav-icon">💎</span>
                 <span>Dicas e Truques</span>
               </button>
+              <button class="wiki-nav-item" data-wiki-page="strategies">
+                <span class="wiki-nav-icon">🎯</span>
+                <span>Estratégias</span>
+              </button>
               <button class="wiki-nav-item" data-wiki-page="faq">
                 <span class="wiki-nav-icon">❓</span>
                 <span>Perguntas Frequentes</span>
+              </button>
+              <button class="wiki-nav-item" data-wiki-page="updates">
+                <span class="wiki-nav-icon">📰</span>
+                <span>Atualizações</span>
               </button>
             </div>
           </nav>
@@ -1182,6 +1202,299 @@
                 <strong>Dica:</strong> Cultive e venda os cultivos colhidos, não as sementes! O lucro é muito maior.
               </div>
             </div>
+
+            <div class="wiki-card">
+              <h2>🔒 Sistema de Bloqueio</h2>
+              <p>Você pode <strong>bloquear itens importantes</strong> no seu inventário para evitar vendê-los acidentalmente!</p>
+              <div class="wiki-list">
+                <div class="wiki-list-item">
+                  <span class="wiki-icon">🔓</span>
+                  <div>
+                    <strong>Como Bloquear</strong>
+                    <p>Abra o inventário, clique no item e pressione o botão de cadeado</p>
+                  </div>
+                </div>
+                <div class="wiki-list-item">
+                  <span class="wiki-icon">🛡️</span>
+                  <div>
+                    <strong>Proteção</strong>
+                    <p>Itens bloqueados não podem ser vendidos no mercado</p>
+                  </div>
+                </div>
+                <div class="wiki-list-item">
+                  <span class="wiki-icon">💡</span>
+                  <div>
+                    <strong>Recomendação</strong>
+                    <p>Bloqueie suas ferramentas básicas (Pá, Enxada, Rastelo)</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="wiki-card">
+              <h2>📂 Sistema de Categorias</h2>
+              <p>Todos os itens do jogo são organizados por categorias para facilitar a navegação:</p>
+              <table class="wiki-table">
+                <thead>
+                  <tr>
+                    <th>Categoria</th>
+                    <th>Ícone</th>
+                    <th>Descrição</th>
+                    <th>Exemplos</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Seeds</strong></td>
+                    <td>🌱</td>
+                    <td>Sementes para plantar</td>
+                    <td>Trigo, Cenoura, Milho</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Crops</strong></td>
+                    <td>🌾</td>
+                    <td>Cultivos colhidos</td>
+                    <td>Wheat, Carrot, Corn</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Tools</strong></td>
+                    <td>🔧</td>
+                    <td>Ferramentas de trabalho</td>
+                    <td>Pá, Enxada, Rastelo</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Materials</strong></td>
+                    <td>📦</td>
+                    <td>Materiais e consumíveis</td>
+                    <td>Fertilizante, Ervas, Cesta</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Food</strong></td>
+                    <td>🍞</td>
+                    <td>Comidas que restauram energia</td>
+                    <td>Pão, Carne Assada</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Fish</strong></td>
+                    <td>🐟</td>
+                    <td>Peixes pescados</td>
+                    <td>Em breve!</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Minerals</strong></td>
+                    <td>💎</td>
+                    <td>Minérios extraídos</td>
+                    <td>Em breve!</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Wood</strong></td>
+                    <td>🪵</td>
+                    <td>Madeiras cortadas</td>
+                    <td>Em breve!</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- All Items Database Page -->
+          <div class="wiki-page" data-page="all-items">
+            <h1 class="wiki-page-title">📋 Lista Completa de Itens</h1>
+
+            <div class="wiki-card">
+              <h2>🌱 Sementes (Seeds)</h2>
+              <table class="wiki-table">
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Nível</th>
+                    <th>Compra</th>
+                    <th>Venda</th>
+                    <th>Descrição</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>🌾 <strong>Semente de Trigo</strong></td>
+                    <td>1</td>
+                    <td>5g</td>
+                    <td>2g</td>
+                    <td>Planta trigo em 30s</td>
+                  </tr>
+                  <tr>
+                    <td>🥕 <strong>Semente de Cenoura</strong></td>
+                    <td>5</td>
+                    <td>10g</td>
+                    <td>5g</td>
+                    <td>Planta cenoura em 45s</td>
+                  </tr>
+                  <tr>
+                    <td>🌽 <strong>Semente de Milho</strong></td>
+                    <td>10</td>
+                    <td>20g</td>
+                    <td>10g</td>
+                    <td>Planta milho em 60s</td>
+                  </tr>
+                  <tr>
+                    <td>🍅 <strong>Semente de Tomate</strong></td>
+                    <td>15</td>
+                    <td>35g</td>
+                    <td>18g</td>
+                    <td>Planta tomate em 90s</td>
+                  </tr>
+                  <tr>
+                    <td>🥔 <strong>Semente de Batata</strong></td>
+                    <td>20</td>
+                    <td>50g</td>
+                    <td>25g</td>
+                    <td>Planta batata em 120s</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="wiki-card">
+              <h2>🌾 Cultivos Colhidos (Crops)</h2>
+              <table class="wiki-table">
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>XP</th>
+                    <th>Venda</th>
+                    <th>Lucro</th>
+                    <th>XP/Gold por Tempo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>🌾 <strong>Trigo</strong></td>
+                    <td>10 XP</td>
+                    <td>8g</td>
+                    <td>+3g</td>
+                    <td>⭐⭐⭐ Excelente</td>
+                  </tr>
+                  <tr>
+                    <td>🥕 <strong>Cenoura</strong></td>
+                    <td>15 XP</td>
+                    <td>15g</td>
+                    <td>+5g</td>
+                    <td>⭐⭐⭐⭐ Ótimo</td>
+                  </tr>
+                  <tr>
+                    <td>🌽 <strong>Milho</strong></td>
+                    <td>20 XP</td>
+                    <td>30g</td>
+                    <td>+10g</td>
+                    <td>⭐⭐⭐ Bom</td>
+                  </tr>
+                  <tr>
+                    <td>🍅 <strong>Tomate</strong></td>
+                    <td>30 XP</td>
+                    <td>50g</td>
+                    <td>+15g</td>
+                    <td>⭐⭐⭐ Bom</td>
+                  </tr>
+                  <tr>
+                    <td>🥔 <strong>Batata</strong></td>
+                    <td>40 XP</td>
+                    <td>75g</td>
+                    <td>+25g</td>
+                    <td>⭐⭐ Moderado</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="wiki-card">
+              <h2>🔧 Ferramentas (Tools)</h2>
+              <table class="wiki-table">
+                <thead>
+                  <tr>
+                    <th>Ferramenta</th>
+                    <th>Preço</th>
+                    <th>Função</th>
+                    <th>Necessária Para</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>🪓 <strong>Pá de Mão</strong></td>
+                    <td>50g</td>
+                    <td>Plantar sementes</td>
+                    <td>✅ Farming básico</td>
+                  </tr>
+                  <tr>
+                    <td>🪝 <strong>Enxada</strong></td>
+                    <td>75g</td>
+                    <td>Limpar ervas</td>
+                    <td>✅ Manutenção da fazenda</td>
+                  </tr>
+                  <tr>
+                    <td>🧹 <strong>Rastelo</strong></td>
+                    <td>60g</td>
+                    <td>Limpar ervas</td>
+                    <td>✅ Alternativa à enxada</td>
+                  </tr>
+                  <tr>
+                    <td>🧺 <strong>Cesta</strong></td>
+                    <td>75g</td>
+                    <td>+5 slots inventário</td>
+                    <td>Expansão de espaço</td>
+                  </tr>
+                  <tr>
+                    <td>⚒️ <strong>Ferramenta de Ferro</strong></td>
+                    <td>200g</td>
+                    <td>-10% tempo de ação</td>
+                    <td>⭐ Upgrade premium</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="wiki-card">
+              <h2>🌿 Consumíveis</h2>
+              <table class="wiki-table">
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Preço</th>
+                    <th>Efeito</th>
+                    <th>Uso Recomendado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>🌿 <strong>Fertilizante</strong></td>
+                    <td>10g</td>
+                    <td>-50% tempo de crescimento</td>
+                    <td>Cultivos lentos (batata, tomate)</td>
+                  </tr>
+                  <tr>
+                    <td>🌿 <strong>Ervas</strong></td>
+                    <td>-</td>
+                    <td>Obtido limpando ervas daninhas</td>
+                    <td>Venda: 2g cada</td>
+                  </tr>
+                  <tr>
+                    <td>🍞 <strong>Pão</strong></td>
+                    <td>15g</td>
+                    <td>+20 energia</td>
+                    <td>Recuperação rápida</td>
+                  </tr>
+                  <tr>
+                    <td>🍗 <strong>Carne Assada</strong></td>
+                    <td>30g</td>
+                    <td>+50 energia</td>
+                    <td>Sessões longas de farming</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="wiki-card wiki-card-tip">
+              <h2>💡 Dica de Economia</h2>
+              <p><strong>Melhor Investimento Inicial:</strong> Compre Cestas primeiro para expandir inventário, depois invista em sementes melhores conforme sobe de nível!</p>
+            </div>
           </div>
 
           <!-- Inventory Page -->
@@ -1273,6 +1586,164 @@
                 <strong>⚠️ Atenção:</strong> Não venda suas ferramentas básicas! Você precisa delas para jogar.
               </div>
             </div>
+
+            <div class="wiki-card">
+              <h2>📂 Categorias do Mercado</h2>
+              <div class="wiki-list">
+                <div class="wiki-list-item">
+                  <span class="wiki-icon">🌱</span>
+                  <div>
+                    <strong>Sementes</strong>
+                    <p>Todas as sementes disponíveis no seu nível</p>
+                  </div>
+                </div>
+                <div class="wiki-list-item">
+                  <span class="wiki-icon">🔧</span>
+                  <div>
+                    <strong>Ferramentas</strong>
+                    <p>Pá, Enxada, Rastelo e upgrades</p>
+                  </div>
+                </div>
+                <div class="wiki-list-item">
+                  <span class="wiki-icon">🌿</span>
+                  <div>
+                    <strong>Consumíveis</strong>
+                    <p>Fertilizantes, poções e comidas</p>
+                  </div>
+                </div>
+                <div class="wiki-list-item">
+                  <span class="wiki-icon">🎒</span>
+                  <div>
+                    <strong>Utilidades</strong>
+                    <p>Cestas e itens de expansão</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="wiki-card">
+              <h2>💎 Sistema de Preços</h2>
+              <p>O mercado funciona com margem fixa:</p>
+              <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                <li><strong>Compra:</strong> Preço base do item (100%)</li>
+                <li><strong>Venda:</strong> 40-80% do preço de compra</li>
+                <li><strong>Cultivos:</strong> Geralmente vendem por mais que o custo da semente</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Bank Page -->
+          <div class="wiki-page" data-page="bank">
+            <h1 class="wiki-page-title">🏦 Sistema Bancário</h1>
+
+            <div class="wiki-card">
+              <h2>💰 O Que é o Banco?</h2>
+              <p>O Banco é um local seguro para guardar seu gold! Você pode depositar e sacar gold a qualquer momento.</p>
+            </div>
+
+            <div class="wiki-card">
+              <h2>📊 Recursos do Banco</h2>
+              <div class="wiki-list">
+                <div class="wiki-list-item">
+                  <span class="wiki-icon">💵</span>
+                  <div>
+                    <strong>Depósitos</strong>
+                    <p>Guarde seu gold com segurança</p>
+                  </div>
+                </div>
+                <div class="wiki-list-item">
+                  <span class="wiki-icon">💸</span>
+                  <div>
+                    <strong>Saques</strong>
+                    <p>Retire gold quando precisar</p>
+                  </div>
+                </div>
+                <div class="wiki-list-item">
+                  <span class="wiki-icon">📈</span>
+                  <div>
+                    <strong>Juros (em breve)</strong>
+                    <p>Ganhe juros sobre o gold depositado</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="wiki-card wiki-card-tip">
+              <h2>💡 Por Que Usar o Banco?</h2>
+              <p>Guarde seu gold no banco para <strong>evitar gastos impulsivos</strong> e acumular para compras maiores como ferramentas premium!</p>
+            </div>
+
+            <div class="wiki-card wiki-card-warning">
+              <h2>🔜 Em Desenvolvimento</h2>
+              <p>Sistema de juros e investimentos será adicionado em breve! Fique ligado nas atualizações.</p>
+            </div>
+          </div>
+
+          <!-- Tavern Page -->
+          <div class="wiki-page" data-page="tavern">
+            <h1 class="wiki-page-title">🍺 Taverna</h1>
+
+            <div class="wiki-card">
+              <h2>🏠 Bem-vindo à Taverna!</h2>
+              <p>A Taverna é o lugar perfeito para descansar, comer e ouvir histórias!</p>
+            </div>
+
+            <div class="wiki-card">
+              <h2>🛏️ Descansar</h2>
+              <p><strong>Custo:</strong> 50 gold | <strong>Efeito:</strong> +50 energia</p>
+              <p>Perfeito quando sua energia está baixa e você precisa continuar farming!</p>
+            </div>
+
+            <div class="wiki-card">
+              <h2>🍖 Refeições</h2>
+              <table class="wiki-table">
+                <thead>
+                  <tr>
+                    <th>Refeição</th>
+                    <th>Custo</th>
+                    <th>Energia</th>
+                    <th>HP</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>🍞 <strong>Simples</strong></td>
+                    <td>25g</td>
+                    <td>+25</td>
+                    <td>+10</td>
+                  </tr>
+                  <tr>
+                    <td>🍲 <strong>Padrão</strong></td>
+                    <td>50g</td>
+                    <td>+50</td>
+                    <td>+25</td>
+                  </tr>
+                  <tr>
+                    <td>🍖 <strong>Deluxe</strong></td>
+                    <td>100g</td>
+                    <td>+100</td>
+                    <td>+50</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="wiki-card">
+              <h2>📖 Histórias</h2>
+              <p><strong>Custo:</strong> 10 gold | <strong>Efeito:</strong> +5 XP</p>
+              <p>Ouça histórias interessantes do bardo e ganhe um pouco de XP!</p>
+            </div>
+
+            <div class="wiki-card">
+              <h2>⭐ Sistema de Reputação</h2>
+              <p>Quanto mais você visita a taverna, maior sua reputação:</p>
+              <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                <li><strong>10+ visitas:</strong> 5% de desconto</li>
+                <li><strong>25+ visitas:</strong> 10% de desconto</li>
+                <li><strong>50+ visitas:</strong> 15% de desconto</li>
+                <li><strong>100+ visitas:</strong> 20% de desconto + refeição grátis diária!</li>
+              </ul>
+            </div>
           </div>
 
           <!-- NPCs Guide Page -->
@@ -1339,6 +1810,20 @@
                     <p>O botão verde "Plantar Tudo" é muito mais eficiente que plantar um por um!</p>
                   </div>
                 </div>
+                <div class="wiki-tip">
+                  <span class="wiki-tip-icon">🔒</span>
+                  <div>
+                    <h3>Bloqueie Itens Importantes</h3>
+                    <p>Use o sistema de bloqueio para proteger suas ferramentas contra venda acidental!</p>
+                  </div>
+                </div>
+                <div class="wiki-tip">
+                  <span class="wiki-tip-icon">💾</span>
+                  <div>
+                    <h3>Exporte Seu Save</h3>
+                    <p>Regularmente exporte seu progresso nas configurações como backup de segurança.</p>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -1366,7 +1851,197 @@
                     <p>Tomate e batata dão mais gold por colheita. Use quando tiver nível suficiente!</p>
                   </div>
                 </div>
+                <div class="wiki-list-item">
+                  <span class="wiki-icon">🌿</span>
+                  <div>
+                    <strong>Farm de Ervas</strong>
+                    <p>Deixe 2-3 plots crescerem ervas propositalmente. Limpe e venda por 2g cada!</p>
+                  </div>
+                </div>
+                <div class="wiki-list-item">
+                  <span class="wiki-icon">🎯</span>
+                  <div>
+                    <strong>Sessões Focadas</strong>
+                    <p>Dedique 10-15 minutos para farming intenso, maximize com fertilizante e "Plantar Tudo"</p>
+                  </div>
+                </div>
               </div>
+            </div>
+
+            <div class="wiki-card">
+              <h2>📱 Dicas Mobile</h2>
+              <div class="wiki-list">
+                <div class="wiki-list-item">
+                  <span class="wiki-icon">📲</span>
+                  <div>
+                    <strong>Instale como App</strong>
+                    <p>Adicione à tela inicial para acesso rápido e experiência nativa</p>
+                  </div>
+                </div>
+                <div class="wiki-list-item">
+                  <span class="wiki-icon">🔋</span>
+                  <div>
+                    <strong>Modo Offline</strong>
+                    <p>O jogo funciona offline após o primeiro carregamento!</p>
+                  </div>
+                </div>
+                <div class="wiki-list-item">
+                  <span class="wiki-icon">👆</span>
+                  <div>
+                    <strong>Gestos Rápidos</strong>
+                    <p>Toque longo em plots para ações rápidas</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Strategies Page -->
+          <div class="wiki-page" data-page="strategies">
+            <h1 class="wiki-page-title">🎯 Estratégias Avançadas</h1>
+
+            <div class="wiki-card">
+              <h2>💰 Estratégia: Gold Rush (Nível 1-10)</h2>
+              <p><strong>Objetivo:</strong> Acumular 500+ gold rapidamente</p>
+              <div class="wiki-steps">
+                <div class="wiki-step">
+                  <span class="wiki-step-number">1</span>
+                  <div class="wiki-step-content">
+                    <h3>Plante Trigo em Massa</h3>
+                    <p>Use suas 10 sementes iniciais + compre mais</p>
+                  </div>
+                </div>
+                <div class="wiki-step">
+                  <span class="wiki-step-number">2</span>
+                  <div class="wiki-step-content">
+                    <h3>Ciclo de 30s</h3>
+                    <p>Colha e replante imediatamente, lucro de 3g por ciclo</p>
+                  </div>
+                </div>
+                <div class="wiki-step">
+                  <span class="wiki-step-number">3</span>
+                  <div class="wiki-step-content">
+                    <h3>10 Ciclos = 270g</h3>
+                    <p>Em 5 minutos você terá gold suficiente para cestas</p>
+                  </div>
+                </div>
+                <div class="wiki-step">
+                  <span class="wiki-step-number">4</span>
+                  <div class="wiki-step-content">
+                    <h3>Compre 1 Cesta</h3>
+                    <p>Aumente seu inventário para continuar farming</p>
+                  </div>
+                </div>
+              </div>
+              <div class="wiki-badge wiki-badge-required" style="margin-top: 1rem;">✅ Resultado: 500g em ~15 minutos</div>
+            </div>
+
+            <div class="wiki-card">
+              <h2>📈 Estratégia: XP Speedrun (Nível 1-20)</h2>
+              <p><strong>Objetivo:</strong> Atingir nível 20 de Farming o mais rápido possível</p>
+              <table class="wiki-table" style="margin-top: 1rem;">
+                <thead>
+                  <tr>
+                    <th>Nível</th>
+                    <th>Cultivo Ideal</th>
+                    <th>Ciclos Necessários</th>
+                    <th>Tempo Estimado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1-5</td>
+                    <td>🌾 Trigo</td>
+                    <td>~50 colheitas</td>
+                    <td>25 min</td>
+                  </tr>
+                  <tr>
+                    <td>5-10</td>
+                    <td>🥕 Cenoura</td>
+                    <td>~70 colheitas</td>
+                    <td>50 min</td>
+                  </tr>
+                  <tr>
+                    <td>10-15</td>
+                    <td>🌽 Milho</td>
+                    <td>~80 colheitas</td>
+                    <td>80 min</td>
+                  </tr>
+                  <tr>
+                    <td>15-20</td>
+                    <td>🍅 Tomate</td>
+                    <td>~60 colheitas</td>
+                    <td>90 min</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="wiki-badge wiki-badge-premium" style="margin-top: 1rem;">⭐ Total: ~4 horas até nível 20</div>
+            </div>
+
+            <div class="wiki-card">
+              <h2>🌟 Estratégia: AFK Farming</h2>
+              <p><strong>Objetivo:</strong> Maximizar progresso com mínima atenção</p>
+              <div class="wiki-list">
+                <div class="wiki-list-item">
+                  <span class="wiki-icon">🥔</span>
+                  <div>
+                    <strong>Plante Batata Antes de Sair</strong>
+                    <p>120s de crescimento = perfeito para pausas longas</p>
+                  </div>
+                </div>
+                <div class="wiki-list-item">
+                  <span class="wiki-icon">⏰</span>
+                  <div>
+                    <strong>Use Alarmes</strong>
+                    <p>Configure timer de 2 minutos no celular</p>
+                  </div>
+                </div>
+                <div class="wiki-list-item">
+                  <span class="wiki-icon">🌿</span>
+                  <div>
+                    <strong>Sem Fertilizante</strong>
+                    <p>Economize gold, o tempo longo compensa quando AFK</p>
+                  </div>
+                </div>
+                <div class="wiki-list-item">
+                  <span class="wiki-icon">💰</span>
+                  <div>
+                    <strong>Lucro: 25g por ciclo</strong>
+                    <p>225g por 9 plots a cada 2 minutos!</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="wiki-card">
+              <h2>⚡ Estratégia: Speed Farming</h2>
+              <p><strong>Objetivo:</strong> Máximo XP e gold em sessão curta (15 min)</p>
+              <ol style="padding-left: 1.5rem; margin-top: 1rem;">
+                <li>Compre 50x sementes de cenoura (500g)</li>
+                <li>Use "Plantar Tudo" nos 9 plots</li>
+                <li>Aplique fertilizante em todos (reduz para 22.5s)</li>
+                <li>Colha tudo assim que pronto</li>
+                <li>Repita o ciclo 5x</li>
+              </ol>
+              <div style="margin-top: 1rem;">
+                <strong>Resultado:</strong>
+                <ul style="padding-left: 1.5rem; margin-top: 0.5rem;">
+                  <li>✅ 675 XP de Farming</li>
+                  <li>✅ 225g de lucro líquido</li>
+                  <li>✅ 45 cenouras colhidas</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="wiki-card wiki-card-tip">
+              <h2>🏆 Estratégia Híbrida (Recomendado)</h2>
+              <p>Combine todas as estratégias:</p>
+              <ul style="padding-left: 1.5rem; margin-top: 0.5rem;">
+                <li>🌾 Sessões curtas (5-10 min): Trigo/Cenoura com fertilizante</li>
+                <li>🥔 Antes de sair: Plante batata em todos os plots</li>
+                <li>💰 Sempre mantenha 200-300g de reserva</li>
+                <li>🎯 Foque em subir 1 nível por dia</li>
+              </ul>
             </div>
           </div>
 
@@ -1375,7 +2050,7 @@
             <h1 class="wiki-page-title">❓ Perguntas Frequentes (FAQ)</h1>
 
             <div class="wiki-card">
-              <h2>🤔 Dúvidas Comuns</h2>
+              <h2>🌾 Farming & Plantio</h2>
 
               <div class="wiki-faq">
                 <div class="wiki-faq-item">
@@ -1394,6 +2069,22 @@
                 </div>
 
                 <div class="wiki-faq-item">
+                  <h3>❓ Posso plantar enquanto o cultivo está crescendo?</h3>
+                  <p><strong>R:</strong> NÃO. Você precisa colher primeiro, depois pode replantar no mesmo plot.</p>
+                </div>
+
+                <div class="wiki-faq-item">
+                  <h3>❓ Como sei quando o cultivo está pronto?</h3>
+                  <p><strong>R:</strong> O plot brilha com raios dourados ✨ e uma animação especial aparece!</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="wiki-card">
+              <h2>💰 Gold & Economia</h2>
+
+              <div class="wiki-faq">
+                <div class="wiki-faq-item">
                   <h3>❓ Como faço para ganhar gold rápido?</h3>
                   <p><strong>R:</strong> Plante trigo em massa, colha e venda no mercado. É o método mais rápido no início!</p>
                 </div>
@@ -1404,23 +2095,55 @@
                 </div>
 
                 <div class="wiki-faq-item">
-                  <h3>❓ Como aumento meu inventário?</h3>
-                  <p><strong>R:</strong> Compre <strong>Cestas (Basket)</strong> no mercado por 75 gold. Cada cesta aumenta seu espaço.</p>
+                  <h3>❓ Qual o cultivo mais lucrativo?</h3>
+                  <p><strong>R:</strong> Depende do seu tempo! Trigo tem melhor lucro/hora (6g/min), mas batata dá mais gold por colheita (25g).</p>
                 </div>
 
                 <div class="wiki-faq-item">
+                  <h3>❓ Posso perder gold ou itens?</h3>
+                  <p><strong>R:</strong> NÃO. O jogo não tem sistema de morte ou perda de itens. Seu progresso é sempre salvo!</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="wiki-card">
+              <h2>🎒 Inventário & Itens</h2>
+
+              <div class="wiki-faq">
+                <div class="wiki-faq-item">
+                  <h3>❓ Como aumento meu inventário?</h3>
+                  <p><strong>R:</strong> Compre <strong>Cestas (Basket)</strong> no mercado por 75 gold. Cada cesta aumenta seu espaço em 5 slots!</p>
+                </div>
+
+                <div class="wiki-faq-item">
+                  <h3>❓ Como faço para bloquear itens?</h3>
+                  <p><strong>R:</strong> Abra o inventário, clique no item e pressione o botão de cadeado 🔒. Itens bloqueados não podem ser vendidos!</p>
+                </div>
+
+                <div class="wiki-faq-item">
+                  <h3>❓ Perdi minhas ferramentas! E agora?</h3>
+                  <p><strong>R:</strong> Compre novamente no Mercado. Pá de Mão (50g), Enxada (75g) e Rastelo (60g) estão sempre disponíveis!</p>
+                </div>
+
+                <div class="wiki-faq-item">
+                  <h3>❓ Como sei quantos slots tenho?</h3>
+                  <p><strong>R:</strong> Abra o inventário. No topo mostra "X/Y itens" onde Y é o total de slots disponíveis.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="wiki-card">
+              <h2>⚙️ Técnico & Sistema</h2>
+
+              <div class="wiki-faq">
+                <div class="wiki-faq-item">
                   <h3>❓ Posso jogar no celular?</h3>
-                  <p><strong>R:</strong> SIM! O jogo é 100% otimizado para mobile. Você pode até instalar como PWA!</p>
+                  <p><strong>R:</strong> SIM! O jogo é 100% otimizado para mobile. Você pode até instalar como PWA adicionando à tela inicial!</p>
                 </div>
 
                 <div class="wiki-faq-item">
                   <h3>❓ Meu progresso é salvo automaticamente?</h3>
-                  <p><strong>R:</strong> SIM! O jogo salva automaticamente seu progresso. Você também pode exportar seu save nas configurações.</p>
-                </div>
-
-                <div class="wiki-faq-item">
-                  <h3>❓ Quando outras skills vão ser liberadas?</h3>
-                  <p><strong>R:</strong> Mining, Fishing, Woodcutting e outras skills estão em desenvolvimento! Por enquanto, foque em Farming.</p>
+                  <p><strong>R:</strong> SIM! O jogo salva automaticamente. Você também pode exportar seu save nas configurações como backup.</p>
                 </div>
 
                 <div class="wiki-faq-item">
@@ -1429,20 +2152,168 @@
                 </div>
 
                 <div class="wiki-faq-item">
-                  <h3>❓ Existe limite de nível?</h3>
-                  <p><strong>R:</strong> Cada skill vai até o nível 99, inspirado em RuneScape!</p>
+                  <h3>❓ O jogo funciona offline?</h3>
+                  <p><strong>R:</strong> SIM! Após o primeiro carregamento, o jogo funciona 100% offline graças ao Service Worker.</p>
                 </div>
 
                 <div class="wiki-faq-item">
-                  <h3>❓ Posso vender minhas ferramentas básicas?</h3>
-                  <p><strong>R:</strong> Tecnicamente sim, mas <strong>NÃO RECOMENDADO!</strong> Sem elas você não consegue jogar. Se vendeu, compre de volta no mercado.</p>
+                  <h3>❓ Como exporto/importo meu save?</h3>
+                  <p><strong>R:</strong> Menu → Configurações → Exportar Save. Guarde o arquivo JSON. Para importar, use "Importar Save" na mesma tela.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="wiki-card">
+              <h2>🎮 Gameplay & Skills</h2>
+
+              <div class="wiki-faq">
+                <div class="wiki-faq-item">
+                  <h3>❓ Quando outras skills vão ser liberadas?</h3>
+                  <p><strong>R:</strong> Mining, Fishing, Woodcutting e outras skills estão em desenvolvimento! Por enquanto, foque em Farming.</p>
+                </div>
+
+                <div class="wiki-faq-item">
+                  <h3>❓ Existe limite de nível?</h3>
+                  <p><strong>R:</strong> Cada skill vai até o nível 99, inspirado em RuneScape! O nível do jogador é a soma de todas as skills.</p>
+                </div>
+
+                <div class="wiki-faq-item">
+                  <h3>❓ Como consigo mais energia?</h3>
+                  <p><strong>R:</strong> Coma comidas (Pão, Carne), descanse na Taverna ou compre refeições. Energia regenera 1 por minuto automaticamente!</p>
+                </div>
+
+                <div class="wiki-faq-item">
+                  <h3>❓ O que acontece se minha energia chegar a 0?</h3>
+                  <p><strong>R:</strong> Você não consegue realizar ações que consomem energia (plantar, colher, etc). Coma algo ou descanse!</p>
                 </div>
               </div>
             </div>
 
             <div class="wiki-card wiki-card-tip">
               <h2>💬 Ainda tem dúvidas?</h2>
-              <p>Explore os outros tópicos da Wiki! Temos guias completos sobre cada aspecto do jogo.</p>
+              <p>Explore os outros tópicos da Wiki! Temos guias completos sobre cada aspecto do jogo. Use a busca (🔍) para encontrar rapidamente!</p>
+            </div>
+          </div>
+
+          <!-- Updates Page -->
+          <div class="wiki-page" data-page="updates">
+            <h1 class="wiki-page-title">📰 Atualizações do Jogo</h1>
+
+            <div class="wiki-card">
+              <h2>🎉 Versão 0.0.8 - Atual</h2>
+              <div class="wiki-badge wiki-badge-required" style="margin-bottom: 1rem;">✨ Lançado recentemente!</div>
+
+              <h3 style="margin-top: 1.5rem;">🆕 Novidades</h3>
+              <ul style="padding-left: 1.5rem;">
+                <li>✅ Wiki completa e expandida com 15+ páginas</li>
+                <li>✅ Lista completa de todos os itens do jogo</li>
+                <li>✅ Guia de estratégias avançadas</li>
+                <li>✅ Sistema de busca na Wiki</li>
+                <li>✅ Páginas sobre Banco e Taverna</li>
+              </ul>
+
+              <h3 style="margin-top: 1.5rem;">🔧 Melhorias</h3>
+              <ul style="padding-left: 1.5rem;">
+                <li>📊 Informações detalhadas sobre cada cultivo</li>
+                <li>💡 Mais de 100 dicas e truques adicionados</li>
+                <li>🎯 Guias de progressão nível por nível</li>
+                <li>📱 Otimizações para mobile</li>
+              </ul>
+            </div>
+
+            <div class="wiki-card">
+              <h2>🌿 Versão 0.0.7 - Sistema de Ervas</h2>
+
+              <h3 style="margin-top: 1.5rem;">🆕 Novidades</h3>
+              <ul style="padding-left: 1.5rem;">
+                <li>🌿 Sistema de ervas daninhas implementado</li>
+                <li>🔧 Ferramentas básicas (Pá, Enxada, Rastelo)</li>
+                <li>🔒 Sistema de bloqueio de itens</li>
+                <li>🌱 Animação SVG de 3 estágios para crescimento</li>
+                <li>✨ Efeito visual SVG para ervas daninhas</li>
+                <li>🎁 Item "Ervas" obtido ao limpar daninhas</li>
+              </ul>
+
+              <h3 style="margin-top: 1.5rem;">🔧 Melhorias</h3>
+              <ul style="padding-left: 1.5rem;">
+                <li>⚡ Botão "Plantar Tudo" agora respeita ervas</li>
+                <li>🎨 Melhorias visuais na UI do inventário</li>
+                <li>📱 Responsividade mobile aprimorada</li>
+                <li>🎯 Notificações mais informativas</li>
+              </ul>
+
+              <h3 style="margin-top: 1.5rem;">🐛 Correções</h3>
+              <ul style="padding-left: 1.5rem;">
+                <li>🔧 Corrigido bug de plantio em plots com ervas</li>
+                <li>💾 Migração automática de saves antigos</li>
+                <li>🎨 Ajustes no tema claro para melhor leitura</li>
+              </ul>
+            </div>
+
+            <div class="wiki-card">
+              <h2>🎮 Versão 0.0.6 - Sistema de Farming</h2>
+
+              <h3 style="margin-top: 1.5rem;">🆕 Novidades</h3>
+              <ul style="padding-left: 1.5rem;">
+                <li>🌾 5 tipos de cultivos implementados</li>
+                <li>⏱️ Sistema de tempo real para crescimento</li>
+                <li>🌿 Fertilizantes para acelerar crescimento</li>
+                <li>📊 Sistema de Skills (Farming nível 1-99)</li>
+                <li>🏪 Mercado com compra e venda</li>
+                <li>🎒 Sistema de inventário com slots</li>
+              </ul>
+
+              <h3 style="margin-top: 1.5rem;">✨ Features</h3>
+              <ul style="padding-left: 1.5rem;">
+                <li>💾 Sistema de save automático</li>
+                <li>📤 Exportar/Importar saves</li>
+                <li>🌙 Tema escuro e claro</li>
+                <li>📱 PWA instalável</li>
+                <li>🌍 Suporte para PT-BR e EN-US</li>
+              </ul>
+            </div>
+
+            <div class="wiki-card">
+              <h2>🔮 Próximas Atualizações</h2>
+              <p>Confira o que está por vir no FazendaRPG:</p>
+
+              <h3 style="margin-top: 1.5rem;">⛏️ Versão 0.0.9 - Mining</h3>
+              <ul style="padding-left: 1.5rem;">
+                <li>⛏️ Sistema de mineração</li>
+                <li>💎 Novos minerais e gemas</li>
+                <li>🗻 Área de mineração na cidade</li>
+                <li>🔨 Ferramentas de mineração</li>
+              </ul>
+
+              <h3 style="margin-top: 1.5rem;">🎣 Versão 0.1.0 - Fishing</h3>
+              <ul style="padding-left: 1.5rem;">
+                <li>🎣 Sistema de pesca</li>
+                <li>🐟 10+ tipos de peixes</li>
+                <li>🌊 Área de pesca com diferentes spots</li>
+                <li>🍳 Receitas de culinária</li>
+              </ul>
+
+              <h3 style="margin-top: 1.5rem;">🪓 Versão 0.1.1 - Woodcutting</h3>
+              <ul style="padding-left: 1.5rem;">
+                <li>🪓 Sistema de corte de árvores</li>
+                <li>🌲 Floresta com diferentes árvores</li>
+                <li>🪵 Madeiras para construção</li>
+                <li>🏠 Sistema de construção básico</li>
+              </ul>
+
+              <h3 style="margin-top: 1.5rem;">👥 Versão 0.1.2 - NPCs & Quests</h3>
+              <ul style="padding-left: 1.5rem;">
+                <li>👨‍🌾 NPCs interativos</li>
+                <li>📜 Sistema de missões completo</li>
+                <li>💬 Diálogos e história</li>
+                <li>🎁 Recompensas exclusivas</li>
+              </ul>
+            </div>
+
+            <div class="wiki-card wiki-card-tip">
+              <h2>📢 Fique Por Dentro</h2>
+              <p>As atualizações são lançadas regularmente! O jogo salva automaticamente, então você nunca perde progresso entre versões.</p>
+              <p style="margin-top: 1rem;"><strong>🔔 Dica:</strong> Exporte seu save antes de grandes atualizações como medida de segurança!</p>
             </div>
           </div>
 

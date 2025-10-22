@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Wiki Manager
  * Manages wiki navigation, search and content display
- * @version 0.0.1
+ * @version 0.0.8
  */
 
 export default class WikiManager {
@@ -128,9 +128,7 @@ export default class WikiManager {
       this.showPage(matches[0].id);
       this.highlightSearchTerms(query);
 
-      console.log(
-        `🔍 Found ${matches.length} matches for "${query}"`,
-      );
+      console.log(`🔍 Found ${matches.length} matches for "${query}"`);
     }
   }
 
