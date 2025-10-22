@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Icon Renderer Utility
  * Handles rendering of both emoji and PNG icons
- * @version 0.0.10
+ * @version 0.0.11
  */
 
 /**

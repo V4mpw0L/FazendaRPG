@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Weed Removal Animation
  * 3D rake animation system for removing weeds from plots
- * @version 0.0.10
+ * @version 0.0.11
  */
 
 export default class WeedRemovalAnimation {

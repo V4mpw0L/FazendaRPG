@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Tavern System
  * Manages tavern activities: rest, meals, stories, and social interactions
- * @version 0.0.10
+ * @version 0.0.11
  */
 
 export default class TavernSystem {

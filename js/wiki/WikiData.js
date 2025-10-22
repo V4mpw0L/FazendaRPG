@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Wiki Data
  * Centralized data structure for all wiki content
- * @version 0.0.10
+ * @version 0.0.11
  */
 
 export default class WikiData {
@@ -638,7 +638,7 @@ export default class WikiData {
   getUpdates() {
     return [
       {
-        version: "0.0.10",
+        version: "0.0.11",
         date: "2024",
         title: "Fix de Ícone e Notificações",
         titleEN: "Icon and Notifications Fix",

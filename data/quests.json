@@ -1,5 +1,5 @@
 {
-  "version": "0.0.10",
+  "version": "0.0.11",
   "quests": {
     "welcome_farmer": {
       "id": "welcome_farmer",

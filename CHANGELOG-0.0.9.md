@@ -238,7 +238,7 @@ Each animation:
 
 ---
 
-## 🎯 What's Next? (Planned for v0.0.10+)
+## 🎯 What's Next? (Planned for v0.0.11+)
 
 Potential future enhancements:
 - More farm animations (watering, tilling, etc.)
