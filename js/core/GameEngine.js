@@ -642,7 +642,13 @@ export default class GameEngine {
       // Update all UI
       this.renderFarm();
       this.renderInventory();
-      this.updatePlayerStats();
+      this.topBar.update();
+      this.updateXPBar();
+
+      // Update avatar in topbar
+      if (this.avatarSelector) {
+        this.avatarSelector.updateTopbarAvatar();
+      }
 
       notifications.success(
         i18n.t("settings.loadSuccess") ||
