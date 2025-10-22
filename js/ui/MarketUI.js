@@ -851,7 +851,7 @@ export default class MarketUI {
           ? `
         <div style="position: absolute; top: 4px; left: 4px; right: 4px; display: flex; justify-content: space-between; align-items: center; z-index: 5;">
           ${isLocked ? '<div style="width: 20px; height: 20px; background: #ef5350; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">🔒</div>' : '<div style="width: 20px;"></div>'}
-          <div style="background: rgba(0,0,0,0.7); color: white; padding: 2px 6px; border-radius: 10px; font-size: 0.65rem; font-weight: 700; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${stock}</div>
+          <div style="background: linear-gradient(135deg, #5caa1f, #4a8e19); color: white; padding: 2px 6px; border-radius: 10px; font-size: 0.65rem; font-weight: 700; box-shadow: 0 2px 4px rgba(0,0,0,0.4); border: 1px solid rgba(255, 255, 255, 0.3); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);">${stock}</div>
         </div>
       `
           : isLocked
