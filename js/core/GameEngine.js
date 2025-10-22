@@ -10,6 +10,7 @@ import SkillSystem from "../systems/SkillSystem.js";
 import FarmSystem from "../systems/FarmSystem.js";
 import InventorySystem from "../systems/InventorySystem.js";
 import QuestSystem from "../systems/QuestSystem.js";
+import NotificationManager from "../systems/NotificationManager.js";
 import TopBar from "../ui/TopBar.js";
 import SideMenu from "../ui/SideMenu.js";
 import ScreenManager from "../ui/ScreenManager.js";
@@ -35,6 +36,7 @@ export default class GameEngine {
     this.farmSystem = null;
     this.inventorySystem = null;
     this.questSystem = null;
+    this.notificationManager = null;
     this.topBar = null;
     this.sideMenu = null;
     this.screenManager = null;
@@ -78,6 +80,10 @@ export default class GameEngine {
       // Initialize game systems
       this.skillSystem = new SkillSystem(this.player);
       await this.skillSystem.init();
+
+      // Initialize notification manager
+      this.notificationManager = new NotificationManager();
+      await this.notificationManager.initialize();
 
       this.inventorySystem = new InventorySystem(this.player);
       await this.inventorySystem.init();
@@ -215,6 +221,13 @@ export default class GameEngine {
 
     // Start farm update loop
     this.farmSystem.startUpdateLoop();
+
+    // Update crop notifications if enabled
+    if (this.notificationManager.isEnabled()) {
+      const plots = this.farmSystem.getPlots();
+      const cropsData = this.farmSystem.getCropsData();
+      this.notificationManager.updateCropNotifications(plots, cropsData);
+    }
 
     this.running = true;
     console.log("✅ Game started");
@@ -648,6 +661,13 @@ export default class GameEngine {
       // Update avatar in topbar
       if (this.avatarSelector) {
         this.avatarSelector.updateTopbarAvatar();
+      }
+
+      // Update crop notifications if enabled
+      if (this.notificationManager.isEnabled()) {
+        const plots = this.farmSystem.getPlots();
+        const cropsData = this.farmSystem.getCropsData();
+        this.notificationManager.updateCropNotifications(plots, cropsData);
       }
 
       notifications.success(
@@ -1209,6 +1229,9 @@ export default class GameEngine {
                   // Clear the plot
                   const plot = this.farmSystem.getPlot(index);
                   if (plot) {
+                    // Cancel crop notification when destroying
+                    this.notificationManager.cancelCropNotification(index);
+
                     plot.cropId = null;
                     plot.crop = null;
                     plot.plantedAt = null;
@@ -1397,6 +1420,21 @@ export default class GameEngine {
             this.renderFarm();
             this.topBar.update();
 
+            // Schedule notification for when crop is ready
+            const plot = this.farmSystem.getPlot(index);
+            if (plot && plot.crop && plot.plantedAt) {
+              const cropData = this.farmSystem.getCropData(cropId);
+              if (cropData) {
+                const growthTime = cropData.growthTime * 1000;
+                const readyAt = plot.plantedAt + growthTime;
+                this.notificationManager.scheduleCropNotification(
+                  index,
+                  cropData.name,
+                  readyAt,
+                );
+              }
+            }
+
             // Update quest progress
             this.questSystem.handleGameEvent("plant", {
               cropId,
@@ -1418,6 +1456,8 @@ export default class GameEngine {
     const result = this.farmSystem.harvest(index);
 
     if (result.success) {
+      // Cancel crop notification when harvesting
+      this.notificationManager.cancelCropNotification(index);
       // Play harvest animation
       const plotElement = document.querySelector(
         `.farm-plot[data-index="${index}"]`,
@@ -1667,6 +1707,105 @@ export default class GameEngine {
     const loadFileBtn = document.getElementById("load-file-btn");
     if (loadFileBtn) {
       loadFileBtn.addEventListener("click", () => this.loadFromFile());
+    }
+
+    // Notification buttons
+    const enableNotificationsBtn = document.getElementById(
+      "enable-notifications-btn",
+    );
+    const testNotificationBtn = document.getElementById(
+      "test-notification-btn",
+    );
+
+    if (enableNotificationsBtn) {
+      enableNotificationsBtn.addEventListener("click", () =>
+        this.toggleNotifications(),
+      );
+    }
+
+    if (testNotificationBtn) {
+      testNotificationBtn.addEventListener("click", () =>
+        this.testNotification(),
+      );
+    }
+
+    // Update notification UI
+    this.updateNotificationUI();
+  }
+
+  /**
+   * Toggle notifications on/off
+   */
+  async toggleNotifications() {
+    if (this.notificationManager.isEnabled()) {
+      // Disable
+      this.notificationManager.disable();
+      notifications.info(i18n.t("settings.notificationsDisabled"));
+    } else {
+      // Enable
+      const granted = await this.notificationManager.enable();
+      if (granted) {
+        notifications.success(i18n.t("settings.notificationsEnabled"));
+
+        // Update all crop notifications
+        const plots = this.farmSystem.getPlots();
+        const cropsData = await this.farmSystem.getCropsData();
+        this.notificationManager.updateCropNotifications(plots, cropsData);
+      } else {
+        notifications.error(i18n.t("settings.notificationsBlocked"));
+      }
+    }
+
+    this.updateNotificationUI();
+  }
+
+  /**
+   * Test notification
+   */
+  async testNotification() {
+    await this.notificationManager.testNotification();
+  }
+
+  /**
+   * Update notification UI status
+   */
+  updateNotificationUI() {
+    const enableBtn = document.getElementById("enable-notifications-btn");
+    const testBtn = document.getElementById("test-notification-btn");
+    const statusDiv = document.getElementById("notification-status");
+
+    if (!enableBtn || !testBtn || !statusDiv) return;
+
+    const isEnabled = this.notificationManager.isEnabled();
+    const permission = this.notificationManager.permission;
+
+    // Update button
+    if (isEnabled) {
+      enableBtn.textContent = "🔕 " + i18n.t("settings.disableNotifications");
+      enableBtn.classList.remove("btn-primary");
+      enableBtn.classList.add("btn-secondary");
+      testBtn.style.display = "inline-block";
+    } else {
+      enableBtn.textContent = "🔔 " + i18n.t("settings.enableNotifications");
+      enableBtn.classList.remove("btn-secondary");
+      enableBtn.classList.add("btn-primary");
+      testBtn.style.display = "none";
+    }
+
+    // Update status
+    if (permission === "granted" && isEnabled) {
+      const count = this.notificationManager.getScheduledCount();
+      statusDiv.textContent = `✅ Notificações ativas (${count} agendadas)`;
+      statusDiv.style.color = "var(--success)";
+    } else if (permission === "denied") {
+      statusDiv.textContent = "❌ Bloqueadas pelo navegador";
+      statusDiv.style.color = "var(--danger)";
+    } else if (permission === "default") {
+      statusDiv.textContent = "⚠️ Clique para permitir notificações";
+      statusDiv.style.color = "var(--text-secondary)";
+    } else {
+      statusDiv.textContent = "🔕 Desativadas";
+      statusDiv.style.color = "var(--text-secondary)";
     }
   }
 

@@ -191,6 +191,9 @@ async function syncGameData() {
   }
 }
 
+// Store for scheduled notifications
+let scheduledNotifications = new Map();
+
 // Push notifications (when available)
 self.addEventListener("push", (event) => {
   const options = {
@@ -211,7 +214,140 @@ self.addEventListener("push", (event) => {
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
 
-  event.waitUntil(clients.openWindow("./"));
+  // Handle different notification actions
+  const notificationData = event.notification.data || {};
+
+  event.waitUntil(
+    clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then((clientList) => {
+        // Check if app is already open
+        for (let client of clientList) {
+          if (client.url.includes(self.location.origin) && "focus" in client) {
+            return client.focus();
+          }
+        }
+        // If not open, open new window
+        if (clients.openWindow) {
+          return clients.openWindow("./");
+        }
+      }),
+  );
 });
+
+// Handle messages from the app to schedule notifications
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SCHEDULE_NOTIFICATION") {
+    const { id, title, body, timestamp, data } = event.data;
+    scheduleNotification(id, title, body, timestamp, data);
+    event.ports[0]?.postMessage({ success: true });
+  }
+
+  if (event.data && event.data.type === "CANCEL_NOTIFICATION") {
+    const { id } = event.data;
+    cancelNotification(id);
+    event.ports[0]?.postMessage({ success: true });
+  }
+
+  if (event.data && event.data.type === "CANCEL_ALL_NOTIFICATIONS") {
+    cancelAllNotifications();
+    event.ports[0]?.postMessage({ success: true });
+  }
+
+  if (event.data && event.data.type === "GET_SCHEDULED_NOTIFICATIONS") {
+    const notifications = Array.from(scheduledNotifications.entries()).map(
+      ([id, data]) => ({
+        id,
+        ...data,
+      }),
+    );
+    event.ports[0]?.postMessage({ notifications });
+  }
+});
+
+// Schedule a notification
+function scheduleNotification(id, title, body, timestamp, data = {}) {
+  // Cancel existing notification with same ID
+  cancelNotification(id);
+
+  const now = Date.now();
+  const delay = timestamp - now;
+
+  if (delay <= 0) {
+    // Should fire immediately
+    showNotification(title, body, data);
+    return;
+  }
+
+  // Schedule notification
+  const timeoutId = setTimeout(() => {
+    showNotification(title, body, data);
+    scheduledNotifications.delete(id);
+  }, delay);
+
+  scheduledNotifications.set(id, {
+    timeoutId,
+    title,
+    body,
+    timestamp,
+    data,
+  });
+
+  console.log(
+    `📅 Notificação agendada: ${title} em ${Math.round(delay / 1000)}s`,
+  );
+}
+
+// Cancel a scheduled notification
+function cancelNotification(id) {
+  const notification = scheduledNotifications.get(id);
+  if (notification) {
+    clearTimeout(notification.timeoutId);
+    scheduledNotifications.delete(id);
+    console.log(`❌ Notificação cancelada: ${id}`);
+  }
+}
+
+// Cancel all scheduled notifications
+function cancelAllNotifications() {
+  scheduledNotifications.forEach((notification) => {
+    clearTimeout(notification.timeoutId);
+  });
+  scheduledNotifications.clear();
+  console.log(`❌ Todas as notificações canceladas`);
+}
+
+// Show notification
+async function showNotification(title, body, data = {}) {
+  try {
+    const options = {
+      body,
+      icon: "./assets/icon-192.png",
+      badge: "./assets/icon-72.png",
+      vibrate: [200, 100, 200],
+      tag: data.tag || "fazendarpg-notification",
+      requireInteraction: false,
+      silent: false,
+      data: {
+        ...data,
+        timestamp: Date.now(),
+      },
+    };
+
+    await self.registration.showNotification(title, options);
+    console.log(`🔔 Notificação mostrada: ${title}`);
+
+    // Notify all clients that notification was shown
+    const clients = await self.clients.matchAll();
+    clients.forEach((client) => {
+      client.postMessage({
+        type: "NOTIFICATION_SHOWN",
+        data: { title, body, ...data },
+      });
+    });
+  } catch (error) {
+    console.error("❌ Erro ao mostrar notificação:", error);
+  }
+}
 
 console.log("🌾 FazendaRPG Service Worker loaded");

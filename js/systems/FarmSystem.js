@@ -88,6 +88,14 @@ export default class FarmSystem {
   }
 
   /**
+   * Get crops data (alias for getAllCrops)
+   * @returns {Object} Crops data
+   */
+  getCropsData() {
+    return this.cropsData || {};
+  }
+
+  /**
    * Get farm plots
    * @returns {Array} Farm plots
    */
