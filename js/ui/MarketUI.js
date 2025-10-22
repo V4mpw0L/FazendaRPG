@@ -851,12 +851,22 @@ export default class MarketUI {
       i18n.t(`market.categories.${item.category}`) || item.category;
 
     card.innerHTML = `
+      ${
+        type === "sell"
+          ? `
+        <div style="position: absolute; top: 4px; left: 4px; right: 4px; display: flex; justify-content: space-between; align-items: center; z-index: 5;">
+          ${isLocked ? '<div style="width: 20px; height: 20px; background: #ef5350; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">🔒</div>' : '<div style="width: 20px;"></div>'}
+          <div style="background: rgba(0,0,0,0.7); color: white; padding: 2px 6px; border-radius: 10px; font-size: 0.65rem; font-weight: 700; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">${stock}</div>
+        </div>
+      `
+          : isLocked
+            ? '<div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; background: #ef5350; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 5;">🔒</div>'
+            : ""
+      }
       <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; flex: 1; ${isLocked ? "opacity: 0.5; filter: grayscale(0.8);" : ""}">
-        ${isLocked ? '<div style="position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; background: #ef5350; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 5;">🔒</div>' : ""}
         <div class="market-item-icon">${renderItemIcon(item, { size: "2rem" })}</div>
         <div class="market-item-name" title="${itemName}">${itemName}</div>
         <div class="market-item-price" style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g</div>
-        ${type === "sell" ? `<div class="market-item-stock">${i18n.t("market.youHave")}: ${stock}</div>` : ""}
       </div>
       <div class="market-item-category" style="background: ${categoryColor};">${categoryName}</div>
       ${requiredLevelInfo}
