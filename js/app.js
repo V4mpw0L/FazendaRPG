@@ -5,10 +5,11 @@
  */
 
 import GameEngine from "./core/GameEngine.js";
+import { VERSION, getVersionString, logVersion } from "../version.js";
 
 // Create global game instance
 window.FazendaRPG = {
-  version: "0.0.12",
+  version: VERSION,
   engine: null,
   initialized: false,
 };
@@ -17,7 +18,7 @@ window.FazendaRPG = {
  * Initialize application
  */
 async function init() {
-  console.log("🌾 FazendaRPG v0.0.12");
+  logVersion(); // Log version info from centralized system
   console.log("📅 Loading game...");
 
   try {

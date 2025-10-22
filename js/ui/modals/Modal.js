@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Modal System
  * Reusable modal dialog system for game UI
- * @version 0.0.11
+ * @version 0.0.12
  */
 
 export default class Modal {
