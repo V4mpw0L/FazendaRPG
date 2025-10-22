@@ -140,30 +140,28 @@ class NotificationManager {
 
             /* Close Button */
             .notification-close {
-                width: 24px;
-                height: 24px;
+                width: 28px;
+                height: 28px;
                 border-radius: 50%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 cursor: pointer;
-                color: #8b0000;
-                font-size: 18px;
+                color: white;
+                font-size: 20px;
                 font-weight: 700;
                 line-height: 1;
                 flex-shrink: 0;
                 transition: all 0.2s ease;
-                opacity: 0.8;
-                background: transparent;
-                border: 2px solid #8b0000;
+                background: linear-gradient(135deg, #ef5350 0%, #e53935 100%);
+                border: none;
+                box-shadow: 0 2px 8px rgba(239, 83, 80, 0.4);
             }
 
             .notification-close:hover {
-                opacity: 1;
-                background: #8b0000;
-                color: white;
-                border-color: #6b0000;
-                transform: scale(1.1) rotate(90deg);
+                background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+                transform: scale(1.1);
+                box-shadow: 0 4px 12px rgba(239, 83, 80, 0.6);
             }
 
             .notification-close:active {
@@ -353,15 +351,13 @@ class NotificationManager {
             }
 
             .dark-theme .notification-close {
-                border-color: #8b0000;
-                color: #8b0000;
-                background: transparent;
+                background: linear-gradient(135deg, #ef5350 0%, #e53935 100%);
+                color: white;
             }
 
             .dark-theme .notification-close:hover {
-                background: #8b0000;
-                color: white;
-                border-color: #6b0000;
+                background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+                box-shadow: 0 4px 12px rgba(239, 83, 80, 0.6);
             }
 
             /* Mobile Responsive */
@@ -405,7 +401,7 @@ class NotificationManager {
       title = null,
       duration = this.defaultDuration,
       icon = null,
-      closable = true,
+      closable = false,
     } = options;
 
     // Create notification element
