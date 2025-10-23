@@ -21,6 +21,12 @@ export default class HalloweenEvent {
       energyReward: 5, // Energia por clique
       goldReward: 5, // Ouro por clique
       clicksPerPumpkin: Infinity, // Cliques ilimitados enquanto estiver na tela
+      // Sistema de drops de itens
+      dropChances: {
+        pirulo_noturno: 0.003, // 0.3% de chance (1 em ~333 cliques)
+        aranha_crocante: 0.001, // 0.1% de chance (1 em ~1000 cliques)
+        jujubas_toxicas: 0.0005, // 0.05% de chance (1 em ~2000 cliques)
+      },
     };
 
     // Controles
@@ -538,6 +544,9 @@ export default class HalloweenEvent {
       this.gameEngine.topBar.update();
     }
 
+    // Tenta dropar item
+    this.tryDropItem(event.clientX, event.clientY);
+
     // Efeito visual de clique
     this.showClickEffect(event.clientX, event.clientY);
 
@@ -545,6 +554,87 @@ export default class HalloweenEvent {
     console.log(
       `🎃 +${this.config.energyReward} Energia, +${this.config.goldReward} Ouro!`,
     );
+  }
+
+  /**
+   * Tenta dropar item aleatoriamente
+   */
+  tryDropItem(x, y) {
+    // Verifica cada item pela ordem de raridade (do mais difícil ao mais fácil)
+    const items = [
+      { id: "jujubas_toxicas", name: "Jujubas Tóxicas", icon: "🍬" },
+      { id: "aranha_crocante", name: "Aranha Crocante", icon: "🕷️" },
+      { id: "pirulo_noturno", name: "Pirulito Noturno", icon: "🍭" },
+    ];
+
+    for (const item of items) {
+      const chance = this.config.dropChances[item.id];
+      const roll = Math.random();
+
+      if (roll <= chance) {
+        // DROP! Adiciona ao inventário
+        if (this.gameEngine.inventorySystem) {
+          this.gameEngine.inventorySystem.addItem(item.id, 1);
+
+          // Efeito visual de drop
+          this.showDropEffect(x, y, item);
+
+          console.log(`🎃 DROP RARO! ${item.name} recebido!`);
+        }
+        return; // Só dropa 1 item por clique
+      }
+    }
+  }
+
+  /**
+   * Mostra efeito visual de drop de item
+   */
+  showDropEffect(x, y, item) {
+    const effect = document.createElement("div");
+    effect.style.cssText = `
+      position: fixed;
+      left: ${x}px;
+      top: ${y}px;
+      color: #ff6600;
+      font-weight: bold;
+      font-size: 24px;
+      pointer-events: none;
+      z-index: 10001;
+      animation: dropFloat 2s ease-out forwards;
+      text-shadow: 0 0 10px rgba(255, 102, 0, 0.8),
+                   0 2px 4px rgba(0, 0, 0, 0.8);
+    `;
+    effect.textContent = `${item.icon} +1 ${item.name}!`;
+
+    // Adiciona animação CSS se não existir
+    if (!document.getElementById("drop-animation")) {
+      const style = document.createElement("style");
+      style.id = "drop-animation";
+      style.textContent = `
+        @keyframes dropFloat {
+          0% {
+            opacity: 1;
+            transform: translateY(0) scale(0.5);
+          }
+          20% {
+            transform: translateY(-20px) scale(1.2);
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(-100px) scale(1);
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    document.body.appendChild(effect);
+
+    setTimeout(() => {
+      if (effect.parentNode) {
+        effect.parentNode.removeChild(effect);
+      }
+    }, 2000);
   }
 
   /**

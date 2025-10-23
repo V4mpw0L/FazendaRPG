@@ -563,6 +563,7 @@ export default class InventoryUI {
       food: "#ff6347",
       tools: "#9370db",
       materials: "#228b22",
+      events: "#ff6600",
     };
     return colors[category] || "#95a5a6";
   }
@@ -740,6 +741,7 @@ export default class InventoryUI {
       food: "#ff6347",
       tools: "#9370db",
       materials: "#228b22",
+      events: "#ff6600",
     };
     const categoryColor = categoryColors[item.category] || "#5caa1f";
     const categoryName =
