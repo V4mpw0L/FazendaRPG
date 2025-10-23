@@ -1,7 +1,7 @@
 /**
  * EventManager - Gerenciador de Eventos do Jogo
  * Sistema modular para gerenciar eventos sazonais (Halloween, Natal, Páscoa, etc)
- * @version 1.0.0
+ * @version 0.0.14
  */
 
 export default class EventManager {

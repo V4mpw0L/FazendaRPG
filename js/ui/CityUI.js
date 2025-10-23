@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - City UI
  * Manages all city location interactions
- * @version 0.0.13
+ * @version 0.0.14
  */
 
 import BankSystem from "../systems/city/BankSystem.js";

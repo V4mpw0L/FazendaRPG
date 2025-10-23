@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Inventory System
  * Manages player inventory, items, stacking, and item operations
- * @version 0.0.13
+ * @version 0.0.14
  */
 
 import i18n from "../utils/i18n.js";

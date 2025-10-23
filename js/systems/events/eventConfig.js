@@ -5,7 +5,7 @@
  * Para ATIVAR um evento: mude para true
  * Para DESATIVAR um evento: mude para false
  *
- * @version 1.0.0
+ * @version 0.0.14
  */
 
 const eventConfig = {

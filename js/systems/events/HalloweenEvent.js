@@ -1,7 +1,7 @@
 /**
  * HalloweenEvent - Evento de Halloween
  * Abóboras aparecem na tela e dão recompensas ao clicar
- * @version 1.0.0
+ * @version 0.0.14
  */
 
 export default class HalloweenEvent {
@@ -176,6 +176,7 @@ export default class HalloweenEvent {
         "M 0 0 Q 25 75 65 175",
         "M 0 0 Q 10 90 25 195",
         "M 0 0 Q -5 100 0 200",
+        "M 200 0 Q 105 5 0 0", // Linha que fecha a teia
       ];
 
       radialLines.forEach((d) => {

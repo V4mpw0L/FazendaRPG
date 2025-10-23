@@ -359,6 +359,34 @@ const FILES_TO_UPDATE = [
     ],
   },
 
+  // Event System files
+  {
+    path: "js/systems/events/EventManager.js",
+    patterns: [
+      { regex: /@version [\d.]+/g, replace: "@version VERSION_PLACEHOLDER" },
+    ],
+  },
+  {
+    path: "js/systems/events/HalloweenEvent.js",
+    patterns: [
+      { regex: /@version [\d.]+/g, replace: "@version VERSION_PLACEHOLDER" },
+    ],
+  },
+  {
+    path: "js/systems/events/eventConfig.js",
+    patterns: [
+      { regex: /@version [\d.]+/g, replace: "@version VERSION_PLACEHOLDER" },
+    ],
+  },
+
+  // News System files
+  {
+    path: "js/ui/news/NewsModal.js",
+    patterns: [
+      { regex: /@version [\d.]+/g, replace: "@version VERSION_PLACEHOLDER" },
+    ],
+  },
+
   // CSS files
   {
     path: "style/main.css",
