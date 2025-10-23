@@ -516,7 +516,7 @@ export default class NPCSUI {
       onClick: () => {
         const gained = this.increaseFriendship(npc.id);
         this.notifications.success(
-          `Você conversou com ${name} (+${gained}% amizade)`,
+          `Você conversou com ${name} +${gained}% amizade 💖`,
         );
         this.render();
         return true;
