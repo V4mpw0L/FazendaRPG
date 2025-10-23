@@ -18,8 +18,8 @@ export default class HalloweenEvent {
       pumpkinMaxDuration: 15000, // Máximo 15 segundos na tela
       pumpkinMoveInterval: 2000, // Move a cada 2 segundos
       pumpkinSize: 80, // Tamanho da abóbora em pixels
-      energyReward: 1, // Energia por clique
-      goldReward: 1, // Ouro por clique
+      energyReward: 5, // Energia por clique
+      goldReward: 5, // Ouro por clique
       clicksPerPumpkin: Infinity, // Cliques ilimitados enquanto estiver na tela
     };
 
