@@ -94,6 +94,7 @@ export default class MarketUI {
         <button class="category-btn" data-category="food">🍞 ${i18n.t("market.categories.food")}</button>
         <button class="category-btn" data-category="tools">🔧 ${i18n.t("market.categories.tools")}</button>
         <button class="category-btn" data-category="materials">📦 ${i18n.t("market.categories.materials")}</button>
+        <button class="category-btn" data-category="events">🎉 ${i18n.t("market.categories.events")}</button>
       </div>
     `;
 
@@ -667,8 +668,9 @@ export default class MarketUI {
   renderBuyTab() {
     this.container.innerHTML = "";
 
+    // Itens compráveis (buyPrice > 0) OU itens de eventos (para visualização)
     const buyableItems = Object.values(this.marketData).filter(
-      (item) => item.buyPrice > 0,
+      (item) => item.buyPrice > 0 || item.category === "events",
     );
 
     // Filter by category
@@ -840,6 +842,7 @@ export default class MarketUI {
       food: "#ff6347",
       tools: "#9370db",
       materials: "#228b22",
+      events: "#ff6600",
     };
     const categoryColor = categoryColors[item.category] || "#5caa1f";
     const categoryName =
@@ -865,7 +868,7 @@ export default class MarketUI {
       </div>
       <div class="market-item-category" style="background: ${categoryColor};">${categoryName}</div>
       ${requiredLevelInfo}
-      <button class="market-item-action${type === "sell" ? " sell-action" : ""}" ${isLocked ? 'disabled style="opacity: 0.5; cursor: not-allowed; background: linear-gradient(135deg, #999 0%, #666 100%) !important; border-color: #555 !important;"' : ""}>${buttonIcon} ${buttonText}</button>
+      <button class="market-item-action${type === "sell" ? " sell-action" : ""}" ${isLocked || (type === "buy" && item.category === "events") ? 'disabled style="opacity: 0.5; cursor: not-allowed; background: linear-gradient(135deg, #999 0%, #666 100%) !important; border-color: #555 !important;"' : ""}>${buttonIcon} ${type === "buy" && item.category === "events" ? "🎉 Evento" : buttonText}</button>
     `;
 
     const button = card.querySelector(".market-item-action");
@@ -894,6 +897,14 @@ export default class MarketUI {
    * Show buy dialog
    */
   showBuyDialog(item) {
+    // Bloquear compra de itens de eventos
+    if (item.category === "events" || item.eventItem) {
+      this.notifications.error(
+        "🎉 Itens de eventos não podem ser comprados! São exclusivos e raros.",
+      );
+      return;
+    }
+
     const unitPrice = item.buyPrice || 0;
     const playerGold = this.player.data.gold || 0;
     const maxAffordable = Math.floor(playerGold / unitPrice);
@@ -916,6 +927,7 @@ export default class MarketUI {
       food: "#ff6347",
       tools: "#9370db",
       materials: "#228b22",
+      events: "#ff6600",
     };
     const categoryColor = categoryColors[item.category] || "#5caa1f";
     const categoryName =
@@ -1129,6 +1141,7 @@ export default class MarketUI {
       food: "#ff6347",
       tools: "#9370db",
       materials: "#228b22",
+      events: "#ff6600",
     };
     const categoryColor = categoryColors[item.category] || "#5caa1f";
     const categoryName =

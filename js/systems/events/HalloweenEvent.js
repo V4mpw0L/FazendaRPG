@@ -76,13 +76,8 @@ export default class HalloweenEvent {
     this.startPumpkinSpawning();
 
     // Notificação
-    if (this.gameEngine.notificationManager) {
-      this.gameEngine.notificationManager.show(
-        "🎃 Evento de Halloween Iniciado!",
-        "Clique nas abóboras para ganhar energia e ouro!",
-        "success",
-      );
-    }
+    console.log("🎃 Evento de Halloween Iniciado!");
+    console.log("Clique nas abóboras para ganhar energia e ouro!");
   }
 
   /**
@@ -109,13 +104,8 @@ export default class HalloweenEvent {
     this.removeDecorations();
 
     // Notificação
-    if (this.gameEngine.notificationManager) {
-      this.gameEngine.notificationManager.show(
-        "🎃 Evento de Halloween Encerrado",
-        "Até o próximo ano!",
-        "info",
-      );
-    }
+    console.log("🎃 Evento de Halloween Encerrado");
+    console.log("Até o próximo ano!");
   }
 
   /**

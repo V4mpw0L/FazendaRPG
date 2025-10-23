@@ -32,9 +32,58 @@
     "materials": {
       "name": "Materials",
       "icon": "📦"
+    },
+    "events": {
+      "name": "Events",
+      "icon": "🎉"
     }
   },
   "items": {
+    "pirulo_noturno": {
+      "id": "pirulo_noturno",
+      "name": "Night Lollipop",
+      "namePtBR": "Pirulito Noturno",
+      "icon": "./assets/sprites/events/halloween2_25.png",
+      "category": "events",
+      "description": "A mysterious lollipop from Halloween night. Very rare!",
+      "descriptionPtBR": "Um pirulito misterioso da noite de Halloween. Muito raro!",
+      "buyPrice": 0,
+      "sellPrice": 1,
+      "stackable": true,
+      "maxStack": 99,
+      "eventItem": true,
+      "rarity": "legendary"
+    },
+    "jujubas_toxicas": {
+      "id": "jujubas_toxicas",
+      "name": "Toxic Gummies",
+      "namePtBR": "Jujubas Tóxicas",
+      "icon": "./assets/sprites/events/halloween2_48.png",
+      "category": "events",
+      "description": "Strange toxic gummies from Halloween. Trade only!",
+      "descriptionPtBR": "Jujubas tóxicas estranhas do Halloween. Apenas para troca!",
+      "buyPrice": 0,
+      "sellPrice": 1,
+      "stackable": true,
+      "maxStack": 99,
+      "eventItem": true,
+      "rarity": "legendary"
+    },
+    "aranha_crocante": {
+      "id": "aranha_crocante",
+      "name": "Crunchy Spider",
+      "namePtBR": "Aranha Crocante",
+      "icon": "./assets/sprites/events/spider.png",
+      "category": "events",
+      "description": "A crunchy spider candy. Halloween exclusive!",
+      "descriptionPtBR": "Uma aranha crocante de doce. Exclusivo do Halloween!",
+      "buyPrice": 0,
+      "sellPrice": 1,
+      "stackable": true,
+      "maxStack": 99,
+      "eventItem": true,
+      "rarity": "legendary"
+    },
     "wheat_seed": {
       "id": "wheat_seed",
       "name": "Wheat Seed",

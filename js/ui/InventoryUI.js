@@ -80,6 +80,7 @@ export default class InventoryUI {
             <option value="food">${i18n.t("market.categories.food")}</option>
             <option value="tools">${i18n.t("market.categories.tools")}</option>
             <option value="materials">${i18n.t("market.categories.materials")}</option>
+            <option value="events">${i18n.t("market.categories.events")}</option>
           </select>
         </div>
       </div>

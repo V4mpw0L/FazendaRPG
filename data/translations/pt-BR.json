@@ -170,7 +170,8 @@
       "wood": "Madeira",
       "food": "Comida",
       "tools": "Ferramentas",
-      "materials": "Materiais"
+      "materials": "Materiais",
+      "events": "Eventos"
     },
     "buyTitle": "Comprar Item",
     "sellTitle": "Vender Item",
