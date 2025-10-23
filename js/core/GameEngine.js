@@ -1168,8 +1168,19 @@ export default class GameEngine {
 
           const result = this.farmSystem.fertilize(index);
           if (result.success) {
+            const fertilizerData =
+              this.inventorySystem.getItemData("fertilizer");
+            let fertilizerIcon = fertilizerData?.icon || "🌿";
+            // Convert PNG path to img tag if needed
+            if (
+              fertilizerIcon.includes(".png") ||
+              fertilizerIcon.includes("assets/")
+            ) {
+              fertilizerIcon = `<img src="${fertilizerIcon}" alt="Fertilizante">`;
+            }
             notifications.success(
-              "🌿 Fertilizante aplicado! Crescimento acelerado.",
+              "Fertilizante aplicado! Crescimento acelerado.",
+              { icon: fertilizerIcon },
             );
             this.renderFarm();
             this.topBar.update();
@@ -1338,7 +1349,7 @@ export default class GameEngine {
       }
 
       // Show weed removal notification
-      notifications.success("Ervas daninhas removidas! +1 Ervas");
+      notifications.success("Ervas daninhas removidas! +1 Ervas 🌿");
       this.renderFarm();
     } else {
       notifications.error(result.error || "Não foi possível limpar as ervas");
@@ -1467,8 +1478,24 @@ export default class GameEngine {
               this.plantAnimation.animate(plotElement);
             }
 
-            // Show simple planting notification
-            notifications.success("🌱 " + i18n.t("farm.planted"));
+            // Show planting notification with quantity, name and correct icon
+            {
+              const plantedCropData = this.farmSystem.getCropData(cropId);
+              const cropName =
+                i18n.getLanguage() === "pt-BR"
+                  ? plantedCropData?.namePtBR || plantedCropData?.name || cropId
+                  : plantedCropData?.name || cropId;
+              const itemData = this.inventorySystem.getItemData(cropId);
+              let iconHTML = itemData?.icon || plantedCropData?.icon || "";
+              // Convert PNG path to img tag if needed
+              if (iconHTML.includes(".png") || iconHTML.includes("assets/")) {
+                iconHTML = `<img src="${iconHTML}" alt="${cropName}">`;
+              }
+              notifications.success(
+                `${i18n.t("farm.planted")} +1x ${cropName}`,
+                { icon: iconHTML },
+              );
+            }
             this.renderFarm();
             this.topBar.update();
 
@@ -1528,12 +1555,18 @@ export default class GameEngine {
           ? cropData.namePtBR || cropData.name
           : cropData.name;
 
+      const itemData = this.inventorySystem.getItemData(result.crop);
+      let _iconHTML = itemData?.icon || cropData.icon || "";
+      // Convert PNG path to img tag if needed
+      if (_iconHTML.includes(".png") || _iconHTML.includes("assets/")) {
+        _iconHTML = `<img src="${_iconHTML}" alt="${cropName}">`;
+      }
       let message = `${i18n.t("farm.harvested")} +${result.amount}x ${cropName}`;
 
       if (result.levelUp) {
         notifications.levelUp(result.newLevel, i18n.t("skills.farming.name"));
       } else {
-        notifications.success(message);
+        notifications.success(message, { icon: _iconHTML });
       }
 
       this.renderFarm();
@@ -2122,12 +2155,24 @@ export default class GameEngine {
             return;
           }
 
-          // Show notification
-          notifications.success(
-            i18n.t("notifications.plantedMultiple", {
-              count: result.planted,
-            }),
-          );
+          // Show notification (include quantity, crop name and correct icon)
+          {
+            const cropData = this.farmSystem.getCropData(cropId);
+            const cropName =
+              i18n.getLanguage() === "pt-BR"
+                ? cropData?.namePtBR || cropData?.name || cropId
+                : cropData?.name || cropId;
+            const itemData = this.inventorySystem.getItemData(cropId);
+            let iconHTML = itemData?.icon || cropData?.icon || "";
+            // Convert PNG path to img tag if needed
+            if (iconHTML.includes(".png") || iconHTML.includes("assets/")) {
+              iconHTML = `<img src="${iconHTML}" alt="${cropName}">`;
+            }
+            notifications.success(
+              `${i18n.t("farm.planted")} +${result.planted}x ${cropName}`,
+              { icon: iconHTML },
+            );
+          }
 
           // Play animations on the DOM elements (they still exist)
           if (this.plantAnimation && result.plantedIndices.length > 0) {
@@ -2189,12 +2234,51 @@ export default class GameEngine {
       return;
     }
 
-    // Show notification
-    notifications.success(
-      i18n.t("notifications.harvestedMultiple", {
-        count: result.harvested,
-      }),
-    );
+    // Show notification with per-crop breakdown and icons (like PlantAll)
+    {
+      const itemsArray = Object.entries(result.items || {});
+      if (itemsArray.length === 1) {
+        // Single crop type - show simple message with icon
+        const [cropId, amount] = itemsArray[0];
+        const cropData = this.farmSystem.getCropData(cropId);
+        const cropName =
+          i18n.getLanguage() === "pt-BR"
+            ? cropData?.namePtBR || cropData?.name || cropId
+            : cropData?.name || cropId;
+        const itemData = this.inventorySystem.getItemData(cropId);
+        let iconHTML = itemData?.icon || cropData?.icon || "";
+        // Convert PNG path to img tag if needed
+        if (iconHTML.includes(".png") || iconHTML.includes("assets/")) {
+          iconHTML = `<img src="${iconHTML}" alt="${cropName}">`;
+        }
+        notifications.success(
+          `${i18n.t("farm.harvested")} +${amount}x ${cropName}`,
+          { icon: iconHTML },
+        );
+      } else if (itemsArray.length > 1) {
+        // Multiple crop types - show with count and first crop icon
+        const [firstCropId] = itemsArray[0];
+        const firstCropData = this.farmSystem.getCropData(firstCropId);
+        const firstItemData = this.inventorySystem.getItemData(firstCropId);
+        let firstIcon = firstItemData?.icon || firstCropData?.icon || "";
+        if (firstIcon.includes(".png") || firstIcon.includes("assets/")) {
+          firstIcon = `<img src="${firstIcon}" alt="Colheita">`;
+        }
+        notifications.success(
+          i18n.t("notifications.harvestedMultiple", {
+            count: result.harvested,
+          }),
+          { icon: firstIcon },
+        );
+      } else {
+        // Fallback
+        notifications.success(
+          i18n.t("notifications.harvestedMultiple", {
+            count: result.harvested,
+          }),
+        );
+      }
+    }
 
     // Play animations on the DOM elements (they still exist)
     if (this.harvestAnimation) {
