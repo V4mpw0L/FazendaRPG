@@ -1,0 +1,172 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║           🔍 DEBUG DO ESTOQUE - Passo a Passo                       ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+TESTE COMPLETO COM LOGS:
+========================
+
+1. Abra o jogo
+2. Abra o Console (F12)
+3. Vá para NPCs > Fazendeiro José > Loja
+
+LOGS ESPERADOS NO CONSOLE:
+---------------------------
+⚠️ Loaded JSON data - stock values will be REPLACED by saved data
+🆕 First time init: wheat_seed for old_farmer = 100/100
+🆕 First time init: corn_seed for old_farmer = 100/100
+... (outros itens)
+✅ Total initialized: 11 new items
+💾 Saved stock for 11 items to player data
+📦 Current stock data: { ... }
+✅ Forced player.save() called
+✅ Player data loaded - JSON stock values IGNORED
+
+4. Compre 50 sementes de trigo
+
+LOGS ESPERADOS:
+---------------
+🛒 BUYING: 50x wheat_seed
+📊 Stock change: 100 → 50
+💾 Saved to player.data.npcStock[old_farmer][wheat_seed] = 50
+💾 Saved stock for 11 items to player data
+📦 Current stock data: {
+  "old_farmer": {
+    "wheat_seed": 50,
+    "corn_seed": 100,
+    ...
+  }
+}
+✅ Forced player.save() called
+✅ Verification: Stock saved as 50
+
+5. Feche a loja
+6. Pressione F5 para recarregar
+
+LOGS ESPERADOS NO RELOAD:
+--------------------------
+⚠️ Loaded JSON data - stock values will be REPLACED by saved data
+🔄 Restored 0x wheat_seed for old_farmer (50/100)  ← IMPORTANTE!
+✅ Total restored: 0 items
+💾 Saved stock for 11 items to player data
+📦 Current stock data: {
+  "old_farmer": {
+    "wheat_seed": 50,    ← DEVE SER 50, NÃO 100!
+    ...
+  }
+}
+✅ Forced player.save() called
+✅ Player data loaded - JSON stock values IGNORED
+
+7. Entre na loja novamente
+
+RESULTADO ESPERADO:
+-------------------
+✅ Estoque DEVE estar em 50
+✅ NÃO pode estar em 100!
+
+═══════════════════════════════════════════════════════════════════════
+
+SE O ESTOQUE VOLTA PARA 100:
+=============================
+
+1. Verifique os logs no console
+2. Procure por estas mensagens:
+
+❌ PROBLEMA: Se aparecer "First time init" no reload
+   → Significa que os dados NÃO foram salvos
+   
+✅ CORRETO: Deve aparecer "Restored 0x" ou valor > 0
+   → Significa que encontrou dados salvos
+
+3. Teste manualmente no console:
+
+// Ver dados salvos:
+console.log(game.player.data.npcStock);
+
+// Deve mostrar algo como:
+{
+  "old_farmer": {
+    "wheat_seed": 50,
+    "corn_seed": 100,
+    ...
+  }
+}
+
+// Se mostrar objeto vazio {} ou undefined:
+→ O save NÃO está funcionando!
+
+4. Teste o save manualmente:
+
+// Forçar save:
+game.player.data.npcStock = {
+  "old_farmer": {
+    "wheat_seed": 50
+  }
+};
+game.player.save();
+
+// Recarregar página (F5)
+// Verificar se manteve:
+console.log(game.player.data.npcStock);
+
+═══════════════════════════════════════════════════════════════════════
+
+COMANDOS ÚTEIS PARA DEBUG:
+===========================
+
+// Ver todos os dados do player:
+console.log(game.player.data);
+
+// Ver especificamente o estoque:
+console.log("Stock:", game.player.data.npcStock);
+console.log("Timestamps:", game.player.data.npcStockTimestamp);
+
+// Ver o que está no localStorage:
+console.log("LocalStorage:", localStorage.getItem('fazendarpg_save'));
+
+// Limpar dados (CUIDADO - apaga tudo):
+localStorage.clear();
+
+// Setar estoque manualmente para teste:
+game.player.data.npcStock.old_farmer.wheat_seed = 42;
+game.player.save();
+
+// Forçar reload do estoque:
+game.npcsUI.loadNPCStock();
+
+// Ver valor atual no objeto NPC:
+console.log(game.npcsUI.npcsData.old_farmer.shop.items[0].stock);
+
+═══════════════════════════════════════════════════════════════════════
+
+POSSÍVEIS CAUSAS SE AINDA NÃO FUNCIONAR:
+=========================================
+
+1. Player.save() não está salvando no localStorage
+   → Verificar se tem erros no console
+   → Verificar se localStorage está habilitado
+
+2. Dados sendo carregados antes do init completar
+   → Problema de async/await
+
+3. Outro código sobrescrevendo os dados
+   → Verificar se tem outros lugares que mexem com npcStock
+
+4. localStorage cheio ou bloqueado
+   → Verificar quota do navegador
+
+═══════════════════════════════════════════════════════════════════════
+
+ME ENVIE:
+=========
+
+Se ainda não funcionar, me envie print/cópia dos logs do console:
+
+1. Logs ao carregar o jogo (primeira vez)
+2. Logs ao comprar itens
+3. Logs ao recarregar (F5)
+4. Output de: console.log(game.player.data.npcStock)
+
+Com isso eu consigo identificar exatamente onde está o problema!
+
+═══════════════════════════════════════════════════════════════════════

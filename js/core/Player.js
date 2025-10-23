@@ -72,6 +72,9 @@ export default class Player {
 
       // NPCs
       npcs: {},
+      npcStock: {},
+      npcStockTimestamp: {},
+      npcLastInteraction: {},
 
       // City Systems
       bank: {

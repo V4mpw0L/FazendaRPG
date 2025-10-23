@@ -17,6 +17,7 @@ export default class NPCSUI {
     this.npcsData = null;
     this.initialized = false;
     this.stockRestoreInterval = null;
+    this.friendshipDecayInterval = null;
   }
 
   /**
@@ -28,13 +29,69 @@ export default class NPCSUI {
   }
 
   /**
-   * Start stock restoration timer (1 item per minute for each NPC)
+   * Start stock restoration timer (calculates based on time passed)
    */
   startStockRestoration() {
-    // Restore 1 stock every 60 seconds
+    // Check and restore stock every 10 seconds based on time passed
     this.stockRestoreInterval = setInterval(() => {
       this.restoreStock();
+    }, 10000); // 10 seconds
+  }
+
+  /**
+   * Start friendship decay timer (decreases over time)
+   * Decay: -1% every 5 minutes of real time
+   */
+  startFriendshipDecay() {
+    // Check friendship decay every 60 seconds
+    this.friendshipDecayInterval = setInterval(() => {
+      this.decayFriendship();
     }, 60000); // 60 seconds
+  }
+
+  /**
+   * Decay friendship for all NPCs based on time since last interaction
+   * -1% every 5 minutes (300 seconds) of real time
+   */
+  decayFriendship() {
+    if (!this.npcsData) return;
+
+    const now = Date.now();
+
+    Object.keys(this.npcsData).forEach((npcId) => {
+      const npc = this.npcsData[npcId];
+
+      // Initialize last interaction if not exists
+      if (!this.player.data.npcLastInteraction) {
+        this.player.data.npcLastInteraction = {};
+      }
+
+      if (!this.player.data.npcLastInteraction[npcId]) {
+        this.player.data.npcLastInteraction[npcId] = now;
+        return;
+      }
+
+      const lastInteraction = this.player.data.npcLastInteraction[npcId];
+      const minutesPassed = (now - lastInteraction) / (1000 * 60);
+
+      // Decay 1% every 5 minutes
+      if (minutesPassed >= 5) {
+        const fiveMinutesPassed = Math.floor(minutesPassed / 5);
+        const decayAmount = fiveMinutesPassed;
+
+        if (decayAmount > 0 && npc.friendship > 0) {
+          npc.friendship = Math.max(0, npc.friendship - decayAmount);
+          this.player.data.npcs[npcId] = npc.friendship;
+          this.player.data.npcLastInteraction[npcId] = now;
+
+          console.log(
+            `💔 ${npcId} friendship decayed by ${decayAmount}% (${Math.floor(minutesPassed)} minutes passed)`,
+          );
+        }
+      }
+    });
+
+    this.saveNPCFriendship();
   }
 
   /**
@@ -43,21 +100,57 @@ export default class NPCSUI {
   restoreStock() {
     if (!this.npcsData) return;
 
-    Object.values(this.npcsData).forEach((npc) => {
+    const now = Date.now();
+
+    // Initialize stock timestamps if not exists
+    if (!this.player.data.npcStockTimestamp) {
+      this.player.data.npcStockTimestamp = {};
+    }
+
+    let totalRestored = 0;
+
+    Object.keys(this.npcsData).forEach((npcId) => {
+      const npc = this.npcsData[npcId];
+
       if (npc.shop && npc.shop.items) {
+        if (!this.player.data.npcStockTimestamp[npcId]) {
+          this.player.data.npcStockTimestamp[npcId] = {};
+        }
+
         npc.shop.items.forEach((item) => {
-          if (item.stock < (item.maxStock || 100)) {
-            item.stock += 1;
+          // Initialize timestamp for this item
+          if (!this.player.data.npcStockTimestamp[npcId][item.id]) {
+            this.player.data.npcStockTimestamp[npcId][item.id] = now;
+          }
+
+          const lastUpdate = this.player.data.npcStockTimestamp[npcId][item.id];
+          const minutesPassed = (now - lastUpdate) / (1000 * 60);
+
+          // Restore 1 stock per minute
+          if (minutesPassed >= 1 && item.stock < (item.maxStock || 100)) {
+            const itemsToRestore = Math.min(
+              Math.floor(minutesPassed),
+              (item.maxStock || 100) - item.stock,
+            );
+
+            if (itemsToRestore > 0) {
+              item.stock += itemsToRestore;
+              totalRestored += itemsToRestore;
+              this.player.data.npcStockTimestamp[npcId][item.id] = now;
+            }
           }
         });
       }
     });
 
-    console.log("🔄 NPCs stock restored +1");
+    if (totalRestored > 0) {
+      this.saveNPCStock();
+      console.log(`🔄 NPCs stock restored: +${totalRestored} items`);
+    }
   }
 
   /**
-   * Get friendship discount (0% to 20% based on friendship)
+   * Get friendship discount (0% to 50% based on friendship)
    */
   getFriendshipDiscount(npcId) {
     if (!this.npcsData[npcId]) return 0;
@@ -65,8 +158,8 @@ export default class NPCSUI {
     const friendship = this.npcsData[npcId].friendship || 0;
     const maxFriendship = this.npcsData[npcId].maxFriendship || 100;
 
-    // 20% discount at max friendship
-    const discountPercent = (friendship / maxFriendship) * 0.2;
+    // 50% discount at max friendship (linear scaling)
+    const discountPercent = (friendship / maxFriendship) * 0.5;
 
     return discountPercent;
   }
@@ -89,16 +182,25 @@ export default class NPCSUI {
       }
 
       const data = await response.json();
+
+      // Load JSON structure but DON'T trust stock values
       this.npcsData = data.npcs;
 
-      // Initialize NPC friendship from player data
-      this.loadNPCFriendship();
+      console.log(
+        "⚠️ Loaded JSON data - stock values will be REPLACED by saved data",
+      );
 
-      // Load stock from player data or initialize
+      // IMMEDIATELY load saved data to override JSON values
+      this.loadNPCFriendship();
       this.loadNPCStock();
+
+      console.log("✅ Player data loaded - JSON stock values IGNORED");
 
       // Start stock restoration
       this.startStockRestoration();
+
+      // Start friendship decay
+      this.startFriendshipDecay();
 
       this.initialized = true;
       console.log("✅ NPCs UI initialized");
@@ -117,6 +219,13 @@ export default class NPCSUI {
       this.player.data.npcs = {};
     }
 
+    // Initialize last interaction tracking
+    if (!this.player.data.npcLastInteraction) {
+      this.player.data.npcLastInteraction = {};
+    }
+
+    const now = Date.now();
+
     // Sync NPC friendship from player data
     Object.keys(this.npcsData).forEach((npcId) => {
       if (this.player.data.npcs[npcId] !== undefined) {
@@ -125,17 +234,38 @@ export default class NPCSUI {
         // Initialize if not exists
         this.player.data.npcs[npcId] = this.npcsData[npcId].friendship || 0;
       }
+
+      // Initialize last interaction timestamp
+      if (!this.player.data.npcLastInteraction[npcId]) {
+        this.player.data.npcLastInteraction[npcId] = now;
+      }
     });
   }
 
   /**
-   * Load NPC stock from player data
+   * Load NPC stock from player data with time-based restoration
+   * CRITICAL: IGNORES JSON stock values completely after first initialization!
    */
   loadNPCStock() {
     if (!this.player.data.npcStock) {
       this.player.data.npcStock = {};
     }
 
+    if (!this.player.data.npcStockTimestamp) {
+      this.player.data.npcStockTimestamp = {};
+    }
+
+    const now = Date.now();
+    let restoredItems = 0;
+    let initializedItems = 0;
+
+    // DEBUG: Check if we have saved data
+    console.log("🔍 Checking player.data.npcStock:", this.player.data.npcStock);
+    console.log(
+      "🔍 Has saved stock data?",
+      Object.keys(this.player.data.npcStock).length > 0,
+    );
+
     Object.keys(this.npcsData).forEach((npcId) => {
       const npc = this.npcsData[npcId];
       if (npc.shop && npc.shop.items) {
@@ -143,26 +273,104 @@ export default class NPCSUI {
           this.player.data.npcStock[npcId] = {};
         }
 
+        if (!this.player.data.npcStockTimestamp[npcId]) {
+          this.player.data.npcStockTimestamp[npcId] = {};
+        }
+
         npc.shop.items.forEach((item) => {
-          if (this.player.data.npcStock[npcId][item.id] !== undefined) {
-            item.stock = this.player.data.npcStock[npcId][item.id];
+          const maxStock = item.maxStock || 100;
+          const itemId = item.id;
+
+          // CRITICAL: Check if this item was already initialized before
+          const hasSavedData =
+            this.player.data.npcStock[npcId] &&
+            this.player.data.npcStock[npcId][itemId] !== undefined;
+
+          console.log(
+            `🔍 ${itemId} for ${npcId}: hasSavedData=${hasSavedData}, value=${this.player.data.npcStock[npcId]?.[itemId]}`,
+          );
+
+          if (hasSavedData) {
+            // ALWAYS use saved data, NEVER the JSON value!
+            let currentStock = this.player.data.npcStock[npcId][itemId];
+
+            // Ensure stock doesn't exceed max (safety check)
+            currentStock = Math.min(currentStock, maxStock);
+
+            // Calculate time-based restoration
+            const lastUpdate =
+              this.player.data.npcStockTimestamp[npcId][itemId] || now;
+            const minutesPassed = (now - lastUpdate) / (1000 * 60);
+
+            // Restore 1 stock per minute since last update
+            if (minutesPassed >= 1 && currentStock < maxStock) {
+              const itemsToRestore = Math.min(
+                Math.floor(minutesPassed),
+                maxStock - currentStock,
+              );
+
+              if (itemsToRestore > 0) {
+                currentStock += itemsToRestore;
+                restoredItems += itemsToRestore;
+                console.log(
+                  `🔄 Restored ${itemsToRestore}x ${itemId} for ${npcId} (${currentStock}/${maxStock})`,
+                );
+              }
+
+              // Update timestamp
+              this.player.data.npcStockTimestamp[npcId][itemId] = now;
+            }
+
+            // Apply the calculated stock (OVERRIDE JSON VALUE!)
+            item.stock = currentStock;
+            this.player.data.npcStock[npcId][itemId] = currentStock;
           } else {
-            // Initialize stock
-            this.player.data.npcStock[npcId][item.id] = item.stock;
+            // First time seeing this item - initialize with max stock
+            const initialStock = maxStock;
+
+            item.stock = initialStock;
+            this.player.data.npcStock[npcId][itemId] = initialStock;
+            this.player.data.npcStockTimestamp[npcId][itemId] = now;
+            initializedItems++;
+
+            console.log(
+              `🆕 First time init: ${itemId} for ${npcId} = ${initialStock}/${maxStock}`,
+            );
+            console.log(
+              `⚠️ WARNING: This should only appear on FIRST game load!`,
+            );
           }
         });
       }
     });
+
+    if (restoredItems > 0) {
+      console.log(`✅ Total restored: ${restoredItems} items`);
+    }
+
+    if (initializedItems > 0) {
+      console.log(`✅ Total initialized: ${initializedItems} new items`);
+    }
+
+    // Force save to ensure data is persisted
+    this.saveNPCStock();
   }
 
   /**
-   * Save NPC stock to player data
+   * Save NPC stock to player data with timestamps
    */
   saveNPCStock() {
     if (!this.player.data.npcStock) {
       this.player.data.npcStock = {};
     }
 
+    if (!this.player.data.npcStockTimestamp) {
+      this.player.data.npcStockTimestamp = {};
+    }
+
+    const now = Date.now();
+    let savedCount = 0;
+
     Object.keys(this.npcsData).forEach((npcId) => {
       const npc = this.npcsData[npcId];
       if (npc.shop && npc.shop.items) {
@@ -170,14 +378,37 @@ export default class NPCSUI {
           this.player.data.npcStock[npcId] = {};
         }
 
+        if (!this.player.data.npcStockTimestamp[npcId]) {
+          this.player.data.npcStockTimestamp[npcId] = {};
+        }
+
         npc.shop.items.forEach((item) => {
+          // Save current stock from the item object
           this.player.data.npcStock[npcId][item.id] = item.stock;
+          savedCount++;
+
+          // Update timestamp only if stock is not at max
+          if (item.stock < (item.maxStock || 100)) {
+            this.player.data.npcStockTimestamp[npcId][item.id] = now;
+          }
         });
       }
     });
 
+    console.log(`💾 Saved stock for ${savedCount} items to player data`);
+    console.log(
+      "📦 Current stock data:",
+      JSON.stringify(this.player.data.npcStock, null, 2),
+    );
+
     // Dispatch event to trigger save
     window.dispatchEvent(new CustomEvent("player:dataChanged"));
+
+    // Force immediate save to localStorage
+    if (this.player && this.player.save) {
+      this.player.save();
+      console.log("✅ Forced player.save() called");
+    }
   }
 
   /**
@@ -203,8 +434,9 @@ export default class NPCSUI {
   render() {
     if (!this.container || !this.npcsData) return;
 
-    // Reload friendship data to ensure sync
+    // CRITICAL: Reload ALL data from player before rendering
     this.loadNPCFriendship();
+    this.loadNPCStock();
 
     this.container.innerHTML = "";
 
@@ -282,8 +514,10 @@ export default class NPCSUI {
       text: "💬 Conversar",
       class: "btn-primary",
       onClick: () => {
-        this.increaseFriendship(npc.id, 1);
-        this.notifications.success("Você conversou com " + name);
+        const gained = this.increaseFriendship(npc.id);
+        this.notifications.success(
+          `Você conversou com ${name} (+${gained}% amizade)`,
+        );
         this.render();
         return true;
       },
@@ -358,6 +592,10 @@ export default class NPCSUI {
       return;
     }
 
+    // CRITICAL: Reload stock data to ensure we have latest saved values
+    // This prevents JSON default values from being shown
+    this.loadNPCStock();
+
     const name = npc.namePtBR || npc.name;
     const shopItems = npc.shop.items;
     const friendship = npc.friendship || 0;
@@ -424,6 +662,11 @@ export default class NPCSUI {
             ? "btn-success"
             : "btn-secondary";
 
+      // Stock display with banner
+      const stockDisplay = `<div style="background: ${outOfStock ? "linear-gradient(135deg, #e74c3c, #c0392b)" : "linear-gradient(135deg, #5caa1f, #4a8c19)"}; color: white; padding: 0.25rem 0.5rem; border-radius: 6px; font-size: 0.75rem; margin-bottom: 0.5rem; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+        📦 Estoque: <span style="font-weight: 700; font-size: 0.875rem;">${stock}</span>
+      </div>`;
+
       let priceDisplay = `<div style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5); font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem;">
         <img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g
       </div>`;
@@ -446,12 +689,12 @@ export default class NPCSUI {
       }
 
       content += `
-        <div class="shop-item" style="background: var(--bg-accent); padding: 0.75rem; border-radius: 8px; border: 2px solid var(--border-color); display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; min-height: 180px; ${isLocked || outOfStock ? "opacity: 0.6;" : ""}">
+        <div class="shop-item" style="background: var(--bg-accent); padding: 0.75rem; border-radius: 8px; border: 2px solid var(--border-color); display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; min-height: 200px; ${isLocked || outOfStock ? "opacity: 0.6;" : ""}">
           <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">${renderItemIcon(itemData, { size: "2.5rem" })}</div>
           <div style="font-weight: 600; font-size: 0.875rem; color: var(--text-primary); margin-bottom: 0.25rem; line-height: 1.2;">${itemName}</div>
           ${requiredLevelInfo}
+          ${stockDisplay}
           ${priceDisplay}
-          <div style="color: ${outOfStock ? "#e74c3c" : "var(--text-secondary)"}; font-size: 0.75rem; margin-bottom: 0.5rem; font-weight: ${outOfStock ? "700" : "400"};">Estoque: ${stock}</div>
           <button class="btn ${buttonClass}"
                   data-item-id="${shopItem.id}"
                   data-price="${price}"
@@ -621,16 +864,53 @@ export default class NPCSUI {
             this.player.removeGold(totalCost);
             this.inventorySystem.addItem(itemId, amount);
 
-            // Decrease stock
+            // Decrease stock and save immediately
+            const oldStock = shopItem.stock;
             shopItem.stock -= amount;
+            const newStock = shopItem.stock;
+
+            console.log(`🛒 BUYING: ${amount}x ${itemId}`);
+            console.log(`📊 Stock change: ${oldStock} → ${newStock}`);
+
+            // Update player data directly to ensure it's saved
+            if (!this.player.data.npcStock[npc.id]) {
+              this.player.data.npcStock[npc.id] = {};
+            }
+            this.player.data.npcStock[npc.id][itemId] = newStock;
+
+            // Update timestamp
+            if (!this.player.data.npcStockTimestamp[npc.id]) {
+              this.player.data.npcStockTimestamp[npc.id] = {};
+            }
+            this.player.data.npcStockTimestamp[npc.id][itemId] = Date.now();
+
+            console.log(
+              `💾 Saved to player.data.npcStock[${npc.id}][${itemId}] = ${newStock}`,
+            );
+
+            // Save all stock data
             this.saveNPCStock();
+
+            // Double-check it was saved
+            setTimeout(() => {
+              const savedValue = this.player.data.npcStock[npc.id]?.[itemId];
+              console.log(`✅ Verification: Stock saved as ${savedValue}`);
+              if (savedValue !== newStock) {
+                console.error(
+                  `❌ ERROR: Stock mismatch! Expected ${newStock}, got ${savedValue}`,
+                );
+              }
+            }, 100);
 
             this.notifications.success(
               `Comprou ${amount}x ${itemName} por ${totalCost}g!`,
             );
 
-            // Increase friendship
-            this.increaseFriendship(npc.id, amount);
+            // Increase friendship based on amount bought (progressive)
+            const friendshipGain = Math.min(amount, 5); // Max 5% per purchase
+            for (let i = 0; i < friendshipGain; i++) {
+              this.increaseFriendship(npc.id);
+            }
 
             // Reopen shop after purchase with delay
             setTimeout(() => {
@@ -690,17 +970,34 @@ export default class NPCSUI {
   }
 
   /**
-   * Increase friendship with NPC
+   * Increase friendship with NPC (progressive gain based on current friendship)
    * @param {string} npcId - NPC ID
-   * @param {number} amount - Amount to increase
+   * @returns {number} - Amount of friendship gained
    */
-  increaseFriendship(npcId, amount) {
-    if (!this.npcsData[npcId]) return;
+  increaseFriendship(npcId) {
+    if (!this.npcsData[npcId]) return 0;
 
     const oldFriendship = this.npcsData[npcId].friendship;
+    const maxFriendship = this.npcsData[npcId].maxFriendship || 100;
+    const currentPercent = (oldFriendship / maxFriendship) * 100;
+
+    // Progressive gain based on current friendship level
+    // 0-25%: +1% per interaction
+    // 25-50%: +2% per interaction
+    // 50-75%: +3% per interaction
+    // 75-100%: +5% per interaction
+    let gainAmount = 1;
+    if (currentPercent >= 75) {
+      gainAmount = 5;
+    } else if (currentPercent >= 50) {
+      gainAmount = 3;
+    } else if (currentPercent >= 25) {
+      gainAmount = 2;
+    }
+
     this.npcsData[npcId].friendship = Math.min(
-      this.npcsData[npcId].maxFriendship,
-      this.npcsData[npcId].friendship + amount,
+      maxFriendship,
+      this.npcsData[npcId].friendship + gainAmount,
     );
 
     // Save to player data
@@ -709,24 +1006,32 @@ export default class NPCSUI {
     }
     this.player.data.npcs[npcId] = this.npcsData[npcId].friendship;
 
+    // Update last interaction timestamp
+    if (!this.player.data.npcLastInteraction) {
+      this.player.data.npcLastInteraction = {};
+    }
+    this.player.data.npcLastInteraction[npcId] = Date.now();
+
     // Trigger save
     this.saveNPCFriendship();
 
     console.log(
-      `💚 ${npcId} friendship: ${oldFriendship} → ${this.npcsData[npcId].friendship}`,
+      `💚 ${npcId} friendship: ${oldFriendship} → ${this.npcsData[npcId].friendship} (+${gainAmount})`,
     );
 
     // Check if reached max friendship
     if (
-      this.npcsData[npcId].friendship >= this.npcsData[npcId].maxFriendship &&
-      oldFriendship < this.npcsData[npcId].maxFriendship
+      this.npcsData[npcId].friendship >= maxFriendship &&
+      oldFriendship < maxFriendship
     ) {
       const npcName =
         this.npcsData[npcId].namePtBR || this.npcsData[npcId].name;
       this.notifications.success(
-        `🎉 Amizade máxima com ${npcName}! Você ganhou 20% de desconto!`,
+        `🎉 Amizade máxima com ${npcName}! Você ganhou 50% de desconto!`,
       );
     }
+
+    return gainAmount;
   }
 
   /**
@@ -743,6 +1048,10 @@ export default class NPCSUI {
     if (this.stockRestoreInterval) {
       clearInterval(this.stockRestoreInterval);
       this.stockRestoreInterval = null;
+    }
+    if (this.friendshipDecayInterval) {
+      clearInterval(this.friendshipDecayInterval);
+      this.friendshipDecayInterval = null;
     }
   }
 }
