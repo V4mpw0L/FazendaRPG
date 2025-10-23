@@ -1910,7 +1910,7 @@ export default class GameEngine {
       enableBtn.textContent = i18n.t("settings.disableNotifications");
       enableBtn.classList.remove("btn-primary");
       enableBtn.classList.add("btn-secondary");
-      testBtn.style.display = "inline-block";
+      // testBtn.style.display = "inline-block"; // Botão de teste oculto
     } else {
       enableBtn.textContent = i18n.t("settings.enableNotifications");
       enableBtn.classList.remove("btn-secondary");
