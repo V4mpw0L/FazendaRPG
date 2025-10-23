@@ -57,6 +57,19 @@ export default class SideMenu {
       item.addEventListener("click", (e) => this.handleMenuItemClick(e));
     });
 
+    // News button
+    const newsBtn = document.getElementById("news-menu-btn");
+    if (newsBtn) {
+      newsBtn.addEventListener("click", () => {
+        // Abre o modal de notícias
+        if (window.FazendaRPG?.engine?.newsModal) {
+          window.FazendaRPG.engine.newsModal.forceShow();
+        }
+        // Fecha o menu lateral
+        this.close();
+      });
+    }
+
     // Keyboard shortcuts
     document.addEventListener("keydown", (e) => this.handleKeyboard(e));
 
