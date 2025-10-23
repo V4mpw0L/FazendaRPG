@@ -283,7 +283,7 @@ export default class NPCSUI {
       class: "btn-primary",
       onClick: () => {
         this.increaseFriendship(npc.id, 1);
-        this.notifications.show("Você conversou com " + name, "success");
+        this.notifications.success("Você conversou com " + name);
         this.render();
         return true;
       },
@@ -307,7 +307,7 @@ export default class NPCSUI {
         text: "📜 Missões",
         class: "btn-secondary",
         onClick: () => {
-          this.notifications.show("Sistema de missões em breve!", "info");
+          this.notifications.info("Sistema de missões em breve!");
           return false;
         },
       });
@@ -354,7 +354,7 @@ export default class NPCSUI {
    */
   showNPCShop(npc) {
     if (!npc.shop || !npc.shop.items) {
-      this.notifications.show("Este NPC não tem loja disponível!", "error");
+      this.notifications.error("Este NPC não tem loja disponível!");
       return;
     }
 

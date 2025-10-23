@@ -1,7 +1,7 @@
 /**
- * FazendaRPG - Advanced Notification System
- * Modern toast notifications with icons, animations and rich styling
- * @version 0.0.12
+ * FazendaRPG - Professional Notification System
+ * Lightweight, elegant notifications with farm/RPG aesthetics
+ * @version 0.0.13
  */
 
 import i18n from "./i18n.js";
@@ -11,8 +11,9 @@ class NotificationManager {
     this.container = null;
     this.queue = [];
     this.activeNotifications = [];
-    this.maxVisible = 3;
-    this.defaultDuration = 3500;
+    this.maxVisible = 4;
+    this.defaultDuration = 3000;
+    this.itemIconCache = {};
     this.init();
   }
 
@@ -32,7 +33,7 @@ class NotificationManager {
 
     this.container = container;
     this.injectStyles();
-    console.log("✅ Notification system initialized");
+    console.log("✅ Notification system initialized (v0.0.13)");
   }
 
   /**
@@ -44,353 +45,570 @@ class NotificationManager {
     const style = document.createElement("style");
     style.id = "notification-styles";
     style.textContent = `
-            /* Notifications Container */
-            .notifications-container {
-                position: fixed;
-                top: calc(var(--topbar-height, 60px) + 16px);
-                right: 16px;
-                z-index: 10000;
-                display: flex;
-                flex-direction: column;
-                gap: 12px;
-                pointer-events: none;
-                max-width: 400px;
-            }
+      /* ===================================
+         FazendaRPG Notifications System
+         Professional & Lightweight
+         =================================== */
 
-            /* Individual Notification */
-            .notification {
-                pointer-events: auto;
-                background: var(--bg-secondary);
-                border-radius: 16px;
-                padding: 16px 20px;
-                box-shadow:
-                    0 10px 40px rgba(0, 0, 0, 0.2),
-                    0 0 0 1px rgba(255, 255, 255, 0.1);
-                display: flex;
-                align-items: flex-start;
-                gap: 14px;
-                min-width: 300px;
-                max-width: 400px;
-                transform: translateX(450px);
-                opacity: 0;
-                transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-                position: relative;
-                overflow: hidden;
-                border: 2px solid transparent;
-                backdrop-filter: blur(10px);
-            }
+      /* Container */
+      .notifications-container {
+        position: fixed;
+        top: calc(var(--topbar-height, 60px) + 12px);
+        right: 12px;
+        z-index: 10000;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        pointer-events: none;
+        max-width: 380px;
+      }
 
-            .notification.show {
-                transform: translateX(0);
-                opacity: 1;
-            }
+      /* Notification Card */
+      .notification {
+        pointer-events: auto;
+        background: linear-gradient(135deg, #8b6914 0%, #a0522d 40%, #654321 100%);
+        border: 2px solid rgba(139, 105, 20, 0.8);
+        border-radius: 12px;
+        padding: 12px 16px;
+        box-shadow:
+          0 4px 12px rgba(0, 0, 0, 0.4),
+          0 0 0 1px rgba(255, 215, 0, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 280px;
+        max-width: 380px;
+        transform: translateX(420px);
+        opacity: 0;
+        transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        position: relative;
+        overflow: hidden;
+      }
 
-            .notification.hide {
-                transform: translateX(450px);
-                opacity: 0;
-            }
+      /* Top green accent line */
+      .notification::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg,
+          var(--brand-primary, #5caa1f) 0%,
+          var(--brand-secondary, #7ec850) 50%,
+          var(--brand-primary, #5caa1f) 100%);
+        opacity: 0.9;
+      }
 
-            /* Icon */
-            .notification-icon {
-                width: 32px;
-                height: 32px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 18px;
-                flex-shrink: 0;
-                position: relative;
-                z-index: 1;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            }
+      .notification.show {
+        transform: translateX(0);
+        opacity: 1;
+      }
 
-            /* Content */
-            .notification-content {
-                flex: 1;
-                min-width: 0;
-                display: flex;
-                flex-direction: column;
-                gap: 4px;
-            }
+      .notification.hide {
+        transform: translateX(420px) scale(0.95);
+        opacity: 0;
+      }
 
-            .notification-title {
-                font-weight: 700;
-                font-size: 14px;
-                color: var(--text-primary);
-                line-height: 1.4;
-            }
+      /* Icon Container */
+      .notification-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+        background: rgba(0, 0, 0, 0.25);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
 
-            .notification-message {
-                font-size: 13px;
-                color: var(--text-secondary);
-                line-height: 1.5;
-                word-wrap: break-word;
-            }
+      .notification-icon img {
+        width: 28px;
+        height: 28px;
+        object-fit: contain;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+      }
 
-            /* Numbers/Values Highlight */
-            .notification-value {
-                font-weight: 800;
-                font-size: 115%;
-                padding: 0 4px;
-                border-radius: 4px;
-                display: inline-block;
-                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-            }
+      .notification-icon-emoji {
+        font-size: 24px;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+      }
 
-            /* Close Button */
-            .notification-close {
-                width: 28px;
-                height: 28px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                color: white;
-                font-size: 20px;
-                font-weight: 700;
-                line-height: 1;
-                flex-shrink: 0;
-                transition: all 0.2s ease;
-                background: linear-gradient(135deg, #ef5350 0%, #e53935 100%);
-                border: none;
-                box-shadow: 0 2px 8px rgba(239, 83, 80, 0.4);
-            }
+      /* Content */
+      .notification-content {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
 
-            .notification-close:hover {
-                background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
-                transform: scale(1.1);
-                box-shadow: 0 4px 12px rgba(239, 83, 80, 0.6);
-            }
+      .notification-title {
+        font-weight: 800;
+        font-size: 14px;
+        color: #ffffff;
+        line-height: 1.3;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        letter-spacing: 0.3px;
+      }
 
-            .notification-close:active {
-                transform: scale(0.95);
-            }
+      .notification-message {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.95);
+        line-height: 1.4;
+        word-wrap: break-word;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+      }
 
-            /* Progress Bar */
-            .notification-progress {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                height: 3px;
-                background: currentColor;
-                opacity: 0.3;
-                transition: width linear;
-                border-radius: 0 0 0 16px;
-            }
+      /* Item Display */
+      .notification-item-display {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(0, 0, 0, 0.3);
+        padding: 3px 8px;
+        border-radius: 6px;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+      }
 
-            /* Type Styles */
+      .notification-item-display img {
+        width: 18px;
+        height: 18px;
+        object-fit: contain;
+      }
 
-            /* Success */
-            .notification.success {
-                border-color: rgba(39, 174, 96, 0.3);
-                background: linear-gradient(135deg,
-                    rgba(39, 174, 96, 0.05) 0%,
-                    var(--bg-secondary) 100%);
-            }
+      .notification-item-name {
+        font-weight: 700;
+        color: #FFD700;
+        text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+      }
 
-            .notification.success .notification-icon {
-                background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
-                color: white;
-            }
+      /* Numbers/Values Highlight */
+      .notification-value {
+        font-weight: 800;
+        font-size: 110%;
+        padding: 2px 5px;
+        border-radius: 4px;
+        display: inline-block;
+        background: rgba(255, 215, 0, 0.15);
+        color: #FFD700;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        border: 1px solid rgba(255, 215, 0, 0.3);
+      }
 
-            .notification.success .notification-value {
-                color: #27ae60;
-                background: rgba(39, 174, 96, 0.1);
-            }
+      /* Gold Value - Special styling */
+      .notification-value.gold-value {
+        background: rgba(255, 215, 0, 0.2);
+        color: #FFD700;
+        border-color: rgba(255, 215, 0, 0.4);
+        font-size: 115%;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+      }
 
-            .notification.success .notification-progress {
-                color: #27ae60;
-            }
+      /* XP Value */
+      .notification-value.xp-value {
+        background: rgba(92, 170, 31, 0.2);
+        color: #7ec850;
+        border-color: rgba(92, 170, 31, 0.4);
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
 
-            /* Error */
-            .notification.error {
-                border-color: rgba(231, 76, 60, 0.3);
-                background: linear-gradient(135deg,
-                    rgba(231, 76, 60, 0.05) 0%,
-                    var(--bg-secondary) 100%);
-            }
+      /* Positive Value */
+      .notification-value.positive {
+        background: rgba(39, 174, 96, 0.15);
+        color: #2ecc71;
+        border-color: rgba(39, 174, 96, 0.3);
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
 
-            .notification.error .notification-icon {
-                background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-                color: white;
-                animation: shake 0.5s ease;
-            }
+      /* Negative Value */
+      .notification-value.negative {
+        background: rgba(231, 76, 60, 0.15);
+        color: #ff6b6b;
+        border-color: rgba(231, 76, 60, 0.3);
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
 
-            .notification.error .notification-value {
-                color: #e74c3c;
-                background: rgba(231, 76, 60, 0.1);
-            }
+      /* Close Button */
+      .notification-close {
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: white;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1;
+        flex-shrink: 0;
+        transition: all 0.2s ease;
+        background: rgba(231, 76, 60, 0.8);
+        border: 1px solid rgba(231, 76, 60, 1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
 
-            .notification.error .notification-progress {
-                color: #e74c3c;
-            }
+      .notification-close:hover {
+        background: rgba(231, 76, 60, 1);
+        transform: scale(1.1);
+        box-shadow: 0 3px 8px rgba(231, 76, 60, 0.5);
+      }
 
-            /* Warning */
-            .notification.warning {
-                border-color: rgba(243, 156, 18, 0.3);
-                background: linear-gradient(135deg,
-                    rgba(243, 156, 18, 0.05) 0%,
-                    var(--bg-secondary) 100%);
-            }
+      .notification-close:active {
+        transform: scale(0.95);
+      }
 
-            .notification.warning .notification-icon {
-                background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
-                color: white;
-                animation: pulse 1s ease infinite;
-            }
+      /* Progress Bar */
+      .notification-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 2px;
+        background: linear-gradient(90deg,
+          var(--brand-primary, #5caa1f),
+          var(--brand-secondary, #7ec850));
+        opacity: 0.6;
+        transition: width linear;
+        border-radius: 0 0 0 12px;
+      }
 
-            .notification.warning .notification-value {
-                color: #f39c12;
-                background: rgba(243, 156, 18, 0.1);
-            }
+      /* Type Variations */
 
-            .notification.warning .notification-progress {
-                color: #f39c12;
-            }
+      /* Success */
+      .notification.success::before {
+        background: linear-gradient(90deg, #27ae60 0%, #2ecc71 50%, #27ae60 100%);
+      }
 
-            /* Info */
-            .notification.info {
-                border-color: rgba(52, 152, 219, 0.3);
-                background: linear-gradient(135deg,
-                    rgba(52, 152, 219, 0.05) 0%,
-                    var(--bg-secondary) 100%);
-            }
+      .notification.success .notification-icon {
+        background: rgba(39, 174, 96, 0.3);
+        border-color: rgba(39, 174, 96, 0.5);
+      }
 
-            .notification.info .notification-icon {
-                background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-                color: white;
-            }
+      /* Error */
+      .notification.error::before {
+        background: linear-gradient(90deg, #e74c3c 0%, #c0392b 50%, #e74c3c 100%);
+      }
 
-            .notification.info .notification-value {
-                color: #3498db;
-                background: rgba(52, 152, 219, 0.1);
-            }
+      .notification.error .notification-icon {
+        background: rgba(231, 76, 60, 0.3);
+        border-color: rgba(231, 76, 60, 0.5);
+        animation: shake 0.4s ease;
+      }
 
-            .notification.info .notification-progress {
-                color: #3498db;
-            }
+      /* Warning */
+      .notification.warning::before {
+        background: linear-gradient(90deg, #f39c12 0%, #e67e22 50%, #f39c12 100%);
+      }
 
-            /* Level Up */
-            .notification.levelup {
-                border-color: rgba(155, 89, 182, 0.3);
-                background: linear-gradient(135deg,
-                    rgba(155, 89, 182, 0.08) 0%,
-                    var(--bg-secondary) 100%);
-            }
+      .notification.warning .notification-icon {
+        background: rgba(243, 156, 18, 0.3);
+        border-color: rgba(243, 156, 18, 0.5);
+      }
 
-            .notification.levelup .notification-icon {
-                background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
-                color: white;
-                animation: bounce 0.6s ease;
-            }
+      /* Info */
+      .notification.info::before {
+        background: linear-gradient(90deg, #3498db 0%, #2980b9 50%, #3498db 100%);
+      }
 
-            .notification.levelup .notification-value {
-                color: #9b59b6;
-                background: rgba(155, 89, 182, 0.15);
-                font-size: 130%;
-            }
+      .notification.info .notification-icon {
+        background: rgba(52, 152, 219, 0.3);
+        border-color: rgba(52, 152, 219, 0.5);
+      }
 
-            .notification.levelup .notification-progress {
-                color: #9b59b6;
-            }
+      /* Level Up */
+      .notification.levelup::before {
+        background: linear-gradient(90deg, #9b59b6 0%, #8e44ad 50%, #9b59b6 100%);
+        height: 4px;
+        box-shadow: 0 0 8px rgba(155, 89, 182, 0.6);
+      }
 
-            /* Gold/Money */
-            .notification.gold {
-                border-color: rgba(255, 215, 0, 0.6);
-                background: linear-gradient(135deg,
-                    rgba(255, 215, 0, 0.1) 0%,
-                    var(--bg-secondary) 100%);
-                box-shadow:
-                    0 10px 40px rgba(0, 0, 0, 0.2),
-                    0 0 0 1px rgba(255, 215, 0, 0.3),
-                    0 0 20px rgba(255, 215, 0, 0.2);
-            }
+      .notification.levelup {
+        border-color: rgba(155, 89, 182, 0.8);
+        box-shadow:
+          0 4px 16px rgba(155, 89, 182, 0.4),
+          0 0 0 1px rgba(155, 89, 182, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      }
 
-            .notification.gold .notification-icon {
-                background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-                color: white;
-                box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-            }
+      .notification.levelup .notification-icon {
+        background: rgba(155, 89, 182, 0.4);
+        border-color: rgba(155, 89, 182, 0.6);
+        animation: pulse 0.8s ease;
+      }
 
-            .notification.gold .notification-value {
-                color: #FFD700;
-                background: rgba(255, 215, 0, 0.15);
-                text-shadow: 0 0 3px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.5);
-            }
+      /* Gold/Money */
+      .notification.gold::before {
+        background: linear-gradient(90deg, #FFD700 0%, #FFA500 50%, #FFD700 100%);
+        height: 3px;
+        box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+      }
 
-            .notification.gold .notification-progress {
-                color: #FFD700;
-            }
+      .notification.gold {
+        border-color: rgba(255, 215, 0, 0.8);
+        box-shadow:
+          0 4px 16px rgba(255, 215, 0, 0.3),
+          0 0 0 1px rgba(255, 215, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      }
 
-            /* Animations */
-            @keyframes shake {
-                0%, 100% { transform: translateX(0); }
-                25% { transform: translateX(-5px); }
-                75% { transform: translateX(5px); }
-            }
+      .notification.gold .notification-icon {
+        background: rgba(255, 215, 0, 0.3);
+        border-color: rgba(255, 215, 0, 0.6);
+      }
 
-            @keyframes pulse {
-                0%, 100% { transform: scale(1); }
-                50% { transform: scale(1.1); }
-            }
+      /* Item/Harvest */
+      .notification.item::before {
+        background: linear-gradient(90deg,
+          var(--brand-primary, #5caa1f) 0%,
+          var(--brand-secondary, #7ec850) 50%,
+          var(--brand-primary, #5caa1f) 100%);
+      }
 
-            @keyframes bounce {
-                0%, 100% { transform: translateY(0); }
-                25% { transform: translateY(-10px); }
-                50% { transform: translateY(-5px); }
-                75% { transform: translateY(-7px); }
-            }
+      .notification.item {
+        border-color: rgba(92, 170, 31, 0.8);
+      }
 
-            /* Dark Theme */
-            .dark-theme .notification {
-                box-shadow:
-                    0 10px 50px rgba(0, 0, 0, 0.6),
-                    0 0 0 1px rgba(255, 255, 255, 0.05);
-            }
+      .notification.item .notification-icon {
+        background: rgba(92, 170, 31, 0.3);
+        border-color: rgba(92, 170, 31, 0.5);
+      }
 
-            .dark-theme .notification-close {
-                background: linear-gradient(135deg, #ef5350 0%, #e53935 100%);
-                color: white;
-            }
+      /* Animations */
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-3px); }
+        75% { transform: translateX(3px); }
+      }
 
-            .dark-theme .notification-close:hover {
-                background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
-                box-shadow: 0 4px 12px rgba(239, 83, 80, 0.6);
-            }
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.15); }
+      }
 
-            /* Mobile Responsive */
-            @media (max-width: 480px) {
-                .notifications-container {
-                    right: 8px;
-                    left: 8px;
-                    max-width: calc(100% - 16px);
-                }
+      /* Dark Theme Adjustments */
+      .dark-theme .notification {
+        box-shadow:
+          0 4px 16px rgba(0, 0, 0, 0.6),
+          0 0 0 1px rgba(255, 215, 0, 0.25),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      }
 
-                .notification {
-                    min-width: 0;
-                    max-width: 100%;
-                    padding: 14px 16px;
-                }
+      .dark-theme .notification-icon {
+        border-color: rgba(255, 255, 255, 0.15);
+      }
 
-                .notification-icon {
-                    width: 28px;
-                    height: 28px;
-                    font-size: 16px;
-                }
+      /* Light Theme Adjustments */
+      .light-theme .notification {
+        background: linear-gradient(135deg, #a0793d 0%, #b8653f 40%, #7a5628 100%);
+        border-color: rgba(139, 105, 20, 0.9);
+        box-shadow:
+          0 4px 12px rgba(0, 0, 0, 0.3),
+          0 0 0 1px rgba(255, 215, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      }
 
-                .notification-title {
-                    font-size: 13px;
-                }
+      .light-theme .notification-title {
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+      }
 
-                .notification-message {
-                    font-size: 12px;
-                }
-            }
-        `;
+      .light-theme .notification-message {
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Mobile Responsive */
+      @media (max-width: 768px) {
+        .notifications-container {
+          right: 8px;
+          left: 8px;
+          max-width: calc(100% - 16px);
+          top: calc(var(--topbar-height, 60px) + 8px);
+        }
+
+        .notification {
+          min-width: 0;
+          max-width: 100%;
+          padding: 10px 12px;
+          gap: 10px;
+        }
+
+        .notification-icon {
+          width: 36px;
+          height: 36px;
+        }
+
+        .notification-icon img {
+          width: 24px;
+          height: 24px;
+        }
+
+        .notification-title {
+          font-size: 13px;
+        }
+
+        .notification-message {
+          font-size: 12px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .notification {
+          padding: 8px 10px;
+          gap: 8px;
+        }
+
+        .notification-icon {
+          width: 32px;
+          height: 32px;
+          font-size: 16px;
+        }
+
+        .notification-icon img {
+          width: 20px;
+          height: 20px;
+        }
+
+        .notification-title {
+          font-size: 12px;
+        }
+
+        .notification-message {
+          font-size: 11px;
+        }
+
+        .notification-value {
+          font-size: 105%;
+          padding: 1px 4px;
+        }
+      }
+    `;
 
     document.head.appendChild(style);
+  }
+
+  /**
+   * Get item icon path from item ID
+   */
+  getItemIcon(itemId) {
+    // Cache for performance
+    if (this.itemIconCache[itemId]) {
+      return this.itemIconCache[itemId];
+    }
+
+    // Map common items to their sprite IDs
+    const itemSpriteMap = {
+      // Seeds
+      wheat_seed: "1053",
+      corn_seed: "1058",
+      tomato_seed: "1068",
+      carrot_seed: "1069",
+      potato_seed: "1070",
+      pumpkin_seed: "1090",
+      strawberry_seed: "1096",
+
+      // Crops
+      wheat: "1247",
+      corn: "1248",
+      tomato: "1249",
+      carrot: "1250",
+      potato: "1299",
+      pumpkin: "1302",
+      strawberry: "1303",
+      lettuce: "1304",
+
+      // Tools
+      hoe: "1358",
+      trowel: "1359",
+      watering_can: "1360",
+      axe: "1361",
+      pickaxe: "1414",
+      fishing_rod: "1415",
+      scythe: "1416",
+      rake: "1417",
+      shovel: "1418",
+
+      // Fish
+      sardine: "1579",
+      salmon: "1630",
+      tuna: "1631",
+      bass: "1632",
+      carp: "1633",
+      trout: "1640",
+      pike: "1641",
+      catfish: "1642",
+      eel: "1643",
+      sturgeon: "1644",
+
+      // Wood
+      wood: "1752",
+      oak_wood: "1753",
+      pine_wood: "1754",
+      birch_wood: "1755",
+      maple_wood: "1756",
+      cedar_wood: "1757",
+      willow_wood: "1758",
+      ash_wood: "1759",
+      cherry_wood: "1760",
+      walnut_wood: "1761",
+
+      // Minerals
+      stone: "1765",
+      copper_ore: "1766",
+      iron_ore: "1767",
+      silver_ore: "1768",
+      gold_ore: "1769",
+      coal: "1770",
+      ruby: "1771",
+      emerald: "1773",
+      sapphire: "1774",
+      diamond: "1775",
+
+      // Materials
+      clay: "1781",
+      sand: "1790",
+      glass: "1791",
+      brick: "1793",
+      plank: "1794",
+      rope: "1795",
+      cloth: "1796",
+      leather: "1800",
+      thread: "1802",
+
+      // Food
+      bread: "1972",
+      cheese: "2967",
+      milk: "2971",
+      butter: "2972",
+      egg: "2973",
+      flour: "2975",
+      sugar: "2977",
+
+      // Special Items
+      fertilizer: "362",
+      compost: "363",
+      manure: "364",
+      bone_meal: "365",
+      weed: "424",
+      hay: "441",
+
+      // Icons
+      ouro: "ouro",
+      energia: "energia",
+      xp: "xp-potion",
+    };
+
+    const spriteId = itemSpriteMap[itemId];
+    if (spriteId) {
+      const path = `./assets/sprites/${spriteId}.png`;
+      this.itemIconCache[itemId] = path;
+      return path;
+    }
+
+    return null;
   }
 
   /**
@@ -411,7 +629,16 @@ class NotificationManager {
     // Icon
     const iconEl = document.createElement("div");
     iconEl.className = "notification-icon";
-    iconEl.innerHTML = icon || this.getIcon(type);
+
+    if (icon) {
+      if (icon.includes("<img")) {
+        iconEl.innerHTML = icon;
+      } else {
+        iconEl.innerHTML = `<span class="notification-icon-emoji">${icon}</span>`;
+      }
+    } else {
+      iconEl.innerHTML = this.getIcon(type);
+    }
 
     // Content
     const content = document.createElement("div");
@@ -502,7 +729,7 @@ class NotificationManager {
       if (index > -1) {
         this.activeNotifications.splice(index, 1);
       }
-    }, 400);
+    }, 350);
   }
 
   /**
@@ -510,16 +737,16 @@ class NotificationManager {
    */
   getIcon(type) {
     const icons = {
-      success: "✓",
-      error: "✕",
-      warning: "⚠",
-      info: "ℹ",
-      levelup: "⭐",
-      gold: '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">',
-      xp: "⚡",
-      item: "📦",
-      quest: "📜",
-      achievement: "🏆",
+      success: '<span class="notification-icon-emoji">✓</span>',
+      error: '<span class="notification-icon-emoji">✕</span>',
+      warning: '<span class="notification-icon-emoji">⚠</span>',
+      info: '<span class="notification-icon-emoji">ℹ</span>',
+      levelup: '<span class="notification-icon-emoji">⭐</span>',
+      gold: '<img src="./assets/sprites/ouro.png" alt="Ouro">',
+      xp: '<img src="./assets/sprites/xp-potion.png" alt="XP">',
+      item: '<span class="notification-icon-emoji">📦</span>',
+      quest: '<span class="notification-icon-emoji">📜</span>',
+      achievement: '<span class="notification-icon-emoji">🏆</span>',
     };
 
     return icons[type] || icons.info;
@@ -531,9 +758,39 @@ class NotificationManager {
   highlightNumbers(text) {
     if (!text) return "";
 
-    // Highlight numbers with + or - prefix
+    // Highlight gold amounts with special class
     text = text.replace(
-      /([+-]?\d+(?:,\d{3})*(?:\.\d+)?)/g,
+      /([+-]?\d+(?:,\d{3})*(?:\.\d+)?)\s*(?:g|gold|ouro)/gi,
+      '<span class="notification-value gold-value">$1g</span>',
+    );
+
+    // Highlight XP amounts
+    text = text.replace(
+      /([+-]?\d+(?:,\d{3})*(?:\.\d+)?)\s*(?:xp|exp)/gi,
+      '<span class="notification-value xp-value">$1 XP</span>',
+    );
+
+    // Highlight quantities with x (e.g., 5x, 10x) - keep space after x
+    text = text.replace(
+      /(\d+x)\s+/gi,
+      '<span class="notification-value">$1</span> ',
+    );
+
+    // Highlight positive numbers with +
+    text = text.replace(
+      /(\+\d+(?:,\d{3})*(?:\.\d+)?)/g,
+      '<span class="notification-value positive">$1</span>',
+    );
+
+    // Highlight negative numbers with -
+    text = text.replace(
+      /(-\d+(?:,\d{3})*(?:\.\d+)?)/g,
+      '<span class="notification-value negative">$1</span>',
+    );
+
+    // Highlight remaining standalone numbers
+    text = text.replace(
+      /\b(\d+(?:,\d{3})*(?:\.\d+)?)\b/g,
       '<span class="notification-value">$1</span>',
     );
 
@@ -590,10 +847,10 @@ class NotificationManager {
    */
   gold(amount, gained = true) {
     const prefix = gained ? "+" : "-";
-    const message = `${prefix}${Math.abs(amount)} Gold`;
+    const message = `${prefix}${Math.abs(amount)}g`;
 
     return this.show(message, "gold", {
-      icon: '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">',
+      icon: '<img src="./assets/sprites/ouro.png" alt="Ouro">',
       duration: 2500,
     });
   }
@@ -605,21 +862,8 @@ class NotificationManager {
     const message = skill ? `+${amount} ${skill} XP` : `+${amount} XP`;
 
     return this.show(message, "success", {
-      icon: "⚡",
+      icon: '<img src="./assets/sprites/xp-potion.png" alt="XP">',
       duration: 2500,
-    });
-  }
-
-  /**
-   * Item received
-   */
-  item(itemName, amount = 1) {
-    const message =
-      amount > 1 ? `Received ${itemName} x${amount}` : `Received ${itemName}`;
-
-    return this.show(message, "info", {
-      icon: "📦",
-      duration: 3000,
     });
   }
 
@@ -627,11 +871,19 @@ class NotificationManager {
    * Quest completed
    */
   quest(questName, rewards = {}) {
-    let message = `Quest completed!`;
+    let message = i18n.t("notifications.questCompleted") || "Missão completa!";
 
-    if (rewards.gold)
-      message += ` +${rewards.gold}<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">`;
-    if (rewards.xp) message += ` +${rewards.xp}⚡`;
+    const rewardParts = [];
+    if (rewards.gold) {
+      rewardParts.push(`+${rewards.gold}g`);
+    }
+    if (rewards.xp) {
+      rewardParts.push(`+${rewards.xp} XP`);
+    }
+
+    if (rewardParts.length > 0) {
+      message += " " + rewardParts.join(" • ");
+    }
 
     return this.show(message, "success", {
       title: questName,
@@ -644,10 +896,16 @@ class NotificationManager {
    * Achievement unlocked
    */
   achievement(name, description = "") {
-    return this.show(description || "Achievement unlocked!", "success", {
-      title: `🏆 ${name}`,
-      duration: 6000,
-    });
+    return this.show(
+      description ||
+        i18n.t("notifications.achievementUnlocked") ||
+        "Conquista desbloqueada!",
+      "success",
+      {
+        title: `🏆 ${name}`,
+        duration: 6000,
+      },
+    );
   }
 
   /**
@@ -660,12 +918,6 @@ class NotificationManager {
   }
 }
 
-// Create singleton instance
+// Export singleton instance
 const notifications = new NotificationManager();
-
-// Make it globally available
-if (typeof window !== "undefined") {
-  window.notifications = notifications;
-}
-
 export default notifications;

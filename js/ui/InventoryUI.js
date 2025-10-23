@@ -841,10 +841,7 @@ export default class InventoryUI {
           if (result.success) {
             this.notifications.success(`Você usou ${itemName}!`);
             if (result.effects.energy) {
-              this.notifications.show(
-                `+${result.effects.energy} energia`,
-                "success",
-              );
+              this.notifications.success(`+${result.effects.energy} energia`);
             }
             this.render();
             return true;
@@ -955,7 +952,7 @@ export default class InventoryUI {
           }
 
           // Show notification
-          this.notifications.success(
+          this.notifications.info(
             newLockStatus
               ? `🔒 ${itemName} bloqueado! Não pode ser vendido.`
               : `🔓 ${itemName} desbloqueado! Pode ser vendido.`,
@@ -1008,13 +1005,8 @@ export default class InventoryUI {
   sellItem(item, amount) {
     const result = this.inventorySystem.sellItem(item.id, amount);
     if (result.success) {
-      this.notifications.success(
-        i18n.t("market.sellSuccess", {
-          amount,
-          item: item.namePtBR || item.name,
-          value: result.gold,
-        }),
-      );
+      // Show gold received notification
+      this.notifications.gold(result.gold, true);
       window.dispatchEvent(new CustomEvent("player:dataChanged"));
       this.render();
       return true;
@@ -1068,11 +1060,14 @@ export default class InventoryUI {
           onClick: () => {
             const result = this.inventorySystem.sellAllItems();
             if (result.success) {
-              this.notifications.success(
-                i18n.t("market.soldMultiple", {
-                  items: result.itemCount,
-                  gold: result.gold,
-                }),
+              // Show gold received notification
+              this.notifications.show(
+                `Vendeu ${result.itemCount} items por ${result.gold}g!`,
+                "gold",
+                {
+                  icon: '<img src="./assets/sprites/ouro.png" alt="Ouro">',
+                  duration: 3500,
+                },
               );
               window.dispatchEvent(new CustomEvent("player:dataChanged"));
               this.render();

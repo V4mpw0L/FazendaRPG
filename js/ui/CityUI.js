@@ -78,7 +78,7 @@ export default class CityUI {
         this.showPlazaUI();
         break;
       default:
-        this.notifications.show("Em breve!", "info");
+        this.notifications.info("Em breve!");
     }
   }
 
@@ -486,11 +486,11 @@ export default class CityUI {
       // Check if there was pending interest
       if (result.pendingInterest && result.pendingInterest.interestEarned > 0) {
         this.notifications.show(
-          `Depositou ${result.amount}g! +${result.pendingInterest.interestEarned}g de juros recebidos! Total no banco: ${result.newBalance}g`,
+          `Depositou ${result.amount}g! +${result.pendingInterest.interestEarned}g de juros! Total: ${result.newBalance}g`,
           "gold",
           {
-            icon: '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">',
-            duration: 3000,
+            icon: '<img src="./assets/sprites/ouro.png" alt="Ouro">',
+            duration: 3500,
           },
         );
       } else {
@@ -498,7 +498,7 @@ export default class CityUI {
           `Depositou ${result.amount}g! Total no banco: ${result.newBalance}g`,
           "gold",
           {
-            icon: '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">',
+            icon: '<img src="./assets/sprites/ouro.png" alt="Ouro">',
             duration: 3000,
           },
         );
@@ -512,7 +512,7 @@ export default class CityUI {
       // Trigger save to persist bank data
       window.dispatchEvent(new CustomEvent("save:auto"));
     } else {
-      this.notifications.show(result.error, "error");
+      this.notifications.error(result.error);
     }
   }
 
@@ -527,11 +527,11 @@ export default class CityUI {
       // Check if there was pending interest
       if (result.pendingInterest && result.pendingInterest.interestEarned > 0) {
         this.notifications.show(
-          `Sacou ${result.amount}g! +${result.pendingInterest.interestEarned}g de juros recebidos! Saldo no banco: ${result.newBalance}g`,
+          `Sacou ${result.amount}g! +${result.pendingInterest.interestEarned}g de juros! Saldo: ${result.newBalance}g`,
           "gold",
           {
-            icon: '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">',
-            duration: 3000,
+            icon: '<img src="./assets/sprites/ouro.png" alt="Ouro">',
+            duration: 3500,
           },
         );
       } else {
@@ -539,7 +539,7 @@ export default class CityUI {
           `Sacou ${result.amount}g! Saldo no banco: ${result.newBalance}g`,
           "gold",
           {
-            icon: '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">',
+            icon: '<img src="./assets/sprites/ouro.png" alt="Ouro">',
             duration: 3000,
           },
         );
@@ -553,7 +553,7 @@ export default class CityUI {
       // Trigger save to persist bank data
       window.dispatchEvent(new CustomEvent("save:auto"));
     } else {
-      this.notifications.show(result.error, "error");
+      this.notifications.error(result.error);
     }
   }
 
@@ -978,16 +978,15 @@ export default class CityUI {
     const result = this.tavernSystem.rest();
 
     if (result.success) {
-      this.notifications.show(
+      this.notifications.success(
         i18n.t("tavern.rested", { restored: result.restored }),
-        "success",
       );
       this.modal.close();
 
       // Dispatch event to update UI
       window.dispatchEvent(new CustomEvent("player:energyChanged"));
     } else {
-      this.notifications.show(result.error, "error");
+      this.notifications.error(result.error);
     }
   }
 
@@ -1011,9 +1010,8 @@ export default class CityUI {
         );
       }
 
-      this.notifications.show(
+      this.notifications.success(
         i18n.t("tavern.ateFood", { effects: messages.join(", ") }),
-        "success",
       );
       this.modal.close();
 
@@ -1021,7 +1019,7 @@ export default class CityUI {
       window.dispatchEvent(new CustomEvent("player:energyChanged"));
       window.dispatchEvent(new CustomEvent("player:goldChanged"));
     } else {
-      this.notifications.show(result.error, "error");
+      this.notifications.error(result.error);
     }
   }
 
@@ -1065,7 +1063,7 @@ export default class CityUI {
       // Dispatch event
       window.dispatchEvent(new CustomEvent("player:xpChanged"));
     } else {
-      this.notifications.show(result.error, "error");
+      this.notifications.error(result.error);
     }
   }
 

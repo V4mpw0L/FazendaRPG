@@ -4,6 +4,8 @@
  * @version 0.0.12
  */
 
+import notifications from "../utils/notifications.js";
+
 export default class AvatarSelector {
   constructor(gameEngine) {
     this.gameEngine = gameEngine;
@@ -146,9 +148,7 @@ export default class AvatarSelector {
     this.loadAvatars();
 
     // Show notification
-    if (this.gameEngine.notifications) {
-      this.gameEngine.notifications.show("Avatar atualizado!", "success");
-    }
+    notifications.success("Avatar atualizado!");
 
     // Close modal after a short delay
     setTimeout(() => {

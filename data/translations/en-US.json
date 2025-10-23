@@ -1,8 +1,8 @@
 {
   "meta": {
     "language": "en-US",
-    "name": "English (United States)",
-    "version": "0.0.12"
+    "name": "English (US)",
+    "version": "0.0.13"
   },
   "welcome": {
     "title": "🌾 FazendaRPG",
@@ -222,7 +222,13 @@
     "itemReceived": "You received: {item} x{amount}",
     "notEnoughSpace": "Inventory full!",
     "saved": "Progress saved!",
-    "error": "An error occurred. Please try again."
+    "error": "An error occurred. Please try again.",
+    "plantedMultiple": "Planted {count} crops!",
+    "harvestedMultiple": "Harvested {count} crops!",
+    "harvested": "Harvested",
+    "received": "Received",
+    "questCompleted": "Quest completed!",
+    "achievementUnlocked": "Achievement unlocked!"
   },
   "footer": {
     "developed": "Developed by:"

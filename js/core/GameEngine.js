@@ -488,10 +488,10 @@ export default class GameEngine {
     if (pendingInterest.interestEarned > 0) {
       setTimeout(() => {
         notifications.show(
-          `💰 Banco: Você recebeu +${pendingInterest.interestEarned}g de juros! (${pendingInterest.cycles} ciclos de 4h)`,
+          `Banco: Você recebeu +${pendingInterest.interestEarned}g de juros! (${pendingInterest.cycles} ciclos de 4h)`,
           "gold",
           {
-            icon: '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;">',
+            icon: '<img src="./assets/sprites/ouro.png" alt="Ouro">',
             duration: 4000,
           },
         );
@@ -1287,7 +1287,7 @@ export default class GameEngine {
                     plot.plantedAt = null;
                     plot.fertilized = false;
 
-                    notifications.success("🗑️ Cultivo destruído!");
+                    notifications.success("Cultivo destruído!");
                     this.renderFarm();
                     this.topBar.update();
                   }
@@ -1337,7 +1337,8 @@ export default class GameEngine {
         this.weedRemovalAnimation.animate(plotElement);
       }
 
-      notifications.success("✅ Ervas daninhas removidas! +1 🌿 Ervas");
+      // Show weed removal notification
+      notifications.success("Ervas daninhas removidas! +1 Ervas");
       this.renderFarm();
     } else {
       notifications.error(result.error || "Não foi possível limpar as ervas");
@@ -1466,7 +1467,8 @@ export default class GameEngine {
               this.plantAnimation.animate(plotElement);
             }
 
-            notifications.success(i18n.t("farm.planted"));
+            // Show simple planting notification
+            notifications.success("🌱 " + i18n.t("farm.planted"));
             this.renderFarm();
             this.topBar.update();
 
@@ -1519,7 +1521,14 @@ export default class GameEngine {
         this.harvestAnimation.animate(plotElement);
       }
 
-      let message = `${i18n.t("farm.harvested")} +${result.amount}x ${result.crop}`;
+      // Get crop display name
+      const cropData = this.farmSystem.getCropData(result.crop);
+      const cropName =
+        i18n.getLanguage() === "pt-BR"
+          ? cropData.namePtBR || cropData.name
+          : cropData.name;
+
+      let message = `${i18n.t("farm.harvested")} +${result.amount}x ${cropName}`;
 
       if (result.levelUp) {
         notifications.levelUp(result.newLevel, i18n.t("skills.farming.name"));
@@ -1936,7 +1945,8 @@ export default class GameEngine {
       btn.classList.toggle("active", btn.dataset.theme === theme);
     });
 
-    notifications.success(`Theme changed to ${theme}`);
+    const themeName = theme === "dark" ? "Escuro" : "Claro";
+    notifications.success(`Tema alterado para ${themeName}`);
   }
 
   /**
@@ -1952,7 +1962,8 @@ export default class GameEngine {
         btn.classList.toggle("active", btn.dataset.lang === lang);
       });
 
-      notifications.success(`Language changed to ${lang}`);
+      const langName = lang === "pt-BR" ? "Português" : "English";
+      notifications.success(`Idioma alterado para ${langName}`);
     }
   }
 
@@ -1993,13 +2004,13 @@ export default class GameEngine {
 
     // Check if there are plots with weeds
     if (plotsWithWeeds > 0 && emptyPlotsCount === 0) {
-      notifications.error(`🌿 ${i18n.t("farm.allPlotsHaveWeeds")}`);
+      notifications.error(i18n.t("farm.allPlotsHaveWeeds"));
       return;
     }
 
     if (plotsWithWeeds > 0) {
       notifications.warning(
-        `⚠️ ${plotsWithWeeds} ${i18n.t("farm.someHaveWeeds")}`,
+        `${plotsWithWeeds} ${i18n.t("farm.someHaveWeeds")}`,
       );
     }
 

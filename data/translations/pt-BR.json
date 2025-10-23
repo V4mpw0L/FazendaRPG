@@ -2,7 +2,7 @@
   "meta": {
     "language": "pt-BR",
     "name": "Português (Brasil)",
-    "version": "0.0.12"
+    "version": "0.0.13"
   },
   "welcome": {
     "title": "🌾 FazendaRPG",
@@ -300,7 +300,11 @@
     "saved": "Progresso salvo!",
     "error": "Ocorreu um erro. Tente novamente.",
     "plantedMultiple": "Plantados {count} cultivos!",
-    "harvestedMultiple": "Colhidos {count} cultivos!"
+    "harvestedMultiple": "Colhidos {count} cultivos!",
+    "harvested": "Colheu",
+    "received": "Recebeu",
+    "questCompleted": "Missão completa!",
+    "achievementUnlocked": "Conquista desbloqueada!"
   },
   "footer": {
     "developed": "Desenvolvido por:"
