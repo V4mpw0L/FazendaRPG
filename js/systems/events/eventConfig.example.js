@@ -5,7 +5,7 @@
  * NÃO EDITE ESTE ARQUIVO!
  * Edite o arquivo: eventConfig.js
  *
- * @version 1.0.0
+ * @version 0.0.14
  */
 
 // ============================================

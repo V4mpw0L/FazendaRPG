@@ -378,6 +378,12 @@ const FILES_TO_UPDATE = [
       { regex: /@version [\d.]+/g, replace: "@version VERSION_PLACEHOLDER" },
     ],
   },
+  {
+    path: "js/systems/events/eventConfig.example.js",
+    patterns: [
+      { regex: /@version [\d.]+/g, replace: "@version VERSION_PLACEHOLDER" },
+    ],
+  },
 
   // News System files
   {
