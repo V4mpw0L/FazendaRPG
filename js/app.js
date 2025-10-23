@@ -165,6 +165,9 @@ window.FazendaRPG.debug = {
   stopHalloween: () => window.FazendaRPG.engine?.stopHalloween(),
   listEvents: () => window.FazendaRPG.engine?.listEvents(),
   getEventManager: () => window.FazendaRPG.engine?.getEventManager(),
+  // News system commands
+  showNews: () => window.FazendaRPG.engine?.newsModal?.forceShow(),
+  hideNews: () => window.FazendaRPG.engine?.newsModal?.hide(),
 };
 
 console.log("💡 Debug commands available at: window.FazendaRPG.debug");

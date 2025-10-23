@@ -1,0 +1,105 @@
+{
+  "news": [
+    {
+      "id": "news-10",
+      "date": "2024-10-23",
+      "version": "0.0.14",
+      "title": "🎃 Evento de Halloween Disponível!",
+      "category": "evento",
+      "content": "O aguardado evento de Halloween chegou! Clique nas abóboras que aparecem na tela para ganhar energia e ouro. Aproveite as decorações temáticas com teias de aranha e aranhas animadas!",
+      "image": "./assets/sprites/events/pumpkin2.png",
+      "tags": ["evento", "halloween", "novidade"],
+      "highlight": true
+    },
+    {
+      "id": "news-09",
+      "date": "2024-10-20",
+      "version": "0.0.13",
+      "title": "📢 Sistema de Notícias Implementado",
+      "category": "sistema",
+      "content": "Agora você pode acompanhar todas as novidades e atualizações do jogo através do nosso novo sistema de notícias! Fique por dentro de eventos, melhorias e correções.",
+      "tags": ["sistema", "novidade"],
+      "highlight": false
+    },
+    {
+      "id": "news-08",
+      "date": "2024-10-15",
+      "version": "0.0.13",
+      "title": "🔧 Correções e Melhorias",
+      "category": "melhoria",
+      "content": "Sistema de notificações corrigido para notificar apenas quando o app estiver fechado. Melhorias na performance geral do jogo e correção de bugs menores.",
+      "tags": ["correção", "performance"],
+      "highlight": false
+    },
+    {
+      "id": "news-07",
+      "date": "2024-10-10",
+      "version": "0.0.12",
+      "title": "🏦 Sistema Bancário Adicionado",
+      "category": "recurso",
+      "content": "Novo sistema bancário disponível na cidade! Deposite seu ouro e ganhe juros diários. Gerencie suas finanças com segurança.",
+      "tags": ["banco", "cidade", "novidade"],
+      "highlight": false
+    },
+    {
+      "id": "news-06",
+      "date": "2024-10-05",
+      "version": "0.0.12",
+      "title": "🍺 Taverna Implementada",
+      "category": "recurso",
+      "content": "A taverna está aberta! Descanse para recuperar energia, compre refeições deliciosas e interaja com outros NPCs. Explore as novas opções de restauração.",
+      "tags": ["taverna", "cidade", "energia"],
+      "highlight": false
+    },
+    {
+      "id": "news-05",
+      "date": "2024-09-28",
+      "version": "0.0.11",
+      "title": "👥 Sistema de NPCs Melhorado",
+      "category": "melhoria",
+      "content": "Sistema de NPCs completamente reformulado! Amizade, diálogos dinâmicos, estoque persistente e muito mais. Interaja melhor com os moradores da vila.",
+      "tags": ["npc", "amizade", "melhoria"],
+      "highlight": false
+    },
+    {
+      "id": "news-04",
+      "date": "2024-09-20",
+      "version": "0.0.10",
+      "title": "🏙️ Sistema de Cidade Adicionado",
+      "category": "recurso",
+      "content": "Explore a cidade e descubra novos locais! Banco, taverna e muito mais. Interaja com NPCs e descubra novas oportunidades de comércio.",
+      "tags": ["cidade", "exploração", "novidade"],
+      "highlight": false
+    },
+    {
+      "id": "news-03",
+      "date": "2024-09-15",
+      "version": "0.0.9",
+      "title": "📱 Notificações Push Implementadas",
+      "category": "recurso",
+      "content": "Receba notificações quando suas plantações estiverem prontas! Configure suas preferências e não perca mais nenhuma colheita.",
+      "tags": ["notificação", "colheita"],
+      "highlight": false
+    },
+    {
+      "id": "news-02",
+      "date": "2024-09-10",
+      "version": "0.0.8",
+      "title": "🎨 Sistema de Temas",
+      "category": "visual",
+      "content": "Modo escuro e claro disponíveis! Escolha o tema que melhor se adapta ao seu gosto e jogue com mais conforto.",
+      "tags": ["tema", "visual", "interface"],
+      "highlight": false
+    },
+    {
+      "id": "news-01",
+      "date": "2024-09-01",
+      "version": "0.0.7",
+      "title": "🚀 Lançamento Inicial",
+      "category": "lançamento",
+      "content": "Bem-vindo ao FazendaRPG! Comece sua jornada plantando, colhendo e expandindo sua fazenda. Muito mais novidades estão por vir!",
+      "tags": ["lançamento", "inicio"],
+      "highlight": false
+    }
+  ]
+}

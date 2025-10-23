@@ -28,6 +28,7 @@ import FertilizerAnimation from "../animations/FertilizerAnimation.js";
 import HarvestAnimation from "../animations/HarvestAnimation.js";
 import PlantAnimation from "../animations/PlantAnimation.js";
 import WeedRemovalAnimation from "../animations/WeedRemovalAnimation.js";
+import NewsModal from "../ui/news/NewsModal.js";
 import i18n from "../utils/i18n.js";
 import notifications from "../utils/notifications.js";
 
@@ -41,6 +42,7 @@ export default class GameEngine {
     this.questSystem = null;
     this.notificationManager = null;
     this.eventManager = null;
+    this.newsModal = null;
     this.topBar = null;
     this.sideMenu = null;
     this.screenManager = null;
@@ -174,6 +176,10 @@ export default class GameEngine {
       // Initialize Avatar Selector
       this.avatarSelector = new AvatarSelector(this);
       this.avatarSelector.init();
+
+      // Initialize News Modal
+      this.newsModal = new NewsModal(this);
+      await this.newsModal.init();
 
       // Initialize Fertilizer Animation
       this.fertilizerAnimation = new FertilizerAnimation();
@@ -2615,6 +2621,9 @@ export default class GameEngine {
 
     if (this.eventManager) {
       this.eventManager.destroy();
+    }
+    if (this.newsModal) {
+      this.newsModal.destroy();
     }
     if (this.topBar) this.topBar.destroy();
     if (this.sideMenu) this.sideMenu.destroy();
