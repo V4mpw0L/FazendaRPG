@@ -430,24 +430,26 @@ export default class NewsModal {
       }
 
       .news-modal-close {
-        background: none;
+        background: #dc3545;
         border: none;
-        font-size: 32px;
+        font-size: 18px;
         cursor: pointer;
-        color: var(--text-color, #666);
-        width: 40px;
-        height: 40px;
+        color: white;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         transition: all 0.2s;
+        box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
       }
 
       .news-modal-close:hover {
-        background: var(--hover-bg, #f5f5f5);
-        color: var(--text-color, #333);
-        transform: rotate(90deg);
+        background: #c82333;
+        color: white;
+        transform: rotate(90deg) scale(1.1);
+        box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.3);
       }
 
       .news-modal-body {
@@ -627,12 +629,14 @@ export default class NewsModal {
       }
 
       .dark-theme .news-modal-close {
-        color: #aaa;
+        background: #dc3545;
+        color: white;
       }
 
       .dark-theme .news-modal-close:hover {
-        background: #3a3a3a;
-        color: #fff;
+        background: #c82333;
+        color: white;
+        box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.4);
       }
 
       .dark-theme .news-item {
