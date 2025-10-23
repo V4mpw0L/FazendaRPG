@@ -117,7 +117,7 @@ export default class CityUI {
                 <div class="bank-header">
                     <div style="font-size: 4rem; margin-bottom: 1rem;">🏦</div>
                     <h2 style="margin: 0 0 0.5rem 0;">Banco da Cidade</h2>
-                    <p style="color: var(--text-secondary); margin: 0;">Guarde seu ouro com segurança e ganhe juros a cada 4 horas!</p>
+                    <p style="color: var(--text-secondary); margin: 0;">Guarde seu ouro com segurança e ganhe 3% de juros a cada 4 horas!</p>
                 </div>
 
                 <div class="bank-balances">
@@ -142,7 +142,7 @@ export default class CityUI {
                     </div>
                     <div class="interest-preview">
                         <div style="font-size: 0.625rem; color: var(--text-secondary); margin-bottom: 0.125rem;">Você receberá:</div>
-                        <div style="font-size: 1rem; font-weight: 700; color: #5caa1f;">+${Math.floor((balance * (stats.interestRate || 1)) / 100)}g</div>
+                        <div style="font-size: 1rem; font-weight: 700; color: #5caa1f;">+${Math.floor((balance * (stats.interestRate || 3)) / 100)}g</div>
                     </div>
                 </div>
                 `
@@ -168,45 +168,65 @@ export default class CityUI {
                     </div>
                 </div>
 
-                <div class="bank-actions">
-                    <div class="action-section">
-                        <h3><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> Depositar</h3>
-                        <input
-                            type="number"
-                            id="deposit-amount"
-                            class="bank-input"
-                            placeholder="Quantidade"
-                            min="${stats.minDeposit}"
-                            max="${playerGold}"
-                            value="${Math.min(100, playerGold)}"
-                        />
-                        <div id="deposit-preview" class="preview-text">
-                            Juros: ${stats.interestRate}% a cada 4h
+                <div class="bank-actions-unified">
+                    <div class="unified-action-panel">
+                        <div class="action-tabs">
+                            <button class="action-tab active" data-action="deposit">
+                                <img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1.2em; height: 1.2em; vertical-align: middle;">
+                                Depositar
+                            </button>
+                            <button class="action-tab" data-action="withdraw">
+                                🏦 Sacar
+                            </button>
                         </div>
-                        <div class="button-row">
-                            <button class="btn btn-sm btn-secondary" onclick="document.getElementById('deposit-amount').value = Math.floor(${playerGold} * 0.25)">25%</button>
-                            <button class="btn btn-sm btn-secondary" onclick="document.getElementById('deposit-amount').value = Math.floor(${playerGold} * 0.5)">50%</button>
-                            <button class="btn btn-sm btn-secondary" onclick="document.getElementById('deposit-amount').value = Math.floor(${playerGold} * 0.75)">75%</button>
-                            <button class="btn btn-sm btn-secondary" onclick="document.getElementById('deposit-amount').value = ${playerGold}">Tudo</button>
-                        </div>
-                    </div>
 
-                    <div class="action-section">
-                        <h3>🏦 Sacar</h3>
-                        <input
-                            type="number"
-                            id="withdraw-amount"
-                            class="bank-input"
-                            placeholder="Quantidade"
-                            min="1"
-                            max="${balance}"
-                            value="${Math.min(100, balance)}"
-                        />
-                        <div class="button-row">
-                            <button class="btn btn-sm btn-secondary" onclick="document.getElementById('withdraw-amount').value = Math.floor(${balance} * 0.25)">25%</button>
-                            <button class="btn btn-sm btn-secondary" onclick="document.getElementById('withdraw-amount').value = Math.floor(${balance} * 0.5)">50%</button>
-                            <button class="btn btn-sm btn-secondary" onclick="document.getElementById('withdraw-amount').value = Math.floor(${balance} * 0.75)">75%</button>
-                            <button class="btn btn-sm btn-secondary" onclick="document.getElementById('withdraw-amount').value = ${balance}">Tudo</button>
+                        <div class="action-content">
+                            <div class="action-pane active" id="deposit-pane">
+                                <div class="input-group">
+                                    <input
+                                        type="number"
+                                        id="deposit-amount"
+                                        class="bank-input-modern"
+                                        placeholder="Quantidade de ouro"
+                                        min="${stats.minDeposit}"
+                                        max="${playerGold}"
+                                        value="${Math.min(100, playerGold)}"
+                                    />
+                                    <div class="input-info">
+                                        <span>💰 Disponível: <strong>${playerGold}g</strong></span>
+                                        <span class="interest-rate">📈 Taxa: ${stats.interestRate}% / 4h</span>
+                                    </div>
+                                </div>
+                                <div class="quick-actions">
+                                    <button class="quick-btn" onclick="document.getElementById('deposit-amount').value = Math.floor(${playerGold} * 0.25)">25%</button>
+                                    <button class="quick-btn" onclick="document.getElementById('deposit-amount').value = Math.floor(${playerGold} * 0.5)">50%</button>
+                                    <button class="quick-btn" onclick="document.getElementById('deposit-amount').value = Math.floor(${playerGold} * 0.75)">75%</button>
+                                    <button class="quick-btn highlight" onclick="document.getElementById('deposit-amount').value = ${playerGold}">Tudo</button>
+                                </div>
+                            </div>
+
+                            <div class="action-pane" id="withdraw-pane">
+                                <div class="input-group">
+                                    <input
+                                        type="number"
+                                        id="withdraw-amount"
+                                        class="bank-input-modern"
+                                        placeholder="Quantidade a sacar"
+                                        min="1"
+                                        max="${balance}"
+                                        value="${Math.min(100, balance)}"
+                                    />
+                                    <div class="input-info">
+                                        <span>🏦 No Banco: <strong>${balance}g</strong></span>
+                                    </div>
+                                </div>
+                                <div class="quick-actions">
+                                    <button class="quick-btn" onclick="document.getElementById('withdraw-amount').value = Math.floor(${balance} * 0.25)">25%</button>
+                                    <button class="quick-btn" onclick="document.getElementById('withdraw-amount').value = Math.floor(${balance} * 0.5)">50%</button>
+                                    <button class="quick-btn" onclick="document.getElementById('withdraw-amount').value = Math.floor(${balance} * 0.75)">75%</button>
+                                    <button class="quick-btn highlight" onclick="document.getElementById('withdraw-amount').value = ${balance}">Tudo</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -301,56 +321,131 @@ export default class CityUI {
                     .info-item strong {
                         color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);
                     }
-                    .bank-actions {
-                        display: grid;
-                        grid-template-columns: repeat(2, 1fr);
-                        gap: 1rem;
+                    .bank-actions-unified {
+                        margin-top: 1rem;
                     }
-                    .action-section {
+                    .unified-action-panel {
                         background: var(--bg-accent);
                         border: 2px solid var(--border-color);
-                        border-radius: 8px;
-                        padding: 1rem;
+                        border-radius: 12px;
+                        overflow: hidden;
                     }
-                    .action-section h3 {
-                        margin: 0 0 0.75rem 0;
+                    .action-tabs {
+                        display: flex;
+                        background: var(--bg-secondary);
+                        border-bottom: 2px solid var(--border-color);
+                    }
+                    .action-tab {
+                        flex: 1;
+                        padding: 1rem;
+                        border: none;
+                        background: transparent;
+                        color: var(--text-secondary);
                         font-size: 1rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        border-bottom: 3px solid transparent;
+                    }
+                    .action-tab:hover {
+                        background: rgba(92, 170, 31, 0.05);
                         color: var(--text-primary);
                     }
-                    .bank-input {
+                    .action-tab.active {
+                        background: linear-gradient(135deg, rgba(92, 170, 31, 0.15), rgba(126, 200, 80, 0.1));
+                        color: var(--brand-primary);
+                        border-bottom-color: var(--brand-primary);
+                    }
+                    .action-content {
+                        padding: 1.5rem;
+                    }
+                    .action-pane {
+                        display: none;
+                    }
+                    .action-pane.active {
+                        display: block;
+                        animation: fadeIn 0.3s ease;
+                    }
+                    @keyframes fadeIn {
+                        from { opacity: 0; transform: translateY(-10px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                    .input-group {
+                        margin-bottom: 1rem;
+                    }
+                    .bank-input-modern {
                         width: 100%;
+                        padding: 1rem;
+                        border: 2px solid var(--border-color);
+                        border-radius: 10px;
+                        background: var(--bg-secondary);
+                        color: var(--text-primary);
+                        font-size: 1.125rem;
+                        font-weight: 600;
+                        text-align: center;
+                        margin-bottom: 0.75rem;
+                        transition: all 0.3s ease;
+                    }
+                    .bank-input-modern:focus {
+                        outline: none;
+                        border-color: var(--brand-primary);
+                        box-shadow: 0 0 0 3px rgba(92, 170, 31, 0.1);
+                    }
+                    .input-info {
+                        display: flex;
+                        justify-content: space-between;
+                        font-size: 0.875rem;
+                        color: var(--text-secondary);
+                        padding: 0 0.5rem;
+                    }
+                    .input-info strong {
+                        color: #FFD700;
+                        text-shadow: 0 0 3px rgba(0,0,0,0.8);
+                    }
+                    .interest-rate {
+                        color: var(--brand-primary);
+                        font-weight: 600;
+                    }
+                    .quick-actions {
+                        display: grid;
+                        grid-template-columns: repeat(4, 1fr);
+                        gap: 0.5rem;
+                    }
+                    .quick-btn {
                         padding: 0.75rem;
                         border: 2px solid var(--border-color);
                         border-radius: 8px;
                         background: var(--bg-secondary);
                         color: var(--text-primary);
-                        font-size: 1rem;
+                        font-size: 0.875rem;
                         font-weight: 600;
-                        margin-bottom: 0.5rem;
+                        cursor: pointer;
+                        transition: all 0.2s ease;
                     }
-                    .bank-input:focus {
-                        outline: none;
+                    .quick-btn:hover {
+                        background: var(--bg-primary);
                         border-color: var(--brand-primary);
+                        transform: translateY(-2px);
                     }
-                    .preview-text {
-                        font-size: 0.75rem;
-                        color: var(--text-secondary);
-                        margin-bottom: 0.75rem;
-                        text-align: center;
+                    .quick-btn.highlight {
+                        background: linear-gradient(135deg, rgba(92, 170, 31, 0.2), rgba(126, 200, 80, 0.15));
+                        border-color: var(--brand-primary);
+                        color: var(--brand-primary);
                     }
-                    .button-row {
-                        display: grid;
-                        grid-template-columns: repeat(4, 1fr);
-                        gap: 0.25rem;
-                        margin-bottom: 0.75rem;
+                    .quick-btn.highlight:hover {
+                        background: linear-gradient(135deg, rgba(92, 170, 31, 0.3), rgba(126, 200, 80, 0.25));
                     }
                     @media (max-width: 768px) {
-                        .bank-balances,
-                        .bank-actions {
+                        .bank-balances {
                             grid-template-columns: 1fr;
                         }
                         .interest-timer {
                             flex-direction: column;
+                            text-align: center;
+                        }
+                        .input-info {
+                            flex-direction: column;
+                            gap: 0.25rem;
                             text-align: center;
                         }
                     }
@@ -363,22 +458,23 @@ export default class CityUI {
       content,
       buttons: [
         {
-          text: '<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> Depositar',
+          text: "✅ Confirmar",
           class: "btn-success",
           onClick: () => {
-            const amount =
-              parseInt(document.getElementById("deposit-amount").value) || 0;
-            this.handleDeposit(amount);
-            return false;
-          },
-        },
-        {
-          text: "🏦 Sacar",
-          class: "btn-primary",
-          onClick: () => {
-            const amount =
-              parseInt(document.getElementById("withdraw-amount").value) || 0;
-            this.handleWithdraw(amount);
+            // Check which tab is active
+            const depositPane = document.getElementById("deposit-pane");
+            const isDeposit =
+              depositPane && depositPane.classList.contains("active");
+
+            if (isDeposit) {
+              const amount =
+                parseInt(document.getElementById("deposit-amount").value) || 0;
+              this.handleDeposit(amount);
+            } else {
+              const amount =
+                parseInt(document.getElementById("withdraw-amount").value) || 0;
+              this.handleWithdraw(amount);
+            }
             return false;
           },
         },
@@ -398,7 +494,37 @@ export default class CityUI {
     // Start real-time timer update after modal renders
     setTimeout(() => {
       this.startBankTimerUpdate();
+      this.setupBankTabSwitching();
     }, 100);
+  }
+
+  /**
+   * Setup bank tab switching
+   */
+  setupBankTabSwitching() {
+    const tabs = document.querySelectorAll(".action-tab");
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", (e) => {
+        const action = e.target.dataset.action;
+
+        // Update tabs
+        document.querySelectorAll(".action-tab").forEach((t) => {
+          t.classList.remove("active");
+        });
+        e.target.classList.add("active");
+
+        // Update panes
+        document.querySelectorAll(".action-pane").forEach((pane) => {
+          pane.classList.remove("active");
+        });
+
+        const targetPane = document.getElementById(action + "-pane");
+        if (targetPane) {
+          targetPane.classList.add("active");
+        }
+      });
+    });
   }
 
   /**
@@ -470,7 +596,7 @@ export default class CityUI {
     // Update interest preview
     const balance = this.bankSystem.getBalance();
     if (interestPreview && balance > 0) {
-      const nextInterest = Math.floor(balance * 0.01);
+      const nextInterest = Math.floor(balance * 0.03);
       interestPreview.textContent = `+${nextInterest}g`;
     }
   }

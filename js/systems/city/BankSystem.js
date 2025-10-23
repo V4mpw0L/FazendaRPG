@@ -7,7 +7,7 @@
 export default class BankSystem {
   constructor(player) {
     this.player = player;
-    this.interestRate = 0.01; // 1% interest every 4 hours
+    this.interestRate = 0.03; // 3% interest every 4 hours
     this.interestInterval = 4 * 60 * 60 * 1000; // 4 hours in milliseconds
     this.minDeposit = 10;
     this.maxBalance = 1000000;
@@ -39,6 +39,8 @@ export default class BankSystem {
     ) {
       this.player.data.bank.lastInterestTime = Date.now();
       console.log("🏦 Initialized lastInterestTime for old save");
+      // Salvar imediatamente após inicializar
+      window.dispatchEvent(new CustomEvent("save:auto"));
     } else {
       console.log(
         "🏦 Using existing lastInterestTime:",
@@ -126,8 +128,10 @@ export default class BankSystem {
         }),
       );
 
-      // Trigger save to persist interest
-      window.dispatchEvent(new CustomEvent("save:auto"));
+      // Trigger save IMMEDIATELY to persist interest and lastInterestTime
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent("save:auto"));
+      }, 100);
     }
 
     return { interestEarned: totalInterest, cycles };
@@ -205,6 +209,10 @@ export default class BankSystem {
     ) {
       this.player.data.bank.lastInterestTime = Date.now();
       console.log("🏦 Started interest timer on first deposit");
+      // Salvar imediatamente após iniciar timer
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent("save:auto"));
+      }, 100);
     }
 
     // Add transaction
@@ -222,6 +230,11 @@ export default class BankSystem {
         detail: { amount, newBalance: this.getBalance(), pendingInterest },
       }),
     );
+
+    // Trigger save to persist deposit and lastInterestTime
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent("save:auto"));
+    }, 100);
 
     return {
       success: true,
@@ -277,6 +290,11 @@ export default class BankSystem {
         detail: { amount, pendingInterest },
       }),
     );
+
+    // Trigger save to persist withdrawal
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent("save:auto"));
+    }, 100);
 
     return {
       success: true,
