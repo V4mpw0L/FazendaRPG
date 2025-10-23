@@ -60,7 +60,7 @@ class NotificationManager {
         flex-direction: column;
         gap: 10px;
         pointer-events: none;
-        max-width: 380px;
+        max-width: 320px;
       }
 
       /* Notification Card */
@@ -69,17 +69,18 @@ class NotificationManager {
         background: linear-gradient(135deg, #8b6914 0%, #a0522d 40%, #654321 100%);
         border: 2px solid rgba(139, 105, 20, 0.8);
         border-radius: 12px;
-        padding: 12px 16px;
+        padding: 10px 14px;
         box-shadow:
           0 4px 12px rgba(0, 0, 0, 0.4),
           0 0 0 1px rgba(255, 215, 0, 0.2),
           inset 0 1px 0 rgba(255, 255, 255, 0.15);
         display: flex;
         align-items: center;
-        gap: 12px;
-        min-width: 280px;
-        max-width: 380px;
-        transform: translateX(420px);
+        gap: 10px;
+        min-width: auto;
+        max-width: 320px;
+        width: fit-content;
+        transform: translateX(360px);
         opacity: 0;
         transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
         position: relative;
@@ -107,19 +108,19 @@ class NotificationManager {
       }
 
       .notification.hide {
-        transform: translateX(420px) scale(0.95);
+        transform: translateX(360px) scale(0.95);
         opacity: 0;
       }
 
       /* Icon Container */
       .notification-icon {
-        width: 40px;
-        height: 40px;
+        width: 36px;
+        height: 36px;
         border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 20px;
+        font-size: 18px;
         flex-shrink: 0;
         background: rgba(0, 0, 0, 0.25);
         border: 2px solid rgba(255, 255, 255, 0.2);
@@ -127,14 +128,14 @@ class NotificationManager {
       }
 
       .notification-icon img {
-        width: 28px;
-        height: 28px;
+        width: 24px;
+        height: 24px;
         object-fit: contain;
         filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
       }
 
       .notification-icon-emoji {
-        font-size: 24px;
+        font-size: 20px;
         filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
       }
 
@@ -149,7 +150,7 @@ class NotificationManager {
 
       .notification-title {
         font-weight: 800;
-        font-size: 14px;
+        font-size: 13px;
         color: #ffffff;
         line-height: 1.3;
         text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
@@ -157,7 +158,7 @@ class NotificationManager {
       }
 
       .notification-message {
-        font-size: 13px;
+        font-size: 12px;
         color: rgba(255, 255, 255, 0.95);
         line-height: 1.4;
         word-wrap: break-word;
