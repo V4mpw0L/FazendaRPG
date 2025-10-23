@@ -11,6 +11,9 @@ import FarmSystem from "../systems/FarmSystem.js";
 import InventorySystem from "../systems/InventorySystem.js";
 import QuestSystem from "../systems/QuestSystem.js";
 import NotificationManager from "../systems/NotificationManager.js";
+import EventManager from "../systems/events/EventManager.js";
+import HalloweenEvent from "../systems/events/HalloweenEvent.js";
+import eventConfig from "../systems/events/eventConfig.js";
 import TopBar from "../ui/TopBar.js";
 import SideMenu from "../ui/SideMenu.js";
 import ScreenManager from "../ui/ScreenManager.js";
@@ -37,6 +40,7 @@ export default class GameEngine {
     this.inventorySystem = null;
     this.questSystem = null;
     this.notificationManager = null;
+    this.eventManager = null;
     this.topBar = null;
     this.sideMenu = null;
     this.screenManager = null;
@@ -101,6 +105,17 @@ export default class GameEngine {
         this.inventorySystem,
       );
       await this.questSystem.init();
+
+      // Initialize Event Manager
+      this.eventManager = new EventManager(this);
+      await this.eventManager.init();
+
+      // Register events
+      const halloweenEvent = new HalloweenEvent(this);
+      this.eventManager.registerEvent("halloween", halloweenEvent);
+
+      // Auto-start events based on config
+      this.autoStartEvents();
 
       // Initialize UI components
       this.screenManager = new ScreenManager();
@@ -2525,11 +2540,82 @@ export default class GameEngine {
   }
 
   /**
+   * Auto-start events based on eventConfig.js
+   */
+  autoStartEvents() {
+    console.log("🎉 Verificando eventos para auto-iniciar...");
+
+    // Halloween
+    if (eventConfig.halloween?.enabled && eventConfig.halloween?.autoStart) {
+      console.log("🎃 Auto-iniciando Halloween...");
+      this.startHalloween();
+    }
+
+    // Christmas (futuro)
+    if (eventConfig.christmas?.enabled && eventConfig.christmas?.autoStart) {
+      // this.startChristmas();
+    }
+
+    // Easter (futuro)
+    if (eventConfig.easter?.enabled && eventConfig.easter?.autoStart) {
+      // this.startEaster();
+    }
+
+    // New Year (futuro)
+    if (eventConfig.newYear?.enabled && eventConfig.newYear?.autoStart) {
+      // this.startNewYear();
+    }
+  }
+
+  /**
+   * Start Halloween event
+   */
+  startHalloween() {
+    if (!this.eventManager) {
+      console.error("❌ EventManager não inicializado");
+      return false;
+    }
+    return this.eventManager.startEvent("halloween");
+  }
+
+  /**
+   * Stop Halloween event
+   */
+  stopHalloween() {
+    if (!this.eventManager) {
+      console.error("❌ EventManager não inicializado");
+      return false;
+    }
+    return this.eventManager.stopEvent("halloween");
+  }
+
+  /**
+   * List all events
+   */
+  listEvents() {
+    if (!this.eventManager) {
+      console.error("❌ EventManager não inicializado");
+      return [];
+    }
+    return this.eventManager.listEvents();
+  }
+
+  /**
+   * Get EventManager instance
+   */
+  getEventManager() {
+    return this.eventManager;
+  }
+
+  /**
    * Clean up and destroy game engine
    */
   destroy() {
     this.stop();
 
+    if (this.eventManager) {
+      this.eventManager.destroy();
+    }
     if (this.topBar) this.topBar.destroy();
     if (this.sideMenu) this.sideMenu.destroy();
     if (this.screenManager) this.screenManager.destroy();

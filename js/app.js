@@ -160,6 +160,11 @@ window.FazendaRPG.debug = {
       engine.skillSystem.addXP(skill, xpNeeded);
     }
   },
+  // Event system commands
+  startHalloween: () => window.FazendaRPG.engine?.startHalloween(),
+  stopHalloween: () => window.FazendaRPG.engine?.stopHalloween(),
+  listEvents: () => window.FazendaRPG.engine?.listEvents(),
+  getEventManager: () => window.FazendaRPG.engine?.getEventManager(),
 };
 
 console.log("💡 Debug commands available at: window.FazendaRPG.debug");
