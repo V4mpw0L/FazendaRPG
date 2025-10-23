@@ -2,7 +2,7 @@
   "news": [
     {
       "id": "news-10",
-      "date": "2024-10-23",
+      "date": "2025-10-23",
       "version": "0.0.14",
       "title": "🎃 Evento de Halloween Disponível!",
       "category": "evento",
@@ -13,7 +13,7 @@
     },
     {
       "id": "news-09",
-      "date": "2024-10-20",
+      "date": "2025-10-20",
       "version": "0.0.13",
       "title": "📢 Sistema de Notícias Implementado",
       "category": "sistema",
@@ -23,7 +23,7 @@
     },
     {
       "id": "news-08",
-      "date": "2024-10-15",
+      "date": "2025-10-15",
       "version": "0.0.13",
       "title": "🔧 Correções e Melhorias",
       "category": "melhoria",
@@ -33,7 +33,7 @@
     },
     {
       "id": "news-07",
-      "date": "2024-10-10",
+      "date": "2025-10-10",
       "version": "0.0.12",
       "title": "🏦 Sistema Bancário Adicionado",
       "category": "recurso",
@@ -43,7 +43,7 @@
     },
     {
       "id": "news-06",
-      "date": "2024-10-05",
+      "date": "2025-10-05",
       "version": "0.0.12",
       "title": "🍺 Taverna Implementada",
       "category": "recurso",
@@ -53,7 +53,7 @@
     },
     {
       "id": "news-05",
-      "date": "2024-09-28",
+      "date": "2025-09-28",
       "version": "0.0.11",
       "title": "👥 Sistema de NPCs Melhorado",
       "category": "melhoria",
@@ -63,7 +63,7 @@
     },
     {
       "id": "news-04",
-      "date": "2024-09-20",
+      "date": "2025-09-20",
       "version": "0.0.10",
       "title": "🏙️ Sistema de Cidade Adicionado",
       "category": "recurso",
@@ -73,7 +73,7 @@
     },
     {
       "id": "news-03",
-      "date": "2024-09-15",
+      "date": "2025-09-15",
       "version": "0.0.9",
       "title": "📱 Notificações Push Implementadas",
       "category": "recurso",
@@ -83,7 +83,7 @@
     },
     {
       "id": "news-02",
-      "date": "2024-09-10",
+      "date": "2025-09-10",
       "version": "0.0.8",
       "title": "🎨 Sistema de Temas",
       "category": "visual",
@@ -93,7 +93,7 @@
     },
     {
       "id": "news-01",
-      "date": "2024-09-01",
+      "date": "2025-09-01",
       "version": "0.0.7",
       "title": "🚀 Lançamento Inicial",
       "category": "lançamento",
