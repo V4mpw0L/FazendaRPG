@@ -759,6 +759,12 @@ class NotificationManager {
   highlightNumbers(text) {
     if (!text) return "";
 
+    // Highlight friendship percentage (+X% amizade 💖)
+    text = text.replace(
+      /(\+\d+%)\s+amizade\s+💖/gi,
+      '<span class="notification-value positive">$1 amizade 💖</span>',
+    );
+
     // Highlight gold amounts with special class
     text = text.replace(
       /([+-]?\d+(?:,\d{3})*(?:\.\d+)?)\s*(?:g|gold|ouro)/gi,
