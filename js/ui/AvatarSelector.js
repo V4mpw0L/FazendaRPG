@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Avatar Selector
  * Manages avatar selection UI and functionality
- * @version 0.0.12
+ * @version 0.0.13
  */
 
 import notifications from "../utils/notifications.js";

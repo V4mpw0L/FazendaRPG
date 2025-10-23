@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Screen Manager
  * Manages different game screens and transitions between them
- * @version 0.0.12
+ * @version 0.0.13
  */
 
 export default class ScreenManager {

@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Wiki Content Generator
  * Dynamically generates wiki page content from game data
- * @version 0.0.12
+ * @version 0.0.13
  */
 
 export default class WikiContentGenerator {

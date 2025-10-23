@@ -8,14 +8,14 @@
  * 3. Or manually import in files that need version
  *
  * @file version.js
- * @version 0.0.12
+ * @version 0.0.13
  */
 
 /**
  * Current version of FazendaRPG
  * @constant {string}
  */
-export const VERSION = "0.0.12";
+export const VERSION = "0.0.13";
 
 /**
  * Version parts for programmatic access
@@ -24,7 +24,7 @@ export const VERSION = "0.0.12";
 export const VERSION_PARTS = {
   major: 0,
   minor: 0,
-  patch: 12,
+  patch: 13,
 };
 
 /**

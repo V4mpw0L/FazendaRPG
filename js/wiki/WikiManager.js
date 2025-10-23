@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Wiki Manager
  * Manages wiki navigation, search and dynamic content generation
- * @version 0.0.12
+ * @version 0.0.13
  */
 
 import WikiData from "./WikiData.js";
