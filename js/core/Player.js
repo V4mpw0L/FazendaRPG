@@ -248,6 +248,33 @@ export default class Player {
       });
     }
 
+    // Migrate old saves: Ensure NPC data structures exist
+    if (!merged.npcStock || typeof merged.npcStock !== "object") {
+      merged.npcStock = {};
+    }
+    if (
+      !merged.npcStockTimestamp ||
+      typeof merged.npcStockTimestamp !== "object"
+    ) {
+      merged.npcStockTimestamp = {};
+    }
+    if (
+      !merged.npcLastInteraction ||
+      typeof merged.npcLastInteraction !== "object"
+    ) {
+      merged.npcLastInteraction = {};
+      // Initialize timestamps for existing NPCs to now
+      const now = Date.now();
+      if (merged.npcs && typeof merged.npcs === "object") {
+        Object.keys(merged.npcs).forEach((npcId) => {
+          merged.npcLastInteraction[npcId] = now;
+        });
+      }
+      console.log(
+        "✅ Migrated old save: initialized npcLastInteraction timestamps",
+      );
+    }
+
     // Migrate old saves: Calculate correct maxEnergy based on levels
     merged.maxEnergy = this.calculateMaxEnergy(merged.level, merged.skills);
 

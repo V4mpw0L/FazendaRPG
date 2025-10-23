@@ -40,7 +40,7 @@ export default class NPCSUI {
 
   /**
    * Start friendship decay timer (decreases over time)
-   * Decay: -1% every 5 minutes of real time
+   * Decay: -1% every 1 MINUTE of real time
    */
   startFriendshipDecay() {
     // Check friendship decay every 60 seconds
@@ -51,47 +51,57 @@ export default class NPCSUI {
 
   /**
    * Decay friendship for all NPCs based on time since last interaction
-   * -1% every 5 minutes (300 seconds) of real time
+   * -1% every 1 MINUTE of real time (SAME LOGIC AS STOCK RESTORATION)
    */
   decayFriendship() {
     if (!this.npcsData) return;
 
     const now = Date.now();
 
+    // Initialize if not exists
+    if (!this.player.data.npcLastInteraction) {
+      this.player.data.npcLastInteraction = {};
+    }
+
+    let totalDecayed = 0;
+
     Object.keys(this.npcsData).forEach((npcId) => {
       const npc = this.npcsData[npcId];
 
-      // Initialize last interaction if not exists
-      if (!this.player.data.npcLastInteraction) {
-        this.player.data.npcLastInteraction = {};
-      }
-
+      // Initialize timestamp for this NPC
       if (!this.player.data.npcLastInteraction[npcId]) {
         this.player.data.npcLastInteraction[npcId] = now;
         return;
       }
 
-      const lastInteraction = this.player.data.npcLastInteraction[npcId];
-      const minutesPassed = (now - lastInteraction) / (1000 * 60);
+      const lastUpdate = this.player.data.npcLastInteraction[npcId];
+      const minutesPassed = (now - lastUpdate) / (1000 * 60);
 
-      // Decay 1% every 5 minutes
-      if (minutesPassed >= 5) {
-        const fiveMinutesPassed = Math.floor(minutesPassed / 5);
-        const decayAmount = fiveMinutesPassed;
+      // Decay 1% per minute (EXACTLY like stock regeneration but inverse)
+      if (minutesPassed >= 1 && npc.friendship > 0) {
+        const decayAmount = Math.min(
+          Math.floor(minutesPassed),
+          npc.friendship, // Can't decay more than current friendship
+        );
 
-        if (decayAmount > 0 && npc.friendship > 0) {
-          npc.friendship = Math.max(0, npc.friendship - decayAmount);
+        if (decayAmount > 0) {
+          const oldFriendship = npc.friendship;
+          npc.friendship -= decayAmount;
           this.player.data.npcs[npcId] = npc.friendship;
           this.player.data.npcLastInteraction[npcId] = now;
+          totalDecayed += decayAmount;
 
           console.log(
-            `💔 ${npcId} friendship decayed by ${decayAmount}% (${Math.floor(minutesPassed)} minutes passed)`,
+            `💔 ${npcId} friendship decayed: ${oldFriendship} → ${npc.friendship} (-${decayAmount}% after ${Math.floor(minutesPassed)} min)`,
           );
         }
       }
     });
 
-    this.saveNPCFriendship();
+    if (totalDecayed > 0) {
+      this.saveNPCFriendship();
+      console.log(`💔 Total friendship decayed: -${totalDecayed}%`);
+    }
   }
 
   /**
@@ -212,34 +222,73 @@ export default class NPCSUI {
   }
 
   /**
-   * Load NPC friendship from player data
+   * Load NPC friendship from player data with time-based decay
+   * SAME LOGIC AS loadNPCStock()
    */
   loadNPCFriendship() {
     if (!this.player.data.npcs) {
       this.player.data.npcs = {};
     }
 
-    // Initialize last interaction tracking
     if (!this.player.data.npcLastInteraction) {
       this.player.data.npcLastInteraction = {};
     }
 
     const now = Date.now();
+    let decayedTotal = 0;
 
-    // Sync NPC friendship from player data
     Object.keys(this.npcsData).forEach((npcId) => {
-      if (this.player.data.npcs[npcId] !== undefined) {
-        this.npcsData[npcId].friendship = this.player.data.npcs[npcId];
-      } else {
-        // Initialize if not exists
-        this.player.data.npcs[npcId] = this.npcsData[npcId].friendship || 0;
-      }
+      const npc = this.npcsData[npcId];
 
-      // Initialize last interaction timestamp
-      if (!this.player.data.npcLastInteraction[npcId]) {
+      // Check if we have saved friendship data
+      const hasSavedData = this.player.data.npcs[npcId] !== undefined;
+
+      if (hasSavedData) {
+        // ALWAYS use saved data (like stock system)
+        let currentFriendship = this.player.data.npcs[npcId];
+
+        // Calculate time-based decay
+        const lastUpdate = this.player.data.npcLastInteraction[npcId] || now;
+        const minutesPassed = (now - lastUpdate) / (1000 * 60);
+
+        // Decay 1% per minute since last update
+        if (minutesPassed >= 1 && currentFriendship > 0) {
+          const decayAmount = Math.min(
+            Math.floor(minutesPassed),
+            currentFriendship,
+          );
+
+          if (decayAmount > 0) {
+            currentFriendship -= decayAmount;
+            decayedTotal += decayAmount;
+            console.log(
+              `💔 Decayed ${decayAmount}% from ${npcId} (${Math.floor(minutesPassed)} min passed)`,
+            );
+          }
+
+          // Update timestamp
+          this.player.data.npcLastInteraction[npcId] = now;
+        }
+
+        // Apply calculated friendship
+        npc.friendship = currentFriendship;
+        this.player.data.npcs[npcId] = currentFriendship;
+      } else {
+        // First time - initialize with default
+        const initialFriendship = npc.friendship || 0;
+        npc.friendship = initialFriendship;
+        this.player.data.npcs[npcId] = initialFriendship;
         this.player.data.npcLastInteraction[npcId] = now;
+        console.log(
+          `🆕 First time init: ${npcId} friendship = ${initialFriendship}`,
+        );
       }
     });
+
+    if (decayedTotal > 0) {
+      console.log(`✅ Total friendship decayed on load: -${decayedTotal}%`);
+      this.saveNPCFriendship();
+    }
   }
 
   /**
@@ -412,11 +461,15 @@ export default class NPCSUI {
   }
 
   /**
-   * Save NPC friendship to player data
+   * Save NPC friendship to player data (with timestamps)
    */
   saveNPCFriendship() {
     if (!this.player.data.npcs) {
       this.player.data.npcs = {};
+    }
+
+    if (!this.player.data.npcLastInteraction) {
+      this.player.data.npcLastInteraction = {};
     }
 
     // Save all NPC friendship values to player data
@@ -424,8 +477,24 @@ export default class NPCSUI {
       this.player.data.npcs[npcId] = this.npcsData[npcId].friendship;
     });
 
+    console.log("💾 Saved friendship data for all NPCs");
+    console.log(
+      "💚 Current friendship:",
+      JSON.stringify(this.player.data.npcs, null, 2),
+    );
+    console.log(
+      "⏰ Last interactions:",
+      JSON.stringify(this.player.data.npcLastInteraction, null, 2),
+    );
+
     // Dispatch event to trigger save
     window.dispatchEvent(new CustomEvent("player:dataChanged"));
+
+    // Force immediate save to localStorage
+    if (this.player && this.player.save) {
+      this.player.save();
+      console.log("✅ Forced player.save() called for friendship data");
+    }
   }
 
   /**
@@ -1006,11 +1075,16 @@ export default class NPCSUI {
     }
     this.player.data.npcs[npcId] = this.npcsData[npcId].friendship;
 
-    // Update last interaction timestamp
+    // Update last interaction timestamp (resets decay timer)
+    const now = Date.now();
     if (!this.player.data.npcLastInteraction) {
       this.player.data.npcLastInteraction = {};
     }
-    this.player.data.npcLastInteraction[npcId] = Date.now();
+    this.player.data.npcLastInteraction[npcId] = now;
+
+    console.log(
+      `⏰ Reset decay timer for ${npcId} at ${new Date(now).toLocaleTimeString()}`,
+    );
 
     // Trigger save
     this.saveNPCFriendship();
