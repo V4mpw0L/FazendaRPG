@@ -430,10 +430,11 @@ export default class NewsModal {
 
       .news-modal-header {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         padding: 20px 24px;
         border-bottom: 2px solid var(--border-color, #e0e0e0);
+        position: relative;
       }
 
       .news-modal-header h2 {
@@ -443,6 +444,10 @@ export default class NewsModal {
       }
 
       .news-modal-close {
+        position: absolute;
+        right: 24px;
+        top: 50%;
+        transform: translateY(-50%);
         background: #dc3545;
         border: none;
         font-size: 18px;
