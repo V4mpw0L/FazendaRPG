@@ -567,7 +567,7 @@ export default class NewsModal {
         height: 80px;
         object-fit: contain;
         border-radius: 8px;
-        background: var(--bg-color, #fff);
+        background: transparent;
         padding: 8px;
         float: left;
         margin-right: 16px;
