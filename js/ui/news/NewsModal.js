@@ -589,18 +589,18 @@ export default class NewsModal {
       /* Estilos para destacar elementos nas notícias */
       .news-content .highlight {
         font-weight: 600;
-        color: var(--primary-color, #4caf50);
+        color: #ff8800;
       }
 
       .news-content .number {
         font-weight: 700;
-        color: var(--accent-color, #ff9800);
+        color: #d4af37;
         padding: 0 2px;
       }
 
       .news-content .item-name {
         font-weight: 600;
-        color: var(--secondary-color, #2196f3);
+        color: #9c27b0;
         font-style: italic;
       }
 
@@ -729,15 +729,15 @@ export default class NewsModal {
 
       /* Dark theme - destacues */
       .dark-theme .news-content .highlight {
-        color: #66bb6a;
+        color: #ffaa44;
       }
 
       .dark-theme .news-content .number {
-        color: #ffb74d;
+        color: #f0c875;
       }
 
       .dark-theme .news-content .item-name {
-        color: #64b5f6;
+        color: #ce93d8;
       }
 
       .dark-theme .news-content .important {
