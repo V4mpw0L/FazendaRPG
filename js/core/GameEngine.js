@@ -31,6 +31,7 @@ import WeedRemovalAnimation from "../animations/WeedRemovalAnimation.js";
 import NewsModal from "../ui/news/NewsModal.js";
 import i18n from "../utils/i18n.js";
 import notifications from "../utils/notifications.js";
+import { renderItemIcon } from "../utils/iconRenderer.js";
 
 export default class GameEngine {
   constructor() {
@@ -1467,7 +1468,7 @@ export default class GameEngine {
           opacity: ${canPlant ? "1" : "0.5"};
           background: ${canPlant ? "transparent" : "rgba(128, 128, 128, 0.1)"};
         ">
-          <div style="font-size: 2rem;">${seed.icon}</div>
+          <div style="font-size: 2rem;">${renderItemIcon(seed, { size: "2rem" })}</div>
           <div style="flex: 1;">
             <div style="font-weight: 600; color: var(--text-primary);">${seed.namePtBR || seed.name}</div>
             <div style="font-size: 0.875rem; color: var(--text-secondary);">
@@ -2144,7 +2145,7 @@ export default class GameEngine {
           opacity: ${canPlant ? "1" : "0.5"};
           background: ${canPlant ? "transparent" : "rgba(128, 128, 128, 0.1)"};
         ">
-          <div style="font-size: 2rem;">${seed.icon}</div>
+          <div style="font-size: 2rem;">${renderItemIcon(seed, { size: "2rem" })}</div>
           <div style="flex: 1;">
             <div style="font-weight: 600; color: var(--text-primary);">${seed.namePtBR || seed.name}</div>
             <div style="font-size: 0.875rem; color: var(--text-secondary);">
