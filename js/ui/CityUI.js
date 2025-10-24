@@ -116,7 +116,7 @@ export default class CityUI {
     const content = `
             <div class="bank-ui">
                 <div class="bank-header">
-                    <div style="font-size: 4rem; margin-bottom: 1rem;">🏦</div>
+                    <div style="font-size: 4rem; margin-bottom: 1rem;"><img src="assets/sprites/banco.png" alt="Banco" style="width: 64px; height: 64px;"></div>
                     <h2 style="margin: 0 0 0.5rem 0;">Banco da Cidade</h2>
                     <p style="color: var(--text-secondary); margin: 0;">Guarde seu ouro com segurança e ganhe 3% de juros a cada 4 horas!</p>
                 </div>
@@ -127,7 +127,7 @@ export default class CityUI {
                         <div class="balance-value">${formatNumber(playerGold)}g</div>
                     </div>
                     <div class="balance-card highlight">
-                        <div class="balance-label">🏦 No Banco</div>
+                        <div class="balance-label"><img src="assets/sprites/banco.png" alt="Banco" style="width: 1em; height: 1em; vertical-align: middle;"> No Banco</div>
                         <div class="balance-value">${formatNumber(balance)}g</div>
                     </div>
                 </div>
@@ -177,7 +177,7 @@ export default class CityUI {
                                 Depositar
                             </button>
                             <button class="action-tab" data-action="withdraw">
-                                🏦 Sacar
+                                <img src="assets/sprites/banco.png" alt="Banco" style="width: 1em; height: 1em; vertical-align: middle;"> Sacar
                             </button>
                         </div>
 
@@ -218,7 +218,7 @@ export default class CityUI {
                                         value="${Math.min(100, balance)}"
                                     />
                                     <div class="input-info">
-                                        <span>🏦 No Banco: <strong>${formatNumber(balance)}g</strong></span>
+                                        <span><img src="assets/sprites/banco.png" alt="Banco" style="width: 1em; height: 1em; vertical-align: middle;"> No Banco: <strong>${formatNumber(balance)}g</strong></span>
                                     </div>
                                 </div>
                                 <div class="quick-actions">
@@ -455,7 +455,8 @@ export default class CityUI {
         `;
 
     this.modal.show({
-      title: "🏦 Banco",
+      title:
+        '<img src="assets/sprites/banco.png" alt="Banco" style="width: 24px; height: 24px; vertical-align: middle; margin-right: 8px;">Banco',
       content,
       buttons: [
         {
@@ -726,7 +727,7 @@ export default class CityUI {
     const content = `
             <div class="tavern-ui">
                 <div class="tavern-header">
-                    <div style="font-size: 5rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));">🍺</div>
+                    <div style="font-size: 5rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));"><img src="assets/sprites/taverna.png" alt="Taverna" style="width: 80px; height: 80px;"></div>
                     <h2 style="margin: 0 0 0.5rem 0; font-size: 1.75rem; color: var(--brand-primary);">Taverna do Viajante</h2>
                     <p style="color: var(--text-secondary); margin: 0; font-size: 0.875rem;">Descanse, coma bem e ouça as melhores histórias da região!</p>
                 </div>
@@ -1057,7 +1058,8 @@ export default class CityUI {
 
     this.modal
       .show({
-        title: "🍺 Taverna",
+        title:
+          '<img src="assets/sprites/taverna.png" alt="Taverna" style="width: 24px; height: 24px; vertical-align: middle; margin-right: 8px;">Taverna',
         content,
         buttons: [
           {
@@ -1216,7 +1218,7 @@ export default class CityUI {
     const content = `
             <div class="plaza-ui">
                 <div class="plaza-header">
-                    <div style="font-size: 5rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));">⛲</div>
+                    <div style="font-size: 5rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));"><img src="assets/sprites/praca.png" alt="Praça" style="width: 80px; height: 80px;"></div>
                     <h2 style="margin: 0 0 0.5rem 0; font-size: 1.75rem; color: var(--brand-primary);">Praça da Cidade</h2>
                     <p style="color: var(--text-secondary); margin: 0; font-size: 0.875rem;">Centro de convivência e informações</p>
                 </div>
@@ -1503,7 +1505,8 @@ export default class CityUI {
         `;
 
     this.modal.show({
-      title: "⛲ Praça da Cidade",
+      title:
+        '<img src="assets/sprites/praca.png" alt="Praça" style="width: 24px; height: 24px; vertical-align: middle; margin-right: 8px;">Praça da Cidade',
       content,
       buttons: [
         {
