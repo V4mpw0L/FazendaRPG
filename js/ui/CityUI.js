@@ -8,6 +8,7 @@ import BankSystem from "../systems/city/BankSystem.js";
 import TavernSystem from "../systems/city/TavernSystem.js";
 import i18n from "../utils/i18n.js";
 import MarketUI from "./MarketUI.js";
+import { formatNumber } from "../utils/helpers.js";
 
 export default class CityUI {
   constructor(player, modal, notifications, inventorySystem, screenManager) {
@@ -123,11 +124,11 @@ export default class CityUI {
                 <div class="bank-balances">
                     <div class="balance-card">
                         <div class="balance-label"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> Seu Ouro</div>
-                        <div class="balance-value">${playerGold}g</div>
+                        <div class="balance-value">${formatNumber(playerGold)}g</div>
                     </div>
                     <div class="balance-card highlight">
                         <div class="balance-label">🏦 No Banco</div>
-                        <div class="balance-value">${balance}g</div>
+                        <div class="balance-value">${formatNumber(balance)}g</div>
                     </div>
                 </div>
 
@@ -142,7 +143,7 @@ export default class CityUI {
                     </div>
                     <div class="interest-preview">
                         <div style="font-size: 0.625rem; color: var(--text-secondary); margin-bottom: 0.125rem;">Você receberá:</div>
-                        <div style="font-size: 1rem; font-weight: 700; color: #5caa1f;">+${Math.floor((balance * (stats.interestRate || 3)) / 100)}g</div>
+                        <div style="font-size: 1rem; font-weight: 700; color: #5caa1f;">+${formatNumber(Math.floor((balance * (stats.interestRate || 3)) / 100))}g</div>
                     </div>
                 </div>
                 `
@@ -156,15 +157,15 @@ export default class CityUI {
                     </div>
                     <div class="info-item">
                         <span>💰 Juros Ganhos:</span>
-                        <strong style="color: #5caa1f;">+${stats.totalInterestEarned}g</strong>
+                        <strong style="color: #5caa1f;">+${formatNumber(stats.totalInterestEarned)}g</strong>
                     </div>
                     <div class="info-item">
                         <span>💵 Depósito Mínimo:</span>
-                        <strong style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);">${stats.minDeposit}g</strong>
+                        <strong style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);">${formatNumber(stats.minDeposit)}g</strong>
                     </div>
                     <div class="info-item">
                         <span>💎 Total Depositado:</span>
-                        <strong style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);">${stats.totalDeposited}g</strong>
+                        <strong style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);">${formatNumber(stats.totalDeposited)}g</strong>
                     </div>
                 </div>
 
@@ -193,7 +194,7 @@ export default class CityUI {
                                         value="${Math.min(100, playerGold)}"
                                     />
                                     <div class="input-info">
-                                        <span>💰 Disponível: <strong>${playerGold}g</strong></span>
+                                        <span>💰 Disponível: <strong>${formatNumber(playerGold)}g</strong></span>
                                         <span class="interest-rate">📈 Taxa: ${stats.interestRate}% / 4h</span>
                                     </div>
                                 </div>
@@ -217,7 +218,7 @@ export default class CityUI {
                                         value="${Math.min(100, balance)}"
                                     />
                                     <div class="input-info">
-                                        <span>🏦 No Banco: <strong>${balance}g</strong></span>
+                                        <span>🏦 No Banco: <strong>${formatNumber(balance)}g</strong></span>
                                     </div>
                                 </div>
                                 <div class="quick-actions">
@@ -790,7 +791,7 @@ export default class CityUI {
                         <div class="service-icon">😴</div>
                         <h3>Descansar</h3>
                         <p>Restaura 50 de energia</p>
-                        <div class="service-price"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${restPrice}g</div>
+                        <div class="service-price"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${formatNumber(restPrice)}g</div>
                         <div class="service-energy">⚡ +50</div>
                     </div>
 
@@ -801,7 +802,7 @@ export default class CityUI {
                             <div class="service-icon">${meal.icon}</div>
                             <h3>${meal.name}</h3>
                             <p>${meal.description}</p>
-                            <div class="service-price"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${meal.price}g ${meal.price < meal.basePrice ? `<span class="discount">-${meal.basePrice - meal.price}g</span>` : ""}</div>
+                            <div class="service-price"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${formatNumber(meal.price)}g ${meal.price < meal.basePrice ? `<span class="discount">-${formatNumber(meal.basePrice - meal.price)}g</span>` : ""}</div>
                             <div class="service-benefits">
                                 <span>⚡ +${meal.energy}</span>
                                 <span>❤️ +${meal.health}</span>
@@ -1243,7 +1244,7 @@ export default class CityUI {
                             <div class="stat-icon"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1.5rem; height: 1.5rem;"></div>
                             <div class="stat-info">
                                 <div class="stat-label">Ouro</div>
-                                <div class="stat-value" style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);">${gold}g</div>
+                                <div class="stat-value" style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);">${formatNumber(gold)}g</div>
                             </div>
                         </div>
                         <div class="stat-card">

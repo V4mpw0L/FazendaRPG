@@ -7,6 +7,7 @@
 import i18n from "../utils/i18n.js";
 import notifications from "../utils/notifications.js";
 import { renderItemIcon } from "../utils/iconRenderer.js";
+import { formatNumber } from "../utils/helpers.js";
 
 export default class InventoryUI {
   constructor(inventorySystem, modal, notifications, farmSystem = null) {
@@ -653,7 +654,7 @@ export default class InventoryUI {
       ${isLocked ? `<div class="inventory-slot-lock">🔒</div>` : ""}
       <div class="inventory-slot-icon">${renderItemIcon(item, { size: "2rem" })}</div>
       <div class="inventory-slot-name" title="${itemName}">${itemName}</div>
-      <div class="inventory-slot-value" style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 0.75em; height: 0.75em; vertical-align: middle;"> ${(item.sellPrice || 0) * (item.count || 1)}g</div>
+      <div class="inventory-slot-value" style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 0.75em; height: 0.75em; vertical-align: middle;"> ${formatNumber((item.sellPrice || 0) * (item.count || 1))}g</div>
       <div class="inventory-slot-category" style="background: ${categoryColor};">
         ${categoryName}
       </div>
@@ -754,8 +755,8 @@ export default class InventoryUI {
         <div style="display: inline-block; background: ${categoryColor}; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.625rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">${categoryName}</div>
         <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0.5rem 0;">${itemDesc}</p>
         ${isConsumable && item.energyRestore ? `<p style="color: #5caa1f; font-weight: 600; font-size: 0.875rem;">⚡ Restaura ${item.energyRestore >= 9999 ? "energia ao máximo" : item.energyRestore + " de energia"}</p>` : ""}
-        <p style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5); font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${sellPrice}g ${i18n.t("market.perUnit")}</p>
-        <p style="color: var(--text-secondary); font-size: 0.875rem;">${i18n.t("market.youHave")}: ${maxSellable}</p>
+        <p style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5); font-weight: 700; font-size: 1.125rem;"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${formatNumber(sellPrice)}g ${i18n.t("market.perUnit")}</p>
+        <p style="color: var(--text-secondary); font-size: 0.875rem;">${i18n.t("market.youHave")}: ${formatNumber(maxSellable)}</p>
 
         <!-- Lock Button -->
         <button id="toggle-lock-btn" style="
@@ -1107,7 +1108,7 @@ export default class InventoryUI {
     }
 
     if (valueEl) {
-      valueEl.innerHTML = `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${totalValue}g`;
+      valueEl.innerHTML = `<img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${formatNumber(totalValue)}g`;
       valueEl.style.color = "#FFD700";
       valueEl.style.textShadow =
         "0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5)";
