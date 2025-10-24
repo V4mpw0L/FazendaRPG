@@ -82,6 +82,24 @@
             "priceMultiplier": 1.0
           },
           {
+            "id": "broccoli_seed",
+            "stock": 100,
+            "maxStock": 100,
+            "priceMultiplier": 1.0
+          },
+          {
+            "id": "garlic_seed",
+            "stock": 100,
+            "maxStock": 100,
+            "priceMultiplier": 1.0
+          },
+          {
+            "id": "avocado_seed",
+            "stock": 100,
+            "maxStock": 100,
+            "priceMultiplier": 1.0
+          },
+          {
             "id": "fertilizer",
             "stock": 50,
             "maxStock": 50,

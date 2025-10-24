@@ -140,6 +140,48 @@
       "harvestAmount": 5,
       "stages": ["🌱", "🌿", "🌶️"],
       "sellPrice": 110
+    },
+    "broccoli": {
+      "id": "broccoli",
+      "name": "Broccoli",
+      "namePtBR": "Brócolis",
+      "icon": "🥦",
+      "seedId": "broccoli_seed",
+      "growthTime": 330,
+      "requiredLevel": 50,
+      "xpGain": 120,
+      "energyCost": 12,
+      "harvestAmount": 4,
+      "stages": ["🌱", "🌿", "🥦"],
+      "sellPrice": 130
+    },
+    "garlic": {
+      "id": "garlic",
+      "name": "Garlic",
+      "namePtBR": "Alho",
+      "icon": "🧄",
+      "seedId": "garlic_seed",
+      "growthTime": 360,
+      "requiredLevel": 55,
+      "xpGain": 140,
+      "energyCost": 13,
+      "harvestAmount": 6,
+      "stages": ["🌱", "🌿", "🧄"],
+      "sellPrice": 145
+    },
+    "avocado": {
+      "id": "avocado",
+      "name": "Avocado",
+      "namePtBR": "Abacate",
+      "icon": "🥑",
+      "seedId": "avocado_seed",
+      "growthTime": 390,
+      "requiredLevel": 60,
+      "xpGain": 160,
+      "energyCost": 14,
+      "harvestAmount": 5,
+      "stages": ["🌱", "🌿", "🥑"],
+      "sellPrice": 170
     }
   }
 }
