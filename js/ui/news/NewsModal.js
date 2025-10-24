@@ -552,6 +552,30 @@ export default class NewsModal {
         line-height: 1.6;
       }
 
+      /* Estilos para destacar elementos nas notícias */
+      .news-content .highlight {
+        font-weight: 600;
+        color: var(--primary-color, #4caf50);
+      }
+
+      .news-content .number {
+        font-weight: 700;
+        color: var(--accent-color, #ff9800);
+        padding: 0 2px;
+      }
+
+      .news-content .item-name {
+        font-weight: 600;
+        color: var(--secondary-color, #2196f3);
+        font-style: italic;
+      }
+
+      .news-content .important {
+        font-weight: 700;
+        color: var(--danger-color, #f44336);
+        text-shadow: 0 0 1px rgba(244, 67, 54, 0.3);
+      }
+
       .news-tags {
         display: flex;
         flex-wrap: wrap;
@@ -662,6 +686,23 @@ export default class NewsModal {
 
       .dark-theme .news-content {
         color: #ccc;
+      }
+
+      /* Dark theme - destacues */
+      .dark-theme .news-content .highlight {
+        color: #66bb6a;
+      }
+
+      .dark-theme .news-content .number {
+        color: #ffb74d;
+      }
+
+      .dark-theme .news-content .item-name {
+        color: #64b5f6;
+      }
+
+      .dark-theme .news-content .important {
+        color: #ef5350;
       }
 
       .dark-theme .news-tag {
