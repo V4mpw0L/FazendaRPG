@@ -6,6 +6,7 @@
 
 import i18n from "../utils/i18n.js";
 import { renderItemIcon } from "../utils/iconRenderer.js";
+import { formatNumber } from "../utils/helpers.js";
 
 export default class NPCSUI {
   constructor(player, modal, notifications, inventorySystem) {
@@ -977,7 +978,7 @@ export default class NPCSUI {
             }, 100);
 
             this.notifications.success(
-              `Comprou ${amount}x ${itemName} por ${totalCost}g!`,
+              `Comprou ${amount}x ${itemName} por ${formatNumber(totalCost)}g!`,
             );
 
             // Increase friendship based on amount bought (progressive)

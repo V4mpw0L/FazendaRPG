@@ -1065,13 +1065,8 @@ export default class InventoryUI {
             const result = this.inventorySystem.sellAllItems();
             if (result.success) {
               // Show gold received notification
-              this.notifications.show(
-                `Vendeu ${result.itemCount} items por ${result.gold}g!`,
-                "gold",
-                {
-                  icon: '<img src="./assets/sprites/ouro.png" alt="Ouro">',
-                  duration: 3500,
-                },
+              this.notifications.success(
+                `Vendeu ${result.itemCount} items por ${formatNumber(result.gold)}g!`,
               );
               window.dispatchEvent(new CustomEvent("player:dataChanged"));
               this.render();

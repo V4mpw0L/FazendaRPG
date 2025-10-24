@@ -765,40 +765,34 @@ class NotificationManager {
       '<span class="notification-value positive">$1 amizade 💖</span>',
     );
 
-    // Highlight gold amounts with special class
+    // Highlight gold amounts with special class (with g at the end)
     text = text.replace(
-      /([+-]?\d+(?:,\d{3})*(?:\.\d+)?)\s*(?:g|gold|ouro)/gi,
+      /([+-]?\d+(?:,\d{3})*(?:\.\d+)?)\s*g(?!\w)/gi,
       '<span class="notification-value gold-value">$1g</span>',
     );
 
     // Highlight XP amounts
     text = text.replace(
-      /([+-]?\d+(?:,\d{3})*(?:\.\d+)?)\s*(?:xp|exp)/gi,
+      /([+-]?\d+(?:,\d{3})*(?:\.\d+)?)\s*(?:xp|exp)\b/gi,
       '<span class="notification-value xp-value">$1 XP</span>',
     );
 
     // Highlight quantities with x (e.g., 5x, 10x) - keep space after x
     text = text.replace(
-      /(\d+x)\s+/gi,
-      '<span class="notification-value">$1</span> ',
+      /(\d+)x\s+/gi,
+      '<span class="notification-value">$1x</span> ',
     );
 
-    // Highlight positive numbers with +
+    // Highlight positive numbers with + that are NOT already in a span
     text = text.replace(
-      /(\+\d+(?:,\d{3})*(?:\.\d+)?)/g,
+      /(?<!<span[^>]*>)(\+\d+(?:,\d{3})*(?:\.\d+)?)(?![^<]*<\/span>)/g,
       '<span class="notification-value positive">$1</span>',
     );
 
-    // Highlight negative numbers with -
+    // Highlight negative numbers with - that are NOT already in a span
     text = text.replace(
-      /(-\d+(?:,\d{3})*(?:\.\d+)?)/g,
+      /(?<!<span[^>]*>)(-\d+(?:,\d{3})*(?:\.\d+)?)(?![^<]*<\/span>)/g,
       '<span class="notification-value negative">$1</span>',
-    );
-
-    // Highlight remaining standalone numbers
-    text = text.replace(
-      /\b(\d+(?:,\d{3})*(?:\.\d+)?)\b/g,
-      '<span class="notification-value">$1</span>',
     );
 
     return text;
