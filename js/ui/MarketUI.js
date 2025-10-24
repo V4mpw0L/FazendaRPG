@@ -677,7 +677,7 @@ export default class MarketUI {
     // Filter by category
     const filteredItems =
       this.currentCategory === "all"
-        ? buyableItems
+        ? buyableItems.filter((item) => item.category !== "events")
         : buyableItems.filter((item) => item.category === this.currentCategory);
 
     if (filteredItems.length === 0) {
