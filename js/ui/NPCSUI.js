@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - NPCs UI
  * Manages NPC display and interactions
- * @version 0.0.14
+ * @version 0.0.15
  */
 
 import i18n from "../utils/i18n.js";

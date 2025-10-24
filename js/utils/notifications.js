@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Professional Notification System
  * Lightweight, elegant notifications with farm/RPG aesthetics
- * @version 0.0.14
+ * @version 0.0.15
  */
 
 import i18n from "./i18n.js";

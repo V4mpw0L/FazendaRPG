@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Skill System
  * Manages all skills, XP progression, and skill-based actions
- * @version 0.0.14
+ * @version 0.0.15
  */
 
 import { calculateLevelFromXP, calculateXPForLevel } from "../utils/helpers.js";

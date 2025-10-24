@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Game Engine
  * Main game engine that integrates all systems and manages game flow
- * @version 0.0.14
+ * @version 0.0.15
  */
 
 import Player from "./Player.js";
@@ -71,7 +71,7 @@ export default class GameEngine {
     }
 
     try {
-      console.log("🎮 Initializing FazendaRPG v0.0.14...");
+      console.log("🎮 Initializing FazendaRPG v0.0.15...");
 
       // Show loading overlay
       this.showLoading(true);
@@ -528,7 +528,7 @@ export default class GameEngine {
     const saveData = {
       player: this.player.getData(),
       savedAt: Date.now(),
-      version: "0.0.14",
+      version: "0.0.15",
     };
 
     const success = this.saveManager.save(saveData);
@@ -584,7 +584,7 @@ export default class GameEngine {
     const saveData = {
       player: this.player.getData(),
       savedAt: Date.now(),
-      version: "0.0.14",
+      version: "0.0.15",
     };
 
     // Verify integrity before saving

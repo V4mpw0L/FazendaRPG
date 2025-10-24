@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Harvest Animation
  * 3D rake animation system for harvesting crops
- * @version 0.0.14
+ * @version 0.0.15
  */
 
 export default class HarvestAnimation {
