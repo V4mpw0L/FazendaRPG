@@ -875,12 +875,32 @@ export default class MarketUI {
     button.addEventListener("click", (e) => {
       e.stopPropagation();
 
+      // Check if button is disabled (level requirement or event item)
+      if (button.disabled) {
+        return;
+      }
+
       // Block selling if item is locked
       if (type === "sell" && isLocked) {
         this.notifications.error(
           "🔒 Este item está bloqueado! Desbloqueie no inventário para vender.",
         );
         return;
+      }
+
+      // Check level requirement for seeds
+      if (type === "buy" && item.category === "seeds") {
+        const cropId = item.id.replace("_seed", "");
+        const cropData = this.farmSystem?.getCropData(cropId);
+        if (cropData && cropData.requiredLevel) {
+          const playerLevel = this.skillSystem?.getLevel("farming") || 1;
+          if (playerLevel < cropData.requiredLevel) {
+            this.notifications.error(
+              `🔒 Você precisa de Farming Nível ${cropData.requiredLevel} para comprar esta semente!`,
+            );
+            return;
+          }
+        }
       }
 
       if (type === "buy") {

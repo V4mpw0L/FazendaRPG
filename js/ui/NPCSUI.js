@@ -797,6 +797,11 @@ export default class NPCSUI {
       const buyButtons = document.querySelectorAll(".shop-item button");
       buyButtons.forEach((button) => {
         button.addEventListener("click", (e) => {
+          // Ignore if button is disabled
+          if (button.disabled) {
+            return;
+          }
+
           const itemId = button.getAttribute("data-item-id");
           const price = parseInt(button.getAttribute("data-price"));
           const npcId = button.getAttribute("data-npc-id");
