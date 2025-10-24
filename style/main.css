@@ -860,6 +860,7 @@ a:hover {
     padding: 12px 20px;
     line-height: 1.3;
     min-height: 65px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .farm-actions .btn span {
