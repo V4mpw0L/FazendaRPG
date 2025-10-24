@@ -57,13 +57,18 @@ export default class NotificationManager {
     // Listen for messages from service worker
     this.listenToServiceWorker();
 
-    // Start periodic check in Service Worker
-    if (this.enabled) {
+    // ALWAYS start periodic check in Service Worker if permission granted
+    // This ensures notifications work even when app is closed
+    if (this.permission === "granted") {
+      console.log("🔔 Permissão concedida - iniciando sistema de background");
       await this.startPeriodicCheck();
       // Check for pending notifications immediately
       await this.checkPendingNotifications();
+
       // Start ping system to keep SW alive
-      this.startPingSystem();
+      if (this.enabled) {
+        this.startPingSystem();
+      }
     }
 
     // Auto-request permission if never asked before
@@ -594,10 +599,14 @@ export default class NotificationManager {
       return;
     }
 
-    console.log("📡 Sistema de ping iniciado - mantendo SW ativo");
+    console.log(
+      "📡 Sistema de ping iniciado - mantendo SW ativo enquanto app está aberto",
+    );
 
-    // Ping every 25 seconds (before 30s timeout)
+    // Ping every 25 seconds (before SW 30s idle timeout)
+    // This keeps the app in sync while it's open
     this.pingInterval = setInterval(() => {
+      console.log("📡 Ping - verificando notificações...");
       this.checkPendingNotifications().catch((error) => {
         console.error("❌ Erro no ping de notificações:", error);
       });

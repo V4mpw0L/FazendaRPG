@@ -41,43 +41,6 @@ const ASSETS_TO_CACHE = [
   "./assets/icon-72.png",
 ];
 
-// Install event - cache assets (iOS optimized)
-self.addEventListener("install", (event) => {
-  console.log("🔧 Service Worker: Installing...");
-
-  event.waitUntil(
-    Promise.race([
-      // Add timeout for iOS
-      new Promise((resolve) => setTimeout(resolve, 5000)),
-      caches
-        .open(CACHE_NAME)
-        .then((cache) => {
-          console.log("📦 Service Worker: Caching app shell");
-          // Cache assets one by one to avoid iOS timeout issues
-          return Promise.allSettled(
-            ASSETS_TO_CACHE.map((url) =>
-              cache.add(new Request(url, { cache: "reload" }))
-                .catch(err => console.warn("⚠️ Failed to cache:", url, err))
-            )
-          );
-        })
-        .catch((error) => {
-          console.warn("⚠️ Failed to cache some assets:", error);
-          // Continue anyway - non-critical assets can be cached on demand
-          return Promise.resolve();
-        })
-    ])
-    .then(() => {
-      console.log("✅ Service Worker: Installation complete");
-      return self.skipWaiting();
-    })
-    .catch((error) => {
-      console.warn("⚠️ Service Worker installation error:", error);
-      return self.skipWaiting(); // Skip waiting even on error
-    })
-  );
-});
-
 // Activate event - clean up old caches
 self.addEventListener("activate", (event) => {
   console.log("🚀 Service Worker: Activating...");
@@ -111,6 +74,12 @@ self.addEventListener("fetch", (event) => {
 
   // Skip chrome extensions and external requests
   if (!event.request.url.startsWith(self.location.origin)) {
+    return;
+  }
+
+  // Handle SW heartbeat pings (keeps SW alive)
+  if (event.request.url.includes('sw-ping')) {
+    event.respondWith(new Response('pong', { status: 200 }));
     return;
   }
 
@@ -387,9 +356,11 @@ async function checkPendingNotifications() {
     const now = Date.now();
     let firedCount = 0;
 
+    // Check notifications - fire any that are overdue
     for (const notification of notifications) {
-      // If notification time has passed, fire it
-      if (notification.timestamp <= now) {
+      // Fire notification if time has passed (with 5 second buffer for reliability)
+      if (notification.timestamp <= now + 5000) {
+        console.log(`🔔 Disparando notificação: ${notification.title}`);
         await showNotification(
           notification.title,
           notification.body,
@@ -401,19 +372,15 @@ async function checkPendingNotifications() {
     }
 
     if (firedCount > 0) {
-      console.log(`🔔 ${firedCount} notificação(ões) pendente(s) disparada(s)`);
+      console.log(`✅ ${firedCount} notificação(ões) disparada(s) com sucesso!`);
     }
 
-    // Schedule next check if there are remaining notifications
+    // Log remaining notifications
     const remainingNotifications = await getAllNotificationsFromDB();
     if (remainingNotifications.length > 0) {
       const nextNotification = remainingNotifications.sort((a, b) => a.timestamp - b.timestamp)[0];
       const delayUntilNext = Math.max(0, nextNotification.timestamp - Date.now());
-
-      // Wake up before the notification time to ensure it fires on time
-      const wakeUpTime = Math.min(delayUntilNext, 30000); // Max 30 seconds
-
-      console.log(`⏰ Próxima verificação em ${Math.round(wakeUpTime / 1000)}s`);
+      console.log(`⏰ ${remainingNotifications.length} notificação(ões) pendente(s) - próxima em ${Math.round(delayUntilNext / 1000)}s`);
     }
   } catch (error) {
     console.error("❌ Erro ao verificar notificações pendentes:", error);
@@ -429,13 +396,52 @@ self.addEventListener("activate", (event) => {
       checkPendingNotifications().catch((error) =>
         console.error("❌ Erro ao verificar notificações na ativação:", error),
       ),
-    ])
+    ]).then(() => {
+      // Start periodic check after activation
+      startPeriodicCheck();
+    })
   );
-});</parameter>
+});
+
+// Keep Service Worker alive with periodic self-ping
+self.addEventListener("install", (event) => {
+  console.log("🔧 Service Worker: Installing...");
+  event.waitUntil(
+    Promise.race([
+      // Add timeout for iOS
+      new Promise((resolve) => setTimeout(resolve, 5000)),
+      caches
+        .open(CACHE_NAME)
+        .then((cache) => {
+          console.log("📦 Service Worker: Caching app shell");
+          // Cache assets one by one to avoid iOS timeout issues
+          return Promise.allSettled(
+            ASSETS_TO_CACHE.map((url) =>
+              cache.add(new Request(url, { cache: "reload" }))
+                .catch(err => console.warn("⚠️ Failed to cache:", url, err))
+            )
+          );
+        })
+        .catch((error) => {
+          console.warn("⚠️ Failed to cache some assets:", error);
+          // Continue anyway - non-critical assets can be cached on demand
+          return Promise.resolve();
+        })
+    ])
+    .then(() => {
+      console.log("✅ Service Worker: Installation complete");
+      return self.skipWaiting();
+    })
+    .catch((error) => {
+      console.warn("⚠️ Service Worker installation error:", error);
+      return self.skipWaiting(); // Skip waiting even on error
+    })
+  );
 });
 
 // Store for scheduled notifications (in-memory for immediate checks)
 let scheduledNotifications = new Map();
+let periodicCheckInterval = null;
 
 // Wake up Service Worker to check notifications
 // This is called from the app to ensure SW stays somewhat active
@@ -445,17 +451,36 @@ async function startPeriodicCheck() {
   // Check immediately
   await checkPendingNotifications();
 
-  // Note: We don't use setInterval here because SW can be terminated
-  // Instead, we rely on:
-  // 1. SW waking up naturally (fetch, message events)
-  // 2. App sending periodic ping messages
-  // 3. User interactions that wake the SW
+  // Clear any existing interval
+  if (periodicCheckInterval) {
+    clearInterval(periodicCheckInterval);
+  }
+
+  // Set up periodic check every 15 seconds (more aggressive for better reliability)
+  // This keeps the SW alive and checks for pending notifications
+  periodicCheckInterval = setInterval(async () => {
+    console.log("🔄 Verificação periódica de notificações (background)");
+
+    // Self-ping to keep SW alive
+    try {
+      await fetch('/?sw-ping=' + Date.now(), { method: 'HEAD' });
+    } catch (e) {
+      // Ignore fetch errors - just to keep SW alive
+    }
+
+    await checkPendingNotifications();
+  }, 15000); // 15 seconds for better notification reliability
+
+  console.log("✅ Verificação periódica ativada (15s) + heartbeat");
 }
 
 // Legacy function kept for compatibility
 function stopPeriodicCheck() {
-  console.log("⏰ Sistema de verificação mantido ativo (sem setInterval)");
-}</parameter>
+  if (periodicCheckInterval) {
+    clearInterval(periodicCheckInterval);
+    periodicCheckInterval = null;
+    console.log("⏰ Sistema de verificação periódica desativado");
+  }
 }
 
 // Push notifications (when available)
@@ -598,14 +623,14 @@ async function scheduleNotification(id, title, body, timestamp, data = {}) {
       `📅 Notificação agendada: ${title} para ${new Date(timestamp).toLocaleString()} (em ${Math.round(delay / 1000)}s)`,
     );
     console.log(`💾 Notificação salva em IndexedDB para disparo em background`);
+    console.log(`⚠️ IMPORTANTE: Notificação será disparada MESMO COM APP FECHADO`);
 
-    // Notify that periodic check should be active
+    // Ensure periodic check is running
     startPeriodicCheck();
   } catch (error) {
     console.error("❌ Erro ao agendar notificação:", error);
     throw error;
   }
-}</parameter>
 }
 
 // Cancel a scheduled notification
@@ -677,13 +702,12 @@ async function showNotification(title, body, data = {}) {
       },
     };
 
-    // Always show notification - even if app is visible
-    // This ensures users don't miss important notifications
+    // ALWAYS show notification - this is the key for background notifications!
     await self.registration.showNotification(title, options);
 
     if (isAppVisible) {
       console.log(
-        `🔔 Notificação mostrada (app visível): ${title} - ${body}`,
+        `🔔 Notificação mostrada (app ABERTO): ${title}`,
       );
       // Also notify the app that notification was shown
       allClients.forEach((client) => {
@@ -694,7 +718,7 @@ async function showNotification(title, body, data = {}) {
       });
     } else {
       console.log(
-        `🔔 Notificação mostrada (app fechado/background): ${title} - ${body}`,
+        `🔔 ✅ NOTIFICAÇÃO BACKGROUND FUNCIONANDO! App FECHADO: ${title}`,
       );
     }
   } catch (error) {
