@@ -6,7 +6,7 @@
       "version": "0.0.14",
       "title": "🎃 Evento de Halloween Disponível!",
       "category": "evento",
-      "content": "O aguardado evento de Halloween chegou! Clique nas abóboras que aparecem na tela para ganhar energia e ouro. Aproveite as decorações temáticas com teias de aranha e aranhas animadas!",
+      "content": "O aguardado evento de Halloween chegou! Clique nas abóboras que aparecem na tela para ganhar energia e ouro. Aproveite as decorações temáticas com teias de aranha e aranhas animadas! Ganhe itens raros de evento: Pirulito Noturno, Aranha Crocante e Jujubas Tóxicas!",
       "image": "./assets/sprites/events/pumpkin2.png",
       "tags": ["evento", "halloween", "novidade"],
       "highlight": true
