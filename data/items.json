@@ -660,7 +660,7 @@
       "id": "herbs",
       "name": "Herbs",
       "namePtBR": "Ervas",
-      "icon": "🌿",
+      "icon": "assets/sprites/mercado/materiais/ervas.png",
       "category": "materials",
       "description": "Wild herbs. Used in potions and cooking.",
       "descriptionPtBR": "Ervas selvagens. Usadas em poções e culinária.",
