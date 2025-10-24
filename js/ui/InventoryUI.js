@@ -653,7 +653,7 @@ export default class InventoryUI {
       ${isLocked ? `<div class="inventory-slot-lock">🔒</div>` : ""}
       <div class="inventory-slot-icon">${renderItemIcon(item, { size: "2rem" })}</div>
       <div class="inventory-slot-name" title="${itemName}">${itemName}</div>
-      <div class="inventory-slot-value" style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 0.75em; height: 0.75em; vertical-align: middle;"> ${item.sellPrice || 0}g</div>
+      <div class="inventory-slot-value" style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5);"><img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 0.75em; height: 0.75em; vertical-align: middle;"> ${(item.sellPrice || 0) * (item.count || 1)}g</div>
       <div class="inventory-slot-category" style="background: ${categoryColor};">
         ${categoryName}
       </div>
