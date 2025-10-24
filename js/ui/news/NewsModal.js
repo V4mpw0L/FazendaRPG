@@ -127,22 +127,32 @@ export default class NewsModal {
     const newsList = this.modal.querySelector("#news-list");
     if (!newsList) return;
 
-    // Calcula paginação
+    // Separa notícias fixadas das normais
+    const pinnedNews = this.newsData.filter((n) => n.pinned);
+    const regularNews = this.newsData.filter((n) => !n.pinned);
+
+    // Calcula paginação apenas para notícias regulares
     const start = (this.currentPage - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
-    const pageNews = this.newsData.slice(start, end);
+    const pageNews = regularNews.slice(start, end);
 
     // Limpa lista
     newsList.innerHTML = "";
 
-    // Renderiza cada notícia
+    // Renderiza notícias fixadas primeiro (sempre visíveis)
+    pinnedNews.forEach((news) => {
+      const newsItem = this.createNewsItem(news);
+      newsList.appendChild(newsItem);
+    });
+
+    // Renderiza notícias regulares paginadas
     pageNews.forEach((news) => {
       const newsItem = this.createNewsItem(news);
       newsList.appendChild(newsItem);
     });
 
-    // Renderiza paginação
-    this.renderPagination();
+    // Renderiza paginação (usa apenas notícias regulares para cálculo)
+    this.renderPagination(regularNews.length);
   }
 
   /**
@@ -150,7 +160,7 @@ export default class NewsModal {
    */
   createNewsItem(news) {
     const item = document.createElement("div");
-    item.className = `news-item ${news.highlight ? "news-highlight" : ""}`;
+    item.className = `news-item ${news.highlight ? "news-highlight" : ""} ${news.pinned ? "news-pinned" : ""}`;
     item.dataset.category = news.category;
 
     const categoryIcon = this.getCategoryIcon(news.category);
@@ -158,6 +168,7 @@ export default class NewsModal {
 
     item.innerHTML = `
       <div class="news-item-header">
+        ${news.pinned ? '<div class="news-pin-icon">📌</div>' : ""}
         <div class="news-item-meta">
           <span class="news-category ${news.category}">${categoryIcon} ${categoryName}</span>
           <span class="news-date">${this.formatDate(news.date)}</span>
@@ -186,11 +197,13 @@ export default class NewsModal {
   /**
    * Renderiza paginação
    */
-  renderPagination() {
+  renderPagination(totalItems = null) {
     const pagination = this.modal.querySelector("#news-pagination");
     if (!pagination) return;
 
-    const totalPages = Math.ceil(this.newsData.length / this.itemsPerPage);
+    // Usa totalItems passado ou calcula com todas as notícias
+    const itemCount = totalItems !== null ? totalItems : this.newsData.length;
+    const totalPages = Math.ceil(itemCount / this.itemsPerPage);
 
     if (totalPages <= 1) {
       pagination.innerHTML = "";
@@ -484,6 +497,27 @@ export default class NewsModal {
 
       .news-item-header {
         margin-bottom: 12px;
+        position: relative;
+      }
+
+      .news-pin-icon {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        font-size: 20px;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        transform: rotate(45deg);
+        animation: pinPulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pinPulse {
+        0%, 100% { transform: rotate(45deg) scale(1); }
+        50% { transform: rotate(45deg) scale(1.1); }
+      }
+
+      .news-pinned {
+        border: 2px solid var(--primary-color, #4caf50);
+        box-shadow: 0 0 12px rgba(76, 175, 80, 0.3);
       }
 
       .news-item-meta {
@@ -642,6 +676,11 @@ export default class NewsModal {
       /* Dark Theme */
       .dark-theme .news-modal-content {
         background: #2a2a2a;
+      }
+
+      .dark-theme .news-pinned {
+        border-color: #66bb6a;
+        box-shadow: 0 0 12px rgba(102, 187, 106, 0.3);
       }
 
       .dark-theme .news-modal-header {
