@@ -777,7 +777,6 @@ a:hover {
     );
     pointer-events: none;
     z-index: 0;
-    animation: shimmer 3s ease-in-out infinite;
 }
 
 @keyframes pulseGlow {
@@ -796,18 +795,6 @@ a:hover {
             0 6px 12px rgba(0, 0, 0, 0.35),
             inset 0 -6px 12px rgba(0, 0, 0, 0.35),
             inset 0 2px 8px rgba(126, 200, 80, 0.5);
-    }
-}
-
-@keyframes shimmer {
-    0%,
-    100% {
-        opacity: 0.5;
-        transform: rotate(0deg) scale(1);
-    }
-    50% {
-        opacity: 1;
-        transform: rotate(180deg) scale(1.1);
     }
 }
 
