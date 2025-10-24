@@ -73,7 +73,7 @@ export default class NewsModal {
       <div class="news-modal-overlay"></div>
       <div class="news-modal-content">
         <div class="news-modal-header">
-          <h2>📰 Notícias e Atualizações</h2>
+          <h2 style="display: flex; align-items: center; justify-content: center; gap: 8px;"><img src="assets/sprites/noticias.png" alt="Notícias" style="width: 24px; height: 24px;">Notícias e Atualizações<img src="assets/sprites/noticias.png" alt="Notícias" style="width: 24px; height: 24px;"></h2>
           <button class="news-modal-close" aria-label="Fechar">×</button>
         </div>
         <div class="news-modal-body">
