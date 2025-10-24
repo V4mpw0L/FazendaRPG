@@ -4,6 +4,8 @@
  * @version 0.0.15
  */
 
+import i18n from "../utils/i18n.js";
+
 export default class WikiPagesRenderer {
   constructor(gameData, wikiData) {
     this.gameData = gameData;
@@ -12,6 +14,7 @@ export default class WikiPagesRenderer {
     this.items = gameData?.items || {};
     this.skills = gameData?.skills || {};
     this.quests = gameData?.quests || {};
+    this.i18n = i18n;
   }
 
   /**
@@ -19,6 +22,7 @@ export default class WikiPagesRenderer {
    * @returns {string} HTML content
    */
   generateSkillsSystem() {
+    const t = (key) => this.i18n.t(key);
     const skillsData = this.skills.skills || {};
 
     let skillsHTML = "";
@@ -33,7 +37,7 @@ export default class WikiPagesRenderer {
             </div>
           </div>
           <div class="wiki-skill-actions">
-            <h4>Ações Disponíveis:</h4>
+            <h4>${t("wiki.skillsSystem.actionsAvailable")}</h4>
             <ul style="margin-left: 1.5rem;">
               ${skill.actions
                 .map(
@@ -52,11 +56,11 @@ export default class WikiPagesRenderer {
     }
 
     return `
-      <h1 class="wiki-page-title"><img src="assets/sprites/skills.png" alt="Skills" style="width: 32px; height: 32px; vertical-align: middle;"> Sistema de Skills</h1>
+      <h1 class="wiki-page-title"><img src="assets/sprites/skills.png" alt="Skills" style="width: 32px; height: 32px; vertical-align: middle;"> ${t("wiki.skillsSystem.title")}</h1>
 
       <div class="wiki-card">
-        <h2>⭐ 8 Skills Únicas</h2>
-        <p>FazendaRPG possui 8 skills diferentes, cada uma com seu próprio nível (máximo 99) e ações únicas!</p>
+        <h2>${t("wiki.skillsSystem.uniqueSkills")}</h2>
+        <p>${t("wiki.skillsSystem.uniqueSkillsDesc")}</p>
       </div>
 
       <div class="wiki-card">
@@ -64,42 +68,47 @@ export default class WikiPagesRenderer {
       </div>
 
       <div class="wiki-card">
-        <h2>📈 Como Funciona o Sistema</h2>
+        <h2>${t("wiki.skillsSystem.howWorks")}</h2>
         <div class="wiki-list">
           <div class="wiki-list-item">
             <span class="wiki-icon">🎯</span>
             <div>
-              <strong>Cada Skill é Independente</strong>
-              <p>Você tem um nível separado para cada skill. Farming lvl 10 não afeta Mining!</p>
+              <strong>${t("wiki.skillsSystem.independent")}</strong>
+              <p>${t("wiki.skillsSystem.independentDesc")}</p>
             </div>
           </div>
           <div class="wiki-list-item">
             <span class="wiki-icon">⬆️</span>
             <div>
-              <strong>Ganhe XP Fazendo Ações</strong>
-              <p>Plante para ganhar Farming XP, pesque para Fishing XP, etc.</p>
+              <strong>${t("wiki.skillsSystem.gainXP")}</strong>
+              <p>${t("wiki.skillsSystem.gainXPDesc")}</p>
             </div>
           </div>
           <div class="wiki-list-item">
             <span class="wiki-icon">🔓</span>
             <div>
-              <strong>Desbloqueie Novas Ações</strong>
-              <p>Níveis mais altos desbloqueiam ações melhores com mais XP e recompensas!</p>
+              <strong>${t("wiki.skillsSystem.unlockActions")}</strong>
+              <p>${t("wiki.skillsSystem.unlockActionsDesc")}</p>
             </div>
           </div>
           <div class="wiki-list-item">
             <span class="wiki-icon">🏆</span>
             <div>
-              <strong>Milestones Especiais</strong>
-              <p>Níveis 10, 25, 50, 75 e 99 têm recompensas especiais!</p>
+              <strong>${t("wiki.skillsSystem.milestones")}</strong>
+              <p>${t("wiki.skillsSystem.milestonesDesc")}</p>
             </div>
           </div>
         </div>
       </div>
 
       <div class="wiki-card wiki-card-tip">
-        <h2>💡 Dica de Skills</h2>
-        <p><strong>Balanceie suas skills!</strong> Não foque apenas em uma. Diversificar skills te dá acesso a mais conteúdo, missões e formas de ganhar gold!</p>
+        <h2>${t("wiki.skillsSystem.tips")}</h2>
+        <ul style="margin-left: 1.5rem;">
+          <li>${t("wiki.skillsSystem.tip1")}</li>
+          <li>${t("wiki.skillsSystem.tip2")}</li>
+          <li>${t("wiki.skillsSystem.tip3")}</li>
+          <li>${t("wiki.skillsSystem.tip4")}</li>
+        </ul>
       </div>
     `;
   }
@@ -109,20 +118,52 @@ export default class WikiPagesRenderer {
    * @returns {string} HTML content
    */
   generateLeveling() {
+    const t = (key) => this.i18n.t(key);
     const xpTable = this.skills.xpTable || [];
     const milestones = this.skills.milestones || [10, 25, 50, 75, 99];
 
     return `
-      <h1 class="wiki-page-title">🎯 Níveis e XP</h1>
+      <h1 class="wiki-page-title">${t("wiki.leveling.title")}</h1>
 
       <div class="wiki-card">
-        <h2>📊 Sistema de XP</h2>
-        <p>Cada skill no FazendaRPG vai do nível 1 ao 99. A quantidade de XP necessária aumenta exponencialmente!</p>
+        <h2>${t("wiki.leveling.howLeveling")}</h2>
+        <p>${t("wiki.leveling.howLevelingDesc")}</p>
       </div>
 
       <div class="wiki-card">
-        <h2>🏆 Milestones Importantes</h2>
-        <p>Ao atingir certos níveis, você recebe recompensas especiais:</p>
+        <h2>${t("wiki.leveling.bonuses")}</h2>
+        <p>${t("wiki.leveling.bonusesDesc")}</p>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+          <li>${t("wiki.leveling.bonus1")}</li>
+          <li>${t("wiki.leveling.bonus2")}</li>
+          <li>${t("wiki.leveling.bonus3")}</li>
+          <li>${t("wiki.leveling.bonus4")}</li>
+          <li>${t("wiki.leveling.bonus5")}</li>
+        </ul>
+      </div>
+
+      <div class="wiki-card">
+        <h2>${t("wiki.leveling.gainXP")}</h2>
+        <ul style="margin-left: 1.5rem;">
+          <li>${t("wiki.leveling.farming")}</li>
+          <li>${t("wiki.leveling.mining")}</li>
+          <li>${t("wiki.leveling.fishing")}</li>
+          <li>${t("wiki.leveling.cooking")}</li>
+          <li>${t("wiki.leveling.woodcutting")}</li>
+          <li>${t("wiki.leveling.crafting")}</li>
+          <li>${t("wiki.leveling.smithing")}</li>
+          <li>${t("wiki.leveling.foraging")}</li>
+        </ul>
+      </div>
+
+      <div class="wiki-card">
+        <h2>${t("wiki.leveling.tips")}</h2>
+        <ul style="margin-left: 1.5rem;">
+          <li>${t("wiki.leveling.tip1")}</li>
+          <li>${t("wiki.leveling.tip2")}</li>
+          <li>${t("wiki.leveling.tip3")}</li>
+          <li>${t("wiki.leveling.tip4")}</li>
+        </ul>
 
         <div class="wiki-milestone-grid">
           ${milestones
