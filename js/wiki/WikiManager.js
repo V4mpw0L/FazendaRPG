@@ -41,9 +41,24 @@ export default class WikiManager {
       // Generate and show default page
       await this.showPage("getting-started");
 
+      // Listen for language changes
+      window.addEventListener("languagechange", () => {
+        console.log("🌍 Wiki: Language changed, refreshing content...");
+        this.refreshCurrentPage();
+      });
+
       console.log("✅ Wiki Manager initialized");
     } catch (error) {
       console.error("❌ Error initializing Wiki Manager:", error);
+    }
+  }
+
+  /**
+   * Refresh current page content
+   */
+  refreshCurrentPage() {
+    if (this.currentPage) {
+      this.showPage(this.currentPage);
     }
   }
 

@@ -4,6 +4,8 @@
  * @version 0.0.14
  */
 
+import i18n from "../utils/i18n.js";
+
 export default class WikiContentGenerator {
   constructor(gameData) {
     this.crops = gameData?.crops || {};
@@ -11,6 +13,7 @@ export default class WikiContentGenerator {
     this.npcs = gameData?.npcs || {};
     this.quests = gameData?.quests || {};
     this.skills = gameData?.skills || {};
+    this.i18n = i18n;
   }
 
   /**
@@ -18,63 +21,65 @@ export default class WikiContentGenerator {
    * @returns {string} HTML content
    */
   generateGettingStarted() {
+    const t = (key) => this.i18n.t(key);
+
     return `
-      <h1 class="wiki-page-title">🌱 Primeiros Passos</h1>
+      <h1 class="wiki-page-title">${t("wiki.gettingStarted.title")}</h1>
 
       <div class="wiki-card">
-        <h2>Bem-vindo ao FazendaRPG! 🎉</h2>
-        <p>FazendaRPG é um jogo de simulação de fazenda inspirado em RuneScape e FarmRPG. Construa sua fazenda, cultive plantas, suba de nível e torne-se o melhor fazendeiro!</p>
+        <h2>${t("wiki.gettingStarted.welcome")}</h2>
+        <p>${t("wiki.gettingStarted.description")}</p>
       </div>
 
       <div class="wiki-card">
-        <h2>🎮 Controles Básicos</h2>
+        <h2>${t("wiki.gettingStarted.basicControls")}</h2>
         <div class="wiki-list">
           <div class="wiki-list-item">
             <span class="wiki-icon">☰</span>
             <div>
-              <strong>Menu de Navegação</strong>
-              <p>Clique no botão de 3 linhas (☰) no canto superior direito para abrir o menu</p>
+              <strong>${t("wiki.gettingStarted.menuNav")}</strong>
+              <p>${t("wiki.gettingStarted.menuNavDesc")}</p>
             </div>
           </div>
           <div class="wiki-list-item">
             <span class="wiki-icon">🖱️</span>
             <div>
-              <strong>Interação com Cliques</strong>
-              <p>Clique nos plots da fazenda, itens do inventário, NPCs e outros elementos para interagir</p>
+              <strong>${t("wiki.gettingStarted.clickInteraction")}</strong>
+              <p>${t("wiki.gettingStarted.clickInteractionDesc")}</p>
             </div>
           </div>
           <div class="wiki-list-item">
             <span class="wiki-icon">📱</span>
             <div>
-              <strong>Mobile Friendly</strong>
-              <p>O jogo funciona perfeitamente em celulares! Toque na tela para interagir</p>
+              <strong>${t("wiki.gettingStarted.mobileFriendly")}</strong>
+              <p>${t("wiki.gettingStarted.mobileFriendlyDesc")}</p>
             </div>
           </div>
           <div class="wiki-list-item">
             <span class="wiki-icon">📲</span>
             <div>
-              <strong>Instale como App</strong>
-              <p>No navegador, use "Adicionar à tela inicial" para instalar como PWA</p>
+              <strong>${t("wiki.gettingStarted.installApp")}</strong>
+              <p>${t("wiki.gettingStarted.installAppDesc")}</p>
             </div>
           </div>
         </div>
       </div>
 
       <div class="wiki-card">
-        <h2>🌾 Sua Primeira Fazenda</h2>
-        <p>Você começa com uma pequena fazenda de <strong>9 plots</strong> onde pode plantar cultivos. Veja como começar:</p>
+        <h2>${t("wiki.gettingStarted.firstFarm")}</h2>
+        <p>${t("wiki.gettingStarted.firstFarmDesc")}</p>
 
         <div class="wiki-steps">
           <div class="wiki-step">
             <span class="wiki-step-number">1</span>
             <div class="wiki-step-content">
-              <h3>Abra o Inventário</h3>
-              <p>Use o menu lateral (☰) e clique em <strong>Inventário</strong>. Você começa com:</p>
+              <h3>${t("wiki.gettingStarted.step1")}</h3>
+              <p>${t("wiki.gettingStarted.step1Desc")}</p>
               <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
-                <li><strong>10x Sementes de Trigo</strong> 🌾</li>
-                <li><strong>3x Fertilizantes</strong> 🌿</li>
-                <li><strong>3 Ferramentas</strong> (Pá, Enxada, Ancinho)</li>
-                <li><strong>100 Gold</strong> 💰</li>
+                <li>${t("wiki.gettingStarted.step1Item1")}</li>
+                <li>${t("wiki.gettingStarted.step1Item2")}</li>
+                <li>${t("wiki.gettingStarted.step1Item3")}</li>
+                <li>${t("wiki.gettingStarted.step1Item4")}</li>
               </ul>
             </div>
           </div>
@@ -82,149 +87,74 @@ export default class WikiContentGenerator {
           <div class="wiki-step">
             <span class="wiki-step-number">2</span>
             <div class="wiki-step-content">
-              <h3>Plante sua Primeira Semente</h3>
-              <p>Volte para a <strong>Fazenda</strong> (menu lateral) e clique em um plot vazio (quadrado marrom)</p>
-              <p>Selecione <strong>Trigo</strong> e confirme. Você gastará 2 de energia ⚡</p>
+              <h3>${t("wiki.gettingStarted.step2")}</h3>
+              <p>${t("wiki.gettingStarted.step2Desc")}</p>
+              <p>${t("wiki.gettingStarted.step2Desc2")}</p>
             </div>
           </div>
 
           <div class="wiki-step">
             <span class="wiki-step-number">3</span>
             <div class="wiki-step-content">
-              <h3>Aguarde o Crescimento</h3>
-              <p>O trigo leva <strong>30 segundos</strong> para crescer. Você verá os estágios:</p>
+              <h3>${t("wiki.gettingStarted.step3")}</h3>
+              <p>${t("wiki.gettingStarted.step3Desc")}</p>
               <p style="font-size: 1.5rem; margin: 0.5rem 0;">🌱 → 🌿 → 🌾</p>
-              <p><strong>Dica:</strong> Use fertilizante para reduzir o tempo em 50% (15 segundos)!</p>
+              <p>${t("wiki.gettingStarted.step3Desc2")}</p>
             </div>
           </div>
 
           <div class="wiki-step">
             <span class="wiki-step-number">4</span>
             <div class="wiki-step-content">
-              <h3>Colha sua Plantação</h3>
-              <p>Quando o trigo estiver maduro 🌾, clique no plot e escolha <strong>Colher</strong></p>
-              <p>Você ganhará: <strong>1x Trigo</strong> e <strong>8 XP</strong> de Farming!</p>
+              <h3>${t("wiki.gettingStarted.step4")}</h3>
+              <p>${t("wiki.gettingStarted.step4Desc")}</p>
+              <p>${t("wiki.gettingStarted.step4Desc2")}</p>
             </div>
           </div>
 
           <div class="wiki-step">
             <span class="wiki-step-number">5</span>
             <div class="wiki-step-content">
-              <h3>Venda no Mercado</h3>
-              <p>Vá para <strong>Cidade</strong> → <strong>Mercado</strong> no menu</p>
-              <p>Venda seu trigo por <strong>8 gold</strong> cada. Use o gold para comprar mais sementes!</p>
+              <h3>${t("wiki.gettingStarted.step5")}</h3>
+              <p>${t("wiki.gettingStarted.step5Desc")}</p>
+              <p>${t("wiki.gettingStarted.step5Desc2")}</p>
             </div>
           </div>
         </div>
       </div>
 
       <div class="wiki-card">
-        <h2>⚡ Sistema de Energia</h2>
-        <div class="wiki-list">
-          <div class="wiki-list-item">
-            <img src="assets/sprites/energia.png" alt="Energia" class="wiki-icon" style="width: 24px; height: 24px;">
-            <div>
-              <strong>Energia Máxima: 100</strong>
-              <p>Cada ação consome energia. Plantar trigo = 2 energia</p>
-            </div>
-          </div>
-          <div class="wiki-list-item">
-            <span class="wiki-icon">🔋</span>
-            <div>
-              <strong>Regeneração Automática</strong>
-              <p>A energia regenera +5 a cada 5 minutos automaticamente</p>
-            </div>
-          </div>
-          <div class="wiki-list-item">
-            <span class="wiki-icon">🧪</span>
-            <div>
-              <strong>Poções de Energia</strong>
-              <p>Compre no mercado para restaurar 50 de energia instantaneamente</p>
-            </div>
-          </div>
-          <div class="wiki-list-item">
-            <span class="wiki-icon">⬆️</span>
-            <div>
-              <strong>Aumente o Máximo</strong>
-              <p>Subir de nível (player e skills) aumenta sua energia máxima!</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="wiki-card">
-        <h2>💰 Economia do Jogo</h2>
-        <p>Você começa com <strong>100 gold</strong> 💰. Ganhe mais vendendo itens no mercado!</p>
-
-        <h3 style="margin-top: 1rem;">Formas de Ganhar Gold:</h3>
+        <h2>${t("wiki.gettingStarted.energySystem")}</h2>
+        <p>${t("wiki.gettingStarted.energySystemDesc")}</p>
         <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
-          <li><strong>Vender Cultivos:</strong> Trigo (8g), Milho (15g), Tomate (25g), etc.</li>
-          <li><strong>Completar Missões:</strong> Recompensas de 50-500+ gold</li>
-          <li><strong>Vender Itens Processados:</strong> Pão vale mais que trigo cru!</li>
-          <li><strong>Pescar e Vender:</strong> Peixes cozidos têm bom valor</li>
+          <li>${t("wiki.gettingStarted.energyItem1")}</li>
+          <li>${t("wiki.gettingStarted.energyItem2")}</li>
+          <li>${t("wiki.gettingStarted.energyItem3")}</li>
         </ul>
+        <p style="margin-top: 0.5rem;">${t("wiki.gettingStarted.energyRegenDesc")}</p>
+        <p style="margin-top: 0.5rem;">${t("wiki.gettingStarted.energyTip")}</p>
       </div>
 
       <div class="wiki-card">
-        <h2>📜 Sistema de Missões</h2>
-        <p>Fale com NPCs na cidade para receber missões! Há dois tipos:</p>
-
-        <div class="wiki-quest-types">
-          <div class="wiki-quest-type">
-            <span class="wiki-quest-icon">⭐</span>
-            <div>
-              <strong>Missões Únicas</strong>
-              <p>Completadas uma vez. Dão recompensas grandes e desbloqueiam conteúdo.</p>
-            </div>
-          </div>
-          <div class="wiki-quest-type">
-            <span class="wiki-quest-icon">🔄</span>
-            <div>
-              <strong>Missões Diárias</strong>
-              <p>Podem ser repetidas a cada 24h. Ótimas para farm de recursos!</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="wiki-card">
-        <h2>🎯 Sistema de Skills</h2>
-        <p>Existem <strong>8 skills diferentes</strong> no jogo, cada uma com nível máximo 99:</p>
-
-        <div class="wiki-skills-grid">
-          <div class="wiki-skill-mini">🌾 Farming</div>
-          <div class="wiki-skill-mini">⛏️ Mining</div>
-          <div class="wiki-skill-mini">🎣 Fishing</div>
-          <div class="wiki-skill-mini">🍳 Cooking</div>
-          <div class="wiki-skill-mini">🪓 Woodcutting</div>
-          <div class="wiki-skill-mini">🔨 Crafting</div>
-          <div class="wiki-skill-mini">⚒️ Smithing</div>
-          <div class="wiki-skill-mini">🌿 Foraging</div>
-        </div>
-
-        <p style="margin-top: 1rem;">Cada skill é treinada fazendo ações relacionadas. Níveis mais altos desbloqueiam novas ações!</p>
-      </div>
-
-      <div class="wiki-card wiki-card-warning">
-        <h2>⚠️ Dicas Importantes</h2>
-        <ul style="margin-left: 1.5rem;">
-          <li>Sempre mantenha suas <strong>3 ferramentas básicas</strong> no inventário (Pá, Enxada, Ancinho)</li>
-          <li>Use <strong>fertilizantes</strong> em cultivos demorados para economizar tempo</li>
-          <li>Limpe <strong>ervas daninhas</strong> dos plots para conseguir ervas grátis 🌿</li>
-          <li>Complete <strong>missões diárias</strong> para recursos constantes</li>
-          <li>Gerencie sua <strong>energia</strong> - não deixe chegar a zero!</li>
-          <li><strong>Salve seu progresso</strong> regularmente nas Configurações</li>
+        <h2>${t("wiki.gettingStarted.progression")}</h2>
+        <p>${t("wiki.gettingStarted.progressionDesc")}</p>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+          <li>${t("wiki.gettingStarted.progressionItem1")}</li>
+          <li>${t("wiki.gettingStarted.progressionItem2")}</li>
+          <li>${t("wiki.gettingStarted.progressionItem3")}</li>
+          <li>${t("wiki.gettingStarted.progressionItem4")}</li>
+          <li>${t("wiki.gettingStarted.progressionItem5")}</li>
         </ul>
       </div>
 
       <div class="wiki-card wiki-card-success">
-        <h2>🎉 Próximos Passos</h2>
-        <p>Agora que você sabe o básico, explore:</p>
+        <h2>${t("wiki.gettingStarted.nextSteps")}</h2>
+        <p>${t("wiki.gettingStarted.nextStepsDesc")}</p>
         <ul style="margin-left: 1.5rem;">
-          <li>📖 <strong>Guia de Cultivos</strong> - Veja todos os crops disponíveis</li>
-          <li>⭐ <strong>Sistema de Skills</strong> - Entenda como funcionam as 8 skills</li>
-          <li>🏘️ <strong>Cidade</strong> - Conheça os NPCs e o mercado</li>
-          <li>💎 <strong>Dicas e Truques</strong> - Aprenda estratégias avançadas</li>
+          <li>${t("wiki.gettingStarted.nextStepsItem1")}</li>
+          <li>${t("wiki.gettingStarted.nextStepsItem2")}</li>
+          <li>${t("wiki.gettingStarted.nextStepsItem3")}</li>
+          <li>${t("wiki.gettingStarted.nextStepsItem4")}</li>
         </ul>
       </div>
     `;
@@ -235,141 +165,121 @@ export default class WikiContentGenerator {
    * @returns {string} HTML content
    */
   generateGameMechanics() {
+    const t = (key) => this.i18n.t(key);
+
     return `
-      <h1 class="wiki-page-title">⚙️ Como Jogar</h1>
+      <h1 class="wiki-page-title">${t("wiki.gameMechanics.title")}</h1>
 
       <div class="wiki-card">
-        <h2>🎮 Mecânicas Principais</h2>
-        <p>FazendaRPG combina elementos de farming, RPG e progressão de skills. Aqui está tudo que você precisa saber:</p>
+        <h2>${t("wiki.gameMechanics.mainMechanics")}</h2>
+        <p>${t("wiki.gameMechanics.mainMechanicsDesc")}</p>
       </div>
 
       <div class="wiki-card">
-        <h2>🌾 Farming</h2>
-        <div class="wiki-list">
-          <div class="wiki-list-item">
-            <span class="wiki-icon">🟫</span>
-            <div>
-              <strong>Plots da Fazenda</strong>
-              <p>Você tem 9 plots onde pode plantar cultivos. Clique em um plot vazio para plantar.</p>
-            </div>
-          </div>
-          <div class="wiki-list-item">
-            <span class="wiki-icon">🌱</span>
-            <div>
-              <strong>Plantio</strong>
-              <p>Escolha uma semente do seu inventário e plante. Cada cultivo tem nível mínimo, tempo de crescimento e custo de energia.</p>
-            </div>
-          </div>
-          <div class="wiki-list-item">
-            <span class="wiki-icon">🌿</span>
-            <div>
-              <strong>Fertilizantes</strong>
-              <p>Use fertilizante ANTES de plantar para reduzir o tempo de crescimento em 50%!</p>
-            </div>
-          </div>
-          <div class="wiki-list-item">
-            <span class="wiki-icon">🌾</span>
-            <div>
-              <strong>Colheita</strong>
-              <p>Quando o crop estiver maduro, clique no plot e escolha "Colher". Você ganhará o item e XP de Farming!</p>
-            </div>
-          </div>
-          <div class="wiki-list-item">
-            <span class="wiki-icon">🌿</span>
-            <div>
-              <strong>Ervas Daninhas</strong>
-              <p>Após colher, ervas daninhas crescem após 60 segundos. Limpe-as para ganhar 1x Ervas grátis!</p>
-            </div>
-          </div>
-        </div>
+        <h2>${t("wiki.gameMechanics.farming")}</h2>
+        <p>${t("wiki.gameMechanics.farmingDesc")}</p>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+          <li>${t("wiki.gameMechanics.farmingItem1")}</li>
+          <li>${t("wiki.gameMechanics.farmingItem2")}</li>
+          <li>${t("wiki.gameMechanics.farmingItem3")}</li>
+          <li>${t("wiki.gameMechanics.farmingItem4")}</li>
+          <li>${t("wiki.gameMechanics.farmingItem5")}</li>
+          <li>${t("wiki.gameMechanics.farmingItem6")}</li>
+        </ul>
       </div>
 
       <div class="wiki-card">
-        <h2>⚡ Sistema de Energia</h2>
-        <div class="wiki-list">
-          <div class="wiki-list-item">
-            <img src="assets/sprites/energia.png" alt="Energia" class="wiki-icon" style="width: 24px; height: 24px;">
-            <div>
-              <strong>Energia Máxima</strong>
-              <p>Começa em 100 e aumenta conforme você sobe de nível (player e skills)</p>
-            </div>
-          </div>
-          <div class="wiki-list-item">
-            <span class="wiki-icon">⚡</span>
-            <div>
-              <strong>Uso de Energia</strong>
-              <p>Cada ação consome energia: plantar, pescar, minerar, cortar árvores, etc.</p>
-            </div>
-          </div>
-          <div class="wiki-list-item">
-            <span class="wiki-icon">🔋</span>
-            <div>
-              <strong>Regeneração</strong>
-              <p>+5 de energia a cada 5 minutos automaticamente</p>
-            </div>
-          </div>
-          <div class="wiki-list-item">
-            <span class="wiki-icon">🧪</span>
-            <div>
-              <strong>Poções</strong>
-              <p>Compre Poções de Energia no mercado para restaurar 50 de energia instantaneamente</p>
-            </div>
-          </div>
-        </div>
+        <h2>${t("wiki.gameMechanics.energySystem")}</h2>
+        <p>${t("wiki.gameMechanics.energySystemDesc")}</p>
+
+        <h3 style="margin-top: 1rem;">${t("wiki.gameMechanics.energyActions")}</h3>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+          <li>${t("wiki.gameMechanics.energyAction1")}</li>
+          <li>${t("wiki.gameMechanics.energyAction2")}</li>
+          <li>${t("wiki.gameMechanics.energyAction3")}</li>
+          <li>${t("wiki.gameMechanics.energyAction4")}</li>
+          <li>${t("wiki.gameMechanics.energyAction5")}</li>
+        </ul>
+
+        <h3 style="margin-top: 1rem;">${t("wiki.gameMechanics.energyRegen")}</h3>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+          <li>${t("wiki.gameMechanics.energyRegenItem1")}</li>
+          <li>${t("wiki.gameMechanics.energyRegenItem2")}</li>
+          <li>${t("wiki.gameMechanics.energyRegenItem3")}</li>
+          <li>${t("wiki.gameMechanics.energyRegenItem4")}</li>
+        </ul>
       </div>
 
       <div class="wiki-card">
-        <h2>💰 Sistema Econômico</h2>
-        <div class="wiki-list">
-          <div class="wiki-list-item">
-            <img src="assets/sprites/ouro.png" alt="Gold" class="wiki-icon" style="width: 24px; height: 24px;">
-            <div>
-              <strong>Gold</strong>
-              <p>Moeda principal do jogo. Use para comprar sementes, itens e ferramentas.</p>
-            </div>
-          </div>
-          <div class="wiki-list-item">
-            <span class="wiki-icon">🏪</span>
-            <div>
-              <strong>Mercado</strong>
-              <p>Compre e venda itens. Preços variam por item.</p>
-            </div>
-          </div>
-          <div class="wiki-list-item">
-            <span class="wiki-icon">💸</span>
-            <div>
-              <strong>Venda Esperta</strong>
-              <p>Itens processados (pão, peixe cozido) valem mais que itens crus!</p>
-            </div>
-          </div>
-        </div>
+        <h2>${t("wiki.gameMechanics.skillsProgression")}</h2>
+        <p>${t("wiki.gameMechanics.skillsDesc")}</p>
+
+        <h3 style="margin-top: 1rem;">${t("wiki.gameMechanics.availableSkills")}</h3>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+          <li>${t("wiki.gameMechanics.skill1")}</li>
+          <li>${t("wiki.gameMechanics.skill2")}</li>
+          <li>${t("wiki.gameMechanics.skill3")}</li>
+          <li>${t("wiki.gameMechanics.skill4")}</li>
+          <li>${t("wiki.gameMechanics.skill5")}</li>
+          <li>${t("wiki.gameMechanics.skill6")}</li>
+          <li>${t("wiki.gameMechanics.skill7")}</li>
+          <li>${t("wiki.gameMechanics.skill8")}</li>
+        </ul>
+
+        <h3 style="margin-top: 1rem;">${t("wiki.gameMechanics.xpSystem")}</h3>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+          <li>${t("wiki.gameMechanics.xpItem1")}</li>
+          <li>${t("wiki.gameMechanics.xpItem2")}</li>
+          <li>${t("wiki.gameMechanics.xpItem3")}</li>
+        </ul>
       </div>
 
       <div class="wiki-card">
-        <h2>🎯 Sistema de Progressão</h2>
-        <div class="wiki-list">
-          <div class="wiki-list-item">
-            <span class="wiki-icon">⭐</span>
-            <div>
-              <strong>Nível do Jogador</strong>
-              <p>Seu nível principal. Sobe com XP total de todas as skills.</p>
-            </div>
-          </div>
-          <div class="wiki-list-item">
-            <img src="assets/sprites/skills.png" alt="Skills" class="wiki-icon" style="width: 24px; height: 24px;">
-            <div>
-              <strong>Níveis de Skills</strong>
-              <p>Cada uma das 8 skills tem seu próprio nível (máx. 99). Desbloqueie novas ações ao subir!</p>
-            </div>
-          </div>
-          <div class="wiki-list-item">
-            <span class="wiki-icon">🔓</span>
-            <div>
-              <strong>Desbloqueios</strong>
-              <p>Níveis mais altos = ações melhores, mais XP, mais gold!</p>
-            </div>
-          </div>
-        </div>
+        <h2>${t("wiki.gameMechanics.inventory")}</h2>
+        <p>${t("wiki.gameMechanics.inventoryDesc")}</p>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+          <li>${t("wiki.gameMechanics.inventoryItem1")}</li>
+          <li>${t("wiki.gameMechanics.inventoryItem2")}</li>
+          <li>${t("wiki.gameMechanics.inventoryItem3")}</li>
+          <li>${t("wiki.gameMechanics.inventoryItem4")}</li>
+        </ul>
+      </div>
+
+      <div class="wiki-card">
+        <h2>${t("wiki.gameMechanics.market")}</h2>
+        <p>${t("wiki.gameMechanics.marketDesc")}</p>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+          <li>${t("wiki.gameMechanics.marketTab1")}</li>
+          <li>${t("wiki.gameMechanics.marketTab2")}</li>
+          <li>${t("wiki.gameMechanics.marketFeature1")}</li>
+          <li>${t("wiki.gameMechanics.marketFeature2")}</li>
+          <li>${t("wiki.gameMechanics.marketFeature3")}</li>
+        </ul>
+      </div>
+
+      <div class="wiki-card">
+        <h2>${t("wiki.gameMechanics.npcsAndQuests")}</h2>
+        <p>${t("wiki.gameMechanics.npcsDesc")}</p>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+          <li>${t("wiki.gameMechanics.npcFeature1")}</li>
+          <li>${t("wiki.gameMechanics.npcFeature2")}</li>
+          <li>${t("wiki.gameMechanics.npcFeature3")}</li>
+          <li>${t("wiki.gameMechanics.npcFeature4")}</li>
+        </ul>
+      </div>
+
+      <div class="wiki-card wiki-card-warning">
+        <h2>${t("wiki.gameMechanics.tips")}</h2>
+        <ul style="margin-left: 1.5rem;">
+          <li>${t("wiki.gameMechanics.tip1")}</li>
+          <li>${t("wiki.gameMechanics.tip2")}</li>
+          <li>${t("wiki.gameMechanics.tip3")}</li>
+          <li>${t("wiki.gameMechanics.tip4")}</li>
+          <li>${t("wiki.gameMechanics.tip5")}</li>
+          <li>${t("wiki.gameMechanics.tip6")}</li>
+          <li>${t("wiki.gameMechanics.tip7")}</li>
+          <li>${t("wiki.gameMechanics.tip8")}</li>
+        </ul>
       </div>
 
       <div class="wiki-card">
