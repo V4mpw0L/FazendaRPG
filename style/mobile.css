@@ -951,7 +951,30 @@
     }
 
     .skills-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
+    }
+
+    .skill-card {
+        padding: var(--spacing-sm);
+    }
+
+    .skill-name {
+        font-size: 0.9rem;
+    }
+
+    .skill-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.5rem;
+    }
+
+    .skill-level {
+        font-size: 1.125rem;
+    }
+
+    .skill-progress-bar {
+        height: 20px;
     }
 
     .city-grid {
@@ -968,6 +991,15 @@
 
     .skills-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+
+    .skill-card {
+        padding: var(--spacing-md);
+    }
+
+    .skill-name {
+        font-size: 1rem;
     }
 
     .city-grid {
