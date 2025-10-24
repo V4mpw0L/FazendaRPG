@@ -685,7 +685,7 @@ export default class NPCSUI {
       <div style="text-align: center; margin-bottom: 1rem;">
         <div style="font-size: 3rem;">${npc.avatar}</div>
         <h3 style="margin: 0.5rem 0;">Loja de ${name}</h3>
-        <p style="color: var(--text-secondary); font-size: 0.875rem;">Seu ouro: <span style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5); font-weight: 700;">${this.player.data.gold}g</span></p>
+        <p style="color: var(--text-secondary); font-size: 0.875rem;">Seu ouro: <span style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5); font-weight: 700;">${formatNumber(this.player.data.gold)}g</span></p>
         ${friendshipBadge}
       </div>
       <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem; max-height: 400px; overflow-y: auto; padding: 0.5rem;">
@@ -738,14 +738,14 @@ export default class NPCSUI {
       </div>`;
 
       let priceDisplay = `<div style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5); font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem;">
-        <img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g
+        <img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${formatNumber(price)}g
       </div>`;
 
       if (discountAmount > 0) {
         priceDisplay = `
-          <div style="color: var(--text-secondary); font-size: 0.75rem; text-decoration: line-through; margin-bottom: 0.125rem;">${basePrice}g</div>
+          <div style="color: var(--text-secondary); font-size: 0.75rem; text-decoration: line-through; margin-bottom: 0.125rem;">${formatNumber(basePrice)}g</div>
           <div style="color: #e74c3c; font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem;">
-            <img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${price}g 💝
+            <img src="./assets/sprites/ouro.png" alt="Ouro" style="width: 1em; height: 1em; vertical-align: middle;"> ${formatNumber(price)}g 💝
           </div>
         `;
       }
