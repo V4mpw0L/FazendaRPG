@@ -138,9 +138,6 @@ export default class GameEngine {
       const halloweenEvent = new HalloweenEvent(this);
       this.eventManager.registerEvent("halloween", halloweenEvent);
 
-      // Auto-start events based on config
-      this.autoStartEvents();
-
       // Initialize UI components
       logStep(9, "🖼️ Construindo interface...");
       this.screenManager = new ScreenManager();
@@ -283,6 +280,9 @@ export default class GameEngine {
       const cropsData = this.farmSystem.getCropsData();
       this.notificationManager.updateCropNotifications(plots, cropsData);
     }
+
+    // Auto-start events based on config (AFTER loading is complete)
+    this.autoStartEvents();
 
     this.running = true;
     console.log("✅ Game started");

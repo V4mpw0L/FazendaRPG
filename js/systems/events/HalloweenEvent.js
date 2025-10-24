@@ -274,6 +274,9 @@ export default class HalloweenEvent {
     // Adiciona aranhas descendo (animadas)
     this.addDescendingSpiders();
 
+    // Adiciona morcegos voando
+    this.addFlyingBats();
+
     // Adiciona ao body
     document.body.appendChild(this.decorations);
   }
@@ -394,6 +397,285 @@ export default class HalloweenEvent {
       spiderContainer.appendChild(spider);
       this.decorations.appendChild(spiderContainer);
     }
+  }
+
+  /**
+   * Adiciona morcegos voando aleatoriamente pela tela
+   */
+  addFlyingBats() {
+    const batCount = 3; // 3 morcegos voando
+
+    for (let i = 0; i < batCount; i++) {
+      const batContainer = document.createElement("div");
+      batContainer.className = "flying-bat";
+
+      // Posição inicial aleatória
+      const startX = Math.random() * 100;
+      const startY = Math.random() * 100;
+
+      // Direção aleatória (pode ser qualquer ângulo)
+      const angle = Math.random() * 360;
+      const duration = 8 + Math.random() * 4; // 8-12 segundos
+      const delay = i * 2.5; // Delay entre cada morcego
+
+      batContainer.style.cssText = `
+        position: fixed;
+        left: ${startX}%;
+        top: ${startY}%;
+        width: 40px;
+        height: 40px;
+        pointer-events: none;
+        z-index: 9999;
+        animation: flyBat${i} ${duration}s linear ${delay}s infinite;
+        opacity: 0;
+      `;
+
+      // SVG do morcego - design mais fofo e estilizado
+      const bat = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      bat.setAttribute("width", "50");
+      bat.setAttribute("height", "50");
+      bat.setAttribute("viewBox", "0 0 50 50");
+      bat.style.filter = "drop-shadow(0 3px 6px rgba(0,0,0,0.4))";
+
+      // Corpo redondo e fofo
+      const body = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "ellipse",
+      );
+      body.setAttribute("cx", "25");
+      body.setAttribute("cy", "28");
+      body.setAttribute("rx", "6");
+      body.setAttribute("ry", "8");
+      body.setAttribute("fill", "#2d2d3d");
+      body.setAttribute("stroke", "#1a1a1a");
+      body.setAttribute("stroke-width", "0.5");
+      bat.appendChild(body);
+
+      // Cabeça maior e redonda
+      const head = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "circle",
+      );
+      head.setAttribute("cx", "25");
+      head.setAttribute("cy", "20");
+      head.setAttribute("r", "7");
+      head.setAttribute("fill", "#3d3d4d");
+      head.setAttribute("stroke", "#1a1a1a");
+      head.setAttribute("stroke-width", "0.5");
+      bat.appendChild(head);
+
+      // Orelhas arredondadas e fofas
+      const ear1 = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "ellipse",
+      );
+      ear1.setAttribute("cx", "20");
+      ear1.setAttribute("cy", "15");
+      ear1.setAttribute("rx", "2.5");
+      ear1.setAttribute("ry", "4");
+      ear1.setAttribute("fill", "#3d3d4d");
+      ear1.setAttribute("stroke", "#1a1a1a");
+      ear1.setAttribute("stroke-width", "0.5");
+      bat.appendChild(ear1);
+
+      const ear2 = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "ellipse",
+      );
+      ear2.setAttribute("cx", "30");
+      ear2.setAttribute("cy", "15");
+      ear2.setAttribute("rx", "2.5");
+      ear2.setAttribute("ry", "4");
+      ear2.setAttribute("fill", "#3d3d4d");
+      ear2.setAttribute("stroke", "#1a1a1a");
+      ear2.setAttribute("stroke-width", "0.5");
+      bat.appendChild(ear2);
+
+      // Olhos grandes e expressivos
+      const eye1Bg = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "circle",
+      );
+      eye1Bg.setAttribute("cx", "22");
+      eye1Bg.setAttribute("cy", "20");
+      eye1Bg.setAttribute("r", "2");
+      eye1Bg.setAttribute("fill", "#ffffff");
+      bat.appendChild(eye1Bg);
+
+      const eye2Bg = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "circle",
+      );
+      eye2Bg.setAttribute("cx", "28");
+      eye2Bg.setAttribute("cy", "20");
+      eye2Bg.setAttribute("r", "2");
+      eye2Bg.setAttribute("fill", "#ffffff");
+      bat.appendChild(eye2Bg);
+
+      // Pupilas vermelhas brilhantes
+      const eye1 = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "circle",
+      );
+      eye1.setAttribute("cx", "22");
+      eye1.setAttribute("cy", "20");
+      eye1.setAttribute("r", "1.2");
+      eye1.setAttribute("fill", "#ff3366");
+      eye1.setAttribute("opacity", "0.95");
+      bat.appendChild(eye1);
+
+      const eye2 = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "circle",
+      );
+      eye2.setAttribute("cx", "28");
+      eye2.setAttribute("cy", "20");
+      eye2.setAttribute("r", "1.2");
+      eye2.setAttribute("fill", "#ff3366");
+      eye2.setAttribute("opacity", "0.95");
+      bat.appendChild(eye2);
+
+      // Brilho nos olhos
+      const shine1 = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "circle",
+      );
+      shine1.setAttribute("cx", "22.5");
+      shine1.setAttribute("cy", "19.5");
+      shine1.setAttribute("r", "0.5");
+      shine1.setAttribute("fill", "#ffffff");
+      shine1.setAttribute("opacity", "0.8");
+      bat.appendChild(shine1);
+
+      const shine2 = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "circle",
+      );
+      shine2.setAttribute("cx", "28.5");
+      shine2.setAttribute("cy", "19.5");
+      shine2.setAttribute("r", "0.5");
+      shine2.setAttribute("fill", "#ffffff");
+      shine2.setAttribute("opacity", "0.8");
+      bat.appendChild(shine2);
+
+      // Narizinho fofo
+      const nose = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "circle",
+      );
+      nose.setAttribute("cx", "25");
+      nose.setAttribute("cy", "23");
+      nose.setAttribute("r", "0.8");
+      nose.setAttribute("fill", "#ff6699");
+      bat.appendChild(nose);
+
+      // Asas arredondadas e estilizadas
+      const wingLeft = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "path",
+      );
+      wingLeft.setAttribute(
+        "d",
+        "M 19 26 Q 10 24 6 28 Q 8 32 12 32 Q 15 30 19 29 Z",
+      );
+      wingLeft.setAttribute("fill", "#4d4d5d");
+      wingLeft.setAttribute("stroke", "#2d2d3d");
+      wingLeft.setAttribute("stroke-width", "0.8");
+      wingLeft.style.transformOrigin = "19px 28px";
+      wingLeft.style.animation = "flapWing 0.3s ease-in-out infinite alternate";
+      bat.appendChild(wingLeft);
+
+      // Detalhes da asa esquerda
+      const wingLeftDetail = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "path",
+      );
+      wingLeftDetail.setAttribute("d", "M 17 27 Q 11 26 8 29");
+      wingLeftDetail.setAttribute("stroke", "#3d3d4d");
+      wingLeftDetail.setAttribute("stroke-width", "0.5");
+      wingLeftDetail.setAttribute("fill", "none");
+      wingLeftDetail.setAttribute("opacity", "0.6");
+      wingLeft.appendChild(wingLeftDetail);
+
+      const wingRight = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "path",
+      );
+      wingRight.setAttribute(
+        "d",
+        "M 31 26 Q 40 24 44 28 Q 42 32 38 32 Q 35 30 31 29 Z",
+      );
+      wingRight.setAttribute("fill", "#4d4d5d");
+      wingRight.setAttribute("stroke", "#2d2d3d");
+      wingRight.setAttribute("stroke-width", "0.8");
+      wingRight.style.transformOrigin = "31px 28px";
+      wingRight.style.animation =
+        "flapWing 0.3s ease-in-out infinite alternate-reverse";
+      bat.appendChild(wingRight);
+
+      // Detalhes da asa direita
+      const wingRightDetail = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "path",
+      );
+      wingRightDetail.setAttribute("d", "M 33 27 Q 39 26 42 29");
+      wingRightDetail.setAttribute("stroke", "#3d3d4d");
+      wingRightDetail.setAttribute("stroke-width", "0.5");
+      wingRightDetail.setAttribute("fill", "none");
+      wingRightDetail.setAttribute("opacity", "0.6");
+      wingRight.appendChild(wingRightDetail);
+
+      batContainer.appendChild(bat);
+      this.decorations.appendChild(batContainer);
+
+      // Adiciona keyframes customizados para cada morcego (direção aleatória)
+      this.addBatAnimationKeyframes(i, angle);
+    }
+  }
+
+  /**
+   * Adiciona keyframes de animação para cada morcego
+   */
+  addBatAnimationKeyframes(batIndex, angle) {
+    // Cria uma stylesheet se não existir
+    let styleSheet = document.getElementById("bat-animations");
+    if (!styleSheet) {
+      styleSheet = document.createElement("style");
+      styleSheet.id = "bat-animations";
+      document.head.appendChild(styleSheet);
+    }
+
+    // Calcula trajetória baseada no ângulo
+    const distance = 150; // Distância em % que o morcego vai percorrer
+    const radians = (angle * Math.PI) / 180;
+    const deltaX = Math.cos(radians) * distance;
+    const deltaY = Math.sin(radians) * distance;
+
+    // Adiciona keyframes
+    const keyframes = `
+      @keyframes flyBat${batIndex} {
+        0% {
+          transform: translate(0, 0) rotate(${angle}deg) scale(0.8);
+          opacity: 0;
+        }
+        5% {
+          opacity: 0.7;
+        }
+        50% {
+          transform: translate(${deltaX / 2}vw, ${deltaY / 2}vh) rotate(${angle}deg) scale(1);
+          opacity: 0.8;
+        }
+        95% {
+          opacity: 0.7;
+        }
+        100% {
+          transform: translate(${deltaX}vw, ${deltaY}vh) rotate(${angle}deg) scale(0.8);
+          opacity: 0;
+        }
+      }
+    `;
+
+    styleSheet.sheet.insertRule(keyframes, styleSheet.sheet.cssRules.length);
   }
 
   /**
@@ -745,6 +1027,20 @@ export default class HalloweenEvent {
 
       .descending-spider {
         filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+      }
+
+      /* Animação de bater asas do morcego */
+      @keyframes flapWing {
+        0% {
+          transform: scaleY(1);
+        }
+        100% {
+          transform: scaleY(0.6) translateY(-2px);
+        }
+      }
+
+      .flying-bat {
+        will-change: transform, opacity;
       }
     `;
 

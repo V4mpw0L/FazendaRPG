@@ -724,7 +724,6 @@ async function showNotification(title, body, data = {}) {
   } catch (error) {
     console.error("❌ Erro ao mostrar notificação:", error);
   }
-}</parameter>
 }
 
 // Check notifications immediately when SW loads/wakes up
@@ -732,15 +731,3 @@ console.log("🌾 FazendaRPG Service Worker carregado - verificando notificaçõ
 checkPendingNotifications().catch((error) => {
   console.error("❌ Erro ao verificar notificações no carregamento:", error);
 });
-
-// Wake up on any fetch event (this helps keep SW alive)
-self.addEventListener("fetch", (event) => {
-  // After handling fetch, check for pending notifications
-  event.waitUntil(
-    (async () => {
-      // Small delay to not interfere with fetch
-      await new Promise(resolve => setTimeout(resolve, 100));
-      await checkPendingNotifications();
-    })().catch(() => {})
-  );
-});</parameter>
