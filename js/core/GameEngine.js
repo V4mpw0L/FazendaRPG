@@ -1405,7 +1405,9 @@ export default class GameEngine {
       }
 
       // Show weed removal notification
-      notifications.success("Ervas daninhas removidas! +1 Ervas 🌿");
+      notifications.success(
+        "Ervas daninhas removidas! +1 Ervas <img src='assets/sprites/mercado/materiais/ervas.png' style='width: 16px; height: 16px; vertical-align: middle;'>",
+      );
       this.renderFarm();
     } else {
       notifications.error(result.error || "Não foi possível limpar as ervas");
