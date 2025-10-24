@@ -21,6 +21,27 @@
     gap: 1rem;
     overflow-y: auto;
     padding-right: 0.5rem;
+    /* Scrollbar styling */
+    scrollbar-width: thin;
+    scrollbar-color: var(--brand-primary) rgba(0, 0, 0, 0.1);
+}
+
+.wiki-sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.wiki-sidebar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+}
+
+.wiki-sidebar::-webkit-scrollbar-thumb {
+    background: var(--brand-primary);
+    border-radius: 10px;
+}
+
+.wiki-sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-secondary);
 }
 
 .wiki-search {
@@ -59,6 +80,33 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    position: relative;
+}
+
+/* Scroll indicator for navigation */
+.wiki-nav::after {
+    content: "⬇ Scroll for more";
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    background: linear-gradient(to top, var(--bg-primary) 70%, transparent);
+    padding: 1rem 0.5rem 0.5rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Portuguese scroll indicator */
+html[lang="pt-BR"] .wiki-nav::after {
+    content: "⬇ Role para ver mais";
+}
+
+.wiki-nav.has-scroll::after {
+    opacity: 1;
 }
 
 .wiki-nav-section {
@@ -66,6 +114,12 @@
     border: 2px solid var(--border-color);
     border-radius: 12px;
     padding: 1rem;
+    transition: all 0.3s ease;
+}
+
+.wiki-nav-section:hover {
+    border-color: var(--brand-primary);
+    box-shadow: 0 4px 12px rgba(92, 170, 31, 0.1);
 }
 
 .wiki-nav-title {
@@ -122,6 +176,54 @@
 .wiki-content {
     overflow-y: auto;
     padding-right: 1rem;
+    position: relative;
+    /* Scrollbar styling */
+    scrollbar-width: thin;
+    scrollbar-color: var(--brand-primary) rgba(0, 0, 0, 0.1);
+}
+
+.wiki-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.wiki-content::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+}
+
+.wiki-content::-webkit-scrollbar-thumb {
+    background: var(--brand-primary);
+    border-radius: 10px;
+}
+
+.wiki-content::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-secondary);
+}
+
+/* Scroll indicator at bottom */
+.wiki-content::after {
+    content: "⬇ More content below";
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    background: linear-gradient(to top, var(--bg-primary) 80%, transparent);
+    padding: 1.5rem 0 0.5rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Portuguese scroll indicator */
+html[lang="pt-BR"] .wiki-content::after {
+    content: "⬇ Mais conteúdo abaixo";
+}
+
+.wiki-content.has-scroll::after {
+    opacity: 1;
 }
 
 .wiki-loading {

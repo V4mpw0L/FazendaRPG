@@ -37,6 +37,7 @@ export default class WikiManager {
       // Setup UI
       this.setupNavigation();
       this.setupSearch();
+      this.setupScrollIndicators();
 
       // Generate and show default page
       await this.showPage("getting-started");
@@ -107,6 +108,78 @@ export default class WikiManager {
         }
       });
     });
+  }
+
+  /**
+   * Setup scroll indicators for navigation and content
+   */
+  setupScrollIndicators() {
+    const wikiNav = document.querySelector(".wiki-nav");
+    const wikiContent = document.querySelector(".wiki-content");
+    const wikiSidebar = document.querySelector(".wiki-sidebar");
+
+    // Check if navigation has scroll
+    const checkNavScroll = () => {
+      if (wikiSidebar) {
+        const hasScroll = wikiSidebar.scrollHeight > wikiSidebar.clientHeight;
+        const isScrolledToBottom =
+          wikiSidebar.scrollHeight - wikiSidebar.scrollTop <=
+          wikiSidebar.clientHeight + 50;
+
+        if (wikiNav) {
+          if (hasScroll && !isScrolledToBottom) {
+            wikiNav.classList.add("has-scroll");
+          } else {
+            wikiNav.classList.remove("has-scroll");
+          }
+        }
+      }
+    };
+
+    // Check if content has scroll
+    const checkContentScroll = () => {
+      if (wikiContent) {
+        const hasScroll = wikiContent.scrollHeight > wikiContent.clientHeight;
+        const isScrolledToBottom =
+          wikiContent.scrollHeight - wikiContent.scrollTop <=
+          wikiContent.clientHeight + 50;
+
+        if (hasScroll && !isScrolledToBottom) {
+          wikiContent.classList.add("has-scroll");
+        } else {
+          wikiContent.classList.remove("has-scroll");
+        }
+      }
+    };
+
+    // Initial check
+    setTimeout(() => {
+      checkNavScroll();
+      checkContentScroll();
+    }, 100);
+
+    // Check on scroll
+    if (wikiSidebar) {
+      wikiSidebar.addEventListener("scroll", checkNavScroll);
+    }
+
+    if (wikiContent) {
+      wikiContent.addEventListener("scroll", checkContentScroll);
+    }
+
+    // Check on window resize
+    window.addEventListener("resize", () => {
+      checkNavScroll();
+      checkContentScroll();
+    });
+
+    // Re-check when page changes
+    this.onPageChange = () => {
+      setTimeout(() => {
+        checkNavScroll();
+        checkContentScroll();
+      }, 100);
+    };
   }
 
   /**
@@ -288,6 +361,11 @@ export default class WikiManager {
         this.currentPage = pageId;
 
         console.log(`📄 Showing wiki page: ${pageId}`);
+
+        // Update scroll indicators
+        if (this.onPageChange) {
+          this.onPageChange();
+        }
       }
     } catch (error) {
       console.error(`Error showing wiki page ${pageId}:`, error);
