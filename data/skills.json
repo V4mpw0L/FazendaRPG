@@ -63,6 +63,57 @@
         }
       ]
     },
+    "cooking": {
+      "id": "cooking",
+      "name": "Cooking",
+      "icon": "🍳",
+      "color": "#ff6347",
+      "colorLight": "#ff8c69",
+      "description": "Cook delicious and nutritious food.",
+      "baseXP": 10,
+      "actions": [
+        {
+          "id": "cook_shrimp",
+          "name": "Cook Shrimp",
+          "xp": 15,
+          "energyCost": 2,
+          "timeSeconds": 10,
+          "requiredLevel": 1,
+          "requiredItems": { "raw_shrimp": 1 },
+          "produces": { "cooked_shrimp": 1 }
+        },
+        {
+          "id": "cook_fish",
+          "name": "Cook Fish",
+          "xp": 25,
+          "energyCost": 3,
+          "timeSeconds": 15,
+          "requiredLevel": 5,
+          "requiredItems": { "raw_fish": 1 },
+          "produces": { "cooked_fish": 1 }
+        },
+        {
+          "id": "cook_salmon",
+          "name": "Cook Salmon",
+          "xp": 45,
+          "energyCost": 4,
+          "timeSeconds": 20,
+          "requiredLevel": 15,
+          "requiredItems": { "raw_salmon": 1 },
+          "produces": { "cooked_salmon": 1 }
+        },
+        {
+          "id": "bake_bread",
+          "name": "Bake Bread",
+          "xp": 35,
+          "energyCost": 5,
+          "timeSeconds": 25,
+          "requiredLevel": 10,
+          "requiredItems": { "wheat": 2 },
+          "produces": { "bread": 1 }
+        }
+      ]
+    },
     "mining": {
       "id": "mining",
       "name": "Mining",
@@ -154,57 +205,6 @@
           "timeSeconds": 60,
           "requiredLevel": 30,
           "produces": { "raw_lobster": 1 }
-        }
-      ]
-    },
-    "cooking": {
-      "id": "cooking",
-      "name": "Cooking",
-      "icon": "🍳",
-      "color": "#ff6347",
-      "colorLight": "#ff8c69",
-      "description": "Cook delicious and nutritious food.",
-      "baseXP": 10,
-      "actions": [
-        {
-          "id": "cook_shrimp",
-          "name": "Cook Shrimp",
-          "xp": 15,
-          "energyCost": 2,
-          "timeSeconds": 10,
-          "requiredLevel": 1,
-          "requiredItems": { "raw_shrimp": 1 },
-          "produces": { "cooked_shrimp": 1 }
-        },
-        {
-          "id": "cook_fish",
-          "name": "Cook Fish",
-          "xp": 25,
-          "energyCost": 3,
-          "timeSeconds": 15,
-          "requiredLevel": 5,
-          "requiredItems": { "raw_fish": 1 },
-          "produces": { "cooked_fish": 1 }
-        },
-        {
-          "id": "cook_salmon",
-          "name": "Cook Salmon",
-          "xp": 45,
-          "energyCost": 4,
-          "timeSeconds": 20,
-          "requiredLevel": 15,
-          "requiredItems": { "raw_salmon": 1 },
-          "produces": { "cooked_salmon": 1 }
-        },
-        {
-          "id": "bake_bread",
-          "name": "Bake Bread",
-          "xp": 35,
-          "energyCost": 5,
-          "timeSeconds": 25,
-          "requiredLevel": 10,
-          "requiredItems": { "wheat": 2 },
-          "produces": { "bread": 1 }
         }
       ]
     },
