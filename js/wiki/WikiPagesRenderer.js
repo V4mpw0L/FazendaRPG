@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Wiki Pages Renderer
  * Renders additional wiki pages (NPCs, Skills, Items, Quests, Tips)
- * @version 0.0.16
+ * @version 0.0.17
  */
 
 import i18n from "../utils/i18n.js";

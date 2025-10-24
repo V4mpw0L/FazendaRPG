@@ -1,7 +1,7 @@
 /**
  * HalloweenEvent - Evento de Halloween
  * Abóboras aparecem na tela e dão recompensas ao clicar
- * @version 0.0.16
+ * @version 0.0.17
  */
 
 export default class HalloweenEvent {
@@ -826,11 +826,16 @@ export default class HalloweenEvent {
       this.gameEngine.topBar.update();
     }
 
-    // Tenta dropar item
+    // Pega posição da abóbora para mostrar notificações acima dela
+    const pumpkinRect = this.pumpkinElement.getBoundingClientRect();
+    const pumpkinCenterX = pumpkinRect.left + pumpkinRect.width / 2;
+    const pumpkinTopY = pumpkinRect.top;
+
+    // Tenta dropar item (usa posição do clique para o efeito)
     this.tryDropItem(event.clientX, event.clientY);
 
-    // Efeito visual de clique
-    this.showClickEffect(event.clientX, event.clientY);
+    // Efeito visual de clique (usa posição da abóbora, acima dela)
+    this.showClickEffect(pumpkinCenterX, pumpkinTopY);
 
     // Som/feedback (opcional)
     console.log(
@@ -928,12 +933,14 @@ export default class HalloweenEvent {
       position: fixed;
       left: ${x}px;
       top: ${y}px;
-      color: #ff6600;
+      transform: translate(-50%, -100%);
+      color: #ffaa44;
       font-weight: bold;
-      font-size: 20px;
+      font-size: 26px;
       pointer-events: none;
       z-index: 10000;
       animation: floatUp 1s ease-out forwards;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
     `;
     effect.textContent = `+${this.config.energyReward} ⚡ +${this.config.goldReward} 💰`;
 
@@ -985,11 +992,11 @@ export default class HalloweenEvent {
       @keyframes floatUp {
         0% {
           opacity: 1;
-          transform: translateY(0);
+          transform: translate(-50%, -100%) translateY(0);
         }
         100% {
           opacity: 0;
-          transform: translateY(-50px);
+          transform: translate(-50%, -100%) translateY(-80px);
         }
       }
 

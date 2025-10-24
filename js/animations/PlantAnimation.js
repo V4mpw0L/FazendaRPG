@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Plant Animation
  * 3D seed planting animation system for planting crops
- * @version 0.0.16
+ * @version 0.0.17
  */
 
 export default class PlantAnimation {
