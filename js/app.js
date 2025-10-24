@@ -21,12 +21,25 @@ async function init() {
   logVersion(); // Log version info from centralized system
   console.log("📅 Loading game...");
 
+  // Detect iOS
+  const isIOS =
+    /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  if (isIOS) {
+    console.log("📱 iOS device detected - using optimized loading");
+  }
+
   try {
     // Create game engine
     window.FazendaRPG.engine = new GameEngine();
 
-    // Initialize engine
-    const success = await window.FazendaRPG.engine.init();
+    // Initialize engine with timeout for iOS
+    const initPromise = window.FazendaRPG.engine.init();
+    const success = await Promise.race([
+      initPromise,
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Initialization timeout")), 15000),
+      ),
+    ]);
 
     if (!success) {
       throw new Error("Failed to initialize game engine");
@@ -45,9 +58,22 @@ async function init() {
 
     // Apply saved language
     applySavedLanguage();
+
+    // Dispatch game loaded event
+    window.dispatchEvent(new Event("gameLoaded"));
   } catch (error) {
     console.error("❌ Failed to initialize FazendaRPG:", error);
-    showErrorMessage("Failed to load game. Please refresh the page.");
+
+    // Show detailed error for iOS
+    if (isIOS) {
+      showErrorMessage(
+        `Failed to load game on iOS.<br><br>` +
+          `Error: ${error.message}<br><br>` +
+          `Try clearing the cache using the button below.`,
+      );
+    } else {
+      showErrorMessage("Failed to load game. Please refresh the page.");
+    }
   }
 }
 
@@ -82,14 +108,23 @@ function applySavedLanguage() {
  * @param {string} message - Error message
  */
 function showErrorMessage(message) {
+  // Hide loading overlay
+  const overlay = document.getElementById("loading-overlay");
+  if (overlay) {
+    overlay.style.display = "none";
+  }
+
   const mainContent = document.getElementById("main-content");
   if (mainContent) {
     mainContent.innerHTML = `
-            <div style="text-align: center; padding: 50px;">
+            <div style="text-align: center; padding: 50px; max-width: 600px; margin: 0 auto;">
                 <h1>❌ Error</h1>
-                <p>${message}</p>
-                <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; font-size: 16px; cursor: pointer;">
+                <p style="margin: 20px 0;">${message}</p>
+                <button onclick="location.reload(true)" style="margin: 10px; padding: 10px 20px; font-size: 16px; cursor: pointer; background: #5caa1f; color: white; border: none; border-radius: 8px;">
                     🔄 Reload Page
+                </button>
+                <button onclick="window.clearCacheAndReload()" style="margin: 10px; padding: 10px 20px; font-size: 16px; cursor: pointer; background: #ff6b6b; color: white; border: none; border-radius: 8px;">
+                    🗑️ Clear Cache & Reload
                 </button>
             </div>
         `;

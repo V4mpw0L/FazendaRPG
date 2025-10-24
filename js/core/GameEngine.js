@@ -70,30 +70,50 @@ export default class GameEngine {
       return false;
     }
 
+    // Detect iOS for enhanced logging
+    const isIOS =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const logStep = (step, message) => {
+      console.log(`📱 [${step}] ${message}`);
+
+      // Update loading progress bar
+      if (window.updateLoadingProgress) {
+        window.updateLoadingProgress(step, message);
+      }
+    };
+
     try {
       console.log("🎮 Initializing FazendaRPG v0.0.15...");
+      if (isIOS)
+        console.log("📱 iOS device detected - verbose logging enabled");
 
       // Show loading overlay
       this.showLoading(true);
 
       // Initialize i18n
+      logStep(1, "📚 Carregando traduções...");
       await i18n.init();
 
       // Initialize core systems
+      logStep(2, "👤 Criando seu personagem...");
       this.player = new Player();
       this.saveManager = new SaveManager();
 
       // Initialize game systems
+      logStep(3, "⚡ Configurando habilidades...");
       this.skillSystem = new SkillSystem(this.player);
       await this.skillSystem.init();
 
       // Initialize notification manager
+      logStep(4, "🔔 Ativando notificações...");
       this.notificationManager = new NotificationManager();
       await this.notificationManager.initialize();
 
+      logStep(5, "🎒 Preparando inventário...");
       this.inventorySystem = new InventorySystem(this.player);
       await this.inventorySystem.init();
 
+      logStep(6, "🌾 Cultivando a fazenda...");
       this.farmSystem = new FarmSystem(
         this.player,
         this.skillSystem,
@@ -101,6 +121,7 @@ export default class GameEngine {
       );
       await this.farmSystem.init();
 
+      logStep(7, "📜 Carregando missões...");
       this.questSystem = new QuestSystem(
         this.player,
         this.skillSystem,
@@ -109,6 +130,7 @@ export default class GameEngine {
       await this.questSystem.init();
 
       // Initialize Event Manager
+      logStep(8, "🎉 Configurando eventos...");
       this.eventManager = new EventManager(this);
       await this.eventManager.init();
 
@@ -120,6 +142,7 @@ export default class GameEngine {
       this.autoStartEvents();
 
       // Initialize UI components
+      logStep(9, "🖼️ Construindo interface...");
       this.screenManager = new ScreenManager();
       this.screenManager.init();
 
@@ -132,6 +155,7 @@ export default class GameEngine {
       this.modal = new Modal();
       this.modal.init();
 
+      logStep(10, "📦 Organizando itens...");
       this.inventoryUI = new InventoryUI(
         this.inventorySystem,
         this.modal,
@@ -140,6 +164,7 @@ export default class GameEngine {
       );
       this.inventoryUI.init();
 
+      logStep(11, "🏪 Abrindo o mercado...");
       this.marketUI = new MarketUI(
         this.player,
         this.inventorySystem,
@@ -150,6 +175,7 @@ export default class GameEngine {
       );
       await this.marketUI.init();
 
+      logStep(12, "🤝 Conhecendo os NPCs...");
       this.npcsUI = new NPCSUI(
         this.player,
         this.modal,
@@ -159,6 +185,7 @@ export default class GameEngine {
       this.npcsUI.setSystems(this.farmSystem, this.skillSystem);
       await this.npcsUI.init();
 
+      logStep(13, "🏘️ Preparando a cidade...");
       this.cityUI = new CityUI(
         this.player,
         this.modal,
@@ -170,27 +197,28 @@ export default class GameEngine {
       this.cityUI.setMarketUI(this.marketUI);
 
       // Initialize Wiki Manager
+      logStep(14, "📖 Carregando a wiki...");
       this.wikiManager = new WikiManager(this);
       await this.wikiManager.init();
 
       // Initialize Avatar Selector
+      logStep(15, "🎨 Configurando avatares...");
       this.avatarSelector = new AvatarSelector(this);
       this.avatarSelector.init();
 
       // Initialize News Modal
+      logStep(16, "📰 Buscando notícias...");
       this.newsModal = new NewsModal(this);
       await this.newsModal.init();
 
-      // Initialize Fertilizer Animation
+      // Initialize Animations
+      logStep(17, "✨ Adicionando animações...");
       this.fertilizerAnimation = new FertilizerAnimation();
-
-      // Initialize Harvest Animation
       this.harvestAnimation = new HarvestAnimation();
-
-      // Initialize Plant Animation
       this.plantAnimation = new PlantAnimation();
 
       // Attach global event listeners
+      logStep(18, "🎮 Finalizando...");
       this.attachEventListeners();
 
       this.initialized = true;
@@ -202,6 +230,12 @@ export default class GameEngine {
       return true;
     } catch (error) {
       console.error("❌ Failed to initialize game engine:", error);
+      console.error("❌ Error stack:", error.stack);
+      if (isIOS) {
+        console.error(
+          "❌ iOS-specific error detected. This may be a Safari compatibility issue.",
+        );
+      }
       this.showLoading(false);
       notifications.error(
         "Failed to initialize game. Please refresh the page.",

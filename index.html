@@ -569,21 +569,226 @@
 
   <!-- Loading Overlay -->
   <div id="loading-overlay" class="loading-overlay">
-    <div class="loading-spinner"></div>
-    <p data-i18n="loading">Carregando...</p>
+    <div class="loading-content">
+      <!-- Logo/Icon -->
+      <div class="loading-logo">
+        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #5caa1f 0%, #7ec850 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; box-shadow: 0 4px 20px rgba(92, 170, 31, 0.5);">🌾</div>
+      </div>
+
+      <!-- Game Title -->
+      <h1 class="loading-title">🌾 FazendaRPG</h1>
+
+      <!-- Progress Bar -->
+      <div class="loading-progress-container">
+        <div class="loading-progress-bar" id="loading-progress-bar">
+          <div class="loading-progress-shine"></div>
+        </div>
+        <div class="loading-progress-text" id="loading-progress-text">0%</div>
+      </div>
+
+      <!-- Loading Message -->
+      <p class="loading-message" id="loading-message" data-i18n="loading">Preparando a fazenda...</p>
+
+      <!-- Loading Steps (hidden by default) -->
+      <div class="loading-steps" id="loading-steps" style="display: none;">
+        <div class="loading-step">📦 Carregando recursos...</div>
+      </div>
+
+      <!-- Timeout Warning -->
+      <div id="loading-timeout-warning" class="loading-timeout-warning" style="display: none;">
+        <div class="timeout-icon">⚠️</div>
+        <p class="timeout-title">Carregamento Demorado</p>
+        <p class="timeout-description">O jogo está demorando mais que o esperado. Tente uma das opções abaixo:</p>
+        <div class="timeout-buttons">
+          <button onclick="forceReloadApp()" class="timeout-btn timeout-btn-primary">
+            <span class="btn-icon">🔄</span>
+            <span class="btn-text">Recarregar</span>
+          </button>
+          <button onclick="clearCacheAndReload()" class="timeout-btn timeout-btn-danger">
+            <span class="btn-icon">🗑️</span>
+            <span class="btn-text">Limpar Cache</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!-- iOS Loading Fix Script -->
+  <script>
+    // Detect iOS (shared globally)
+    window.isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+    // Loading progress tracking
+    let loadingTimeout;
+    let gameLoaded = false;
+    let currentProgress = 0;
+    const totalSteps = 18; // Total loading steps from GameEngine
+
+    // Loading messages for each step
+    const loadingMessages = [
+      '🌍 Preparando o mundo...',
+      '📚 Carregando traduções...',
+      '👤 Criando seu personagem...',
+      '⚡ Configurando habilidades...',
+      '🔔 Ativando notificações...',
+      '🎒 Preparando inventário...',
+      '🌾 Cultivando a fazenda...',
+      '📜 Carregando missões...',
+      '🎉 Configurando eventos...',
+      '🖼️ Construindo interface...',
+      '📦 Organizando itens...',
+      '🏪 Abrindo o mercado...',
+      '🤝 Conhecendo os NPCs...',
+      '🏘️ Preparando a cidade...',
+      '📖 Carregando a wiki...',
+      '🎨 Configurando avatares...',
+      '📰 Buscando notícias...',
+      '✨ Adicionando animações...',
+      '🎮 Finalizando...'
+    ];
+
+    // Update loading progress
+    window.updateLoadingProgress = function(step, message) {
+      const progressBar = document.getElementById('loading-progress-bar');
+      const progressText = document.getElementById('loading-progress-text');
+      const messageEl = document.getElementById('loading-message');
+
+      if (!progressBar || !progressText || !messageEl) return;
+
+      // Calculate progress percentage
+      const progress = Math.min(Math.round((step / totalSteps) * 100), 100);
+
+      // Smooth transition
+      setTimeout(() => {
+        progressBar.style.width = progress + '%';
+        progressText.textContent = progress + '%';
+
+        // Use custom message or default from array
+        const displayMessage = message || loadingMessages[step] || 'Carregando...';
+        messageEl.textContent = displayMessage;
+
+        // Add pulse animation
+        messageEl.style.animation = 'none';
+        setTimeout(() => {
+          messageEl.style.animation = 'fadeInUp 0.5s ease-out';
+        }, 10);
+      }, 50);
+    };
+
+    function startLoadingTimeout() {
+      loadingTimeout = setTimeout(() => {
+        if (!gameLoaded) {
+          console.warn('⚠️ Loading timeout detected! Showing recovery options...');
+          const warningDiv = document.getElementById('loading-timeout-warning');
+          const stepsDiv = document.getElementById('loading-steps');
+          if (warningDiv) {
+            warningDiv.style.display = 'block';
+          }
+          if (stepsDiv) {
+            stepsDiv.style.display = 'none';
+          }
+        }
+      }, 10000); // 10 seconds
+    }
+
+    function clearLoadingTimeout() {
+      gameLoaded = true;
+      if (loadingTimeout) {
+        clearTimeout(loadingTimeout);
+      }
+    }
+
+    function forceReloadApp() {
+      console.log('🔄 Force reloading app...');
+      window.location.reload(true);
+    }
+
+    async function clearCacheAndReload() {
+      console.log('🗑️ Clearing all caches...');
+
+      // Show clearing message
+      const messageEl = document.getElementById('loading-message');
+      if (messageEl) {
+        messageEl.textContent = '🗑️ Limpando cache...';
+      }
+
+      // Clear Service Worker caches
+      if ('caches' in window) {
+        const cacheNames = await caches.keys();
+        await Promise.all(cacheNames.map(name => caches.delete(name)));
+        console.log('✅ Caches cleared');
+      }
+
+      // Unregister Service Worker
+      if ('serviceWorker' in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(registrations.map(reg => reg.unregister()));
+        console.log('✅ Service Workers unregistered');
+      }
+
+      // Clear localStorage flag
+      localStorage.removeItem('sw_failed');
+
+      // Reload
+      window.location.reload(true);
+    }
+
+    // Start with initial progress
+    window.updateLoadingProgress(0, '🌾 Iniciando FazendaRPG...');
+
+    // Start timeout
+    startLoadingTimeout();
+
+    // Listen for successful game load
+    window.addEventListener('gameLoaded', () => {
+      clearLoadingTimeout();
+      window.updateLoadingProgress(totalSteps, '✅ Pronto para jogar!');
+
+      // Hide loading overlay after a short delay
+      setTimeout(() => {
+        const overlay = document.getElementById('loading-overlay');
+        if (overlay) {
+          overlay.style.opacity = '0';
+          setTimeout(() => {
+            overlay.style.display = 'none';
+          }, 300);
+        }
+      }, 500);
+    });
+
+    // Expose functions globally
+    window.forceReloadApp = forceReloadApp;
+    window.clearCacheAndReload = clearCacheAndReload;
+  </script>
 
   <!-- Scripts -->
   <script type="module" src="js/app.js"></script>
 
-  <!-- Service Worker Registration -->
+  <!-- Service Worker Registration with iOS fix -->
   <script>
-    if ('serviceWorker' in navigator) {
+    // Use the globally defined isIOS
+    const swFailed = localStorage.getItem('sw_failed') === 'true';
+
+    // On iOS, if Service Worker failed before, skip it
+    if ('serviceWorker' in navigator && !(window.isIOS && swFailed)) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('✅ Service Worker registered'))
-          .catch(err => console.error('❌ SW registration failed:', err));
+        navigator.serviceWorker.register('./sw.js', {
+          updateViaCache: 'none' // Disable caching for SW script itself on iOS
+        })
+          .then(reg => {
+            console.log('✅ Service Worker registered');
+            localStorage.removeItem('sw_failed');
+          })
+          .catch(err => {
+            console.error('❌ SW registration failed:', err);
+            if (window.isIOS) {
+              console.warn('⚠️ iOS detected - marking SW as failed, will skip on next load');
+              localStorage.setItem('sw_failed', 'true');
+            }
+          });
       });
+    } else if (window.isIOS && swFailed) {
+      console.log('ℹ️ iOS: Skipping Service Worker due to previous failure');
     }
   </script>
 </body>

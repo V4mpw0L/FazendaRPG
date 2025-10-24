@@ -25,9 +25,9 @@ export default class NotificationManager {
       return false;
     }
 
-    // Check if service worker is supported
+    // Check if service worker is supported (silent check)
     if (!("serviceWorker" in navigator)) {
-      console.warn("⚠️ Service Worker not supported");
+      // Service Worker not available - notifications will be disabled
       return false;
     }
 
@@ -38,13 +38,19 @@ export default class NotificationManager {
     const savedPreference = localStorage.getItem(this.storageKey);
     this.enabled = savedPreference === "true";
 
-    // Wait for service worker to be ready
+    // Wait for service worker to be ready (with timeout for faster loading)
     try {
-      const registration = await navigator.serviceWorker.ready;
+      const registration = await Promise.race([
+        navigator.serviceWorker.ready,
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("SW timeout")), 2000),
+        ),
+      ]);
       this.serviceWorkerReady = true;
       console.log("✅ Service Worker ready for notifications");
     } catch (error) {
-      console.error("❌ Service Worker not ready:", error);
+      // Service Worker not ready yet - notifications will be available later
+      this.serviceWorkerReady = false;
       return false;
     }
 

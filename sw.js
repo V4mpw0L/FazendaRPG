@@ -41,29 +41,40 @@ const ASSETS_TO_CACHE = [
   "./assets/icon-72.png",
 ];
 
-// Install event - cache assets
+// Install event - cache assets (iOS optimized)
 self.addEventListener("install", (event) => {
   console.log("🔧 Service Worker: Installing...");
 
   event.waitUntil(
-    caches
-      .open(CACHE_NAME)
-      .then((cache) => {
-        console.log("📦 Service Worker: Caching app shell");
-        return cache
-          .addAll(
-            ASSETS_TO_CACHE.map((url) => new Request(url, { cache: "reload" })),
-          )
-          .catch((error) => {
-            console.warn("⚠️ Failed to cache some assets:", error);
-            // Continue anyway - non-critical assets can be cached on demand
-            return Promise.resolve();
-          });
-      })
-      .then(() => {
-        console.log("✅ Service Worker: Installation complete");
-        return self.skipWaiting();
-      }),
+    Promise.race([
+      // Add timeout for iOS
+      new Promise((resolve) => setTimeout(resolve, 5000)),
+      caches
+        .open(CACHE_NAME)
+        .then((cache) => {
+          console.log("📦 Service Worker: Caching app shell");
+          // Cache assets one by one to avoid iOS timeout issues
+          return Promise.allSettled(
+            ASSETS_TO_CACHE.map((url) =>
+              cache.add(new Request(url, { cache: "reload" }))
+                .catch(err => console.warn("⚠️ Failed to cache:", url, err))
+            )
+          );
+        })
+        .catch((error) => {
+          console.warn("⚠️ Failed to cache some assets:", error);
+          // Continue anyway - non-critical assets can be cached on demand
+          return Promise.resolve();
+        })
+    ])
+    .then(() => {
+      console.log("✅ Service Worker: Installation complete");
+      return self.skipWaiting();
+    })
+    .catch((error) => {
+      console.warn("⚠️ Service Worker installation error:", error);
+      return self.skipWaiting(); // Skip waiting even on error
+    })
   );
 });
 
@@ -91,7 +102,7 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event - iOS optimized strategy
 self.addEventListener("fetch", (event) => {
   // Skip non-GET requests
   if (event.request.method !== "GET") {
@@ -103,6 +114,33 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  const url = new URL(event.request.url);
+
+  // Network-first for JS modules (critical for iOS)
+  if (url.pathname.endsWith(".js")) {
+    event.respondWith(
+      Promise.race([
+        fetch(event.request).then(response => {
+          if (response && response.status === 200) {
+            const responseToCache = response.clone();
+            caches.open(CACHE_NAME).then(cache => {
+              cache.put(event.request, responseToCache);
+            }).catch(err => console.warn("Cache put failed:", err));
+          }
+          return response;
+        }),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Network timeout")), 3000)
+        )
+      ]).catch(() => {
+        // Fallback to cache on network failure
+        return caches.match(event.request);
+      })
+    );
+    return;
+  }
+
+  // Cache-first for other resources
   event.respondWith(
     caches
       .match(event.request)
@@ -129,9 +167,14 @@ self.addEventListener("fetch", (event) => {
   );
 });
 
-// Helper function to fetch and cache
+// Helper function to fetch and cache (iOS optimized with timeout)
 function fetchAndCache(request) {
-  return fetch(request).then((response) => {
+  return Promise.race([
+    fetch(request),
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Fetch timeout")), 5000)
+    )
+  ]).then((response) => {
     // Don't cache non-successful responses
     if (!response || response.status !== 200 || response.type === "error") {
       return response;
@@ -150,6 +193,10 @@ function fetchAndCache(request) {
       });
 
     return response;
+  }).catch((error) => {
+    console.warn("⚠️ Fetch failed:", request.url, error);
+    // Try to return from cache as fallback
+    return caches.match(request);
   });
 }
 
