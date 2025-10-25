@@ -1,6 +1,6 @@
-// FazendaRPG Service Worker v0.0.19
+// FazendaRPG Service Worker v0.0.20
 // NOTA: Para atualizar versão, edite: version.js (será integrado em breve)
-const VERSION = "0.0.19"; // TODO: Importar de version.js quando Service Worker suportar ES modules
+const VERSION = "0.0.20"; // TODO: Importar de version.js quando Service Worker suportar ES modules
 const CACHE_NAME = `fazendarpg-v${VERSION}`;
 const ASSETS_TO_CACHE = [
   "./index.html",

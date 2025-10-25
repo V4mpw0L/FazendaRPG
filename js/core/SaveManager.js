@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Save Manager
  * Handles saving and loading game data with automatic backups and fallbacks
- * @version 0.0.19
+ * @version 0.0.20
  */
 
 import {
@@ -18,7 +18,7 @@ export default class SaveManager {
     this.autoSaveInterval = 60000; // 60 seconds
     this.autoSaveTimer = null;
     this.lastSaveTime = 0;
-    this.currentVersion = "0.0.19";
+    this.currentVersion = "0.0.20";
     this.firebaseManager = firebaseManager;
   }
 

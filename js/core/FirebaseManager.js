@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Firebase Manager
  * Handles cloud saves with Firebase Firestore and Google Authentication
- * @version 0.0.19
+ * @version 0.0.20
  */
 
 export default class FirebaseManager {

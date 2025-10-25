@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Fertilizer Animation
  * 3D particle animation system for fertilizer application
- * @version 0.0.19
+ * @version 0.0.20
  */
 
 export default class FertilizerAnimation {

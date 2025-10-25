@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Bank System
  * Manages player banking, deposits, withdrawals, and interest
- * @version 0.0.19
+ * @version 0.0.20
  */
 
 export default class BankSystem {

@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Game Engine
  * Main game logic and systems
- * @version 0.0.19
+ * @version 0.0.20
  */
 
 // Global flags for robust login sync
@@ -96,7 +96,7 @@ export default class GameEngine {
     };
 
     try {
-      console.log("🎮 Initializing FazendaRPG v0.0.19...");
+      console.log("🎮 Initializing FazendaRPG v0.0.20...");
       if (isIOS)
         console.log("📱 iOS device detected - verbose logging enabled");
 
@@ -620,7 +620,7 @@ export default class GameEngine {
     return {
       player: this.player.getData(),
       savedAt: Date.now(),
-      version: "0.0.19",
+      version: "0.0.20",
     };
   }
 
@@ -673,7 +673,7 @@ export default class GameEngine {
     const saveData = {
       player: this.player.getData(),
       savedAt: Date.now(),
-      version: "0.0.19",
+      version: "0.0.20",
     };
 
     // Verify integrity before saving
