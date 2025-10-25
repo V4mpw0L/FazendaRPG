@@ -144,6 +144,15 @@ const FILES_TO_UPDATE = [
       },
     ],
   },
+  {
+    path: "data/news/news.json",
+    patterns: [
+      {
+        regex: /"version": "[\d.]+"/g,
+        replace: '"version": "VERSION_PLACEHOLDER"',
+      },
+    ],
+  },
 
   // System files
   {
@@ -406,6 +415,66 @@ const FILES_TO_UPDATE = [
   {
     path: "style/wiki.css",
     patterns: [
+      { regex: /@version [\d.]+/g, replace: "@version VERSION_PLACEHOLDER" },
+    ],
+  },
+  {
+    path: "style/topbar.css",
+    patterns: [
+      {
+        regex: /FazendaRPG v[\d.]+/g,
+        replace: "FazendaRPG vVERSION_PLACEHOLDER",
+      },
+      { regex: /@version [\d.]+/g, replace: "@version VERSION_PLACEHOLDER" },
+    ],
+  },
+  {
+    path: "style/themes.css",
+    patterns: [
+      {
+        regex: /FazendaRPG v[\d.]+/g,
+        replace: "FazendaRPG vVERSION_PLACEHOLDER",
+      },
+      { regex: /@version [\d.]+/g, replace: "@version VERSION_PLACEHOLDER" },
+    ],
+  },
+  {
+    path: "style/skills.css",
+    patterns: [
+      {
+        regex: /FazendaRPG v[\d.]+/g,
+        replace: "FazendaRPG vVERSION_PLACEHOLDER",
+      },
+      { regex: /@version [\d.]+/g, replace: "@version VERSION_PLACEHOLDER" },
+    ],
+  },
+  {
+    path: "style/mobile.css",
+    patterns: [
+      {
+        regex: /FazendaRPG v[\d.]+/g,
+        replace: "FazendaRPG vVERSION_PLACEHOLDER",
+      },
+      { regex: /@version [\d.]+/g, replace: "@version VERSION_PLACEHOLDER" },
+    ],
+  },
+  {
+    path: "style/topbar-fix.css",
+    patterns: [
+      {
+        regex: /FazendaRPG v[\d.]+/g,
+        replace: "FazendaRPG vVERSION_PLACEHOLDER",
+      },
+      { regex: /@version [\d.]+/g, replace: "@version VERSION_PLACEHOLDER" },
+    ],
+  },
+  {
+    path: "style/components/farm-improvements.css",
+    patterns: [
+      {
+        regex: /FazendaRPG v[\d.]+/g,
+        replace: "FazendaRPG vVERSION_PLACEHOLDER",
+      },
       { regex: /@version [\d.]+/g, replace: "@version VERSION_PLACEHOLDER" },
     ],
   },
