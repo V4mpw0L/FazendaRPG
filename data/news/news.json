@@ -4,7 +4,7 @@
       "id": "news-10",
       "date": "2025-10-23",
       "version": "0.0.14",
-      "title": "🎃 Evento de Halloween Disponível!",
+      "title": "🎃 Evento de Halloween Disponível! 🎃",
       "category": "evento",
       "content": "O aguardado <span class='highlight'>evento de Halloween</span> chegou! Clique nas <span class='highlight'>abóboras</span> que aparecem na tela para ganhar <span class='number'>energia</span> e <span class='number'>ouro</span>. Aproveite as decorações temáticas com teias de aranha e aranhas animadas! Ganhe itens raros de evento: <span class='item-name'>Pirulito Noturno</span>, <span class='item-name'>Aranha Crocante</span> e <span class='item-name'>Jujubas Tóxicas</span>! O evento estará disponível até o dia <span class='important'>31 de outubro</span>, então não perca tempo!",
       "image": "./assets/sprites/events/pumpkin2.png",
