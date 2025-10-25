@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Main Application Entry Point
  * Initializes and starts the game engine
- * @version 0.0.18
+ * @version 0.0.19
  */
 
 import GameEngine from "./core/GameEngine.js";

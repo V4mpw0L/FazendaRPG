@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Internationalization System
  * Handles multi-language support (pt-BR, en-US)
- * @version 0.0.18
+ * @version 0.0.19
  */
 
 class I18n {

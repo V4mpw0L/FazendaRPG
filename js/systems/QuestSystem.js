@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Quest System
  * Manages quests, objectives, progression, and rewards
- * @version 0.0.18
+ * @version 0.0.19
  */
 
 export default class QuestSystem {

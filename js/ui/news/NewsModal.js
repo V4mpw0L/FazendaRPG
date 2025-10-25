@@ -1,7 +1,7 @@
 /**
  * NewsModal - Sistema de Notícias e Changelog
  * Exibe notícias, atualizações e changelog do jogo
- * @version 0.0.18
+ * @version 0.0.19
  */
 
 export default class NewsModal {
