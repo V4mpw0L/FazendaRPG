@@ -4,12 +4,13 @@
       "id": "news-10",
       "date": "2025-10-23",
       "version": "0.0.14",
-      "title": "🎃 Evento de Halloween Disponível! 🎃",
+      "title": "🎃 Evento de Halloween Disponível!",
       "category": "evento",
-      "content": "O aguardado <span class='highlight'>Evento de Halloween</span> chegou! Clique nas <span class='highlight'>Abóboras</span> que aparecem na tela para ganhar <span class='number'>ENERGIA</span> e <span class='number'>OURO</span>. Aproveite as decorações temáticas com teias de aranha e aranhas animadas! Ganhe itens raros de evento: <span class='item-name'>Pirulito Noturno</span>, <span class='item-name'>Aranha Crocante</span> e <span class='item-name'>Jujubas Tóxicas</span>! O evento estará disponível até o dia <span class='important'>31 de outubro</span>, então não perca tempo!",
+      "content": "O aguardado <span class='highlight'>evento de Halloween</span> chegou! Clique nas <span class='highlight'>abóboras</span> que aparecem na tela para ganhar <span class='number'>energia</span> e <span class='number'>ouro</span>. Aproveite as decorações temáticas com teias de aranha e aranhas animadas! Ganhe itens raros de evento: <span class='item-name'>Pirulito Noturno</span>, <span class='item-name'>Aranha Crocante</span> e <span class='item-name'>Jujubas Tóxicas</span>! O evento estará disponível até o dia <span class='important'>31 de outubro</span>, então não perca tempo!",
       "image": "./assets/sprites/events/pumpkin2.png",
       "tags": ["evento", "halloween", "novidade"],
       "highlight": true,
+      "author": "Tiago",
       "pinned": true
     },
     {
@@ -20,7 +21,8 @@
       "category": "sistema",
       "content": "Agora você pode acompanhar todas as <span class='highlight'>novidades e atualizações</span> do jogo através do nosso novo <span class='highlight'>sistema de notícias</span>! Fique por dentro de <span class='item-name'>eventos especiais</span>, <span class='item-name'>melhorias</span> e <span class='item-name'>correções</span>. Acompanhe o desenvolvimento do FazendaRPG em tempo real!",
       "tags": ["sistema", "novidade"],
-      "highlight": false
+      "highlight": false,
+      "author": "Tiago"
     },
     {
       "id": "news-08",
@@ -30,7 +32,8 @@
       "category": "melhoria",
       "content": "<span class='highlight'>Sistema de notificações</span> corrigido para notificar apenas quando o app estiver fechado. Melhorias na <span class='number'>performance geral</span> do jogo e correção de diversos bugs. Experiência de jogo mais fluida e estável!",
       "tags": ["correção", "performance"],
-      "highlight": false
+      "highlight": false,
+      "author": "Tiago"
     },
     {
       "id": "news-07",
@@ -40,7 +43,8 @@
       "category": "recurso",
       "content": "Novo <span class='highlight'>sistema bancário</span> disponível na cidade! Deposite seu <span class='number'>ouro</span> e ganhe <span class='number'>juros diários</span>. Gerencie suas finanças com segurança e faça seu dinheiro trabalhar por você. Acesse o <span class='item-name'>Banco da Cidade</span> e comece a investir!",
       "tags": ["banco", "cidade", "novidade"],
-      "highlight": false
+      "highlight": false,
+      "author": "Tiago"
     },
     {
       "id": "news-06",
@@ -50,7 +54,8 @@
       "category": "recurso",
       "content": "A <span class='highlight'>taverna</span> está aberta! Descanse para recuperar <span class='number'>energia</span>, compre <span class='item-name'>refeições deliciosas</span> e interaja com outros <span class='highlight'>NPCs</span>. Prove o famoso <span class='item-name'>Ensopado do Chef</span> e outras iguarias. Um lugar perfeito para relaxar após um longo dia de trabalho na fazenda!",
       "tags": ["taverna", "cidade", "energia"],
-      "highlight": false
+      "highlight": false,
+      "author": "Tiago"
     },
     {
       "id": "news-05",
@@ -60,7 +65,8 @@
       "category": "melhoria",
       "content": "<span class='highlight'>Sistema de NPCs</span> completamente reformulado! Construa <span class='number'>amizade</span> com os moradores, experimente <span class='highlight'>diálogos dinâmicos</span> e aproveite o <span class='highlight'>estoque persistente</span>. Cada NPC agora tem sua própria personalidade e história. Conheça melhor a <span class='item-name'>Dona Rosa</span>, o <span class='item-name'>Seu João</span> e outros personagens incríveis!",
       "tags": ["npc", "amizade", "melhoria"],
-      "highlight": false
+      "highlight": false,
+      "author": "Tiago"
     },
     {
       "id": "news-04",
@@ -70,7 +76,8 @@
       "category": "recurso",
       "content": "Explore a <span class='highlight'>cidade</span> e descubra novos locais! Visite o <span class='item-name'>Banco</span>, a <span class='item-name'>Taverna</span>, o <span class='item-name'>Mercado</span> e muito mais. Interaja com <span class='highlight'>NPCs únicos</span> e descubra novas oportunidades de <span class='number'>comércio</span>. Um mundo inteiro esperando por você!",
       "tags": ["cidade", "exploração", "novidade"],
-      "highlight": false
+      "highlight": false,
+      "author": "Tiago"
     },
     {
       "id": "news-03",
@@ -80,7 +87,8 @@
       "category": "recurso",
       "content": "Receba <span class='highlight'>notificações</span> quando suas <span class='item-name'>plantações</span> estiverem prontas! Configure suas preferências e não perca mais nenhuma <span class='number'>colheita</span>. Fique sempre por dentro do que acontece na sua fazenda, mesmo quando estiver longe!",
       "tags": ["notificação", "colheita"],
-      "highlight": false
+      "highlight": false,
+      "author": "Tiago"
     },
     {
       "id": "news-02",
@@ -90,7 +98,8 @@
       "category": "visual",
       "content": "<span class='highlight'>Modo escuro</span> e <span class='highlight'>modo claro</span> disponíveis! Escolha o tema que melhor se adapta ao seu gosto e jogue com mais <span class='number'>conforto</span>. Proteja seus olhos durante longas sessões de jogo. Alterne entre os temas a qualquer momento nas <span class='item-name'>Configurações</span>!",
       "tags": ["tema", "visual", "interface"],
-      "highlight": false
+      "highlight": false,
+      "author": "Tiago"
     },
     {
       "id": "news-01",
@@ -100,7 +109,8 @@
       "category": "lançamento",
       "content": "Bem-vindo ao <span class='highlight'>FazendaRPG</span>! Comece sua jornada <span class='item-name'>plantando</span>, <span class='item-name'>colhendo</span> e <span class='number'>expandindo</span> sua fazenda. Plante <span class='item-name'>Trigo</span>, <span class='item-name'>Cenoura</span>, <span class='item-name'>Tomate</span> e muito mais! Construa a fazenda dos seus sonhos e torne-se o melhor fazendeiro da região. Muito mais novidades estão por vir!",
       "tags": ["lançamento", "inicio"],
-      "highlight": false
+      "highlight": false,
+      "author": "Tiago"
     }
   ]
 }
