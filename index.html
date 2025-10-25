@@ -17,6 +17,11 @@
 
   <title>🌾 FazendaRPG</title>
 
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=MedievalSharp&family=Cinzel:wght@400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+
   <!-- PWA Manifest -->
   <link rel="manifest" href="manifest.json" />
 
@@ -392,7 +397,27 @@
 
         <div class="setting-group">
           <h3 data-i18n="settings.data">Dados do Jogo</h3>
-          <button id="save-file-btn" class="btn btn-secondary" data-i18n="settings.save">
+          <p class="setting-description">
+            Escolha a fonte do jogo
+          </p>
+          <div class="font-selector">
+            <button class="font-btn active" data-font="default">
+              <span>Padrão</span>
+            </button>
+            <button class="font-btn" data-font="fredoka">
+              <span>Fredoka</span>
+            </button>
+            <button class="font-btn" data-font="medieval">
+              <span>Medieval</span>
+            </button>
+            <button class="font-btn" data-font="cinzel">
+              <span>Cinzel</span>
+            </button>
+            <button class="font-btn" data-font="pixel">
+              <span>Pixel</span>
+            </button>
+          </div>
+          <button id="save-file-btn" class="btn btn-secondary" data-i18n="settings.save" style="margin-top: 16px;">
             💾 Salvar Jogo
           </button>
           <button id="load-file-btn" class="btn btn-secondary" data-i18n="settings.load">

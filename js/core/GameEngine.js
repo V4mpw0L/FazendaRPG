@@ -1875,6 +1875,15 @@ export default class GameEngine {
       });
     });
 
+    // Font buttons
+    const fontBtns = document.querySelectorAll(".font-btn");
+    fontBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const font = btn.dataset.font;
+        this.changeFont(font);
+      });
+    });
+
     // Reset button
     const resetBtn = document.getElementById("reset-game-btn");
     if (resetBtn) {
@@ -2056,6 +2065,37 @@ export default class GameEngine {
       const langName = lang === "pt-BR" ? "Português" : "English";
       notifications.success(`Idioma alterado para ${langName}`);
     }
+  }
+
+  /**
+   * Change font
+   * @param {string} font - Font name
+   */
+  changeFont(font) {
+    document.body.classList.remove(
+      "font-default",
+      "font-fredoka",
+      "font-medieval",
+      "font-cinzel",
+      "font-pixel",
+    );
+    document.body.classList.add(`font-${font}`);
+    localStorage.setItem("fazenda_font", font);
+
+    // Update active button
+    document.querySelectorAll(".font-btn").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.font === font);
+    });
+
+    const fontNames = {
+      default: "Padrão",
+      fredoka: "Fredoka",
+      medieval: "Medieval",
+      cinzel: "Cinzel",
+      pixel: "Pixel",
+    };
+    const fontName = fontNames[font] || "Padrão";
+    notifications.success(`Fonte alterada para ${fontName}`);
   }
 
   /**

@@ -59,6 +59,9 @@ async function init() {
     // Apply saved language
     applySavedLanguage();
 
+    // Apply saved font
+    applySavedFont();
+
     // Dispatch game loaded event
     window.dispatchEvent(new Event("gameLoaded"));
   } catch (error) {
@@ -100,6 +103,26 @@ function applySavedLanguage() {
   // Update language button active state
   document.querySelectorAll(".lang-btn").forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.lang === savedLang);
+  });
+}
+
+/**
+ * Apply saved font
+ */
+function applySavedFont() {
+  const savedFont = localStorage.getItem("fazenda_font") || "default";
+  document.body.classList.remove(
+    "font-default",
+    "font-fredoka",
+    "font-medieval",
+    "font-cinzel",
+    "font-pixel",
+  );
+  document.body.classList.add(`font-${savedFont}`);
+
+  // Update font button active state
+  document.querySelectorAll(".font-btn").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.font === savedFont);
   });
 }
 

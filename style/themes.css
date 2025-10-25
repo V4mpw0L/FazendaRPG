@@ -163,6 +163,65 @@
     background: rgba(0, 0, 0, 0.3);
 }
 
+/* Font Selector */
+.font-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+@media (max-width: 768px) {
+    .font-selector {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.font-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background: rgba(0, 0, 0, 0.2);
+    border: 3px solid rgba(139, 105, 20, 0.5);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+}
+
+@media (max-width: 768px) {
+    .font-btn {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 0.9rem;
+        border-width: 2px;
+    }
+}
+
+.font-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    border-color: var(--brand-primary);
+    background: rgba(92, 170, 31, 0.15);
+}
+
+.font-btn.active {
+    background: linear-gradient(
+        135deg,
+        var(--brand-primary) 0%,
+        var(--brand-secondary) 100%
+    );
+    color: white;
+    border-color: var(--brand-tertiary);
+    box-shadow: 0 4px 16px rgba(92, 170, 31, 0.5);
+}
+
 /* Language Selector */
 .language-selector {
     display: grid;
@@ -288,6 +347,217 @@
         font-size: 0.8em;
         padding: 6px 8px;
     }
+}
+
+/* ===================================
+   Font System
+   =================================== */
+
+/* Default Font (Sistema) */
+body.font-default {
+    font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+        Arial, sans-serif;
+}
+
+body.font-default h1,
+body.font-default h2,
+body.font-default h3,
+body.font-default h4,
+body.font-default h5,
+body.font-default h6,
+body.font-default .btn,
+body.font-default .menu-header h2,
+body.font-default .menu-subtitle,
+body.font-default .menu-item-title,
+body.font-default .topbar-player-name,
+body.font-default .topbar-player-level,
+body.font-default .topbar-stat-value,
+body.font-default .topbar-farming-text,
+body.font-default .screen-header h2,
+body.font-default .game-title {
+    font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+        Arial, sans-serif;
+}
+
+/* Fredoka Font */
+body.font-fredoka {
+    font-family:
+        "Fredoka",
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
+}
+
+body.font-fredoka h1,
+body.font-fredoka h2,
+body.font-fredoka h3,
+body.font-fredoka h4,
+body.font-fredoka h5,
+body.font-fredoka h6,
+body.font-fredoka .btn,
+body.font-fredoka .menu-header h2,
+body.font-fredoka .menu-subtitle,
+body.font-fredoka .menu-item-title,
+body.font-fredoka .topbar-player-name,
+body.font-fredoka .topbar-player-level,
+body.font-fredoka .topbar-stat-value,
+body.font-fredoka .topbar-farming-text,
+body.font-fredoka .screen-header h2,
+body.font-fredoka .game-title {
+    font-family: "Fredoka", sans-serif;
+}
+
+/* Medieval Sharp Font */
+body.font-medieval {
+    font-family:
+        "MedievalSharp",
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
+}
+
+body.font-medieval h1,
+body.font-medieval h2,
+body.font-medieval h3,
+body.font-medieval h4,
+body.font-medieval h5,
+body.font-medieval h6,
+body.font-medieval .btn,
+body.font-medieval .menu-header h2,
+body.font-medieval .menu-subtitle,
+body.font-medieval .menu-item-title,
+body.font-medieval .topbar-player-name,
+body.font-medieval .topbar-player-level,
+body.font-medieval .topbar-stat-value,
+body.font-medieval .topbar-farming-text,
+body.font-medieval .screen-header h2,
+body.font-medieval .game-title {
+    font-family: "MedievalSharp", cursive;
+}
+
+/* Cinzel Font (Elegante/Clássica) */
+body.font-cinzel {
+    font-family:
+        "Cinzel",
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
+}
+
+body.font-cinzel h1,
+body.font-cinzel h2,
+body.font-cinzel h3,
+body.font-cinzel h4,
+body.font-cinzel h5,
+body.font-cinzel h6,
+body.font-cinzel .btn,
+body.font-cinzel .menu-header h2,
+body.font-cinzel .menu-subtitle,
+body.font-cinzel .menu-item-title,
+body.font-cinzel .topbar-player-name,
+body.font-cinzel .topbar-player-level,
+body.font-cinzel .topbar-stat-value,
+body.font-cinzel .topbar-farming-text,
+body.font-cinzel .screen-header h2,
+body.font-cinzel .game-title {
+    font-family: "Cinzel", serif;
+}
+
+/* Press Start 2P Font (Pixel/Retro) */
+body.font-pixel {
+    font-family:
+        "Press Start 2P",
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segui UI",
+        Roboto,
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
+    font-size: 0.75rem;
+}
+
+body.font-pixel h1,
+body.font-pixel h2,
+body.font-pixel h3,
+body.font-pixel h4,
+body.font-pixel h5,
+body.font-pixel h6,
+body.font-pixel .btn,
+body.font-pixel .menu-header h2,
+body.font-pixel .menu-subtitle,
+body.font-pixel .menu-item-title,
+body.font-pixel .topbar-player-name,
+body.font-pixel .topbar-player-level,
+body.font-pixel .topbar-stat-value,
+body.font-pixel .topbar-farming-text,
+body.font-pixel .screen-header h2,
+body.font-pixel .game-title {
+    font-family: "Press Start 2P", cursive;
+}
+
+/* Ajuste de tamanho para fonte Pixel */
+body.font-pixel .topbar-player-name {
+    font-size: 8px;
+}
+
+body.font-pixel .topbar-player-level {
+    font-size: 6px;
+}
+
+body.font-pixel .topbar-stat-value {
+    font-size: 9px;
+}
+
+body.font-pixel .topbar-farming-text {
+    font-size: 6px;
+}
+
+body.font-pixel .menu-item-title {
+    font-size: 10px;
+}
+
+body.font-pixel .menu-subtitle {
+    font-size: 8px;
+}
+
+body.font-pixel .menu-header h2 {
+    font-size: 16px;
+}
+
+body.font-pixel .screen-header h2 {
+    font-size: 1.3rem;
+}
+
+body.font-pixel .btn {
+    font-size: 0.7rem;
+    padding: 14px 24px;
+}
+
+body.font-pixel h1 {
+    font-size: 1.5rem;
+}
+
+body.font-pixel h2 {
+    font-size: 1.3rem;
+}
+
+body.font-pixel h3 {
+    font-size: 1.1rem;
 }
 
 /* ===================================
