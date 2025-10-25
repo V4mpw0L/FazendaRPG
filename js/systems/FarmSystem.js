@@ -181,6 +181,14 @@ export default class FarmSystem {
       return { success: false, error: "Plot has no weeds" };
     }
 
+    // Check if player has enough energy
+    if (this.player.data.energy < 1) {
+      return { success: false, error: "Not enough energy" };
+    }
+
+    // Consume energy
+    this.player.data.energy -= 1;
+
     // Clear weeds
     plot.hasWeeds = false;
     plot.lastHarvestedAt = Date.now();
