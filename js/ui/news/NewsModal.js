@@ -485,6 +485,41 @@ export default class NewsModal {
         padding: 24px;
       }
 
+      /* Scrollbar customizada sempre visível */
+      .news-modal-body::-webkit-scrollbar {
+        width: 12px;
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 6px;
+      }
+
+      .news-modal-body::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: 6px;
+        margin: 8px 0;
+      }
+
+      .news-modal-body::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #5caa1f 0%, #4a8c19 100%);
+        border-radius: 6px;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 2px 6px rgba(92, 170, 31, 0.3);
+      }
+
+      .news-modal-body::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #6bc225 0%, #5caa1f 100%);
+        box-shadow: 0 2px 8px rgba(92, 170, 31, 0.5);
+      }
+
+      .news-modal-body::-webkit-scrollbar-thumb:active {
+        background: linear-gradient(180deg, #4a8c19 0%, #3d7514 100%);
+      }
+
+      /* Firefox */
+      .news-modal-body {
+        scrollbar-width: thin;
+        scrollbar-color: #5caa1f rgba(0, 0, 0, 0.1);
+      }
+
       .news-list {
         display: flex;
         flex-direction: column;
@@ -734,6 +769,34 @@ export default class NewsModal {
       /* Dark Theme */
       .dark-theme .news-modal-content {
         background: #2a2a2a;
+      }
+
+      /* Scrollbar Dark Theme */
+      .dark-theme .news-modal-body::-webkit-scrollbar {
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .dark-theme .news-modal-body::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .dark-theme .news-modal-body::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #6bc225 0%, #5caa1f 100%);
+        border: 2px solid rgba(0, 0, 0, 0.2);
+        box-shadow: 0 2px 6px rgba(107, 194, 37, 0.4);
+      }
+
+      .dark-theme .news-modal-body::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #7ec850 0%, #6bc225 100%);
+        box-shadow: 0 2px 8px rgba(107, 194, 37, 0.6);
+      }
+
+      .dark-theme .news-modal-body::-webkit-scrollbar-thumb:active {
+        background: linear-gradient(180deg, #5caa1f 0%, #4a8c19 100%);
+      }
+
+      .dark-theme .news-modal-body {
+        scrollbar-color: #6bc225 rgba(255, 255, 255, 0.05);
       }
 
       .dark-theme .news-pinned {
