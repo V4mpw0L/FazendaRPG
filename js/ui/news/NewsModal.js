@@ -531,6 +531,7 @@ export default class NewsModal {
         border-radius: 8px;
         padding: 16px;
         border-left: 4px solid var(--primary-color, #5caa1f);
+        border-right: 4px solid var(--primary-color, #5caa1f);
         transition: all 0.3s;
       }
 
@@ -541,11 +542,13 @@ export default class NewsModal {
 
       .news-item.news-highlight {
         border-left-color: #ff6600;
+        border-right-color: #ff6600;
         background: var(--highlight-bg, #fff8f0);
       }
 
       .news-item.news-important {
         border-left-color: #dc3545;
+        border-right-color: #dc3545;
         background: var(--important-bg, #fff0f0);
         box-shadow: 0 0 8px rgba(220, 53, 69, 0.2);
       }
