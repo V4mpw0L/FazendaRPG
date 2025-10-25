@@ -247,13 +247,10 @@ export default class FirebaseManager {
     try {
       console.log("☁️ Saving to cloud...");
 
-      // Add cloud metadata
+      // Add cloudSavedAt timestamp, but do NOT add extra fields (structure must match manual save/load)
       const cloudSaveData = {
         ...saveData,
         cloudSavedAt: firebase.firestore.FieldValue.serverTimestamp(),
-        userId: this.user.uid,
-        userEmail: this.user.email,
-        deviceInfo: this.getDeviceInfo(),
       };
 
       // Save to Firestore
@@ -318,13 +315,23 @@ export default class FirebaseManager {
       const cloudData = doc.data();
       console.log("✅ Cloud load successful");
 
-      // Remove cloud-specific metadata
-      const { cloudSavedAt, userId, userEmail, deviceInfo, ...saveData } =
-        cloudData;
+      // Remove only Firestore timestamp object, but keep the rest of the save exactly as manual
+      const saveData = { ...cloudData };
+
+      // If cloudSavedAt exists and is a Firestore Timestamp, convert to savedAt
+      if (saveData.cloudSavedAt && saveData.cloudSavedAt.toMillis) {
+        saveData.savedAt = saveData.cloudSavedAt.toMillis();
+        delete saveData.cloudSavedAt;
+      }
+
+      // Remove Firestore-only metadata (userId, userEmail, deviceInfo) if present
+      delete saveData.userId;
+      delete saveData.userEmail;
+      delete saveData.deviceInfo;
 
       // Notify listeners
       this.notifyListeners("cloudLoad", {
-        timestamp: cloudSavedAt ? cloudSavedAt.toMillis() : null,
+        timestamp: saveData.savedAt || null,
       });
 
       // Dispatch custom event

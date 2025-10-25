@@ -1,8 +1,16 @@
 /**
  * FazendaRPG - Game Engine
- * Main game engine that integrates all systems and manages game flow
+ * Main game logic and systems
  * @version 0.0.18
  */
+
+// Global flags for robust login sync
+window.pendingFirebaseLogin = null;
+window.gameEngineReady = false;
+
+// Global flags for robust login sync
+window.pendingFirebaseLogin = null;
+window.gameEngineReady = false;
 
 import Player from "./Player.js";
 import SaveManager from "./SaveManager.js";
@@ -70,8 +78,10 @@ export default class GameEngine {
   async init() {
     if (this.initialized) {
       console.warn("⚠️ Game engine already initialized");
-      return false;
+      return true;
     }
+    this.ready = false;
+    this.pendingFirebaseLogin = null;
 
     // Detect iOS for enhanced logging
     const isIOS =
@@ -244,7 +254,16 @@ export default class GameEngine {
       this.attachEventListeners();
 
       this.initialized = true;
+      this.ready = true;
+      window.gameEngineReady = true;
+      window.dispatchEvent(new CustomEvent("game:ready"));
       console.log("✅ Game engine initialized successfully");
+
+      // Se houver login pendente, processa agora
+      if (window.pendingFirebaseLogin) {
+        this.onFirebaseLogin(window.pendingFirebaseLogin);
+        window.pendingFirebaseLogin = null;
+      }
 
       // Hide loading overlay
       this.showLoading(false);
@@ -1982,9 +2001,13 @@ export default class GameEngine {
     }
 
     // Listen for Firebase events
-    window.addEventListener("firebase:login", (e) =>
-      this.onFirebaseLogin(e.detail),
-    );
+    window.addEventListener("firebase:login", (e) => {
+      if (!window.gameEngineReady) {
+        window.pendingFirebaseLogin = e.detail;
+        return;
+      }
+      this.onFirebaseLogin(e.detail);
+    });
     window.addEventListener("firebase:logout", () => this.onFirebaseLogout());
     window.addEventListener("firebase:cloudSave", () =>
       this.updateCloudSyncUI(),
@@ -2054,37 +2077,60 @@ export default class GameEngine {
     // Update UI
     this.updateFirebaseUI();
 
-    // Sync with cloud
+    // Aguarda o GameEngine estar pronto antes de processar login
+    if (!this.ready) {
+      notifications.info("⏳ Aguardando inicialização do jogo...");
+      window.pendingFirebaseLogin = detail;
+      return;
+    }
+    // Update UI
+    this.updateFirebaseUI();
+
+    // Aguarda o GameEngine estar pronto antes de processar login
+    if (!this.ready) {
+      notifications.info("⏳ Aguardando inicialização do jogo...");
+      window.pendingFirebaseLogin = detail;
+      return;
+    }
+
+    // Aguarda sistemas prontos antes de carregar save da nuvem
+    while (
+      !this.farmSystem ||
+      !this.inventorySystem ||
+      !this.questSystem ||
+      !this.skillSystem
+    ) {
+      notifications.info("⏳ Inicializando sistemas do jogo...");
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+
+    // NOVO FLUXO: Sempre tenta carregar da nuvem primeiro ao logar
     try {
-      notifications.info("🔄 Sincronizando com a nuvem...");
+      notifications.info("🔄 Buscando save na nuvem...");
 
-      const syncResult = await this.saveManager.syncWithCloud();
+      const cloudSave = await this.saveManager.loadFromCloud();
 
-      if (syncResult.synced) {
-        if (syncResult.action === "downloaded") {
-          notifications.success("⬇️ Save carregado da nuvem!");
-
-          // Reload game with cloud data
-          this.player.load(syncResult.data.player);
-          this.farmSystem.load(syncResult.data);
-          this.inventorySystem.load(syncResult.data);
-          this.questSystem.load(syncResult.data);
-          this.skillSystem.load(syncResult.data);
-
-          // Update UI
-          this.topBar.update();
-          this.updateUI();
-        } else if (syncResult.action === "uploaded") {
-          notifications.success("⬆️ Save enviado para a nuvem!");
-        } else {
-          notifications.success("✅ Já está sincronizado!");
-        }
+      if (cloudSave && cloudSave.player && cloudSave.player.name) {
+        // Salva localmente e carrega no jogo
+        await this.saveManager.save(cloudSave, false); // só local
+        this.loadGameFromData(cloudSave);
+        notifications.success("✅ Save carregado da nuvem!");
+        this.showTopBarAndMenu();
+        this.screenManager.showScreen("farm-screen");
+        this.updateCloudSyncUI();
+        return;
       }
 
+      // Se não tem save na nuvem, inicia novo jogo normalmente
+      const nameInput = document.getElementById("player-name");
+      const playerName =
+        nameInput?.value.trim() || detail.user.displayName || "Fazendeiro";
+      this.startNewGame(playerName);
+      notifications.info("📝 Novo jogo criado (sem save na nuvem)");
       this.updateCloudSyncUI();
     } catch (error) {
-      console.error("Sync error:", error);
-      notifications.warning("⚠️ Erro ao sincronizar, mas você está logado");
+      console.error("Cloud load error:", error);
+      notifications.error("❌ Erro ao carregar da nuvem");
     }
   }
 
@@ -2095,6 +2141,46 @@ export default class GameEngine {
     console.log("🔥 Firebase logout detected");
     this.updateFirebaseUI();
     this.updateCloudSyncUI();
+  }
+
+  /**
+   * Carrega save igual ao manual: só player, start() e atualiza UI/Avatar
+   */
+  loadGameFromData(data) {
+    // Só carrega se player válido
+    if (!data.player || !data.player.name) {
+      notifications.error("❌ Save inválido: nome do personagem ausente!");
+      return;
+    }
+
+    // Carrega player
+    const loadSuccess = this.player.load(data.player);
+    if (!loadSuccess) {
+      notifications.error("❌ Erro ao carregar dados do jogador");
+      this.start();
+      return;
+    }
+
+    // Salva localmente (agora é o save ativo)
+    this.saveGame();
+
+    // Reinicia o jogo com os dados carregados
+    this.start();
+
+    // Atualiza UI manualmente (garante avatar e tudo mais)
+    this.renderFarm();
+    this.renderInventory();
+    this.topBar.update();
+    this.updateXPBar();
+    if (this.avatarSelector) this.avatarSelector.updateTopbarAvatar();
+    if (this.notificationManager.isEnabled()) {
+      const plots = this.farmSystem.getPlots();
+      const cropsData = this.farmSystem.getCropsData();
+      this.notificationManager.updateCropNotifications(plots, cropsData);
+    }
+    notifications.success(
+      `✅ Save carregado! Bem-vindo de volta, ${data.player.name}!`,
+    );
   }
 
   /**
