@@ -603,30 +603,61 @@ export default class NotificationManager {
       "📡 Sistema de ping iniciado - mantendo SW ativo enquanto app está aberto",
     );
 
-    // Ping every 25 seconds (before SW 30s idle timeout)
+    // Ping every 15 seconds (more aggressive for better reliability)
     // This keeps the app in sync while it's open
     this.pingInterval = setInterval(() => {
       console.log("📡 Ping - verificando notificações...");
       this.checkPendingNotifications().catch((error) => {
         console.error("❌ Erro no ping de notificações:", error);
       });
-    }, 25000); // 25 seconds
+    }, 15000); // 15 seconds - more aggressive
 
-    // Also ping when tab becomes visible
-    document.addEventListener("visibilitychange", () => {
+    // Listen for visibility changes
+    this.visibilityHandler = () => {
       if (!document.hidden && this.enabled) {
-        console.log("👁️ App visível - verificando notificações");
+        console.log("👁️ App ficou visível - verificando notificações");
         this.checkPendingNotifications().catch(() => {});
+        // Notify SW that app is visible
+        this.sendMessageToServiceWorker({ type: "APP_VISIBLE" }).catch(
+          () => {},
+        );
+      } else if (document.hidden && this.enabled) {
+        console.log("💤 App foi minimizado - notificando SW");
+        // Notify SW that app is hidden so it can prepare wake-up strategies
+        this.sendMessageToServiceWorker({ type: "APP_HIDDEN" }).catch(() => {});
       }
-    });
+    };
+    document.addEventListener("visibilitychange", this.visibilityHandler);
 
-    // Ping when window gets focus
-    window.addEventListener("focus", () => {
+    // Ping when window gets focus (additional safety)
+    this.focusHandler = () => {
       if (this.enabled) {
         console.log("🎯 Janela em foco - verificando notificações");
         this.checkPendingNotifications().catch(() => {});
       }
-    });
+    };
+    window.addEventListener("focus", this.focusHandler);
+
+    // Listen for page lifecycle events (better for mobile)
+    this.resumeHandler = () => {
+      if (this.enabled) {
+        console.log("🔄 App resumido - verificando notificações");
+        this.checkPendingNotifications().catch(() => {});
+        this.sendMessageToServiceWorker({ type: "APP_VISIBLE" }).catch(
+          () => {},
+        );
+      }
+    };
+    document.addEventListener("resume", this.resumeHandler);
+
+    // Pagehide for iOS Safari
+    this.pagehideHandler = () => {
+      if (this.enabled) {
+        console.log("📱 App saindo (iOS) - notificando SW");
+        this.sendMessageToServiceWorker({ type: "APP_HIDDEN" }).catch(() => {});
+      }
+    };
+    window.addEventListener("pagehide", this.pagehideHandler);
   }
 
   /**
@@ -637,6 +668,27 @@ export default class NotificationManager {
       clearInterval(this.pingInterval);
       this.pingInterval = null;
       console.log("📡 Sistema de ping parado");
+    }
+
+    // Remove event listeners
+    if (this.visibilityHandler) {
+      document.removeEventListener("visibilitychange", this.visibilityHandler);
+      this.visibilityHandler = null;
+    }
+
+    if (this.focusHandler) {
+      window.removeEventListener("focus", this.focusHandler);
+      this.focusHandler = null;
+    }
+
+    if (this.resumeHandler) {
+      document.removeEventListener("resume", this.resumeHandler);
+      this.resumeHandler = null;
+    }
+
+    if (this.pagehideHandler) {
+      window.removeEventListener("pagehide", this.pagehideHandler);
+      this.pagehideHandler = null;
     }
   }
 }

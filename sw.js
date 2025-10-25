@@ -78,8 +78,8 @@ self.addEventListener("fetch", (event) => {
   }
 
   // Handle SW heartbeat pings (keeps SW alive)
-  if (event.request.url.includes('sw-ping')) {
-    event.respondWith(new Response('pong', { status: 200 }));
+  if (event.request.url.includes("sw-ping")) {
+    event.respondWith(new Response("pong", { status: 200 }));
     return;
   }
 
@@ -89,22 +89,25 @@ self.addEventListener("fetch", (event) => {
   if (url.pathname.endsWith(".js")) {
     event.respondWith(
       Promise.race([
-        fetch(event.request).then(response => {
+        fetch(event.request).then((response) => {
           if (response && response.status === 200) {
             const responseToCache = response.clone();
-            caches.open(CACHE_NAME).then(cache => {
-              cache.put(event.request, responseToCache);
-            }).catch(err => console.warn("Cache put failed:", err));
+            caches
+              .open(CACHE_NAME)
+              .then((cache) => {
+                cache.put(event.request, responseToCache);
+              })
+              .catch((err) => console.warn("Cache put failed:", err));
           }
           return response;
         }),
         new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("Network timeout")), 3000)
-        )
+          setTimeout(() => reject(new Error("Network timeout")), 3000),
+        ),
       ]).catch(() => {
         // Fallback to cache on network failure
         return caches.match(event.request);
-      })
+      }),
     );
     return;
   }
@@ -141,32 +144,34 @@ function fetchAndCache(request) {
   return Promise.race([
     fetch(request),
     new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Fetch timeout")), 5000)
-    )
-  ]).then((response) => {
-    // Don't cache non-successful responses
-    if (!response || response.status !== 200 || response.type === "error") {
+      setTimeout(() => reject(new Error("Fetch timeout")), 5000),
+    ),
+  ])
+    .then((response) => {
+      // Don't cache non-successful responses
+      if (!response || response.status !== 200 || response.type === "error") {
+        return response;
+      }
+
+      // Clone the response
+      const responseToCache = response.clone();
+
+      caches
+        .open(CACHE_NAME)
+        .then((cache) => {
+          cache.put(request, responseToCache);
+        })
+        .catch((error) => {
+          console.warn("⚠️ Failed to cache:", request.url, error);
+        });
+
       return response;
-    }
-
-    // Clone the response
-    const responseToCache = response.clone();
-
-    caches
-      .open(CACHE_NAME)
-      .then((cache) => {
-        cache.put(request, responseToCache);
-      })
-      .catch((error) => {
-        console.warn("⚠️ Failed to cache:", request.url, error);
-      });
-
-    return response;
-  }).catch((error) => {
-    console.warn("⚠️ Fetch failed:", request.url, error);
-    // Try to return from cache as fallback
-    return caches.match(request);
-  });
+    })
+    .catch((error) => {
+      console.warn("⚠️ Fetch failed:", request.url, error);
+      // Try to return from cache as fallback
+      return caches.match(request);
+    });
 }
 
 // Message event - handle messages from clients
@@ -356,35 +361,88 @@ async function checkPendingNotifications() {
     const now = Date.now();
     let firedCount = 0;
 
-    // Check notifications - fire any that are overdue
+    // Check notifications - fire any that are overdue or VERY CLOSE (30 second buffer)
     for (const notification of notifications) {
-      // Fire notification if time has passed (with 5 second buffer for reliability)
-      if (notification.timestamp <= now + 5000) {
+      // Fire notification if time has passed OR within 30 seconds (more aggressive)
+      // This ensures notifications fire even if SW wakes up slightly late
+      if (notification.timestamp <= now + 30000) {
         console.log(`🔔 Disparando notificação: ${notification.title}`);
+
+        // Show notification
         await showNotification(
           notification.title,
           notification.body,
           notification.data,
         );
+
+        // Remove from DB
         await removeNotificationFromDB(notification.id);
         firedCount++;
+
+        // Also try to wake up any open clients
+        try {
+          const clients = await self.clients.matchAll({ type: "window" });
+          clients.forEach((client) => {
+            client.postMessage({
+              type: "NOTIFICATION_FIRED",
+              notificationId: notification.id,
+              data: notification.data,
+            });
+          });
+        } catch (e) {
+          console.warn("⚠️ Não foi possível notificar clients:", e);
+        }
       }
     }
 
     if (firedCount > 0) {
-      console.log(`✅ ${firedCount} notificação(ões) disparada(s) com sucesso!`);
+      console.log(
+        `✅ ${firedCount} notificação(ões) disparada(s) com sucesso!`,
+      );
     }
 
     // Log remaining notifications
     const remainingNotifications = await getAllNotificationsFromDB();
     if (remainingNotifications.length > 0) {
-      const nextNotification = remainingNotifications.sort((a, b) => a.timestamp - b.timestamp)[0];
-      const delayUntilNext = Math.max(0, nextNotification.timestamp - Date.now());
-      console.log(`⏰ ${remainingNotifications.length} notificação(ões) pendente(s) - próxima em ${Math.round(delayUntilNext / 1000)}s`);
+      const nextNotification = remainingNotifications.sort(
+        (a, b) => a.timestamp - b.timestamp,
+      )[0];
+      const delayUntilNext = Math.max(
+        0,
+        nextNotification.timestamp - Date.now(),
+      );
+      console.log(
+        `⏰ ${remainingNotifications.length} notificação(ões) pendente(s) - próxima em ${Math.round(delayUntilNext / 1000)}s`,
+      );
+
+      // Schedule a wake-up attempt for the next notification
+      if (delayUntilNext > 0 && delayUntilNext < 3600000) {
+        // Only if within 1 hour
+        scheduleWakeUp(delayUntilNext);
+      }
     }
   } catch (error) {
     console.error("❌ Erro ao verificar notificações pendentes:", error);
   }
+}
+
+// NEW: Schedule wake-up using setTimeout for next notification
+let wakeUpTimeout = null;
+function scheduleWakeUp(delay) {
+  // Clear existing timeout
+  if (wakeUpTimeout) {
+    clearTimeout(wakeUpTimeout);
+  }
+
+  // Schedule wake-up slightly before the notification time
+  const wakeUpDelay = Math.max(0, delay - 5000); // 5 seconds before
+
+  wakeUpTimeout = setTimeout(async () => {
+    console.log("⏰ Wake-up scheduled - checking notifications NOW");
+    await checkPendingNotifications();
+  }, wakeUpDelay);
+
+  console.log(`⏰ Wake-up agendado em ${Math.round(wakeUpDelay / 1000)}s`);
 }
 
 // Check notifications when Service Worker activates
@@ -399,7 +457,7 @@ self.addEventListener("activate", (event) => {
     ]).then(() => {
       // Start periodic check after activation
       startPeriodicCheck();
-    })
+    }),
   );
 });
 
@@ -417,25 +475,26 @@ self.addEventListener("install", (event) => {
           // Cache assets one by one to avoid iOS timeout issues
           return Promise.allSettled(
             ASSETS_TO_CACHE.map((url) =>
-              cache.add(new Request(url, { cache: "reload" }))
-                .catch(err => console.warn("⚠️ Failed to cache:", url, err))
-            )
+              cache
+                .add(new Request(url, { cache: "reload" }))
+                .catch((err) => console.warn("⚠️ Failed to cache:", url, err)),
+            ),
           );
         })
         .catch((error) => {
           console.warn("⚠️ Failed to cache some assets:", error);
           // Continue anyway - non-critical assets can be cached on demand
           return Promise.resolve();
-        })
+        }),
     ])
-    .then(() => {
-      console.log("✅ Service Worker: Installation complete");
-      return self.skipWaiting();
-    })
-    .catch((error) => {
-      console.warn("⚠️ Service Worker installation error:", error);
-      return self.skipWaiting(); // Skip waiting even on error
-    })
+      .then(() => {
+        console.log("✅ Service Worker: Installation complete");
+        return self.skipWaiting();
+      })
+      .catch((error) => {
+        console.warn("⚠️ Service Worker installation error:", error);
+        return self.skipWaiting(); // Skip waiting even on error
+      }),
   );
 });
 
@@ -456,22 +515,33 @@ async function startPeriodicCheck() {
     clearInterval(periodicCheckInterval);
   }
 
-  // Set up periodic check every 15 seconds (more aggressive for better reliability)
-  // This keeps the SW alive and checks for pending notifications
+  // Set up AGGRESSIVE periodic check every 10 seconds
+  // Multiple strategies to keep SW alive and check notifications
   periodicCheckInterval = setInterval(async () => {
     console.log("🔄 Verificação periódica de notificações (background)");
 
-    // Self-ping to keep SW alive
+    // Strategy 1: Self-ping to keep SW alive
     try {
-      await fetch('/?sw-ping=' + Date.now(), { method: 'HEAD' });
+      await fetch("/?sw-ping=" + Date.now(), { method: "HEAD" });
     } catch (e) {
-      // Ignore fetch errors - just to keep SW alive
+      // Ignore fetch errors
     }
 
+    // Strategy 2: Check pending notifications
     await checkPendingNotifications();
-  }, 15000); // 15 seconds for better notification reliability
 
-  console.log("✅ Verificação periódica ativada (15s) + heartbeat");
+    // Strategy 3: Force registration update to keep SW active
+    try {
+      const registration = await self.registration;
+      await registration.update();
+    } catch (e) {
+      // Ignore errors
+    }
+  }, 10000); // 10 seconds - more aggressive
+
+  console.log(
+    "✅ Verificação periódica ativada (10s) + múltiplas estratégias de wake-up",
+  );
 }
 
 // Legacy function kept for compatibility
@@ -482,6 +552,18 @@ function stopPeriodicCheck() {
     console.log("⏰ Sistema de verificação periódica desativado");
   }
 }
+
+// Push notifications (when available)
+// NEW: Listen for visibilitychange to check notifications when app comes back
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "APP_VISIBLE") {
+    console.log("👀 App ficou visível - verificando notificações");
+    checkPendingNotifications();
+  } else if (event.data && event.data.type === "APP_HIDDEN") {
+    console.log("💤 App foi minimizado/fechado - garantindo wake-up system");
+    startPeriodicCheck();
+  }
+});
 
 // Push notifications (when available)
 self.addEventListener("push", (event) => {
@@ -623,7 +705,9 @@ async function scheduleNotification(id, title, body, timestamp, data = {}) {
       `📅 Notificação agendada: ${title} para ${new Date(timestamp).toLocaleString()} (em ${Math.round(delay / 1000)}s)`,
     );
     console.log(`💾 Notificação salva em IndexedDB para disparo em background`);
-    console.log(`⚠️ IMPORTANTE: Notificação será disparada MESMO COM APP FECHADO`);
+    console.log(
+      `⚠️ IMPORTANTE: Notificação será disparada MESMO COM APP FECHADO`,
+    );
 
     // Ensure periodic check is running
     startPeriodicCheck();
@@ -706,9 +790,7 @@ async function showNotification(title, body, data = {}) {
     await self.registration.showNotification(title, options);
 
     if (isAppVisible) {
-      console.log(
-        `🔔 Notificação mostrada (app ABERTO): ${title}`,
-      );
+      console.log(`🔔 Notificação mostrada (app ABERTO): ${title}`);
       // Also notify the app that notification was shown
       allClients.forEach((client) => {
         client.postMessage({
@@ -727,7 +809,9 @@ async function showNotification(title, body, data = {}) {
 }
 
 // Check notifications immediately when SW loads/wakes up
-console.log("🌾 FazendaRPG Service Worker carregado - verificando notificações...");
+console.log(
+  "🌾 FazendaRPG Service Worker carregado - verificando notificações...",
+);
 checkPendingNotifications().catch((error) => {
   console.error("❌ Erro ao verificar notificações no carregamento:", error);
 });
