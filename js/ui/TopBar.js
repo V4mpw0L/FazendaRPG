@@ -54,6 +54,16 @@ export default class TopBar {
     // Energy changes
     window.addEventListener("farm:planted", () => this.update());
     window.addEventListener("farm:harvested", () => this.update());
+
+    // Energy gain/loss notifications
+    window.addEventListener("player:energyGain", (e) => {
+      this.showEnergyGain(e.detail.amount);
+      this.update();
+    });
+    window.addEventListener("player:energyLoss", (e) => {
+      this.showEnergyLoss(e.detail.amount);
+      this.update();
+    });
   }
 
   /**
@@ -177,6 +187,23 @@ export default class TopBar {
    * @param {number} amount - Amount of energy gained
    */
   showEnergyGain(amount) {
+    this.showEnergyChange(amount, true);
+  }
+
+  /**
+   * Show energy loss animation
+   * @param {number} amount - Amount of energy lost
+   */
+  showEnergyLoss(amount) {
+    this.showEnergyChange(amount, false);
+  }
+
+  /**
+   * Show energy change animation (gain or loss)
+   * @param {number} amount - Amount of energy changed
+   * @param {boolean} isGain - True for gain, false for loss
+   */
+  showEnergyChange(amount, isGain = true) {
     if (!this.elements.energy) return;
 
     // Get the energy display container
@@ -185,17 +212,19 @@ export default class TopBar {
 
     // Create floating notification element
     const notification = document.createElement("div");
-    notification.className = "energy-gain-notification";
-    notification.textContent = `+${amount} ⚡`;
+    notification.className = isGain
+      ? "energy-gain-notification"
+      : "energy-loss-notification";
+    notification.textContent = isGain ? `+${amount} ⚡` : `-${amount} ⚡`;
     notification.style.cssText = `
       position: absolute;
       bottom: -25px;
       left: 50%;
       transform: translateX(-50%);
-      color: #FFD700;
+      color: ${isGain ? "#FFD700" : "#e74c3c"};
       font-weight: 700;
       font-size: 1rem;
-      text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.5);
+      text-shadow: 0 0 10px ${isGain ? "rgba(255, 215, 0, 0.8)" : "rgba(231, 76, 60, 0.8)"}, 0 2px 4px rgba(0, 0, 0, 0.5);
       pointer-events: none;
       z-index: 1000;
       animation: floatUpEnergy 2s ease-out forwards;

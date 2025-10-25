@@ -189,6 +189,13 @@ export default class FarmSystem {
     // Consume energy
     this.player.data.energy -= 1;
 
+    // Dispatch energy loss event for UI notification
+    window.dispatchEvent(
+      new CustomEvent("player:energyLoss", {
+        detail: { amount: 1 },
+      }),
+    );
+
     // Clear weeds
     plot.hasWeeds = false;
     plot.lastHarvestedAt = Date.now();

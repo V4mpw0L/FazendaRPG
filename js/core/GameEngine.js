@@ -374,8 +374,6 @@ export default class GameEngine {
         const energyToAdd = 5;
         this.player.addEnergy(energyToAdd);
         localStorage.setItem("fazenda_last_energy_regen", now.toString());
-        this.topBar.update();
-        this.topBar.showEnergyGain(energyToAdd);
       }
     }
   }

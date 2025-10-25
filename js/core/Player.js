@@ -470,7 +470,18 @@ export default class Player {
    * @param {number} amount - Energy amount
    */
   addEnergy(amount) {
+    const oldEnergy = this.data.energy;
     this.data.energy = clamp(this.data.energy + amount, 0, this.data.maxEnergy);
+    const actualGain = this.data.energy - oldEnergy;
+
+    // Dispatch energy gain event for UI notification (only if actually gained)
+    if (actualGain > 0) {
+      window.dispatchEvent(
+        new CustomEvent("player:energyGain", {
+          detail: { amount: actualGain },
+        }),
+      );
+    }
   }
 
   /**
@@ -483,6 +494,14 @@ export default class Player {
     if (this.data.energy < amount) return false;
 
     this.data.energy -= amount;
+
+    // Dispatch energy loss event for UI notification
+    window.dispatchEvent(
+      new CustomEvent("player:energyLoss", {
+        detail: { amount },
+      }),
+    );
+
     return true;
   }
 

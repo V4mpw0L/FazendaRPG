@@ -318,7 +318,7 @@
 
 /* Energy - Light Theme (mais transparente) */
 .light-theme .topbar-energy {
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(0, 0, 0, 0.15);
 }
 
 .light-theme .topbar-energy .topbar-stat-icon {
