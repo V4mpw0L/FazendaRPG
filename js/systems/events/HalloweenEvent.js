@@ -1,7 +1,7 @@
 /**
  * HalloweenEvent - Evento de Halloween
  * Abóboras aparecem na tela e dão recompensas ao clicar
- * @version 0.0.17
+ * @version 0.0.18
  */
 
 export default class HalloweenEvent {

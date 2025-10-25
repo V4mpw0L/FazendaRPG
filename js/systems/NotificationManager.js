@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Notification Manager
  * Manages push notifications for crops and game events
- * @version 0.0.17
+ * @version 0.0.18
  */
 
 export default class NotificationManager {

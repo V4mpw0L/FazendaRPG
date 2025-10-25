@@ -1,7 +1,7 @@
 /**
  * FazendaRPG - Wiki Content Generator
  * Dynamically generates wiki page content from game data
- * @version 0.0.17
+ * @version 0.0.18
  */
 
 import i18n from "../utils/i18n.js";
