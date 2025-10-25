@@ -160,7 +160,7 @@ export default class NewsModal {
    */
   createNewsItem(news) {
     const item = document.createElement("div");
-    item.className = `news-item ${news.highlight ? "news-highlight" : ""} ${news.pinned ? "news-pinned" : ""}`;
+    item.className = `news-item ${news.highlight ? "news-highlight" : ""} ${news.important ? "news-important" : ""} ${news.pinned ? "news-pinned" : ""}`;
     item.dataset.category = news.category;
 
     const categoryIcon = this.getCategoryIcon(news.category);
@@ -180,10 +180,19 @@ export default class NewsModal {
         <h3 class="news-title">${news.title}</h3>
         <p class="news-content">${news.content}</p>
         ${
-          news.tags && news.tags.length > 0
+          (news.tags && news.tags.length > 0) || news.author
             ? `
-          <div class="news-tags">
-            ${news.tags.map((tag) => `<span class="news-tag">${tag}</span>`).join("")}
+          <div class="news-footer-meta">
+            ${
+              news.tags && news.tags.length > 0
+                ? `
+            <div class="news-tags">
+              ${news.tags.map((tag) => `<span class="news-tag">${tag}</span>`).join("")}
+            </div>
+            `
+                : ""
+            }
+            ${news.author ? `<span class="news-author-badge"><span class="author-name">Autor: ${news.author}</span><img src="./assets/sprites/adm.png" alt="Staff" class="author-icon"></span>` : ""}
           </div>
         `
             : ""
@@ -500,6 +509,12 @@ export default class NewsModal {
         background: var(--highlight-bg, #fff8f0);
       }
 
+      .news-item.news-important {
+        border-left-color: #dc3545;
+        background: var(--important-bg, #fff0f0);
+        box-shadow: 0 0 8px rgba(220, 53, 69, 0.2);
+      }
+
       .news-item-header {
         margin-bottom: 12px;
         position: relative;
@@ -561,6 +576,36 @@ export default class NewsModal {
         font-weight: 600;
       }
 
+      .news-author-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 8px;
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #ffd700 100%);
+        border: 1px solid #d4af37;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 700;
+        color: #4a3500;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+        box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.5);
+        flex-shrink: 0;
+      }
+
+
+
+      .news-author-badge .author-name {
+        font-weight: 700;
+        letter-spacing: 0.3px;
+      }
+
+      .news-author-badge .author-icon {
+        width: 14px;
+        height: 14px;
+        object-fit: contain;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+      }
+
       .news-item-body {
         display: flex;
         flex-direction: column;
@@ -615,11 +660,20 @@ export default class NewsModal {
         text-shadow: 0 0 1px rgba(244, 67, 54, 0.3);
       }
 
+      .news-footer-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+      }
+
       .news-tags {
         display: flex;
         flex-wrap: wrap;
         gap: 6px;
-        margin-top: 8px;
+        flex: 1;
       }
 
       .news-tag {
@@ -715,6 +769,11 @@ export default class NewsModal {
         background: #3a2a1a;
       }
 
+      .dark-theme .news-item.news-important {
+        background: #3a1a1a;
+        box-shadow: 0 0 8px rgba(220, 53, 69, 0.3);
+      }
+
       .dark-theme .news-date {
         color: #aaa;
       }
@@ -722,6 +781,14 @@ export default class NewsModal {
       .dark-theme .news-version {
         background: #444;
         color: #fff;
+      }
+
+      .dark-theme .news-author-badge {
+        background: linear-gradient(135deg, #d4af37 0%, #f0c875 50%, #d4af37 100%);
+        border-color: #b8960f;
+        color: #2a1f00;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+        box-shadow: 0 2px 10px rgba(212, 175, 55, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.4);
       }
 
       .dark-theme .news-title {
