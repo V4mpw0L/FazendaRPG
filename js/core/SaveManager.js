@@ -12,13 +12,23 @@ import {
 } from "../utils/helpers.js";
 
 export default class SaveManager {
-  constructor() {
+  constructor(firebaseManager = null) {
     this.saveKey = "fazendarpg_save";
     this.backupKey = "fazendarpg_save_backup";
     this.autoSaveInterval = 60000; // 60 seconds
     this.autoSaveTimer = null;
     this.lastSaveTime = 0;
     this.currentVersion = "0.0.18";
+    this.firebaseManager = firebaseManager;
+  }
+
+  /**
+   * Set Firebase Manager (called after initialization)
+   * @param {FirebaseManager} firebaseManager
+   */
+  setFirebaseManager(firebaseManager) {
+    this.firebaseManager = firebaseManager;
+    console.log("🔥 Firebase Manager connected to SaveManager");
   }
 
   /**
@@ -56,11 +66,12 @@ export default class SaveManager {
   }
 
   /**
-   * Save game data to localStorage
+   * Save game data to localStorage (and cloud if enabled)
    * @param {Object} data - Game data to save
-   * @returns {boolean} Success
+   * @param {boolean} cloudSync - Also save to cloud (default: true)
+   * @returns {Promise<boolean>} Success
    */
-  save(data) {
+  async save(data, cloudSync = true) {
     if (!data || typeof data !== "object") {
       console.error("❌ Invalid save data");
       return false;
@@ -82,11 +93,29 @@ export default class SaveManager {
         localStorage.setItem(this.backupKey, currentSave);
       }
 
-      // Save new data
+      // Save new data to localStorage
       localStorage.setItem(this.saveKey, jsonData);
       this.lastSaveTime = Date.now();
 
-      console.log("✅ Game saved successfully");
+      console.log("✅ Game saved locally");
+
+      // Save to cloud if Firebase is enabled and user is logged in
+      if (
+        cloudSync &&
+        this.firebaseManager &&
+        this.firebaseManager.isLoggedIn()
+      ) {
+        try {
+          await this.firebaseManager.saveToCloud(saveData);
+          console.log("✅ Game saved to cloud");
+        } catch (error) {
+          console.warn(
+            "⚠️ Cloud save failed (continuing with local save):",
+            error,
+          );
+          // Don't fail the whole save if cloud save fails
+        }
+      }
 
       // Dispatch save event
       window.dispatchEvent(
@@ -143,6 +172,84 @@ export default class SaveManager {
     } catch (error) {
       console.error("❌ Failed to load game:", error);
       return this.loadBackup();
+    }
+  }
+
+  /**
+   * Load game data from cloud
+   * @returns {Promise<Object|null>} Loaded data or null
+   */
+  async loadFromCloud() {
+    if (!this.firebaseManager) {
+      console.warn("⚠️ Firebase not available");
+      return null;
+    }
+
+    if (!this.firebaseManager.isLoggedIn()) {
+      console.warn("⚠️ User not logged in");
+      return null;
+    }
+
+    try {
+      const cloudData = await this.firebaseManager.loadFromCloud();
+
+      if (!cloudData) {
+        console.log("📭 No cloud save found");
+        return null;
+      }
+
+      // Validate cloud data
+      if (!this.validateSaveData(cloudData)) {
+        console.error("❌ Invalid cloud save data");
+        return null;
+      }
+
+      // Migrate if needed
+      const migratedData = this.migrateSaveData(cloudData);
+
+      console.log("✅ Cloud save loaded successfully");
+      return migratedData;
+    } catch (error) {
+      console.error("❌ Failed to load from cloud:", error);
+      return null;
+    }
+  }
+
+  /**
+   * Sync with cloud (called after login)
+   * @returns {Promise<Object>} Sync result
+   */
+  async syncWithCloud() {
+    if (!this.firebaseManager || !this.firebaseManager.isLoggedIn()) {
+      return {
+        synced: false,
+        reason: "Firebase not available or user not logged in",
+      };
+    }
+
+    try {
+      console.log("🔄 Syncing with cloud...");
+
+      // Get local save
+      const localSave = this.load();
+
+      // Sync with Firebase
+      const result = await this.firebaseManager.syncWithCloud(localSave);
+
+      if (result.synced && result.action === "downloaded") {
+        // Cloud is newer - save to local
+        const jsonData = safeJSONStringify(result.data);
+        localStorage.setItem(this.saveKey, jsonData);
+        console.log("✅ Local save updated from cloud");
+      }
+
+      return result;
+    } catch (error) {
+      console.error("❌ Sync failed:", error);
+      return {
+        synced: false,
+        reason: error.message,
+      };
     }
   }
 

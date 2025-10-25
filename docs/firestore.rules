@@ -1,0 +1,109 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ============================================
+    // FAZENDARPG - FIRESTORE SECURITY RULES
+    // ============================================
+    // Version: 0.0.18
+    // Description: Security rules for cloud saves
+    // ============================================
+
+    // Função auxiliar: verificar se usuário está autenticado
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Função auxiliar: verificar se é o dono do documento
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Função auxiliar: validar estrutura do save
+    function isValidSave() {
+      let data = request.resource.data;
+      return data.keys().hasAll(['player', 'version', 'savedAt']) &&
+             data.player is map &&
+             data.player.keys().hasAll(['name', 'level', 'xp', 'gold', 'energy']) &&
+             data.version is string &&
+             data.savedAt is number;
+    }
+
+    // ============================================
+    // COLEÇÃO DE SAVES
+    // ============================================
+    // Cada usuário tem um documento com seu userId
+    // Estrutura: saves/{userId}
+    // ============================================
+    match /saves/{userId} {
+      // Leitura: Apenas o dono pode ler seu próprio save
+      allow read: if isOwner(userId);
+
+      // Escrita: Apenas o dono pode criar/atualizar seu próprio save
+      // E o save deve ter uma estrutura válida
+      allow create, update: if isOwner(userId) && isValidSave();
+
+      // Deleção: Apenas o dono pode deletar seu próprio save
+      allow delete: if isOwner(userId);
+    }
+
+    // ============================================
+    // COLEÇÃO DE BACKUPS (OPCIONAL - FUTURO)
+    // ============================================
+    // Estrutura: backups/{userId}/saves/{timestamp}
+    // ============================================
+    match /backups/{userId}/saves/{timestamp} {
+      // Leitura: Apenas o dono pode ler seus backups
+      allow read: if isOwner(userId);
+
+      // Escrita: Apenas o dono pode criar backups
+      allow create: if isOwner(userId);
+
+      // Deleção: Apenas o dono pode deletar seus backups
+      allow delete: if isOwner(userId);
+    }
+
+    // ============================================
+    // COLEÇÃO DE LEADERBOARD (OPCIONAL - FUTURO)
+    // ============================================
+    // Estrutura: leaderboard/{userId}
+    // Dados públicos para ranking
+    // ============================================
+    match /leaderboard/{userId} {
+      // Leitura: Público (todos podem ver o ranking)
+      allow read: if true;
+
+      // Escrita: Apenas o dono pode atualizar seus dados no ranking
+      allow create, update: if isOwner(userId);
+
+      // Deleção: Apenas o dono pode se remover do ranking
+      allow delete: if isOwner(userId);
+    }
+
+    // ============================================
+    // COLEÇÃO DE ESTATÍSTICAS (OPCIONAL - FUTURO)
+    // ============================================
+    // Estrutura: stats/{userId}
+    // Estatísticas do jogador
+    // ============================================
+    match /stats/{userId} {
+      // Leitura: Apenas o dono pode ver suas stats
+      allow read: if isOwner(userId);
+
+      // Escrita: Apenas o dono pode atualizar suas stats
+      allow create, update: if isOwner(userId);
+
+      // Deleção: Apenas o dono pode deletar suas stats
+      allow delete: if isOwner(userId);
+    }
+
+    // ============================================
+    // BLOQUEAR TUDO O RESTO
+    // ============================================
+    // Por padrão, negar acesso a qualquer outra coleção
+    // ============================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

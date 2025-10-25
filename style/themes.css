@@ -644,6 +644,10 @@ body.font-pixel .version-number {
     --dirt-color: #2d1f16;
     --sky-color: #1a2838;
     --moon-color: #e8f5e0;
+
+    /* Status backgrounds for dark theme */
+    --success-bg: rgba(76, 175, 80, 0.15);
+    --info-bg: rgba(33, 150, 243, 0.15);
 }
 
 /* Dark theme shadows */

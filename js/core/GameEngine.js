@@ -6,6 +6,7 @@
 
 import Player from "./Player.js";
 import SaveManager from "./SaveManager.js";
+import FirebaseManager from "./FirebaseManager.js";
 import SkillSystem from "../systems/SkillSystem.js";
 import FarmSystem from "../systems/FarmSystem.js";
 import InventorySystem from "../systems/InventorySystem.js";
@@ -37,6 +38,7 @@ export default class GameEngine {
   constructor() {
     this.player = null;
     this.saveManager = null;
+    this.firebaseManager = null;
     this.skillSystem = null;
     this.farmSystem = null;
     this.inventorySystem = null;
@@ -98,7 +100,29 @@ export default class GameEngine {
       // Initialize core systems
       logStep(2, "👤 Criando seu personagem...");
       this.player = new Player();
-      this.saveManager = new SaveManager();
+
+      // Initialize Firebase Manager
+      this.firebaseManager = new FirebaseManager();
+      const firebaseInitialized = await this.firebaseManager.init();
+
+      // Check for Firebase redirect result FIRST (mobile login)
+      if (firebaseInitialized) {
+        try {
+          console.log("🔍 Checking for redirect result...");
+          await this.firebaseManager.getRedirectResult();
+        } catch (error) {
+          console.error("❌ Firebase redirect error:", error);
+        }
+      }
+
+      // Initialize Save Manager with Firebase
+      this.saveManager = new SaveManager(this.firebaseManager);
+
+      if (firebaseInitialized) {
+        console.log("🔥 Firebase cloud saves enabled");
+      } else {
+        console.log("💾 Using local saves only");
+      }
 
       // Initialize game systems
       logStep(3, "⚡ Configurando habilidades...");
@@ -555,22 +579,30 @@ export default class GameEngine {
 
   /**
    * Save game
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
-  saveGame() {
-    const saveData = {
-      player: this.player.getData(),
-      savedAt: Date.now(),
-      version: "0.0.18",
-    };
+  async saveGame() {
+    const saveData = this.getSaveData();
 
-    const success = this.saveManager.save(saveData);
+    const success = await this.saveManager.save(saveData);
 
     if (success) {
       console.log("💾 Game saved");
     }
 
     return success;
+  }
+
+  /**
+   * Get save data object
+   * @returns {Object}
+   */
+  getSaveData() {
+    return {
+      player: this.player.getData(),
+      savedAt: Date.now(),
+      version: "0.0.18",
+    };
   }
 
   /**
@@ -1922,6 +1954,305 @@ export default class GameEngine {
 
     // Update notification UI
     this.updateNotificationUI();
+
+    // Firebase login button
+    const googleLoginBtn = document.getElementById("google-login-btn");
+    if (googleLoginBtn) {
+      googleLoginBtn.addEventListener("click", () => this.handleGoogleLogin());
+    }
+
+    // Firebase logout button
+    const googleLogoutBtn = document.getElementById("google-logout-btn");
+    if (googleLogoutBtn) {
+      googleLogoutBtn.addEventListener("click", () =>
+        this.handleGoogleLogout(),
+      );
+    }
+
+    // Manual cloud save button
+    const manualCloudSaveBtn = document.getElementById("manual-cloud-save-btn");
+    if (manualCloudSaveBtn) {
+      manualCloudSaveBtn.addEventListener("click", () => this.saveToCloud());
+    }
+
+    // Manual cloud load button
+    const manualCloudLoadBtn = document.getElementById("manual-cloud-load-btn");
+    if (manualCloudLoadBtn) {
+      manualCloudLoadBtn.addEventListener("click", () => this.loadFromCloud());
+    }
+
+    // Listen for Firebase events
+    window.addEventListener("firebase:login", (e) =>
+      this.onFirebaseLogin(e.detail),
+    );
+    window.addEventListener("firebase:logout", () => this.onFirebaseLogout());
+    window.addEventListener("firebase:cloudSave", () =>
+      this.updateCloudSyncUI(),
+    );
+
+    // Update Firebase UI
+    this.updateFirebaseUI();
+  }
+
+  /**
+   * Handle Google Login
+   */
+  async handleGoogleLogin() {
+    if (!this.firebaseManager || !this.firebaseManager.initialized) {
+      notifications.error(
+        "🔥 Firebase não está configurado. Configure no arquivo FirebaseManager.js",
+      );
+      return;
+    }
+
+    try {
+      notifications.info("🔐 Abrindo login do Google...");
+
+      await this.firebaseManager.signInWithGoogle();
+
+      // If mobile (using redirect), the page will reload
+      // Otherwise, onFirebaseLogin will be called automatically
+    } catch (error) {
+      console.error("Login error:", error);
+      notifications.error(
+        "❌ Erro ao fazer login: " + (error.message || "Erro desconhecido"),
+      );
+    }
+  }
+
+  /**
+   * Handle Google Logout
+   */
+  async handleGoogleLogout() {
+    if (!this.firebaseManager) return;
+
+    const confirm = window.confirm(
+      "Tem certeza que deseja sair? Seu save local será mantido, mas não sincronizará mais com a nuvem.",
+    );
+
+    if (!confirm) return;
+
+    try {
+      await this.firebaseManager.signOut();
+      notifications.info("👋 Você saiu da sua conta Google");
+    } catch (error) {
+      console.error("Logout error:", error);
+      notifications.error("❌ Erro ao sair");
+    }
+  }
+
+  /**
+   * On Firebase Login (called automatically)
+   */
+  async onFirebaseLogin(detail) {
+    console.log("🔥 Firebase login detected:", detail.user);
+
+    notifications.success(
+      `✅ Bem-vindo, ${detail.user.displayName || detail.user.email}!`,
+    );
+
+    // Update UI
+    this.updateFirebaseUI();
+
+    // Sync with cloud
+    try {
+      notifications.info("🔄 Sincronizando com a nuvem...");
+
+      const syncResult = await this.saveManager.syncWithCloud();
+
+      if (syncResult.synced) {
+        if (syncResult.action === "downloaded") {
+          notifications.success("⬇️ Save carregado da nuvem!");
+
+          // Reload game with cloud data
+          this.player.load(syncResult.data.player);
+          this.farmSystem.load(syncResult.data);
+          this.inventorySystem.load(syncResult.data);
+          this.questSystem.load(syncResult.data);
+          this.skillSystem.load(syncResult.data);
+
+          // Update UI
+          this.topBar.update();
+          this.updateUI();
+        } else if (syncResult.action === "uploaded") {
+          notifications.success("⬆️ Save enviado para a nuvem!");
+        } else {
+          notifications.success("✅ Já está sincronizado!");
+        }
+      }
+
+      this.updateCloudSyncUI();
+    } catch (error) {
+      console.error("Sync error:", error);
+      notifications.warning("⚠️ Erro ao sincronizar, mas você está logado");
+    }
+  }
+
+  /**
+   * On Firebase Logout
+   */
+  onFirebaseLogout() {
+    console.log("🔥 Firebase logout detected");
+    this.updateFirebaseUI();
+    this.updateCloudSyncUI();
+  }
+
+  /**
+   * Update Firebase UI (login status)
+   */
+  updateFirebaseUI() {
+    const notLoggedIn = document.getElementById("firebase-not-logged-in");
+    const loggedIn = document.getElementById("firebase-logged-in");
+    const notConfiguredWarning = document.getElementById(
+      "firebase-not-configured-warning",
+    );
+    const userPhoto = document.getElementById("user-photo");
+    const userName = document.getElementById("user-name");
+    const userEmail = document.getElementById("user-email");
+
+    if (!this.firebaseManager || !this.firebaseManager.initialized) {
+      // Firebase not configured
+      if (notLoggedIn) notLoggedIn.style.display = "none";
+      if (loggedIn) loggedIn.style.display = "none";
+      if (notConfiguredWarning) notConfiguredWarning.style.display = "block";
+      return;
+    }
+
+    // Firebase is configured, hide warning
+    if (notConfiguredWarning) notConfiguredWarning.style.display = "none";
+
+    const user = this.firebaseManager.getUser();
+
+    if (user) {
+      // Logged in
+      if (notLoggedIn) notLoggedIn.style.display = "none";
+      if (loggedIn) loggedIn.style.display = "block";
+
+      if (userPhoto)
+        userPhoto.src = user.photoURL || "assets/sprites/avatars/11.png";
+      if (userName) userName.textContent = user.displayName || "Usuário";
+      if (userEmail) userEmail.textContent = user.email || "";
+
+      this.updateCloudSyncUI();
+    } else {
+      // Not logged in
+      if (notLoggedIn) notLoggedIn.style.display = "block";
+      if (loggedIn) loggedIn.style.display = "none";
+    }
+  }
+
+  /**
+   * Update cloud sync timestamp UI
+   */
+  updateCloudSyncUI() {
+    const lastCloudSync = document.getElementById("last-cloud-sync");
+
+    if (!lastCloudSync) return;
+    if (!this.firebaseManager || !this.firebaseManager.isLoggedIn()) return;
+
+    const lastSave = this.firebaseManager.getLastCloudSave();
+
+    if (lastSave) {
+      const date = new Date(lastSave);
+      const now = new Date();
+      const diff = Math.floor((now - date) / 1000); // seconds
+
+      let timeStr;
+      if (diff < 60) {
+        timeStr = "agora mesmo";
+      } else if (diff < 3600) {
+        const mins = Math.floor(diff / 60);
+        timeStr = `há ${mins} minuto${mins > 1 ? "s" : ""}`;
+      } else if (diff < 86400) {
+        const hours = Math.floor(diff / 3600);
+        timeStr = `há ${hours} hora${hours > 1 ? "s" : ""}`;
+      } else {
+        timeStr =
+          date.toLocaleDateString("pt-BR") +
+          " às " +
+          date.toLocaleTimeString("pt-BR");
+      }
+
+      lastCloudSync.textContent = `☁️ Última sincronização: ${timeStr}`;
+    } else {
+      lastCloudSync.textContent = "☁️ Última sincronização: Nunca";
+    }
+  }
+
+  /**
+   * Manual save to cloud
+   */
+  async saveToCloud() {
+    if (!this.firebaseManager || !this.firebaseManager.isLoggedIn()) {
+      notifications.error("❌ Você precisa estar logado");
+      return;
+    }
+
+    try {
+      notifications.info("☁️ Salvando na nuvem...");
+
+      const saveData = this.getSaveData();
+      const success = await this.firebaseManager.saveToCloud(saveData);
+
+      if (success) {
+        notifications.success("✅ Save enviado para a nuvem!");
+        this.updateCloudSyncUI();
+      } else {
+        notifications.error("❌ Erro ao salvar na nuvem");
+      }
+    } catch (error) {
+      console.error("Cloud save error:", error);
+      notifications.error("❌ Erro ao salvar na nuvem");
+    }
+  }
+
+  /**
+   * Manual load from cloud
+   */
+  async loadFromCloud() {
+    if (!this.firebaseManager || !this.firebaseManager.isLoggedIn()) {
+      notifications.error("❌ Você precisa estar logado");
+      return;
+    }
+
+    const confirm = window.confirm(
+      "Tem certeza que deseja carregar o save da nuvem? Seu progresso atual será substituído!\n\nDica: Salve seu progresso atual primeiro para não perder.",
+    );
+
+    if (!confirm) return;
+
+    try {
+      notifications.info("☁️ Carregando da nuvem...");
+
+      const cloudData = await this.saveManager.loadFromCloud();
+
+      if (!cloudData) {
+        notifications.error("❌ Nenhum save encontrado na nuvem");
+        return;
+      }
+
+      // Load data
+      this.player.load(cloudData.player);
+      this.farmSystem.load(cloudData);
+      this.inventorySystem.load(cloudData);
+      this.questSystem.load(cloudData);
+      this.skillSystem.load(cloudData);
+
+      // Save locally
+      await this.saveManager.save(cloudData, false); // Don't save back to cloud
+
+      // Update UI
+      this.topBar.update();
+      this.updateUI();
+
+      notifications.success(
+        `✅ Save carregado da nuvem! Bem-vindo de volta, ${cloudData.player.name}!`,
+      );
+      this.updateCloudSyncUI();
+    } catch (error) {
+      console.error("Cloud load error:", error);
+      notifications.error("❌ Erro ao carregar da nuvem");
+    }
   }
 
   /**

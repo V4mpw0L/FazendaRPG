@@ -1,0 +1,394 @@
+/**
+ * FazendaRPG - Firebase UI Styles
+ * Styles for cloud save and authentication UI
+ * @version 0.0.18
+ */
+
+/* Cloud Save Section */
+.setting-group {
+    margin-bottom: 2rem;
+}
+
+#cloud-save-status {
+    transition: all 0.3s ease;
+}
+
+/* Login Button */
+#google-login-btn {
+    background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+    color: white;
+    border: none;
+    padding: 0.875rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0 auto;
+}
+
+#google-login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(66, 133, 244, 0.4);
+}
+
+#google-login-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(66, 133, 244, 0.3);
+}
+
+/* Logged In Status Card */
+#firebase-logged-in {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* User Photo */
+#user-photo {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+#user-photo:hover {
+    transform: scale(1.05);
+}
+
+/* Cloud Action Buttons */
+#manual-cloud-save-btn,
+#manual-cloud-load-btn {
+    transition: all 0.2s ease;
+}
+
+#manual-cloud-save-btn {
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+    border: none;
+    color: white;
+}
+
+#manual-cloud-save-btn:hover {
+    background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+#manual-cloud-load-btn {
+    background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+    border: none;
+    color: white;
+}
+
+#manual-cloud-load-btn:hover {
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+/* Logout Button */
+#google-logout-btn {
+    transition: all 0.2s ease;
+}
+
+#google-logout-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+}
+
+/* Last Sync Info */
+#last-cloud-sync {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+    font-size: 0.8em;
+}
+
+/* Info Box Styles */
+.setting-description {
+    color: var(--text-secondary);
+    font-size: 0.9em;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+/* Success Background */
+.success-bg {
+    background: #e8f5e9;
+    border: 2px solid #4caf50;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+/* Info Box */
+.info-box {
+    background: var(--info-bg, #e3f2fd);
+    border-left: 4px solid var(--info, #2196f3);
+    padding: 0.75rem;
+    border-radius: 4px;
+    font-size: 0.85em;
+    margin-top: 1rem;
+    line-height: 1.6;
+}
+
+.info-box strong {
+    color: var(--info, #2196f3);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+/* Sync Status Indicators */
+.sync-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75em;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.sync-indicator.synced {
+    background: #e8f5e9;
+    color: #4caf50;
+}
+
+.sync-indicator.syncing {
+    background: #fff3e0;
+    color: #ff9800;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.sync-indicator.error {
+    background: #ffebee;
+    color: #f44336;
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #google-login-btn {
+        width: 100%;
+        max-width: none;
+    }
+
+    #manual-cloud-save-btn,
+    #manual-cloud-load-btn {
+        min-width: auto;
+    }
+
+    .info-box {
+        font-size: 0.8em;
+    }
+}
+
+/* Dark Theme Support */
+.dark-theme #google-login-btn {
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.4);
+}
+
+.dark-theme #manual-cloud-save-btn:hover {
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.dark-theme #manual-cloud-load-btn:hover {
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+}
+
+/* Dark Theme - Logged In Card */
+.dark-theme #firebase-logged-in > div:first-child {
+    background: rgba(76, 175, 80, 0.15);
+    border-color: #4caf50;
+}
+
+.dark-theme #firebase-logged-in #user-name {
+    color: #ffffff;
+}
+
+.dark-theme #firebase-logged-in #user-email {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.dark-theme
+    #firebase-logged-in
+    > div:first-child
+    > div:first-child
+    > div:last-child
+    > div {
+    color: #4caf50;
+}
+
+.dark-theme #last-cloud-sync {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Dark Theme - Info Box */
+.dark-theme .info-box {
+    background: rgba(33, 150, 243, 0.15);
+    border-color: #2196f3;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.dark-theme .info-box strong {
+    color: #64b5f6;
+}
+
+/* Dark Theme - Warning */
+.dark-theme #firebase-not-configured-warning {
+    background: rgba(255, 193, 7, 0.15);
+    border-color: #ffc107;
+}
+
+.dark-theme #firebase-not-configured-warning strong,
+.dark-theme #firebase-not-configured-warning p {
+    color: #ffd54f;
+}
+
+.dark-theme #firebase-not-configured-warning a {
+    background: #ffc107;
+    color: #000;
+}
+
+/* Dark Theme - Setting Description */
+.dark-theme .setting-description {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Dark Theme - Not Logged In */
+.dark-theme #firebase-not-logged-in p {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Loading State */
+.cloud-loading {
+    opacity: 0.6;
+    pointer-events: none;
+    position: relative;
+}
+
+.cloud-loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* Button Icons */
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* User Info Grid */
+.user-info-grid {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.user-info-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.user-info-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-info-email {
+    font-size: 0.85em;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-info-status {
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* Connection Status Badge */
+.connection-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.connection-badge.online {
+    background: #e8f5e9;
+    color: #4caf50;
+}
+
+.connection-badge.offline {
+    background: #fce4ec;
+    color: #e91e63;
+}
+
+/* Feature List */
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+}
+
+.feature-list li {
+    padding: 0.25rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.feature-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0.5rem;
+    color: var(--info, #2196f3);
+    font-weight: bold;
+}

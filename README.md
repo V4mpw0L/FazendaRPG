@@ -22,6 +22,8 @@ FazendaRPG é um jogo de fazenda com elementos de RPG, desenvolvido como Progres
 - 🎯 **Missões** - Complete quests e ganhe recompensas
 - 🎃 **Eventos Especiais** - Eventos sazonais (Halloween, etc)
 - 🔔 **Notificações Push** - Avisos quando crops estão prontos
+- ☁️ **Cloud Saves** - Save na nuvem com login Google (Firebase)
+- 🔄 **Multi-Dispositivo** - Jogue no PC e continue no celular
 - 🌍 **Multilíngue** - Português (BR) e Inglês
 - 🎨 **Temas** - Modo Claro e Escuro
 - 🔤 **Fontes Customizáveis** - 5 opções de fonte (Padrão, Fredoka, Medieval, Cinzel, Pixel)
@@ -48,6 +50,8 @@ Toda a documentação está organizada na pasta [`docs/`](docs/):
 ### **📖 Guias:**
 - [📚 Comece Aqui](docs/guides/📚_COMECE_AQUI.md) - Guia inicial
 - [⚡ Quick Start](docs/guides/QUICK_START.md) - Início rápido
+- [🔥 Firebase Setup](docs/FIREBASE_SETUP.md) - Configurar cloud saves (completo)
+- [🔥 Firebase Quick Start](docs/FIREBASE_QUICKSTART.md) - Configurar cloud saves (rápido)
 - [🎃 Eventos](docs/guides/🎃_LEIA_AQUI_EVENTOS.md) - Sistema de eventos
 - [📦 Como Adicionar Itens](docs/guides/📦_COMO_ADICIONAR_ITENS.md) - Adicionar conteúdo
 - [📰 Sistema de Notícias](docs/guides/📰_NOTICIAS_GUIA.md) - Gerenciar notícias
