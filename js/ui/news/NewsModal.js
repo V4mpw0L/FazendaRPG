@@ -536,8 +536,7 @@ export default class NewsModal {
       }
 
       .news-pinned {
-        border: 2px solid var(--primary-color, #4caf50);
-        box-shadow: 0 0 12px rgba(76, 175, 80, 0.3);
+        /* Borda removida - mantém apenas o ícone de PIN */
       }
 
       .news-item-meta {
@@ -738,8 +737,7 @@ export default class NewsModal {
       }
 
       .dark-theme .news-pinned {
-        border-color: #66bb6a;
-        box-shadow: 0 0 12px rgba(102, 187, 106, 0.3);
+        /* Borda removida - mantém apenas o ícone de PIN */
       }
 
       .dark-theme .news-modal-header {
