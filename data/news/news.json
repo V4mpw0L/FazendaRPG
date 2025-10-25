@@ -1,6 +1,31 @@
 {
   "news": [
     {
+      "id": "news-10",
+      "date": "2025-10-23",
+      "version": "0.0.18",
+      "title": "🎃 Evento de Halloween Disponível!🎃",
+      "category": "evento",
+      "content": "O aguardado <span class='highlight'>Evento de Halloween</span> chegou! Clique nas <span class='highlight'>Abóboras</span> que aparecem na tela para ganhar <span class='number'>ENERGIA</span> e <span class='number'>OURO</span>. Aproveite as decorações temáticas com teias de aranha e aranhas animadas! Ganhe itens raros de evento: <span class='item-name'>Pirulito Noturno</span>, <span class='item-name'>Aranha Crocante</span> e <span class='item-name'>Jujubas Tóxicas</span>! O evento estará disponível até o dia <span class='important'>31 de outubro</span>, então não perca tempo!",
+      "image": "./assets/sprites/events/pumpkin2.png",
+      "tags": ["evento", "halloween", "novidade"],
+      "highlight": true,
+      "author": "Tiago",
+      "pinned": true
+    },
+    {
+      "id": "news-12",
+      "date": "2025-01-16",
+      "version": "0.0.18",
+      "title": "💾 IMPORTANTE: Salve Seu Progresso!",
+      "category": "sistema",
+      "content": "Não esqueça de <span class='important'>salvar seu progresso</span> regularmente! Vá em <span class='highlight'>Configurações ⚙️</span> > <span class='highlight'>Dados do Jogo</span> > <span class='important'>💾 Salvar Jogo</span> para fazer backup. Se precisar, você pode <span class='highlight'>carregar o arquivo</span> depois. Proteja suas conquistas!",
+      "tags": ["importante", "save", "backup"],
+      "important": true,
+      "author": "Tiago",
+      "pinned": true
+    },
+    {
       "id": "news-11",
       "date": "2025-01-15",
       "version": "0.0.18",
@@ -12,19 +37,6 @@
       "highlight": false,
       "author": "Tiago",
       "pinned": false
-    },
-    {
-      "id": "news-10",
-      "date": "2025-10-23",
-      "version": "0.0.18",
-      "title": "🎃 Evento de Halloween Disponível!",
-      "category": "evento",
-      "content": "O aguardado <span class='highlight'>evento de Halloween</span> chegou! Clique nas <span class='highlight'>abóboras</span> que aparecem na tela para ganhar <span class='number'>energia</span> e <span class='number'>ouro</span>. Aproveite as decorações temáticas com teias de aranha e aranhas animadas! Ganhe itens raros de evento: <span class='item-name'>Pirulito Noturno</span>, <span class='item-name'>Aranha Crocante</span> e <span class='item-name'>Jujubas Tóxicas</span>! O evento estará disponível até o dia <span class='important'>31 de outubro</span>, então não perca tempo!",
-      "image": "./assets/sprites/events/pumpkin2.png",
-      "tags": ["evento", "halloween", "novidade"],
-      "highlight": true,
-      "author": "Tiago",
-      "pinned": true
     },
     {
       "id": "news-09",
