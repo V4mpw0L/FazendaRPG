@@ -23,9 +23,9 @@ export default class HalloweenEvent {
       clicksPerPumpkin: Infinity, // Cliques ilimitados enquanto estiver na tela
       // Sistema de drops de itens
       dropChances: {
-        pirulo_noturno: 0.003, // 0.3% de chance (1 em ~333 cliques)
-        aranha_crocante: 0.001, // 0.1% de chance (1 em ~1000 cliques)
-        jujubas_toxicas: 0.0005, // 0.05% de chance (1 em ~2000 cliques)
+        pirulo_noturno: 0.0067, // 0.67% de chance (1 em ~150 cliques)
+        aranha_crocante: 0.002, // 0.2% de chance (1 em ~500 cliques)
+        jujubas_toxicas: 0.001, // 0.1% de chance (1 em ~1000 cliques)
       },
     };
 
