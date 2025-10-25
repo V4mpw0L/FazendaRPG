@@ -560,6 +560,27 @@ body.font-pixel h3 {
     font-size: 0.75rem;
 }
 
+/* Ajustes do Footer para fonte Pixel */
+body.font-pixel .footer-game-name {
+    font-size: 0.6rem;
+}
+
+body.font-pixel .footer-copyright {
+    font-size: 0.5rem;
+}
+
+body.font-pixel .footer-dev-text {
+    font-size: 0.55rem;
+}
+
+body.font-pixel .gennisys-text {
+    font-size: 0.55rem;
+}
+
+body.font-pixel .version-number {
+    font-size: 0.55rem;
+}
+
 /* ===================================
    Light Theme Customizations
    =================================== */
