@@ -640,6 +640,11 @@ export default class GameEngine {
     // Delete save data
     this.saveManager.deleteSave(true);
 
+    // Logout from Google/Firebase if logged in
+    if (this.firebaseManager && this.firebaseManager.isLoggedIn()) {
+      this.firebaseManager.signOut();
+    }
+
     // Reset player
     this.player.reset();
 
