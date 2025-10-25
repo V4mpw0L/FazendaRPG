@@ -1,3 +1,9 @@
+/**
+ * FazendaRPG - Topbar Fix Styles
+ * Força topbar fixa em todas as telas
+ * @version 0.0.19
+ */
+
 /* FORÇA TOPBAR FIXA - SOBRESCREVE TUDO */
 .topbar {
     position: fixed !important;
