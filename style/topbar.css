@@ -500,6 +500,23 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
+/* Dark theme - melhor contraste no header do menu */
+.dark-theme .menu-header {
+    background: linear-gradient(135deg, #4a8b17 0%, #5caa1f 100%);
+    border-bottom: 3px solid #3d8b0f;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.dark-theme .menu-header h2 {
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.dark-theme .menu-subtitle {
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
 .menu-header-content {
     display: flex;
     align-items: center;
