@@ -92,6 +92,11 @@ export default class Player {
       // Achievements
       achievements: [],
 
+      // Migrations (one-time flags)
+      migrations: {
+        toolsAdded: false, // Flag to prevent re-adding tools after selling
+      },
+
       // Settings
       settings: {
         theme: "light",
@@ -169,8 +174,14 @@ export default class Player {
   /**
    * Migrate tools for existing players (one-time)
    * Gives trowel, hoe, and rake if they don't have them
+   * Only runs once per save using migrations.toolsAdded flag
    */
   migrateToolsForExistingPlayers() {
+    // Check if migration already ran
+    if (this.data.migrations && this.data.migrations.toolsAdded) {
+      return; // Migration already done, skip
+    }
+
     // Check if player already has the tools
     const hasTrowel = this.hasItem("trowel");
     const hasHoe = this.hasItem("hoe");
@@ -189,6 +200,13 @@ export default class Player {
       this.addItem("rake", 1);
       console.log("✅ Migrated: Added rake to existing player");
     }
+
+    // Mark migration as complete
+    if (!this.data.migrations) {
+      this.data.migrations = {};
+    }
+    this.data.migrations.toolsAdded = true;
+    console.log("✅ Tools migration completed and flagged");
   }
 
   /**
