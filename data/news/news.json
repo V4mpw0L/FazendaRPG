@@ -1,6 +1,19 @@
 {
   "news": [
     {
+      "id": "news-11",
+      "date": "2025-01-15",
+      "version": "0.0.18",
+      "title": "✨ Atualização v0.0.18 - Melhorias e Personalização!",
+      "category": "melhoria",
+      "content": "Grande atualização trazendo <span class='highlight'>personalização total</span> e melhorias robustas! Agora você pode escolher entre <span class='number'>5 fontes diferentes</span> (Padrão, Fredoka, Medieval, Cinzel e Pixel) nas configurações. Sistema de <span class='important'>notificações muito mais robusto</span> com verificações a cada 10 segundos e múltiplas estratégias de wake-up para garantir que você <span class='highlight'>nunca perca uma colheita</span>! Interface do modo escuro melhorada com <span class='highlight'>melhor legibilidade</span> no menu. Sistema de notícias agora exibe <span class='item-name'>badge dourado</span> com autor das postagens. Corrigido bug onde <span class='important'>ferramentas voltavam ao inventário</span> após venda. Projeto totalmente <span class='highlight'>reorganizado</span> com documentação completa na pasta docs/. Sistema de versionamento automático para <span class='number'>67 arquivos</span> do projeto!",
+      "tags": ["atualização", "personalização", "melhorias", "correções"],
+      "important": true,
+      "highlight": false,
+      "author": "Tiago",
+      "pinned": false
+    },
+    {
       "id": "news-10",
       "date": "2025-10-23",
       "version": "0.0.18",
