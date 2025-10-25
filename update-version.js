@@ -478,6 +478,18 @@ const FILES_TO_UPDATE = [
       { regex: /@version [\d.]+/g, replace: "@version VERSION_PLACEHOLDER" },
     ],
   },
+  {
+    path: "js/core/FirebaseManager.js",
+    patterns: [
+      { regex: /@version [\d.]+/g, replace: "@version VERSION_PLACEHOLDER" },
+    ],
+  },
+  {
+    path: "style/firebase.css",
+    patterns: [
+      { regex: /@version [\d.]+/g, replace: "@version VERSION_PLACEHOLDER" },
+    ],
+  },
 ];
 
 /**
