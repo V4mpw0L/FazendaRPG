@@ -735,7 +735,7 @@ export default class CityUI {
                 <div class="player-status">
                     <div class="status-item">
                         <span class="status-label">💰 Seu Ouro:</span>
-                        <span class="status-value" style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5); font-weight: 700;">${playerGold}g</span>
+                        <span class="status-value" style="color: #FFD700; text-shadow: 0 0 3px rgba(0,0,0,0.8), 0 1px 2px rgba(0,0,0,0.5); font-weight: 700;">${formatNumber(playerGold)}g</span>
                     </div>
                     <div class="status-item">
                         <span class="status-label">⚡ Energia:</span>
