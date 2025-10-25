@@ -19,7 +19,7 @@
       "version": "0.0.18",
       "title": "☁️ NOVO: Save na Nuvem com Google!",
       "category": "sistema",
-      "content": "Agora você pode <span class='important'>salvar na nuvem</span> com login Google! Vá em <span class='highlight'>Configurações ⚙️</span> > <span class='highlight'>☁️ Save na Nuvem</span> > <span class='important'>🔐 Entrar com Google</span>. Seus dados ficam <span class='highlight'>seguros</span> e você pode <span class='number'>jogar em qualquer dispositivo</span>! Auto-save automático a cada 60s. Ainda prefere backup manual? Use <span class='highlight'>💾 Salvar Jogo</span> para baixar o arquivo. <span class='important'>Nunca mais perca seu progresso!</span>",
+      "content": "Agora você pode <span class='important'>salvar na nuvem</span> com login Google! Vá em <span class='highlight'>Configurações ⚙️</span> > <span class='highlight'>☁️ Save na Nuvem</span> > <span class='important'>🔐 Entrar com Google</span>. Seus dados ficam <span class='highlight'>seguros</span> e você pode <span class='number'>jogar em qualquer dispositivo</span>! Auto-save automático a cada 60s. Ainda prefere backup manual? Use <span class='highlight'>💾 Salvar Jogo</span> para baixar o arquivo. <span class='important'>EM DESENVOLVIMENTO 🚧!</span>",
       "tags": ["importante", "save", "nuvem", "google"],
       "important": true,
       "author": "Tiago",
