@@ -122,9 +122,10 @@ export default class TopBar {
     // Update bar fill
     this.elements.farmingFill.style.width = `${percentage}%`;
 
-    // Update text
-    this.elements.farmingCurrent.textContent = xpInLevel;
-    this.elements.farmingNeeded.textContent = xpNeededForLevel;
+    // Update text to show percentage
+    const percentageText = Math.floor(percentage);
+    this.elements.farmingCurrent.textContent = percentageText;
+    this.elements.farmingNeeded.textContent = "%";
   }
 
   /**
